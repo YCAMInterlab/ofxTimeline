@@ -1,0 +1,24 @@
+#standard gitignore for Flightphase addons
+
+#xcode files
+*.mode*
+*.perspectivev3
+*.pbxuser
+*.xcworkspace
+xcuserdata/
+
+#builds
+build/
+obj/
+*.o
+*.app
+
+#codeblocks files
+apps/*/*/*.layout
+apps/*/*/*.depend
+apps/*/*/bin/clickToLaunch*
+apps/*/*/bin/libs
+apps/*/*/obj
+
+#mac files
+.DS_Store
