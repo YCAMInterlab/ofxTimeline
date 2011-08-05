@@ -32,7 +32,7 @@ void ofxTLZoomer::draw()
 	else{
 		ofSetColor(150, 150, 0); //unfocused outline color
 	}
-
+	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
 	//draw min

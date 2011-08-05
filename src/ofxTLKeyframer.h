@@ -61,13 +61,11 @@ class ofxTLKeyframer : public ofxTLElement
 	void reset();
 	void clear();
 	
-  private:		
-
+  private:
 	ofxTLKeyframe* firstkey;
 	ofxTLKeyframe* lastkey;
 	ofVec2f grabOffset;
 	vector<ofxTLKeyframe*> keyframes;
-	ofRectangle bounds;
 	ofRange zoomBounds;
 	
 	bool keyframeIsInBounds(ofxTLKeyframe* key);

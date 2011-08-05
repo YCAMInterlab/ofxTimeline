@@ -13,13 +13,16 @@
 ofxTLElement::ofxTLElement()
 :	xmlFileName(""),
 	bounds(ofRectangle(0,0,0,0)),
-	zoomBounds(ofRange(0,1.0))
+	zoomBounds(ofRange(0,1.0)),
+	enabled(true),
+	focused(false),
+	hover(false)
 {
 	//default constructor
 }
 
 ofxTLElement::~ofxTLElement(){
-	//un used
+	//unused
 }
 
 void ofxTLElement::enable(){
@@ -33,6 +36,11 @@ void ofxTLElement::disable(){
 
 void ofxTLElement::setDrawRect(ofRectangle drawRect){
 	bounds = drawRect;
+}
+
+void ofxTLElement::offsetDrawRect(ofVec2f offset){
+	bounds.x += offset.x;
+	bounds.y += offset.y;
 }
 
 ofRectangle ofxTLElement::getDrawRect(){

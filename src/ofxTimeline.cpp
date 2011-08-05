@@ -94,7 +94,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 	//move playhead
-
+	
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseMoved(args);
 	}	
@@ -125,17 +125,25 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 #pragma mark DRAWING
 void ofxTimeline::recalculateBoundingRects(){
 	
-	sort(headers.begin(), headers.end(), headersort);
+	//sort(headers.begin(), headers.end(), headersort);
 	
 	ticker->setDrawRect( ofRectangle(0, 0, ofGetWidth(), TICKER_HEIGHT));
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
 		ofRectangle nextHeader = (i == headers.size()-1) ? zoomer->getDrawRect() : headers[i+i]->getDrawRect();
+		if(i != headers.size()-1){
+			cout << "next: header for " << headers[i+1]->name << " y is " << headers[i+i]->getDrawRect().y << " height " << headers[i+i]->getDrawRect().height << endl;
+		}
 		float startY = thisHeader.y+thisHeader.height;
 		float endY = nextHeader.y;
-		elements[ headers[i]->name ]->setDrawRect( ofRectangle(0, startY, ofGetWidth(), endY - startY) );
+		thisHeader.width = ofGetWidth();
+		headers[i]->setDrawRect(thisHeader);
+		ofRectangle elementRectangle = ofRectangle(0, startY, ofGetWidth(), endY - startY);
+		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
+		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
 	}
-	zoomer->setDrawRect(ofRectangle(0, (*--headers.end())->getDrawRect().y+(*--headers.end())->getDrawRect().height,
+	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
+	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height,
 									ofGetWidth(), ZOOMER_HEIGHT));
 }
 
@@ -158,13 +166,21 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 	//TODO: check to make sure we don't have an element with the same name
 
 	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
-	newHeader->setDrawRect(ofRectangle(0, zoomer->getDrawRect().y, ofGetWidth(), HEADER_HEIGHT));
+	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
+	
+	ofRectangle newHeaderRect = ofRectangle(0, zoomer->getDrawRect().y, ofGetWidth(), HEADER_HEIGHT);
+	newHeader->setDrawRect(newHeaderRect);
 	newHeader->name = name;
 	
 	headers.push_back(newHeader);
-	element->setDrawRect(ofRectangle(0, newHeader->getDrawRect().y+newHeader->getDrawRect().height,
+	element->setDrawRect(ofRectangle(0, newHeaderRect.y+newHeaderRect.height,
 									 ofGetWidth(), DEFAULT_ELEMENT_HEIGHT));
+	zoomer->offsetDrawRect( ofVec2f(0, HEADER_HEIGHT+DEFAULT_ELEMENT_HEIGHT) );
+						   
 	elements[name] = element;
+
+	cout << "added header for " << headers[headers.size()-1]->name << " y " << headers[headers.size()-1]->getDrawRect().y << " height " << headers[headers.size()-1]->getDrawRect().height << endl;
+	
 
 	recalculateBoundingRects();
 }

@@ -22,6 +22,8 @@ void ofxTLElementHeader::draw(){
 	ofPushStyle();
 	
 	ofSetColor(250, 180, 80);
+	
+	
 	ofNoFill();
 	ofDrawBitmapString( name + " header la la la ", ofPoint(bounds.x + 30, bounds.y + 10) );
 	ofRect(bounds);

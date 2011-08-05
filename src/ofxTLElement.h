@@ -28,6 +28,8 @@ class ofxTLElement
 	virtual bool hasFocus();
 	
 	virtual void setDrawRect(ofRectangle bounds);
+	virtual void offsetDrawRect(ofVec2f offset);
+	
 	virtual ofRectangle getDrawRect();
 	
 	virtual void setZoomBounds(ofRange zoomBoundsPercent); //allows you to zoom in!
@@ -54,6 +56,7 @@ class ofxTLElement
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
 	
+	bool hover;
 	bool enabled; //it's up to the implementation to respect this
 	bool focused; //it's up to the implementation to modify this;
 	bool autosave; //it's up to the implementation to save when it's modified based on this var

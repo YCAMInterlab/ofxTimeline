@@ -14,16 +14,7 @@ bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 	return a->position.x < b->position.x;
 }
 
-ofxTLKeyframer::ofxTLKeyframer()
-{
-//	zoomBounds = ofRange(0.0, 1.0);
-	
-//	ofAddListener(ofEvents.mouseMoved, this, &ofxTLKeyframer::mouseMoved);
-//	ofAddListener(ofEvents.mousePressed, this, &ofxTLKeyframer::mousePressed);
-//	ofAddListener(ofEvents.mouseReleased, this, &ofxTLKeyframer::mouseReleased);
-//	ofAddListener(ofEvents.mouseDragged, this, &ofxTLKeyframer::mouseDragged);
-//
-//	ofAddListener(ofEvents.keyPressed, this, &ofxTLKeyframer::keyPressed);
+ofxTLKeyframer::ofxTLKeyframer(){
 
 	initializeEasings();
 	reset();
@@ -34,33 +25,11 @@ ofxTLKeyframer::ofxTLKeyframer()
 	xmlFileName = "_keyframes.xml";
 }
 
-ofxTLKeyframer::~ofxTLKeyframer()
-{
+ofxTLKeyframer::~ofxTLKeyframer(){
 	clear();
 }
 
-//void ofxTLKeyframer::setXMLFileName(string filename)
-//{
-//	xmlFileName = filename;
-//}
-
-//void ofxTLKeyframer::setZoomBounds(ofRange zb) //allows you to zoom in!
-//{
-//	zoomBounds = zb;
-//}
-
-//void ofxTLKeyframer::setDrawRect(ofRectangle newBounds)
-//{
-//	bounds = newBounds;
-//}
-
-//ofRectangle ofxTLKeyframer::getDrawRect()
-//{
-//	return bounds;
-//}
-
-float ofxTLKeyframer::sampleTimelineAt(float percent)
-{
+float ofxTLKeyframer::sampleTimelineAt(float percent){
 	percent = ofClamp(percent, 0, 1.0);
 	
 	//edge case
@@ -80,8 +49,12 @@ float ofxTLKeyframer::sampleTimelineAt(float percent)
 	return 0;
 }
 
-void ofxTLKeyframer::draw()
-{
+void ofxTLKeyframer::draw(){
+	
+	if(bounds.width == 0 || bounds.height == 0){
+		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
+		return;
+	}
 	
 	ofPushStyle();
 	ofPushMatrix();
@@ -89,15 +62,19 @@ void ofxTLKeyframer::draw()
 	
 	//**** DRAW BORDER
 	ofNoFill();
-	if(focused){
+	if(hover){
+		ofSetColor(255, 0, 0);
+	}
+	else if(focused){
 		ofSetColor(255, 200, 0); //focused outline color
 	}
 	else{
 		ofSetColor(150, 150, 0); //unfocused outline color
 	}
 
+	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
+	
 	ofSetColor(100, 0, 0);
 	//**** DRAW KEYFRAME LINES
 	ofNoFill();
@@ -174,19 +151,7 @@ void ofxTLKeyframer::draw()
 	ofPopStyle();
 }
 
-//void ofxTLKeyframer::enable()
-//{
-//	enabled = true;
-//}
-//
-//void ofxTLKeyframer::disable()
-//{
-//	enabled = false;
-//	focused = false;
-//}
-
-void ofxTLKeyframer::load()
-{
+void ofxTLKeyframer::load(){
 	ofxXmlSettings savedkeyframes;
 	if(!savedkeyframes.loadFile(xmlFileName)){
 		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- couldn't load xml file " + xmlFileName);
@@ -216,24 +181,21 @@ void ofxTLKeyframer::load()
 	updateKeyframeSort();
 }
 
-void ofxTLKeyframer::clear()
-{
+void ofxTLKeyframer::clear(){
 	for(int i = 0; i < keyframes.size(); i++){
 		delete keyframes[i];
 	}
 	keyframes.clear();	
 }
 
-void ofxTLKeyframer::reset()
-{
+void ofxTLKeyframer::reset(){
 	clear();
 	//add first and last keyframe always
 	firstkey = newKeyframe( ofVec2f(0, .5) );
 	lastkey = newKeyframe( ofVec2f(1.0, .5) );
 }
 
-void ofxTLKeyframer::save()
-{
+void ofxTLKeyframer::save(){
 	ofxXmlSettings savedkeyframes;
 	savedkeyframes.addTag("keyframes");
 	savedkeyframes.pushTag("keyframes");
@@ -252,8 +214,7 @@ void ofxTLKeyframer::save()
 	savedkeyframes.saveFile(xmlFileName);
 }
 
-void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args)
-{
+void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	if(!enabled) return;
 	
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
@@ -334,13 +295,16 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args)
 	}
 }
 
-void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args)
-{
-	
+void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
+	if(bounds.inside(args.x, args.y)){
+		hover = true;
+	}
+	else{
+		hover = false;
+	}
 }
 
-void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args)
-{
+void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args){
 	if(!enabled) return;
 	
 	if(focused && selectedKeyframe != NULL){
@@ -350,22 +314,19 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args)
 	}
 }
 
-void ofxTLKeyframer::updateKeyframeSort()
-{
+void ofxTLKeyframer::updateKeyframeSort(){
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
 	firstkey = keyframes[0];
 	lastkey = keyframes[keyframes.size()-1];	
 }
 
-void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args)
-{
+void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
 	if(autosave){
 		save();
 	}
 }
 
-void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args)
-{
+void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	if(!enabled || !focused) return;
 	
 	bool modified = false;
@@ -425,32 +386,27 @@ ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 
 }
 
-bool ofxTLKeyframer::keyframeIsInBounds(ofxTLKeyframe* key)
-{
+bool ofxTLKeyframer::keyframeIsInBounds(ofxTLKeyframe* key){
 	if(zoomBounds.min == 0.0 && zoomBounds.max == 1.0) return true;
 	
 	return key->position.x > zoomBounds.min && key->position.x < zoomBounds.max;
 }
 
-ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint)
-{
+ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint){
 	return ofVec2f(ofMap(keyframePoint.x, zoomBounds.min, zoomBounds.max, bounds.x, bounds.x+bounds.width, true),
 				   ofMap(keyframePoint.y, 1.0, 0.0, bounds.y, bounds.y+bounds.height, true));
 }
 
-bool ofxTLKeyframer::screenpointIsInBounds(ofVec2f screenpoint)
-{
+bool ofxTLKeyframer::screenpointIsInBounds(ofVec2f screenpoint){
 	return isPointInRect(screenpoint, bounds);
 }
 
-ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord)
-{
+ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord){
 	return ofVec2f(ofMap(coord.x, bounds.x, bounds.x+bounds.width,  zoomBounds.min, zoomBounds.max, true),
 				   ofMap(coord.y, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true));
 }
 
-ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point)
-{
+ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point){
 	ofxTLKeyframe* k = new ofxTLKeyframe();
 	k->position = point;
 	k->easeFunc = easingFunctions[0];
@@ -459,8 +415,7 @@ ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point)
 	return k;
 }
 
-void ofxTLKeyframer::initializeEasings()
-{
+void ofxTLKeyframer::initializeEasings(){
 
 	//FUNCTIONS ----
 	EasingFunction* ef;
