@@ -1,0 +1,8 @@
+A lightweight timeline addon for openframeworks.
+
+Dependent on the following addons
+
+ofxXmlSettings (core library)
+ofxTween ( https://github.com/arturoc/ofxTween )
+ofxRange ( https://github.com/Flightphase/ofxRange )
+
