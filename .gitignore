@@ -22,3 +22,9 @@ apps/*/*/obj
 
 #mac files
 .DS_Store
+
+#linux files
+*modex.so
+*modexp64.so
+*/*/*.tags
+*/bin/timelineExample
