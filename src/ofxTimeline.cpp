@@ -127,13 +127,14 @@ void ofxTimeline::recalculateBoundingRects(){
 	
 	//sort(headers.begin(), headers.end(), headersort);
 	
+//	for(int i = 0; i < headers.size(); i++){
+//		cout << "	PRE RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
+//	}
+	
 	ticker->setDrawRect( ofRectangle(0, 0, ofGetWidth(), TICKER_HEIGHT));
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
-		ofRectangle nextHeader = (i == headers.size()-1) ? zoomer->getDrawRect() : headers[i+i]->getDrawRect();
-		if(i != headers.size()-1){
-			cout << "next: header for " << headers[i+1]->name << " y is " << headers[i+i]->getDrawRect().y << " height " << headers[i+i]->getDrawRect().height << endl;
-		}
+		ofRectangle nextHeader = (i == headers.size()-1) ? zoomer->getDrawRect() : headers[i+1]->getDrawRect();
 		float startY = thisHeader.y+thisHeader.height;
 		float endY = nextHeader.y;
 		thisHeader.width = ofGetWidth();
@@ -145,6 +146,11 @@ void ofxTimeline::recalculateBoundingRects(){
 	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
 	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height,
 									ofGetWidth(), ZOOMER_HEIGHT));
+	
+//	for(int i = 0; i < headers.size(); i++){
+//		cout << "	POST RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
+//	}
+	
 }
 
 void ofxTimeline::draw(){
@@ -165,6 +171,10 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 
 	//TODO: check to make sure we don't have an element with the same name
 
+//	for(int i = 0; i < headers.size(); i++){
+//		cout << "	PRE ADD header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
+//	}
+	
 	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
 	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
 	
@@ -179,9 +189,10 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 						   
 	elements[name] = element;
 
-	cout << "added header for " << headers[headers.size()-1]->name << " y " << headers[headers.size()-1]->getDrawRect().y << " height " << headers[headers.size()-1]->getDrawRect().height << endl;
+//	for(int i = 0; i < headers.size(); i++){
+//		cout << "	POST ADD header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
+//	}
 	
-
 	recalculateBoundingRects();
 }
 
