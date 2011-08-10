@@ -74,12 +74,15 @@ void ofxTimeline::disable(){
 
 
 void ofxTimeline::setDuration(int frames){
+	ticker->setDuration(frames);
 }
 
 void ofxTimeline::setDuration(float seconds){
+	ticker->setDuration(seconds);
 }
 
 void ofxTimeline::setFrameRate(int framerate){
+	ticker->setFrameRate(framerate);
 }
 
 void ofxTimeline::setAutosave(bool autosave){
@@ -94,13 +97,14 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 	//move playhead
-	
+	ticker->mouseMoved(args);
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseMoved(args);
 	}	
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
+	ticker->mouseDragged(args);
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseDragged(args);
 	}
