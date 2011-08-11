@@ -6,6 +6,7 @@ void testApp::setup(){
 	timeline->setup();
 	timeline->addKeyframes("Keyframe A", "keyframe_a.xml", ofRange(0, 1.0));
 	timeline->addKeyframes("Keyframe B", "keyframe_b.xml", ofRange(0, 1.0));
+	timeline->addKeyframes("Keyframe C", "keyframe_c.xml", ofRange(0, 1.0));
 
 }
 

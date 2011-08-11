@@ -90,32 +90,37 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mousePressed(args);
 	}
+	zoomer->mousePressed(args);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
-	//move playhead
+	//TODO move playhead
 	
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseMoved(args);
-	}	
+	}
+	zoomer->mouseMoved(args);
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseDragged(args);
 	}
+	zoomer->mouseDragged(args);
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->mouseReleased(args);
 	}	
+	zoomer->mouseReleased(args);
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->keyPressed(args);
-	}	
+	}
+	zoomer->keyPressed(args);
 }
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
@@ -205,7 +210,6 @@ ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRan
 }
 
 float ofxTimeline::getKeyframeValue(string name){
-
 	
 }
 

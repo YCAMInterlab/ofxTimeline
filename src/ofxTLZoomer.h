@@ -36,7 +36,7 @@ class ofxTLZoomer : public ofxTLElement
 	ofRange getViewRange();
 	
   private:
-	
+
 	ofRange currentViewRange;
 	
 	float minGrabOffset;

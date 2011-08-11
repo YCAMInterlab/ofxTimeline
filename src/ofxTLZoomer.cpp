@@ -102,6 +102,7 @@ void ofxTLZoomer::mouseMoved(ofMouseEventArgs& args)
 
 void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 {
+
 	if(!enabled) return;
 
 	minSelected = maxSelected = midSelected = focused  = false;

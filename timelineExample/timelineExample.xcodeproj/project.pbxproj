@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -82,6 +83,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A6020B7D13F19C3400634B4D /* ofxTLEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLEvents.h; sourceTree = "<group>"; };
+		A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLEvents.cpp; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -299,6 +302,8 @@
 				E7FBD08A13D61DAC00938471 /* ofxTLZoomer.h */,
 				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
 				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
+				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
+				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
 			);
 			name = src;
 			path = ../src;
@@ -508,6 +513,7 @@
 				E7FBD0CD13D61DC900938471 /* tinyxmlerror.cpp in Sources */,
 				E7FBD0CE13D61DC900938471 /* tinyxmlparser.cpp in Sources */,
 				E7FBD0CF13D61DC900938471 /* ofxXmlSettings.cpp in Sources */,
+				A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
