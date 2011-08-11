@@ -35,7 +35,9 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="" IntermediateDirectory="../" Command="./timelineExample" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(ProjectPath)/../bin" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+        <![CDATA[
+      
+      ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <PostConnectCommands/>
@@ -69,6 +71,8 @@
         <![CDATA[
       
       
+      
+      
       ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
@@ -93,4 +97,25 @@
       </AdditionalRules>
     </Configuration>
   </Settings>
+  <VirtualDirectory Name="ofxTimeline">
+    <File Name="../../.gitignore"/>
+    <File Name="../../README"/>
+    <File Name="../../src/ofxTimeline.cpp"/>
+    <File Name="../../src/ofxTimeline.h"/>
+    <File Name="../../src/ofxTimelineUtils.h"/>
+    <File Name="../../src/ofxTLElement.cpp"/>
+    <File Name="../../src/ofxTLElement.h"/>
+    <File Name="../../src/ofxTLElementHeader.cpp"/>
+    <File Name="../../src/ofxTLElementHeader.h"/>
+    <File Name="../../src/ofxTLKeyframer.cpp"/>
+    <File Name="../../src/ofxTLKeyframer.h"/>
+    <File Name="../../src/ofxTLSwitcher.cpp"/>
+    <File Name="../../src/ofxTLSwitcher.h"/>
+    <File Name="../../src/ofxTLTicker.cpp"/>
+    <File Name="../../src/ofxTLTicker.h"/>
+    <File Name="../../src/ofxTLTrigger.cpp"/>
+    <File Name="../../src/ofxTLTrigger.h"/>
+    <File Name="../../src/ofxTLZoomer.cpp"/>
+    <File Name="../../src/ofxTLZoomer.h"/>
+  </VirtualDirectory>
 </CodeLite_Project>

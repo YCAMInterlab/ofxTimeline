@@ -23,11 +23,19 @@ class ofxTLTicker : public ofxTLElement
 	virtual void setDuration(int frames);
 	virtual void setDuration(float seconds);
 	virtual void setFrameRate(int framerate);
-	
-  protected:
+
+	void mousePressed(ofMouseEventArgs& args);
+	void mouseMoved(ofMouseEventArgs& args);
+	void mouseDragged(ofMouseEventArgs& args);
+	void mouseReleased(ofMouseEventArgs& args);
+
+protected:
+	void updateHover(ofMouseEventArgs& args);
+
 	bool isFrameBased;
 	int durationInFrames;
 	float durationInSeconds;
 	int framerate;
+	int curHoverFrame;
 
 };
