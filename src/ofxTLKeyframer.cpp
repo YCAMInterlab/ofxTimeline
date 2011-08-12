@@ -23,10 +23,19 @@ ofxTLKeyframer::ofxTLKeyframer(){
 	drawingEasingWindow = false;
 	
 	xmlFileName = "_keyframes.xml";
+	
+	cout << "constructing keyframe editor" << endl;
+	
 }
 
 ofxTLKeyframer::~ofxTLKeyframer(){
 	clear();
+}
+
+void ofxTLKeyframer::setup(){
+	cout << "setting up keyframe editor" << xmlFileName << endl;
+	enable();
+	load();
 }
 
 float ofxTLKeyframer::sampleTimelineAt(float percent){
@@ -153,6 +162,9 @@ void ofxTLKeyframer::draw(){
 
 void ofxTLKeyframer::load(){
 	ofxXmlSettings savedkeyframes;
+	
+	cout << "Loading keyframe file " << xmlFileName << endl;
+	
 	if(!savedkeyframes.loadFile(xmlFileName)){
 		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- couldn't load xml file " + xmlFileName);
 		reset();
@@ -196,6 +208,9 @@ void ofxTLKeyframer::reset(){
 }
 
 void ofxTLKeyframer::save(){
+	
+	cout << "Saving keyframe file " << xmlFileName << endl;
+
 	ofxXmlSettings savedkeyframes;
 	savedkeyframes.addTag("keyframes");
 	savedkeyframes.pushTag("keyframes");
@@ -225,12 +240,14 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		for(int i = 0; i < easingFunctions.size(); i++){
 			if(isPointInRect(screenpoint-easingWindowPosition, easingFunctions[i]->bounds)){
 				selectedKeyframe->easeFunc = easingFunctions[i];
+				if(autosave) save();
 				return;
 			}
 		}
 		for(int i = 0; i < easingTypes.size(); i++){
 			if(isPointInRect(screenpoint-easingWindowPosition, easingTypes[i]->bounds)){
 				selectedKeyframe->easeType = easingTypes[i];
+				if(autosave) save();
 				return;
 			}
 		}
@@ -321,8 +338,10 @@ void ofxTLKeyframer::updateKeyframeSort(){
 }
 
 void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
-	if(autosave){
-		save();
+	if(pointInScreenBounds(ofVec2f(args.x, args.y))){
+		if(autosave){
+			save();
+		}
 	}
 }
 

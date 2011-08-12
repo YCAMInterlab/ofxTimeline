@@ -16,9 +16,10 @@ ofxTLElement::ofxTLElement()
 	zoomBounds(ofRange(0,1.0)),
 	enabled(true),
 	focused(false),
-	hover(false)
+	hover(false),
+	autosave(true)
 {
-	enable();
+
 }
 
 ofxTLElement::~ofxTLElement(){
@@ -67,12 +68,10 @@ void ofxTLElement::setZoomBounds(ofRange zoomBoundsPercent){
 
 void ofxTLElement::setXMLFileName(string filename){
 	xmlFileName = filename;
-	if(autosave) save();
 }
 
 void ofxTLElement::setAutosave(bool _autosave){
 	autosave = _autosave;
-	if(autosave) save();
 }
 			   
 bool ofxTLElement::hasFocus()

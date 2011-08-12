@@ -20,8 +20,12 @@ ofxTLZoomer::ofxTLZoomer()
 	//default constructor
 }
 
-void ofxTLZoomer::draw()
-{
+void ofxTLZoomer::setup(){
+	enable();
+	load();
+}
+
+void ofxTLZoomer::draw(){
 	ofPushStyle();
 	ofEnableSmoothing();
 

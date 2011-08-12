@@ -42,24 +42,25 @@ class ofxTLKeyframer : public ofxTLElement
   public:	
 	ofxTLKeyframer();
 	~ofxTLKeyframer();
-	
-	//main function to get values out of the timeline
-	float sampleTimelineAt(float percent);
-	
-	void draw();
-	
-	void mousePressed(ofMouseEventArgs& args);
-	void mouseMoved(ofMouseEventArgs& args);
-	void mouseDragged(ofMouseEventArgs& args);
-	void mouseReleased(ofMouseEventArgs& args);
-		
-	void keyPressed(ofKeyEventArgs& args);
 
-	void save();
-	void load();
+	virtual void setup();
+	virtual void draw();
+
+	//main function to get values out of the timeline
+	virtual float sampleTimelineAt(float percent);
 	
-	void reset();
-	void clear();
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+		
+	virtual void keyPressed(ofKeyEventArgs& args);
+
+	virtual void save();
+	virtual void load();
+	
+	virtual void reset();
+	virtual void clear();
 	
   private:
 	ofxTLKeyframe* firstkey;

@@ -22,6 +22,10 @@ ofxTLTicker::ofxTLTicker()
 ofxTLTicker::~ofxTLTicker(){
 }
 
+void ofxTLTicker::setup(){
+	//empty
+}
+
 void ofxTLTicker::draw(){
 	
 	ofPushStyle();

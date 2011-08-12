@@ -16,7 +16,11 @@ ofxTLElementHeader::ofxTLElementHeader(){
 ofxTLElementHeader::~ofxTLElementHeader(){
 
 }
-	
+
+void ofxTLElementHeader::setup(){
+	enable();
+	load();
+}
 
 void ofxTLElementHeader::draw(){
 	ofPushStyle();

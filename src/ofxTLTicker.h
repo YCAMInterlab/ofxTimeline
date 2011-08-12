@@ -18,6 +18,7 @@ class ofxTLTicker : public ofxTLElement
 	ofxTLTicker();
 	~ofxTLTicker();
 	
+	virtual void setup();
 	virtual void draw();
 	
 	virtual void setDuration(int frames);

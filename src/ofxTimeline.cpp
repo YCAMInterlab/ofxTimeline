@@ -29,7 +29,7 @@ ofxTimeline::ofxTimeline()
 	durationInSeconds(0),
 	currentFrameRate(0),
 	isShowing(true),
-	filename("timeline.xml")
+	filenamePrefix("defaultTimeline_")
 {
 }
 
@@ -39,11 +39,14 @@ ofxTimeline::~ofxTimeline(){
 
 void ofxTimeline::setup(){
 	ticker = new ofxTLTicker();
+	ticker->setup();
 	ticker->setDrawRect(ofRectangle(0,0, ofGetWidth(), TICKER_HEIGHT));
 	
 	zoomer = new ofxTLZoomer();
+	zoomer->setXMLFileName(filenamePrefix + "zoomer.xml");
+	zoomer->setup();
 	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT, ofGetWidth(), ZOOMER_HEIGHT));
-	
+		
 	elements["ticker"] = ticker;
 	elements["zoomer"] = zoomer;
 						
@@ -148,9 +151,10 @@ void ofxTimeline::recalculateBoundingRects(){
 		thisHeader.width = ofGetWidth();
 		headers[i]->setDrawRect(thisHeader);
 		ofRectangle elementRectangle = ofRectangle(0, startY, ofGetWidth(), endY - startY);
-		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
+//		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
 		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
 	}
+	
 	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
 	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height,
 									ofGetWidth(), ZOOMER_HEIGHT));
@@ -184,13 +188,18 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 //	}
 	
 	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
-	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
+	newHeader->setup();
+	
+//	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
 	
 	ofRectangle newHeaderRect = ofRectangle(0, zoomer->getDrawRect().y, ofGetWidth(), HEADER_HEIGHT);
 	newHeader->setDrawRect(newHeaderRect);
 	newHeader->name = name;
 	
 	headers.push_back(newHeader);
+	
+	element->setup();
+	element->setAutosave(autosave);
 	element->setDrawRect(ofRectangle(0, newHeaderRect.y+newHeaderRect.height,
 									 ofGetWidth(), DEFAULT_ELEMENT_HEIGHT));
 	zoomer->offsetDrawRect( ofVec2f(0, HEADER_HEIGHT+DEFAULT_ELEMENT_HEIGHT) );
@@ -207,6 +216,7 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
 
 	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
+	newKeyframer->setXMLFileName(xmlFileName);
 	addTimelineElement(name, newKeyframer);
 	
 	return newKeyframer;

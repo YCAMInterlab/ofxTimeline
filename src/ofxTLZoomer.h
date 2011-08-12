@@ -19,6 +19,7 @@ class ofxTLZoomer : public ofxTLElement
 	ofxTLZoomer();
 	~ofxTLZoomer();
 	
+	void setup();
 	void draw();
 		
 	void mousePressed(ofMouseEventArgs& args);

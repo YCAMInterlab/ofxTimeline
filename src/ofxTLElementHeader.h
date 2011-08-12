@@ -18,6 +18,7 @@ class ofxTLElementHeader : public ofxTLElement
 	~ofxTLElementHeader();
 	string name;	
 	
+	virtual void setup();
 	virtual void draw();
 		
 };

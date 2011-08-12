@@ -109,7 +109,7 @@ class ofxTimeline
 	void recalculateBoundingRects();
 	
     ofxXmlSettings settings;
-	string filename;
+	string filenamePrefix;
 	
 	ofRectangle bounds;
 	bool isEnabled; //allows for editing
