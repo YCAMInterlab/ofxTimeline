@@ -39,29 +39,29 @@ class ofxTLCoreEvents {
 extern ofxTLCoreEvents ofxTLEvents;
 
 template<class ListenerClass>
-void ofxnMMRegisterPlaybackEvents(ListenerClass * listener){
+void ofxTLRegisterPlaybackEvents(ListenerClass * listener){
     ofAddListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackBegan);
     ofAddListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
     ofAddListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
 }
 
 template<class ListenerClass>
-void ofxNMMRemovePlaybackEvents(ListenerClass * listener){
+void ofxTLRemovePlaybackEvents(ListenerClass * listener){
     ofRemoveListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackBegan);
     ofRemoveListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
     ofRemoveListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
 }
 
 template<class ListenerClass>
-void ofxnMMRegisterZoomEvents(ListenerClass * listener){
-    ofAddListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::playbackBegan);
-    ofAddListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::playbackEnded);
-    ofAddListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::playbackLooped);
+void ofxTLRegisterZoomEvents(ListenerClass * listener){
+    ofAddListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::zoomStarted);
+    ofAddListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::zoomDragged);
+    ofAddListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::zoomEnded);
 }
 
 template<class ListenerClass>
-void ofxNMMRemoveZoomEvents(ListenerClass * listener){
-    ofRemoveListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::playbackBegan);
-    ofRemoveListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::playbackEnded);
-    ofRemoveListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::playbackLooped);
+void ofxTLRemoveZoomEvents(ListenerClass * listener){
+    ofRemoveListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::zoomStarted);
+    ofRemoveListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::zoomDragged);
+    ofRemoveListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::zoomEnded);
 }

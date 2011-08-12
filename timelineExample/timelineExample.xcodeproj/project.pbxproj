@@ -301,9 +301,9 @@
 				E7FBD08713D61DAC00938471 /* ofxTLTrigger.cpp */,
 				E7FBD08A13D61DAC00938471 /* ofxTLZoomer.h */,
 				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
-				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
 				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
 				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
+				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
 			);
 			name = src;
 			path = ../src;

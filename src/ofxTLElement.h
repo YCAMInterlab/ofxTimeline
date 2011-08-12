@@ -13,6 +13,7 @@
 #include "ofxXmlSettings.h"
 #include "ofxTween.h"
 #include "ofRange.h"
+#include "ofxTLEvents.h"
 
 class ofxTLElement 
 {
@@ -37,12 +38,18 @@ class ofxTLElement
 	virtual void setXMLFileName(string filename);
 	virtual void setAutosave(bool autosave);
 	
+	//standard events
 	virtual void mousePressed(ofMouseEventArgs& args){};
 	virtual void mouseMoved(ofMouseEventArgs& args){};
 	virtual void mouseDragged(ofMouseEventArgs& args){};
 	virtual void mouseReleased(ofMouseEventArgs& args){};
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
+	
+	//zoom events
+	virtual void zoomStarted(ofxTLZoomEventArgs& args);
+	virtual void zoomDragged(ofxTLZoomEventArgs& args);
+	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
 	virtual void save(){};
 	virtual void load(){};

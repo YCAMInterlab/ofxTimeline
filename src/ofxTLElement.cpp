@@ -18,20 +18,22 @@ ofxTLElement::ofxTLElement()
 	focused(false),
 	hover(false)
 {
-	//default constructor
+	enable();
 }
 
 ofxTLElement::~ofxTLElement(){
-	//unused
+	disable();
 }
 
 void ofxTLElement::enable(){
 	enabled = true;
+	ofxTLRegisterZoomEvents(this);
 }
 
 void ofxTLElement::disable(){
 	enabled = false;
 	focused = false;
+	ofxTLRemoveZoomEvents(this);	
 }
 
 void ofxTLElement::setDrawRect(ofRectangle drawRect){
@@ -45,6 +47,18 @@ void ofxTLElement::offsetDrawRect(ofVec2f offset){
 
 ofRectangle ofxTLElement::getDrawRect(){
 	return bounds;
+}
+
+void ofxTLElement::zoomStarted(ofxTLZoomEventArgs& args){
+	setZoomBounds(args.currentZoom);
+}
+
+void ofxTLElement::zoomDragged(ofxTLZoomEventArgs& args){
+	setZoomBounds(args.currentZoom);
+}
+
+void ofxTLElement::zoomEnded(ofxTLZoomEventArgs& args){
+	setZoomBounds(args.currentZoom);
 }
 
 void ofxTLElement::setZoomBounds(ofRange zoomBoundsPercent){

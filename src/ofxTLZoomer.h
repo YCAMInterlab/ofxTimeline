@@ -37,6 +37,10 @@ class ofxTLZoomer : public ofxTLElement
 	
   private:
 
+	void notifyZoomStarted();
+	void notifyZoomDragged(ofRange oldZoom);
+	void notifyZoomEnded();
+
 	ofRange currentViewRange;
 	
 	float minGrabOffset;

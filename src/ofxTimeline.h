@@ -11,6 +11,9 @@
 // ofxTLFilmstrip
 // ofxTLGradient
 
+//JG current priorities:
+//connect zoomer through events
+//add 
 
 //STAGE 1
 //TODO: Add playback

@@ -113,6 +113,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 		minGrabOffset = args.x - minScreenX ;
 		if(fabs(minScreenX - args.x) < 5){
 			minSelected = true;
+			notifyZoomStarted();
 			return;
 		}
 
@@ -120,10 +121,12 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 		maxGrabOffset = args.x - maxScreenX;
 		if(fabs(maxScreenX - args.x) < 5){
 			maxSelected = true;
+			notifyZoomStarted();
 			return;
 		}
 
 		if(args.x > minScreenX && args.x < maxScreenX){
+			notifyZoomStarted();
 			midSelected = true;
 		}
 	}
@@ -133,28 +136,51 @@ void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args)
 {
 	if(!enabled) return;
 
+	ofRange oldRange = currentViewRange;
 	if(minSelected || midSelected){
 		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset), 0, currentViewRange.max);
+		notifyZoomDragged(oldRange);
 	}
 
 	if(maxSelected || midSelected){
 		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset), currentViewRange.min, 1.0);
-	}
+		notifyZoomDragged(oldRange);
+	}	
 }
 
-bool ofxTLZoomer::isActive()
-{
+bool ofxTLZoomer::isActive(){
 	return mouseIsDown && ( maxSelected || minSelected || midSelected);
 }
 
-void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args)
-{
+void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 	if(!enabled) return;
-
-	mouseIsDown = false;
-	if(autosave){
-		save();
+	
+	if(mouseIsDown){
+		mouseIsDown = false;
+		notifyZoomEnded();
+		if(autosave){
+			save();
+		}		
 	}
+}
+
+void ofxTLZoomer::notifyZoomStarted(){
+	ofxTLZoomEventArgs zoomEvent;
+	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
+	ofNotifyEvent(ofxTLEvents.zoomStarted, zoomEvent);		
+}
+
+void ofxTLZoomer::notifyZoomDragged(ofRange oldRange){
+	ofxTLZoomEventArgs zoomEvent;
+	zoomEvent.oldZoom = oldRange;
+	zoomEvent.currentZoom = currentViewRange;
+	ofNotifyEvent(ofxTLEvents.zoomDragged, zoomEvent);
+}
+
+void ofxTLZoomer::notifyZoomEnded(){
+	ofxTLZoomEventArgs zoomEvent;
+	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
+	ofNotifyEvent(ofxTLEvents.zoomEnded, zoomEvent);	
 }
 
 void ofxTLZoomer::keyPressed(ofKeyEventArgs& args)

@@ -66,7 +66,7 @@ class ofxTLKeyframer : public ofxTLElement
 	ofxTLKeyframe* lastkey;
 	ofVec2f grabOffset;
 	vector<ofxTLKeyframe*> keyframes;
-	ofRange zoomBounds;
+
 	
 	bool keyframeIsInBounds(ofxTLKeyframe* key);
 	
