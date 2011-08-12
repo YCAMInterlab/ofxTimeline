@@ -34,6 +34,8 @@ class ofxTLCoreEvents {
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
+	
+	ofEvent<ofEventArgs> viewNeedsResize;
 };
 
 extern ofxTLCoreEvents ofxTLEvents;

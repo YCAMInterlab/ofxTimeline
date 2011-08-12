@@ -187,6 +187,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A60C520D13F5E4DC00BB5789 /* base */ = {
+			isa = PBXGroup;
+			children = (
+				E7FBD07B13D61DAC00938471 /* ofxTimeline.h */,
+				E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */,
+				E7FBD07E13D61DAC00938471 /* ofxTLElement.h */,
+				E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */,
+				E7FBD08013D61DAC00938471 /* ofxTLElementHeader.h */,
+				E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */,
+				E7FBD08613D61DAC00938471 /* ofxTLTicker.h */,
+				E7FBD08513D61DAC00938471 /* ofxTLTicker.cpp */,
+				E7FBD08A13D61DAC00938471 /* ofxTLZoomer.h */,
+				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
+				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
+				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
+				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
+			);
+			name = base;
+			sourceTree = "<group>";
+		};
+		A60C521413F5E51800BB5789 /* elements */ = {
+			isa = PBXGroup;
+			children = (
+				E7FBD08213D61DAC00938471 /* ofxTLKeyframer.h */,
+				E7FBD08113D61DAC00938471 /* ofxTLKeyframer.cpp */,
+				E7FBD08413D61DAC00938471 /* ofxTLSwitcher.h */,
+				E7FBD08313D61DAC00938471 /* ofxTLSwitcher.cpp */,
+				E7FBD08813D61DAC00938471 /* ofxTLTrigger.h */,
+				E7FBD08713D61DAC00938471 /* ofxTLTrigger.cpp */,
+			);
+			name = elements;
+			sourceTree = "<group>";
+		};
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,25 +318,8 @@
 		E7FBD07913D61DAC00938471 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				E7FBD07B13D61DAC00938471 /* ofxTimeline.h */,
-				E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */,
-				E7FBD07E13D61DAC00938471 /* ofxTLElement.h */,
-				E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */,
-				E7FBD08013D61DAC00938471 /* ofxTLElementHeader.h */,
-				E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */,
-				E7FBD08213D61DAC00938471 /* ofxTLKeyframer.h */,
-				E7FBD08113D61DAC00938471 /* ofxTLKeyframer.cpp */,
-				E7FBD08413D61DAC00938471 /* ofxTLSwitcher.h */,
-				E7FBD08313D61DAC00938471 /* ofxTLSwitcher.cpp */,
-				E7FBD08613D61DAC00938471 /* ofxTLTicker.h */,
-				E7FBD08513D61DAC00938471 /* ofxTLTicker.cpp */,
-				E7FBD08813D61DAC00938471 /* ofxTLTrigger.h */,
-				E7FBD08713D61DAC00938471 /* ofxTLTrigger.cpp */,
-				E7FBD08A13D61DAC00938471 /* ofxTLZoomer.h */,
-				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
-				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
-				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
-				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
+				A60C520D13F5E4DC00BB5789 /* base */,
+				A60C521413F5E51800BB5789 /* elements */,
 			);
 			name = src;
 			path = ../src;

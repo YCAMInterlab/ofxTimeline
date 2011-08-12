@@ -14,7 +14,7 @@ bool headersort(ofxTLElementHeader* a, ofxTLElementHeader* b){
 }
 
 #define TICKER_HEIGHT 30
-#define ZOOMER_HEIGHT 40
+#define ZOOMER_HEIGHT 20
 
 #define HEADER_HEIGHT 20 //TODO: make this variable
 #define DEFAULT_ELEMENT_HEIGHT 150 //TODO: make this variable
@@ -58,6 +58,7 @@ void ofxTimeline::setup(){
 	ofAddListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
 	ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
 	
+	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 }
 
 #pragma mark CONFIGURATION
@@ -93,7 +94,9 @@ void ofxTimeline::setAutosave(bool autosave){
 
 #pragma mark EVENTS
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+
 	for(int i = 0; i < headers.size(); i++){
+		headers[i]->mousePressed(args);
 		elements[headers[i]->name]->mousePressed(args);
 	}
 	zoomer->mousePressed(args);
@@ -102,6 +105,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 	ticker->mouseMoved(args);
 	for(int i = 0; i < headers.size(); i++){
+		headers[i]->mouseMoved(args);
 		elements[headers[i]->name]->mouseMoved(args);
 	}
 	zoomer->mouseMoved(args);
@@ -110,6 +114,7 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 	ticker->mouseDragged(args);
 	for(int i = 0; i < headers.size(); i++){
+		headers[i]->mouseDragged(args);
 		elements[headers[i]->name]->mouseDragged(args);
 	}
 	zoomer->mouseDragged(args);
@@ -117,6 +122,7 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
+		headers[i]->mouseReleased(args);
 		elements[headers[i]->name]->mouseReleased(args);
 	}	
 	zoomer->mouseReleased(args);
@@ -134,6 +140,11 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 #pragma mark DRAWING
+
+void ofxTimeline::viewNeedsResize(ofEventArgs& args){
+	recalculateBoundingRects();
+}
+
 void ofxTimeline::recalculateBoundingRects(){
 	
 	//sort(headers.begin(), headers.end(), headersort);
@@ -141,22 +152,31 @@ void ofxTimeline::recalculateBoundingRects(){
 //	for(int i = 0; i < headers.size(); i++){
 //		cout << "	PRE RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
 //	}
-	
+
 	ticker->setDrawRect( ofRectangle(0, 0, ofGetWidth(), TICKER_HEIGHT));
+	float currentY = TICKER_HEIGHT;
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
 		ofRectangle nextHeader = (i == headers.size()-1) ? zoomer->getDrawRect() : headers[i+1]->getDrawRect();
+		ofRectangle elementRectangle = elements[ headers[i]->name ]->getDrawRect();
+		
 		float startY = thisHeader.y+thisHeader.height;
-		float endY = nextHeader.y;
+		float endY = startY + elementRectangle.height;
+		
 		thisHeader.width = ofGetWidth();
+		thisHeader.y = currentY;
 		headers[i]->setDrawRect(thisHeader);
-		ofRectangle elementRectangle = ofRectangle(0, startY, ofGetWidth(), endY - startY);
+		elementRectangle.y = startY;
+		elementRectangle.width = ofGetWidth();
+		
+		//elementRectangle = ofRectangle(0, startY, ofGetWidth(), endY - startY);
 //		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
 		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
+		currentY += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
 	}
 	
 	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
-	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height,
+	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height + FOOTER_HEIGHT,
 									ofGetWidth(), ZOOMER_HEIGHT));
 	
 //	for(int i = 0; i < headers.size(); i++){
@@ -188,6 +208,7 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 //	}
 	
 	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
+	newHeader->setElement(element);
 	newHeader->setup();
 	
 //	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;

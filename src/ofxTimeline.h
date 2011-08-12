@@ -106,6 +106,8 @@ class ofxTimeline
 	
 	void windowResized(ofResizeEventArgs& args);
 	
+	void viewNeedsResize(ofEventArgs& args);
+						 
 	void recalculateBoundingRects();
 	
     ofxXmlSettings settings;
