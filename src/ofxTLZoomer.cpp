@@ -75,6 +75,8 @@ void ofxTLZoomer::draw(){
 
 void ofxTLZoomer::load()
 {
+	notifyZoomStarted();
+	
 	ofxXmlSettings settings;
 	if(!settings.loadFile(xmlFileName)){
 		ofLog(OF_LOG_ERROR, "ofxTLZoomer -- couldn't load zoom settings file");
@@ -86,6 +88,8 @@ void ofxTLZoomer::load()
 							   settings.getValue("max", 1.0));
 
 	settings.popTag();
+	
+	notifyZoomEnded();
 }
 
 void ofxTLZoomer::save()

@@ -59,6 +59,8 @@ void ofxTimeline::setup(){
 	ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
 	
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
+	
+	loadElementPositions();
 }
 
 #pragma mark CONFIGURATION
@@ -173,11 +175,17 @@ void ofxTimeline::recalculateBoundingRects(){
 //		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
 		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
 		currentY += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
+		
+		savedElementPositions[headers[i]->name] = elementRectangle;
 	}
 	
 	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
 	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height + FOOTER_HEIGHT,
 									ofGetWidth(), ZOOMER_HEIGHT));
+	
+	if(autosave){
+		saveElementPositions();
+	}
 	
 //	for(int i = 0; i < headers.size(); i++){
 //		cout << "	POST RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
@@ -195,6 +203,50 @@ void ofxTimeline::draw(){
 	}
 	
 	zoomer->draw();
+}
+
+void ofxTimeline::loadElementPositions(){
+	ofxXmlSettings elementPositions;
+	if(elementPositions.loadFile("ofxTimeline_elementPositions.xml")){
+		elementPositions.pushTag("positions");
+		int numElements = elementPositions.getNumTags("element");
+		for(int i = 0; i < numElements; i++){
+			string name = elementPositions.getAttribute("element", "name", "", i);
+			elementPositions.pushTag("element", i);
+			ofRectangle elementPosition = ofRectangle(ofToFloat(elementPositions.getValue("x", "0")),
+													  ofToFloat(elementPositions.getValue("y", "0")),
+													  ofToFloat(elementPositions.getValue("width", "0")),
+													  ofToFloat(elementPositions.getValue("height", "0")));
+			savedElementPositions[name] = elementPosition;
+			elementPositions.popTag();
+		}
+		elementPositions.popTag();
+	}
+}
+
+void ofxTimeline::saveElementPositions(){
+	ofxXmlSettings elementPositions;
+	elementPositions.addTag("positions");
+	elementPositions.pushTag("positions");
+		
+	int curElement = 0;
+	map<string, ofRectangle>::iterator it;
+	for(it = savedElementPositions.begin(); it != savedElementPositions.end(); it++){
+		elementPositions.addTag("element");
+		elementPositions.addAttribute("element", "name", it->first, curElement);
+		
+		elementPositions.pushTag("element", curElement);
+		elementPositions.addValue("x", it->second.x);
+		elementPositions.addValue("y", it->second.y);
+		elementPositions.addValue("width", it->second.width);
+		elementPositions.addValue("height", it->second.height);
+
+		elementPositions.popTag(); //element
+		
+		curElement++;
+	}
+	elementPositions.popTag();
+	elementPositions.saveFile("ofxTimeline_elementPositions.xml");
 }
 
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS
@@ -221,8 +273,17 @@ void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
 	
 	element->setup();
 	element->setAutosave(autosave);
-	element->setDrawRect(ofRectangle(0, newHeaderRect.y+newHeaderRect.height,
-									 ofGetWidth(), DEFAULT_ELEMENT_HEIGHT));
+	ofRectangle drawRect;
+	if(savedElementPositions.find(name) != savedElementPositions.end()){
+		drawRect = savedElementPositions[name];
+	}
+	else {
+		drawRect = ofRectangle(0, newHeaderRect.y+newHeaderRect.height, ofGetWidth(), DEFAULT_ELEMENT_HEIGHT);
+	}
+
+	element->setDrawRect(drawRect);
+	element->setZoomBounds(zoomer->getViewRange());
+	
 	zoomer->offsetDrawRect( ofVec2f(0, HEADER_HEIGHT+DEFAULT_ELEMENT_HEIGHT) );
 						   
 	elements[name] = element;

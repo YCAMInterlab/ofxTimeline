@@ -105,10 +105,13 @@ class ofxTimeline
 	void keyPressed(ofKeyEventArgs& args);
 	
 	void windowResized(ofResizeEventArgs& args);
-	
 	void viewNeedsResize(ofEventArgs& args);
 						 
 	void recalculateBoundingRects();
+
+	void saveElementPositions();
+	void loadElementPositions();
+	map<string, ofRectangle> savedElementPositions;	
 	
     ofxXmlSettings settings;
 	string filenamePrefix;

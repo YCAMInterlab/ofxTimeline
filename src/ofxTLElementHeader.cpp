@@ -42,12 +42,13 @@ void ofxTLElementHeader::mousePressed(ofMouseEventArgs& args){
 	ofRectangle elementRect = element->getDrawRect();
 	float footerStartY = elementRect.y + elementRect.height;
 	
-	cout << "args touched at " << args.y << " footer start is " << footerStartY << endl;
+//	cout << "args touched at " << args.y << " footer start is " << footerStartY << endl;
 	
 	if (args.y > footerStartY && args.y < footerStartY + FOOTER_HEIGHT) {
 		dragOffset = args.y - footerStartY;
 		draggingSize = true;
-		cout << "dragging started" << endl;
+		
+		//cout << "dragging started" << endl;
 	}
 }
 
@@ -63,7 +64,8 @@ void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
 		
 		ofEventArgs a;
 		ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
-		cout << "notifying event. old height " << oldHeight << " new height " << elementRect.height << endl;
+		
+		//cout << "notifying event. old height " << oldHeight << " new height " << elementRect.height << endl;
 
 	}
 }
