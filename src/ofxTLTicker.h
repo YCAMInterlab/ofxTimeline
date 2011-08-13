@@ -43,7 +43,11 @@ protected:
 	float durationInSeconds;
 	int framerate;
 	
+	float curHoverPoint;
+	int curStartFrame;
+	int curEndFrame;
 	int curHoverFrame;
-	float curHoverTime;
-	float curHoverPoint; //normalized
+	bool hovering;
+	
+	
 };

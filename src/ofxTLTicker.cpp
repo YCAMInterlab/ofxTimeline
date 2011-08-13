@@ -17,13 +17,14 @@ ofxTLTicker::ofxTLTicker()
 	curHoverFrame(-1)
 {
 	//default constructor
+	hovering = false;
 }
 
 ofxTLTicker::~ofxTLTicker(){
 }
 
 void ofxTLTicker::setup(){
-	//empty
+	enable();
 }
 
 void ofxTLTicker::draw(){
@@ -31,6 +32,9 @@ void ofxTLTicker::draw(){
 	ofPushStyle();
 	
 	if(isFrameBased){
+		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, durationInFrames);
+		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, durationInFrames);
+		curHoverFrame = ofMap(ofGetMouseX(), totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
 		//draw tickers with frame numbers
 		float d = bounds.width/(float)durationInFrames; //using a float results in uneven spread of keyframes
 		ofSetColor(200, 180, 40);
@@ -46,8 +50,8 @@ void ofxTLTicker::draw(){
 		}
 
 		//highlite current mouse position
-		if(curHoverFrame > -1){
-			float pos = bounds.x+d*curHoverFrame;
+		if(hovering){
+			float pos = ofGetMouseX();
 			ofRect(pos, bounds.y, d, bounds.height);
 			ofSetColor(0);
 			string text = ofToString(curHoverFrame);
@@ -61,7 +65,7 @@ void ofxTLTicker::draw(){
 			//draw playhead line
 			ofSetColor(255, 0, 0, 150);
 			ofSetLineWidth(1);
-			ofLine(pos+d, 0, pos+d, totalDrawRect.height);
+			ofLine(ofGetMouseX(), 0, ofGetMouseX(), totalDrawRect.height);
 		}
 	}
 	else {
@@ -122,14 +126,5 @@ void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 
 void ofxTLTicker::updateHover(ofMouseEventArgs& args){
 	ofVec2f mousePos(args.x - totalDrawRect.x, args.y - totalDrawRect.y); //necessary or are mouse positions already mapped to the right region?
-	if(mousePos.y < 0 || mousePos.y > totalDrawRect.height){
-		curHoverFrame = -1;
-		return;
-	}
-	if(isFrameBased){
-		curHoverFrame = floorf(mousePos.x/(bounds.width/(float)durationInFrames));
-	}
-	else{
-
-	}
+	hovering = mousePos.x > 0 && mousePos.x < totalDrawRect.width && mousePos.y > 0 && mousePos.y < totalDrawRect.height;
 }
