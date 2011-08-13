@@ -180,8 +180,12 @@ void ofxTimeline::recalculateBoundingRects(){
 	}
 	
 	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
-	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height + FOOTER_HEIGHT,
-									ofGetWidth(), ZOOMER_HEIGHT));
+//	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height + FOOTER_HEIGHT,
+//									ofGetWidth(), ZOOMER_HEIGHT));
+	zoomer->setDrawRect(ofRectangle(0, currentY, ofGetWidth(), ZOOMER_HEIGHT));
+	
+	ofRectangle totalDrawRect = ofRectangle(0,0,ofGetWidth(),currentY+ZOOMER_HEIGHT);
+	ticker->setTotalDrawRect(totalDrawRect);
 	
 	if(autosave){
 		saveElementPositions();

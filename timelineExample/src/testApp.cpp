@@ -2,6 +2,10 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+	
+	ofSetFrameRate(30);
+	ofSetVerticalSync(true);
+	
 	timeline = new ofxTimeline();
 	timeline->setup();
 	timeline->addKeyframes("Keyframe A", "keyframe_a.xml", ofRange(0, 1.0));

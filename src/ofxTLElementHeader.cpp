@@ -32,7 +32,7 @@ void ofxTLElementHeader::draw(){
 	ofSetColor(250, 180, 80);
 	
 	ofNoFill();
-	ofDrawBitmapString( name + " header la la la ", ofPoint(bounds.x + 30, bounds.y + 10) );
+	ofDrawBitmapString( name + " header la la la ", ofPoint(bounds.x + 30, bounds.y + 15) );
 	ofRect(bounds);
 	
 	ofPopStyle();
@@ -64,9 +64,6 @@ void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
 		
 		ofEventArgs a;
 		ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
-		
-		//cout << "notifying event. old height " << oldHeight << " new height " << elementRect.height << endl;
-
 	}
 }
 
