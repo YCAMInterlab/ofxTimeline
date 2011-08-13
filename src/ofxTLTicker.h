@@ -47,6 +47,7 @@ protected:
 	int curStartFrame;
 	int curEndFrame;
 	int curHoverFrame;
+	int framesInView;
 	bool hovering;
 	
 	

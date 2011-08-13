@@ -32,12 +32,46 @@ void ofxTLTicker::draw(){
 	ofPushStyle();
 	
 	if(isFrameBased){
+		
 		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, durationInFrames);
 		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, durationInFrames);
 		curHoverFrame = ofMap(ofGetMouseX(), totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
+		framesInView = curEndFrame-curStartFrame;
+	
+		float framesPerPixel = framesInView / totalDrawRect.width;
+		int frameStepSize = 1;
+		
+		/*
+		if(framesPerPixel > 10){
+			frameStepSize = 10;
+		}
+		else if(framesPerPixel > 1){
+		}
+		else {
+			frameStepSize = 1;			
+		}
+		*/
+		
+		for(int i = curStartFrame; i <= curEndFrame; i++){
+			float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
+			ofSetColor(200, 180, 40);
+			float heightMultiplier = 0.0;
+			if(i % 10 == 0){
+				ofSetLineWidth(3);
+				heightMultiplier = .5;
+			}
+			else {
+				heightMultiplier = .75;
+				ofSetLineWidth(1);
+			}
+			
+			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.height);
+		}
+			
+		/*
 		//draw tickers with frame numbers
 		float d = bounds.width/(float)durationInFrames; //using a float results in uneven spread of keyframes
-		ofSetColor(200, 180, 40);
+		 ofSetColor(200, 180, 40);
 		int counter = 0;
 		for (float i = bounds.x; i < bounds.width; i+=d){
 			ofLine(i, bounds.y, i, bounds.y+bounds.height);
@@ -48,20 +82,21 @@ void ofxTLTicker::draw(){
 			}
 			counter++;
 		}
-
+		 */
+		
 		//highlite current mouse position
 		if(hovering){
-			float pos = ofGetMouseX();
-			ofRect(pos, bounds.y, d, bounds.height);
+			ofEnableAlphaBlending();
+			//draw background rect
 			ofSetColor(0);
+			
 			string text = ofToString(curHoverFrame);
 			int textH = 10;
 			int textW = (text.size()+1)*7;
-			ofRect(pos+d, bounds.y+bounds.height-textH, textW, textH);
+			ofRect(ofGetMouseX(), bounds.y+bounds.height-textH, textW, textH);
 			ofSetColor(200, 180, 40);
-			ofDrawBitmapString(text, pos+d+2, bounds.y+bounds.height);
+			ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+bounds.height);
 			
-			ofEnableAlphaBlending();
 			//draw playhead line
 			ofSetColor(255, 0, 0, 150);
 			ofSetLineWidth(1);
