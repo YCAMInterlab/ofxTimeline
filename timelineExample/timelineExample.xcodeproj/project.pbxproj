@@ -25,6 +25,8 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E7B29A0D143873C40014A410 /* ofxTLPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29A0C143873C40014A410 /* ofxTLPage.cpp */; };
+		E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */; };
 		E7FBD08B13D61DAC00938471 /* ofxTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */; };
 		E7FBD08C13D61DAC00938471 /* ofxTLElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */; };
 		E7FBD08D13D61DAC00938471 /* ofxTLElementHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */; };
@@ -106,6 +108,10 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E7B29A0B143873C40014A410 /* ofxTLPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLPage.h; sourceTree = "<group>"; };
+		E7B29A0C143873C40014A410 /* ofxTLPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPage.cpp; sourceTree = "<group>"; };
+		E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLPageTabs.h; sourceTree = "<group>"; };
+		E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPageTabs.cpp; sourceTree = "<group>"; };
 		E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeline.cpp; sourceTree = "<group>"; };
 		E7FBD07B13D61DAC00938471 /* ofxTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimeline.h; sourceTree = "<group>"; };
 		E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimelineUtils.h; sourceTree = "<group>"; };
@@ -192,12 +198,16 @@
 			children = (
 				E7FBD07B13D61DAC00938471 /* ofxTimeline.h */,
 				E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */,
+				E7B29A0B143873C40014A410 /* ofxTLPage.h */,
+				E7B29A0C143873C40014A410 /* ofxTLPage.cpp */,
 				E7FBD07E13D61DAC00938471 /* ofxTLElement.h */,
 				E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */,
 				E7FBD08013D61DAC00938471 /* ofxTLElementHeader.h */,
 				E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */,
 				E7FBD08613D61DAC00938471 /* ofxTLTicker.h */,
 				E7FBD08513D61DAC00938471 /* ofxTLTicker.cpp */,
+				E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */,
+				E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */,
 				E7FBD08A13D61DAC00938471 /* ofxTLZoomer.h */,
 				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
 				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
@@ -530,6 +540,8 @@
 				E7FBD0CE13D61DC900938471 /* tinyxmlparser.cpp in Sources */,
 				E7FBD0CF13D61DC900938471 /* ofxXmlSettings.cpp in Sources */,
 				A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */,
+				E7B29A0D143873C40014A410 /* ofxTLPage.cpp in Sources */,
+				E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

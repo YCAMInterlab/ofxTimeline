@@ -32,6 +32,7 @@ class ofxTLElement
 	virtual void setDrawRect(ofRectangle bounds);
 	virtual void offsetDrawRect(ofVec2f offset);
 	
+	
 	virtual ofRectangle getDrawRect();
 	
 	virtual void setZoomBounds(ofRange zoomBoundsPercent); //allows you to zoom in!
@@ -63,6 +64,7 @@ class ofxTLElement
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
+	virtual void drawRectChanged(){};
 	
 	bool hover;
 	bool enabled; //it's up to the implementation to respect this

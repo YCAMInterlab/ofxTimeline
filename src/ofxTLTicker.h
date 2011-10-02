@@ -26,15 +26,15 @@ class ofxTLTicker : public ofxTLElement
 	virtual void setFrameRate(int framerate);
 
 	//set the draw rect for the whole keyframer interface
-	void setTotalDrawRect(ofRectangle drawRect);
+	virtual void setTotalDrawRect(ofRectangle drawRect);
 	
-	void mousePressed(ofMouseEventArgs& args);
-	void mouseMoved(ofMouseEventArgs& args);
-	void mouseDragged(ofMouseEventArgs& args);
-	void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
 
-protected:
-	void updateHover(ofMouseEventArgs& args);
+  protected:
+	virtual void updateHover(ofMouseEventArgs& args);
 	
 	ofRectangle totalDrawRect;
 	

@@ -100,7 +100,7 @@ void ofxTLTicker::draw(){
 			//draw playhead line
 			ofSetColor(255, 0, 0, 150);
 			ofSetLineWidth(1);
-			ofLine(ofGetMouseX(), 0, ofGetMouseX(), totalDrawRect.height);
+			ofLine(ofGetMouseX(), totalDrawRect.y-bounds.height, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
 		}
 	}
 	else {

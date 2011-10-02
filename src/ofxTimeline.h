@@ -41,77 +41,92 @@
 #include "ofMain.h"
 #include "ofxTLElement.h"
 #include "ofxTLElementHeader.h"
+#include "ofxTLPage.h"
+#include "ofxTLPageTabs.h"
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
 #include "ofxTLKeyframer.h"
 #include "ofxTLTrigger.h"
 #include "ofxTLSwitcher.h"
 
-class ofxTimeline 
-{
+class ofxTimeline {
   public:
 	ofxTimeline();
 	~ofxTimeline();
 
-	void setup();
+	virtual void setup();
 
-	void toggleShow();
-	void togglePlay();
+	virtual void toggleShow();
+	virtual void togglePlay();
 	
-	void enable();
-	void disable();
+	virtual void enable();
+	virtual void disable();
 
-	void setDuration(int frames);
-	void setDuration(float seconds);
-	void setFrameRate(int framerate);
+	virtual void setOffset(ofVec2f offset);
+	virtual void setWidth(float width);
+//	virtual void setTickerHeight(float newTickerHeight);
+//	virtual void setZoomerHeight(float newZoomerHeight);
+										
+	virtual void setDuration(int frames);
+	virtual void setDuration(float seconds);
+	virtual void setFrameRate(int framerate);
 
-	void draw();
+	virtual void draw();
+
+	virtual void addPage(string name, bool makeCurrent = true);
+	virtual void setCurrentPage(string name);
+	virtual void setCurrentPage(int number);
 	
-	ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange);
-	float getKeyframeValue(string name); 
-	float getKeyframeValue(string name, float atTime);
-	float getKeyframeValue(string name, int atFrame);
+	//adding elements always adds to the current page
+	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange);
+	virtual float getKeyframeValue(string name); 
+	virtual float getKeyframeValue(string name, float atTime);
+	virtual float getKeyframeValue(string name, int atFrame);
 		
-	ofxTLSwitcher* addSwitcher(string name, string xmlFileName);
-	bool getSwitcherOn(string name);
-	bool getSwitcherOn(string name, float atTime);
-	bool getSwitcherOn(string name, int atFrame);
+	virtual ofxTLSwitcher* addSwitcher(string name, string xmlFileName);
+	virtual bool getSwitcherOn(string name);
+	virtual bool getSwitcherOn(string name, float atTime);
+	virtual bool getSwitcherOn(string name, int atFrame);
 	
-	ofxTLTrigger* addTriggers(string name, string xmlFileName);
-	string getNextTrigger(string name);
-	string getNextTrigger(string name, float atTime);
-	string getNextTrigger(string name, int atFrame);
+	virtual ofxTLTrigger* addTriggers(string name, string xmlFileName);
+	virtual string getNextTrigger(string name);
+	virtual string getNextTrigger(string name, float atTime);
+	virtual string getNextTrigger(string name, int atFrame);
 
-	string getLastTrigger(string name);
-	string getLastTrigger(string name, float atTime);
-	string getLastTrigger(string name, int atFrame);
+	virtual string getLastTrigger(string name);
+	virtual string getLastTrigger(string name, float atTime);
+	virtual string getLastTrigger(string name, int atFrame);
 
 	//for custom elements
-	void addTimelineElement(string name, ofxTLElement* element);
+	virtual void addTimelineElement(string name, ofxTLElement* element);
 	
-	void setAutosave(bool autosave);
+	virtual void setAutosave(bool autosave);
 
-  private:
-	vector<ofxTLElementHeader*> headers;
-	map<string, ofxTLElement*> elements;
+  protected:
+	
+	ofxTLPage* currentPage;
+	vector<ofxTLPage*> pages;
+	
 	ofxTLTicker* ticker;
+	ofxTLPageTabs* tabs;
 	ofxTLZoomer* zoomer;
 
-	void mousePressed(ofMouseEventArgs& args);
-	void mouseMoved(ofMouseEventArgs& args);
-	void mouseDragged(ofMouseEventArgs& args);
-	void mouseReleased(ofMouseEventArgs& args);
+	float width;
+	ofVec2f offset;
 	
-	void keyPressed(ofKeyEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
 	
-	void windowResized(ofResizeEventArgs& args);
-	void viewNeedsResize(ofEventArgs& args);
-						 
-	void recalculateBoundingRects();
+	virtual void keyPressed(ofKeyEventArgs& args);
+	
+	virtual void windowResized(ofResizeEventArgs& args);
+	virtual void viewNeedsResize(ofEventArgs& args);
+	virtual void pageChanged(ofxTLPageEventArgs& args);
 
-	void saveElementPositions();
-	void loadElementPositions();
-	map<string, ofRectangle> savedElementPositions;	
+	virtual void updatePagePositions();
+	virtual void recalculateBoundingRects();
 	
     ofxXmlSettings settings;
 	string filenamePrefix;

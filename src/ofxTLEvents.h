@@ -7,6 +7,8 @@
  *
  */
 
+#pragma once
+
 #include "ofMain.h"
 #include "ofRange.h"
 
@@ -24,6 +26,12 @@ class ofxTLZoomEventArgs : public ofEventArgs {
 	ofRange oldZoom;
 };
 
+class ofxTLPageEventArgs : public ofEventArgs {
+  public:
+	string currentPageName;
+	string oldPageName;
+};
+
 
 class ofxTLCoreEvents {
   public:
@@ -34,6 +42,8 @@ class ofxTLCoreEvents {
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
+	
+	ofEvent<ofxTLPageEventArgs> pageChanged;
 	
 	ofEvent<ofEventArgs> viewNeedsResize;
 };

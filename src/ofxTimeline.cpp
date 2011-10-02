@@ -16,18 +16,18 @@ bool headersort(ofxTLElementHeader* a, ofxTLElementHeader* b){
 #define TICKER_HEIGHT 30
 #define ZOOMER_HEIGHT 20
 
-#define HEADER_HEIGHT 20 //TODO: make this variable
-#define DEFAULT_ELEMENT_HEIGHT 150 //TODO: make this variable
 
 ofxTimeline::ofxTimeline()
 :	mouseoverPlayheadPosition(0),
 	playbackPlayheadPosition(0),
+	width(1024),
+	offset(ofVec2f(0,0)),
 	modalIsShown(false),
 	autosave(true),
 	isFrameBased(false),
 	durationInFrames(100),
-	durationInSeconds(0),
-	currentFrameRate(0),
+	durationInSeconds(100/30.0),
+	currentFrameRate(30),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_")
 {
@@ -38,18 +38,21 @@ ofxTimeline::~ofxTimeline(){
 }
 
 void ofxTimeline::setup(){
+	width = ofGetWidth();
+
+	tabs = new ofxTLPageTabs();
+	tabs->setup();
+	tabs->setDrawRect(ofRectangle(0, 0, width, TICKER_HEIGHT));
+
 	ticker = new ofxTLTicker();
 	ticker->setup();
-	ticker->setDrawRect(ofRectangle(0,0, ofGetWidth(), TICKER_HEIGHT));
+	ticker->setDrawRect(ofRectangle(0, TICKER_HEIGHT, width, TICKER_HEIGHT));
 	
 	zoomer = new ofxTLZoomer();
-	zoomer->setXMLFileName(filenamePrefix + "zoomer.xml");
+	zoomer->setXMLFileName(filenamePrefix + "_zoomer.xml");
 	zoomer->setup();
-	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT, ofGetWidth(), ZOOMER_HEIGHT));
+	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
 		
-	elements["ticker"] = ticker;
-	elements["zoomer"] = zoomer;
-						
 	ofAddListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
 	ofAddListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
 	ofAddListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
@@ -59,8 +62,10 @@ void ofxTimeline::setup(){
 	ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
 	
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
+	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
+
+	addPage("_defaultPage", true);
 	
-	loadElementPositions();
 }
 
 #pragma mark CONFIGURATION
@@ -91,49 +96,55 @@ void ofxTimeline::setFrameRate(int framerate){
 	ticker->setFrameRate(framerate);
 }
 
-void ofxTimeline::setAutosave(bool autosave){
+void ofxTimeline::setAutosave(bool doAutosave){
+	autosave = doAutosave;
+}
+
+void ofxTimeline::setOffset(ofVec2f newOffset){
+	offset = newOffset;
+	updatePagePositions();
+}
+
+void ofxTimeline::setWidth(float newWidth){
+	width = newWidth;
+	updatePagePositions();
+}
+
+void ofxTimeline::updatePagePositions(){
+	ofVec2f pageOffset = offset + ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
+	for(int i = 0; i < pages.size(); i++){
+		pages[i]->setContainer(pageOffset, width);
+	}	
+	
+	currentPage->recalculateHeight();
 }
 
 #pragma mark EVENTS
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
-
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mousePressed(args);
-		elements[headers[i]->name]->mousePressed(args);
-	}
+	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 	ticker->mouseMoved(args);
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mouseMoved(args);
-		elements[headers[i]->name]->mouseMoved(args);
-	}
+	currentPage->mouseMoved(args);
 	zoomer->mouseMoved(args);
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 	ticker->mouseDragged(args);
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mouseDragged(args);
-		elements[headers[i]->name]->mouseDragged(args);
-	}
+	currentPage->mouseDragged(args);
 	zoomer->mouseDragged(args);
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mouseReleased(args);
-		elements[headers[i]->name]->mouseReleased(args);
-	}	
+	tabs->mouseReleased(args);
+	currentPage->mouseReleased(args);
 	zoomer->mouseReleased(args);
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->keyPressed(args);
-	}
+	currentPage->keyPressed(args);
 	zoomer->keyPressed(args);
 }
 
@@ -142,162 +153,94 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 #pragma mark DRAWING
-
 void ofxTimeline::viewNeedsResize(ofEventArgs& args){
 	recalculateBoundingRects();
 }
 
 void ofxTimeline::recalculateBoundingRects(){
 	
-	//sort(headers.begin(), headers.end(), headersort);
-	
-//	for(int i = 0; i < headers.size(); i++){
-//		cout << "	PRE RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
-//	}
+	tabs->setDrawRect( ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT) );
+	ticker->setDrawRect( ofRectangle(offset.x, offset.y+TICKER_HEIGHT, width, TICKER_HEIGHT) );
+	updatePagePositions();
 
-	ticker->setDrawRect( ofRectangle(0, 0, ofGetWidth(), TICKER_HEIGHT));
-	float currentY = TICKER_HEIGHT;
-	for(int i = 0; i < headers.size(); i++){
-		ofRectangle thisHeader = headers[i]->getDrawRect();
-		ofRectangle nextHeader = (i == headers.size()-1) ? zoomer->getDrawRect() : headers[i+1]->getDrawRect();
-		ofRectangle elementRectangle = elements[ headers[i]->name ]->getDrawRect();
-		
-		float startY = thisHeader.y+thisHeader.height;
-		float endY = startY + elementRectangle.height;
-		
-		thisHeader.width = ofGetWidth();
-		thisHeader.y = currentY;
-		headers[i]->setDrawRect(thisHeader);
-		elementRectangle.y = startY;
-		elementRectangle.width = ofGetWidth();
-		
-		//elementRectangle = ofRectangle(0, startY, ofGetWidth(), endY - startY);
-//		cout << "element rectangle for " << headers[i]->name << " is " << elementRectangle.x << " " << elementRectangle.y << " " << elementRectangle.width << " " << elementRectangle.height << endl;
-		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
-		currentY += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
-		
-		savedElementPositions[headers[i]->name] = elementRectangle;
-	}
-	
-	ofxTLElement* lastElement = elements[ headers[headers.size()-1]->name ];
-//	zoomer->setDrawRect(ofRectangle(0, lastElement->getDrawRect().y+lastElement->getDrawRect().height + FOOTER_HEIGHT,
-//									ofGetWidth(), ZOOMER_HEIGHT));
-	zoomer->setDrawRect(ofRectangle(0, currentY, ofGetWidth(), ZOOMER_HEIGHT));
-	
-	ofRectangle totalDrawRect = ofRectangle(0,0,ofGetWidth(),currentY+ZOOMER_HEIGHT);
-	ticker->setTotalDrawRect(totalDrawRect);
-	
-	if(autosave){
-		saveElementPositions();
-	}
-	
-//	for(int i = 0; i < headers.size(); i++){
-//		cout << "	POST RECALC header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
-//	}
-	
+	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
+	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+TICKER_HEIGHT*2,
+											width,currentPage->getComputedHeight()+ZOOMER_HEIGHT);
+	ticker->setTotalDrawRect(totalDrawRect);	
 }
 
-void ofxTimeline::draw(){
-		
-	ticker->draw();
-	
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->draw();
-		elements[headers[i]->name]->draw();
+
+void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
+	for(int i = 0; i < pages.size(); i++){
+		if(pages[i]->getName() == args.currentPageName){
+			currentPage = pages[i];
+			recalculateBoundingRects();
+			
+			return;
+		}
 	}
 	
+	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
+}
+
+void ofxTimeline::draw(){	
+	tabs->draw();
+	ticker->draw();
+	currentPage->draw();
 	zoomer->draw();
 }
 
-void ofxTimeline::loadElementPositions(){
-	ofxXmlSettings elementPositions;
-	if(elementPositions.loadFile("ofxTimeline_elementPositions.xml")){
-		elementPositions.pushTag("positions");
-		int numElements = elementPositions.getNumTags("element");
-		for(int i = 0; i < numElements; i++){
-			string name = elementPositions.getAttribute("element", "name", "", i);
-			elementPositions.pushTag("element", i);
-			ofRectangle elementPosition = ofRectangle(ofToFloat(elementPositions.getValue("x", "0")),
-													  ofToFloat(elementPositions.getValue("y", "0")),
-													  ofToFloat(elementPositions.getValue("width", "0")),
-													  ofToFloat(elementPositions.getValue("height", "0")));
-			savedElementPositions[name] = elementPosition;
-			elementPositions.popTag();
-		}
-		elementPositions.popTag();
-	}
-}
-
-void ofxTimeline::saveElementPositions(){
-	ofxXmlSettings elementPositions;
-	elementPositions.addTag("positions");
-	elementPositions.pushTag("positions");
-		
-	int curElement = 0;
-	map<string, ofRectangle>::iterator it;
-	for(it = savedElementPositions.begin(); it != savedElementPositions.end(); it++){
-		elementPositions.addTag("element");
-		elementPositions.addAttribute("element", "name", it->first, curElement);
-		
-		elementPositions.pushTag("element", curElement);
-		elementPositions.addValue("x", it->second.x);
-		elementPositions.addValue("y", it->second.y);
-		elementPositions.addValue("width", it->second.width);
-		elementPositions.addValue("height", it->second.height);
-
-		elementPositions.popTag(); //element
-		
-		curElement++;
-	}
-	elementPositions.popTag();
-	elementPositions.saveFile("ofxTimeline_elementPositions.xml");
-}
-
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS
+void ofxTimeline::addPage(string name, bool makeCurrent){
+	if(name == ""){
+		ofLogError("ofxTimeline -- Cannot add page with an empty name.");
+		return;
+	}
+	
+	for(int i = 0; i < pages.size(); i++){
+		if(name == pages[i]->getName()){
+			ofLogError("ofxTimeline -- Page " + name + " already exists");
+			return;
+		}
+	}
+	
+	ofxTLPage* newPage = new ofxTLPage();
+	newPage->setName(name);
+	newPage->setup();
+	newPage->setAutosave(autosave);
+	tabs->addPage(name);
+	
+	pages.push_back(newPage);
+	if(makeCurrent){
+		tabs->selectPage(name);
+	}
+}
+
+void ofxTimeline::setCurrentPage(string name){
+	for(int i = 0; i < pages.size(); i++){
+		if(name == pages[i]->getName()){
+			currentPage = pages[i];
+			return;
+		}
+	}
+	
+	ofLogError("ofxTimeline -- Page " + name + " not found");
+}
+
+void ofxTimeline::setCurrentPage(int index){
+	if(index >= pages.size()){
+		ofLogError("ofxTimeline -- Page at index " + ofToString(index) + " does not exist");
+		return;
+	}
+	currentPage = pages[index];
+	
+}
+
 //can be used custom elements
 void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
-
-	//TODO: check to make sure we don't have an element with the same name
-
-//	for(int i = 0; i < headers.size(); i++){
-//		cout << "	PRE ADD header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
-//	}
-	
-	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
-	newHeader->setElement(element);
-	newHeader->setup();
-	
-//	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
-	
-	ofRectangle newHeaderRect = ofRectangle(0, zoomer->getDrawRect().y, ofGetWidth(), HEADER_HEIGHT);
-	newHeader->setDrawRect(newHeaderRect);
-	newHeader->name = name;
-	
-	headers.push_back(newHeader);
-	
-	element->setup();
-	element->setAutosave(autosave);
-	ofRectangle drawRect;
-	if(savedElementPositions.find(name) != savedElementPositions.end()){
-		drawRect = savedElementPositions[name];
-	}
-	else {
-		drawRect = ofRectangle(0, newHeaderRect.y+newHeaderRect.height, ofGetWidth(), DEFAULT_ELEMENT_HEIGHT);
-	}
-
-	element->setDrawRect(drawRect);
-	element->setZoomBounds(zoomer->getViewRange());
-	
-	zoomer->offsetDrawRect( ofVec2f(0, HEADER_HEIGHT+DEFAULT_ELEMENT_HEIGHT) );
-						   
-	elements[name] = element;
-
-//	for(int i = 0; i < headers.size(); i++){
-//		cout << "	POST ADD header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
-//	}
-	
-	recalculateBoundingRects();
+	currentPage->addElement(name, element);		
 }
+
 
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
 

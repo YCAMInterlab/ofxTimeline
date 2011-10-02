@@ -19,7 +19,7 @@ ofxTLElement::ofxTLElement()
 	hover(false),
 	autosave(true)
 {
-
+	//
 }
 
 ofxTLElement::~ofxTLElement(){
@@ -39,11 +39,13 @@ void ofxTLElement::disable(){
 
 void ofxTLElement::setDrawRect(ofRectangle drawRect){
 	bounds = drawRect;
+	drawRectChanged();
 }
 
 void ofxTLElement::offsetDrawRect(ofVec2f offset){
 	bounds.x += offset.x;
 	bounds.y += offset.y;
+	drawRectChanged();
 }
 
 ofRectangle ofxTLElement::getDrawRect(){
@@ -74,22 +76,18 @@ void ofxTLElement::setAutosave(bool _autosave){
 	autosave = _autosave;
 }
 			   
-bool ofxTLElement::hasFocus()
-{
+bool ofxTLElement::hasFocus(){
 	return focused;
 }
 
-bool ofxTLElement::pointInScreenBounds(ofVec2f screenpoint)
-{
+bool ofxTLElement::pointInScreenBounds(ofVec2f screenpoint){
 	return isPointInRect(screenpoint, bounds);
 }
 
-float ofxTLElement::screenXtoNormalizedX(float x)
-{
+float ofxTLElement::screenXtoNormalizedX(float x){
 	return ofMap(x, bounds.x, bounds.x+bounds.width, 0.0, 1.0, true);
 }
 
-float ofxTLElement::normalizedXtoScreenX(float x)
-{
+float ofxTLElement::normalizedXtoScreenX(float x){
 	return ofMap(x, 0.0, 1.0, bounds.x, bounds.x+bounds.width, true);
 }
