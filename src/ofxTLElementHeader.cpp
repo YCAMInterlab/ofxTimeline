@@ -32,7 +32,7 @@ void ofxTLElementHeader::draw(){
 	ofSetColor(250, 180, 80);
 	
 	ofNoFill();
-	ofDrawBitmapString( name + " header la la la ", ofPoint(bounds.x + 30, bounds.y + 15) );
+	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 15) );
 	ofRect(bounds);
 	
 	ofPopStyle();
