@@ -29,15 +29,40 @@ ofxTimeline::ofxTimeline()
 	durationInSeconds(100/30.0),
 	currentFrameRate(30),
 	isShowing(true),
-	filenamePrefix("defaultTimeline_")
+	filenamePrefix("defaultTimeline_"),
+	isSetup(false)
 {
 }
 
 ofxTimeline::~ofxTimeline(){
-	//TODO: cleanup!
+	if(isSetup){
+		delete currentPage;
+		for(int i = 0; i < pages.size(); i++){ 
+			delete pages[i];
+		}
+		pages.clear();
+		
+		delete ticker;
+		delete tabs;
+		delete zoomer;
+		
+		ofRemoveListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofRemoveListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
+		ofRemoveListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofRemoveListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		
+		ofRemoveListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
+		ofRemoveListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		
+		ofRemoveListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
+		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
+	}
 }
 
 void ofxTimeline::setup(){
+
+	isSetup = true;
+	
 	width = ofGetWidth();
 
 	tabs = new ofxTLPageTabs();

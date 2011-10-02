@@ -11,28 +11,14 @@
 // ofxTLFilmstrip
 // ofxTLGradient
 
-//JG current priorities:
-//connect zoomer through events
-//add 
-
 //STAGE 1
-//TODO: Add playback
+//TODO: Add getting values back
 //TODO: Add loop modes
-//TODO: Add pages
-//TOOD: Add movable headers
-//TODO: Add built-in zoomer
-//TODO: Add built-in frame markers 
-//TODO: Add built-in playhead
 //TODO: Add timing functions and play
 //TODO: Add modality
 //TODO: Add collapsable members
-//TODO: Add remove keyframe options
-
-//TODO: Add headers swap location when dragged across one another
 
 //TODO: Create events for modal
-//TODO: Add snap to bottom
-//TODO: Add variable width (instead of using full width)
 //TODO: Add global undo
 //TODO: Add changable colors
 
@@ -64,8 +50,6 @@ class ofxTimeline {
 
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
-//	virtual void setTickerHeight(float newTickerHeight);
-//	virtual void setZoomerHeight(float newZoomerHeight);
 										
 	virtual void setDuration(int frames);
 	virtual void setDuration(float seconds);
@@ -103,7 +87,7 @@ class ofxTimeline {
 	virtual void setAutosave(bool autosave);
 
   protected:
-	
+	bool isSetup;
 	ofxTLPage* currentPage;
 	vector<ofxTLPage*> pages;
 	

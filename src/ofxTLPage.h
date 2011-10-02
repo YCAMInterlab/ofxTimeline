@@ -45,6 +45,9 @@ class ofxTLPage {
 	
   protected:
 	
+	vector<ofxTLElementHeader*> headers;
+	map<string, ofxTLElement*> elements;
+	
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	virtual void saveElementPositions();
 	virtual void loadElementPositions();
@@ -59,9 +62,6 @@ class ofxTLPage {
 	float headerHeight;
 	float defaultElementHeight;
 	ofRange currentZoomBounds;
-	
-	vector<ofxTLElementHeader*> headers;
-	map<string, ofxTLElement*> elements;
 
 	map<string, ofRectangle> savedElementPositions;	
 	

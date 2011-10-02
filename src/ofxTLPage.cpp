@@ -25,6 +25,13 @@ ofxTLPage::ofxTLPage()
 
 ofxTLPage::~ofxTLPage(){
 	if(isSetup){
+		for(int i = 0; i < headers.size(); i++){
+			delete elements[headers[i]->name];
+			delete headers[i];
+		}
+		headers.clear();
+		elements.clear();
+		
 		ofRemoveListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	}
 }
