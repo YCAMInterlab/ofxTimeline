@@ -49,6 +49,6 @@ class ofxTLTicker : public ofxTLElement
 	int curHoverFrame;
 	int framesInView;
 	bool hovering;
-	
-	
+
+	float mousex;
 };
