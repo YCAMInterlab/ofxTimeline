@@ -30,7 +30,7 @@ void ofxTLPageTabs::draw(){
 	ofPopStyle();
 }
 
-
+	
 void ofxTLPageTabs::mouseReleased(ofMouseEventArgs& args){
 	for(int i = 0; i < pages.size(); i++){
 		cout << "testing page " << pages[i].name << " is in? " << pages[i].bounds.inside(args.x, args.y) << endl;
