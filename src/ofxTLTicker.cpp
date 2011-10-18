@@ -35,7 +35,6 @@ void ofxTLTicker::draw(){
 		
 		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, durationInFrames);
 		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, durationInFrames);
-		curHoverFrame = ofMap(ofGetMouseX(), totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
 		framesInView = curEndFrame-curStartFrame;
 	
 		float framesPerPixel = framesInView / totalDrawRect.width;
@@ -93,14 +92,14 @@ void ofxTLTicker::draw(){
 			string text = ofToString(curHoverFrame);
 			int textH = 10;
 			int textW = (text.size()+1)*7;
-			ofRect(ofGetMouseX(), bounds.y+bounds.height-textH, textW, textH);
+			ofRect(mousex, bounds.y+bounds.height-textH, textW, textH);
 			ofSetColor(200, 180, 40);
-			ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+bounds.height);
+			ofDrawBitmapString(text, mousex+5, bounds.y+bounds.height);
 			
 			//draw playhead line
 			ofSetColor(255, 0, 0, 150);
 			ofSetLineWidth(1);
-			ofLine(ofGetMouseX(), totalDrawRect.y-bounds.height, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
+			ofLine(mousex, totalDrawRect.y-bounds.height, mousex, totalDrawRect.y+totalDrawRect.height);
 		}
 	}
 	else {
@@ -162,4 +161,8 @@ void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 void ofxTLTicker::updateHover(ofMouseEventArgs& args){
 	ofVec2f mousePos(args.x - totalDrawRect.x, args.y - totalDrawRect.y); //necessary or are mouse positions already mapped to the right region?
 	hovering = mousePos.x > 0 && mousePos.x < totalDrawRect.width && mousePos.y > 0 && mousePos.y < totalDrawRect.height;
+	
+	curHoverFrame = ofMap(mousePos.x, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
+	
+	mousex  = mousePos.x; 
 }

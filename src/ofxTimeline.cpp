@@ -26,11 +26,12 @@ ofxTimeline::ofxTimeline()
 	autosave(true),
 	isFrameBased(false),
 	durationInFrames(100),
-	durationInSeconds(100/30.0),
+	durationInSeconds(100.0f/30.0f),
 	currentFrameRate(30),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
-	isSetup(false)
+	isSetup(false),
+	usingEvents(false)
 {
 }
 
@@ -45,14 +46,6 @@ ofxTimeline::~ofxTimeline(){
 		delete ticker;
 		delete tabs;
 		delete zoomer;
-		
-		ofRemoveListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-		ofRemoveListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-		ofRemoveListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-		ofRemoveListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
-		
-		ofRemoveListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-		ofRemoveListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
 		
 		ofRemoveListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
@@ -78,13 +71,7 @@ void ofxTimeline::setup(){
 	zoomer->setup();
 	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
 		
-	ofAddListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-	ofAddListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-	ofAddListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-	ofAddListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
-	
-	ofAddListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-	ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+	enableEvents();
 	
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
@@ -145,6 +132,34 @@ void ofxTimeline::updatePagePositions(){
 }
 
 #pragma mark EVENTS
+void ofxTimeline::enableEvents() {
+	if (!usingEvents) {
+		ofAddListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofAddListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
+		ofAddListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofAddListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		
+		ofAddListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
+		ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		
+		usingEvents = true;
+	}
+}
+
+void ofxTimeline::disableEvents() {
+	if (usingEvents) {
+		ofRemoveListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofRemoveListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
+		ofRemoveListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofRemoveListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		
+		ofRemoveListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
+		ofRemoveListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		
+		usingEvents = false;
+	}
+}
+
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
