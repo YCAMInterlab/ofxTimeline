@@ -85,9 +85,21 @@ class ofxTimeline {
 	virtual void addTimelineElement(string name, ofxTLElement* element);
 	
 	virtual void setAutosave(bool autosave);
+	
+	void enableEvents();
+	void disableEvents();
+	
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void keyPressed(ofKeyEventArgs& args);
+	virtual void windowResized(ofResizeEventArgs& args);
 
   protected:
 	bool isSetup;
+	bool usingEvents;
+	
 	ofxTLPage* currentPage;
 	vector<ofxTLPage*> pages;
 	
@@ -97,15 +109,7 @@ class ofxTimeline {
 
 	float width;
 	ofVec2f offset;
-	
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args);
-	virtual void mouseReleased(ofMouseEventArgs& args);
-	
-	virtual void keyPressed(ofKeyEventArgs& args);
-	
-	virtual void windowResized(ofResizeEventArgs& args);
+
 	virtual void viewNeedsResize(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);
 
