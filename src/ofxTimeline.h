@@ -34,6 +34,7 @@
 #include "ofxTLKeyframer.h"
 #include "ofxTLTrigger.h"
 #include "ofxTLSwitcher.h"
+#include "ofxTLImageSequence.h"
 
 class ofxTimeline {
   public:
@@ -76,11 +77,19 @@ class ofxTimeline {
 	virtual string getNextTrigger(string name);
 	virtual string getNextTrigger(string name, float atTime);
 	virtual string getNextTrigger(string name, int atFrame);
-
+	
 	virtual string getLastTrigger(string name);
 	virtual string getLastTrigger(string name, float atTime);
 	virtual string getLastTrigger(string name, int atFrame);
 
+
+	virtual ofxTLImageSequence* addImageSequence(string name);
+	virtual ofxTLImageSequence* addImageSequence(string name, string directory);
+	virtual ofImage* getImage(string name);
+	virtual ofImage* getImage(string name, float atTime);
+	virtual ofImage* getImage(string name, int atFrame);
+	
+	
 	//for custom elements
 	virtual void addTimelineElement(string name, ofxTLElement* element);
 	

@@ -27,8 +27,8 @@
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E7B29A0D143873C40014A410 /* ofxTLPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29A0C143873C40014A410 /* ofxTLPage.cpp */; };
 		E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */; };
-		E7F4B5C81458DF4B0031CC9A /* ofxTLImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */; };
-		E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */; };
+		E7E5EBD4144FCD3400675C9C /* ofxTLImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E5EBD0144FCD3400675C9C /* ofxTLImageSequence.cpp */; };
+		E7E5EBD5144FCD3400675C9C /* ofxTLImageSequenceFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7E5EBD2144FCD3400675C9C /* ofxTLImageSequenceFrame.cpp */; };
 		E7FBD08B13D61DAC00938471 /* ofxTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */; };
 		E7FBD08C13D61DAC00938471 /* ofxTLElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */; };
 		E7FBD08D13D61DAC00938471 /* ofxTLElementHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */; };
@@ -114,10 +114,10 @@
 		E7B29A0C143873C40014A410 /* ofxTLPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPage.cpp; sourceTree = "<group>"; };
 		E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLPageTabs.h; sourceTree = "<group>"; };
 		E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPageTabs.cpp; sourceTree = "<group>"; };
-		E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequence.cpp; sourceTree = "<group>"; };
-		E7F4B5C51458DF4B0031CC9A /* ofxTLImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequence.h; sourceTree = "<group>"; };
-		E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequenceFrame.cpp; sourceTree = "<group>"; };
-		E7F4B5C71458DF4B0031CC9A /* ofxTLImageSequenceFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequenceFrame.h; sourceTree = "<group>"; };
+		E7E5EBD0144FCD3400675C9C /* ofxTLImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequence.cpp; sourceTree = "<group>"; };
+		E7E5EBD1144FCD3400675C9C /* ofxTLImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequence.h; sourceTree = "<group>"; };
+		E7E5EBD2144FCD3400675C9C /* ofxTLImageSequenceFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequenceFrame.cpp; sourceTree = "<group>"; };
+		E7E5EBD3144FCD3400675C9C /* ofxTLImageSequenceFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequenceFrame.h; sourceTree = "<group>"; };
 		E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeline.cpp; sourceTree = "<group>"; };
 		E7FBD07B13D61DAC00938471 /* ofxTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimeline.h; sourceTree = "<group>"; };
 		E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimelineUtils.h; sourceTree = "<group>"; };
@@ -210,10 +210,6 @@
 				E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */,
 				E7FBD08013D61DAC00938471 /* ofxTLElementHeader.h */,
 				E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */,
-				E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */,
-				E7F4B5C51458DF4B0031CC9A /* ofxTLImageSequence.h */,
-				E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */,
-				E7F4B5C71458DF4B0031CC9A /* ofxTLImageSequenceFrame.h */,
 				E7FBD08613D61DAC00938471 /* ofxTLTicker.h */,
 				E7FBD08513D61DAC00938471 /* ofxTLTicker.cpp */,
 				E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */,
@@ -230,6 +226,10 @@
 		A60C521413F5E51800BB5789 /* elements */ = {
 			isa = PBXGroup;
 			children = (
+				E7E5EBD1144FCD3400675C9C /* ofxTLImageSequence.h */,
+				E7E5EBD0144FCD3400675C9C /* ofxTLImageSequence.cpp */,
+				E7E5EBD3144FCD3400675C9C /* ofxTLImageSequenceFrame.h */,
+				E7E5EBD2144FCD3400675C9C /* ofxTLImageSequenceFrame.cpp */,
 				E7FBD08213D61DAC00938471 /* ofxTLKeyframer.h */,
 				E7FBD08113D61DAC00938471 /* ofxTLKeyframer.cpp */,
 				E7FBD08413D61DAC00938471 /* ofxTLSwitcher.h */,
@@ -465,7 +465,7 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExample" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ImageSequenceExample" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -551,8 +551,8 @@
 				A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */,
 				E7B29A0D143873C40014A410 /* ofxTLPage.cpp in Sources */,
 				E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */,
-				E7F4B5C81458DF4B0031CC9A /* ofxTLImageSequence.cpp in Sources */,
-				E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */,
+				E7E5EBD4144FCD3400675C9C /* ofxTLImageSequence.cpp in Sources */,
+				E7E5EBD5144FCD3400675C9C /* ofxTLImageSequenceFrame.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,7 +799,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExample" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "ImageSequenceExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,

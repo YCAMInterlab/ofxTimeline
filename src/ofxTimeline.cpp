@@ -322,4 +322,27 @@ string ofxTimeline::getLastTrigger(string name, float atTime){
 string ofxTimeline::getLastTrigger(string name, int atFrame){
 }
 
+ofxTLImageSequence* ofxTimeline::addImageSequence(string name){
+	ofFileDialogResult result = ofSystemLoadDialog("Load Sequence", true);
+	if(result.bSuccess && ofDirectory::doesDirectoryExist(result.filePath, false)){
+		addImageSequence(name, result.getPath());
+	}
+}
+
+
+ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory){
+	ofxTLImageSequence*	newImageSequence = new ofxTLImageSequence();
+	newImageSequence->loadSequence(directory);
+	addTimelineElement(name, newImageSequence);
+	return newImageSequence;	
+}
+
+ofImage* ofxTimeline::getImage(string name){
+}
+
+ofImage* ofxTimeline::getImage(string name, float atTime){
+}
+
+ofImage* ofxTimeline::getImage(string name, int atFrame){
+}
 
