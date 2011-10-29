@@ -13,21 +13,32 @@ bool framesort(ofxTLImageSequenceFrame* a, ofxTLImageSequenceFrame* b) {
     return a->lastUsedTime < b->lastUsedTime;
 }
 
-ofxTLImageSequence::ofxTLImageSequence(){
+ofxTLImageSequence::ofxTLImageSequence() {
 	
 }
 
-ofxTLImageSequence::~ofxTLImageSequence(){
+ofxTLImageSequence::~ofxTLImageSequence() {
 	
 }
 
 void ofxTLImageSequence::setup(){
 	maxThumbsLoaded = 300;
 	maxFramesLoaded = 50;
+	enable();
 }
 
 
-void ofxTLImageSequence::draw(){
+void ofxTLImageSequence::draw() {
+	if(!loaded){
+		return;
+	}
+	
+    //cout << "preview textures size is " << previewTextures.size() << " " << endl;
+	
+	for(int i = 0; i < previewTextures.size(); i++){
+		ofRectangle b = previewTextures[i].bounds;
+		previewTextures[i].texture->draw(bounds.x + b.x, bounds.y + b.y, b.width, b.height);
+	}
 	
 }
 
@@ -36,6 +47,7 @@ void ofxTLImageSequence::draw(){
 //}
 
 bool ofxTLImageSequence::loadSequence(string directory){
+
     if(loaded){
 		clear();
     }
@@ -64,7 +76,9 @@ bool ofxTLImageSequence::loadSequence(string directory){
 	if(imageType == OF_IMAGE_UNDEFINED){
 		//sniff the first file
 		ofImage testImage;
-		testImage.loadImage(list.getPath(0));
+		if(!testImage.loadImage(list.getPath(0))){
+			ofLogError("ofxTLImageSequence -- error loading test file: " + list.getPath(0));
+		}
 		imageType = testImage.getPixelsRef().getImageType();
 	}
 	
@@ -87,7 +101,6 @@ bool ofxTLImageSequence::loadSequence(string directory){
     thumbHeight = frames[0]->getThumbHeight();
 	
 	loaded = true;
-	//frameAspectRatio = imageWidth/imageHeight;
 	
     recomputePreview();
 	
@@ -127,12 +140,25 @@ ofImage* ofxTLImageSequence::getImageAtFrame(int frame){
 	
 }
 
-void ofxTLImageSequence::mousePressed(ofMouseEventArgs& args){
+void ofxTLImageSequence::drawRectChanged(){
+	recomputePreview();
 }
+
+void ofxTLImageSequence::setZoomBounds(ofRange zoomBoundsPercent){
+	ofxTLElement::setZoomBounds(zoomBoundsPercent);
+	recomputePreview();
+}
+
+void ofxTLImageSequence::mousePressed(ofMouseEventArgs& args){
+	
+}
+
 void ofxTLImageSequence::mouseMoved(ofMouseEventArgs& args){
 }
+
 void ofxTLImageSequence::mouseDragged(ofMouseEventArgs& args){
 }
+
 void ofxTLImageSequence::mouseReleased(ofMouseEventArgs& args){
 }
 
@@ -141,41 +167,47 @@ void ofxTLImageSequence::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLImageSequence::save(){
 }
+
 void ofxTLImageSequence::load(){
 }
 
 void ofxTLImageSequence::reset(){
 }
+
 void ofxTLImageSequence::clear(){
 }
 
 void ofxTLImageSequence::recomputePreview(){
+	
 	if(!loaded){
+		ofLogError("ofxTLImageSequence -- hasn't been loaded");
 		return;
 	}
 	
 	if(bounds.height < 20){
-		//too squished
+		ofLogError("ofxTLImageSequence -- too squished at height " + ofToString(20));
 		return;
 	}
 	
 	float widthPerFrame = bounds.height/imageHeight * imageWidth;
-	framesToShow = (bounds.width / widthPerFrame);
+	int framesToShow = (bounds.width / widthPerFrame) + 1;
 	if(framesToShow == 0){
+		ofLogError("ofxTLImageSequence -- no frames to show!");
 		return;
 	}
 	
-	//TODO roll off and alignt to frame ticker
+	
 	int startIndex = getIndexAtPercent(zoomBounds.min);
 	int endIndex = getIndexAtPercent(zoomBounds.max);
 	int framesInRange = (endIndex - startIndex);
-	
+
 	int frameStep = framesInRange / framesToShow;
 	int fameIndex = 0;
+//	cout << " start index is " << startIndexDec << " end index " << endIndexDec << " frames in range " << framesInRange << " framestep " << frameStep << " frames to show " << framesToShow << endl;
 	
 	clearPreviewTextures();
 	
-	for(int i = 0; i < framesToShow; i ++){
+	for(int i = 0; i < framesToShow; i++){
 		ofImage* thumbnail = frames[startIndex+frameStep*i]->getThumbnail();
 		PreviewTexture p;
 		
@@ -183,8 +215,9 @@ void ofxTLImageSequence::recomputePreview(){
 		p.texture = new ofTexture();
 		p.texture->allocate(thumbnail->getWidth(), thumbnail->getHeight(), ofGetGlInternalFormat(thumbnail->getPixelsRef()));
 		p.texture->loadData(thumbnail->getPixels(), thumbnail->getWidth(), thumbnail->getHeight(), ofGetGlInternalFormat(thumbnail->getPixelsRef()));
-		p.bounds = ofRectangle(widthPerFrame*i, 0, widthPerFrame, heightPerFrame);
-		
+		p.bounds = ofRectangle(widthPerFrame*i, 0, widthPerFrame, bounds.height);
+
+//		cout << " preview texture for frame " << startIndex+framesInRange*i << endl;
 		
 		previewTextures.push_back( p );
 	}	
@@ -193,6 +226,10 @@ void ofxTLImageSequence::recomputePreview(){
 int ofxTLImageSequence::getIndexAtPercent(float percent)
 {
 	return ofMap(percent, 0, 1.0, 0, frames.size()-1, true);
+}
+
+float ofxTLImageSequence::getPercentAtIndex(int index){
+	return ofMap(index, 0, frames.size()-1, 0, 1, true);
 }
 
 void ofxTLImageSequence::purgeFrames()

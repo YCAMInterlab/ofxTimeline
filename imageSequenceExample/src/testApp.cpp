@@ -8,10 +8,10 @@ void testApp::setup(){
 	
 	timeline = new ofxTimeline();
 	timeline->setup();
-	timeline->addImageSequence("kinect");
+	timeline->addImageSequence("testsequence");
+	timeline->addKeyframes("Keyframer A", "keyframe_a.xml", ofRange(0, 1.0));
 	
 	/*
-	timeline->addKeyframes("Keyframe A", "keyframe_a.xml", ofRange(0, 1.0));
 	timeline->addKeyframes("Keyframe B", "keyframe_b.xml", ofRange(0, 1.0));
 	timeline->addKeyframes("Keyframe C", "keyframe_c.xml", ofRange(0, 1.0));
 
@@ -20,7 +20,7 @@ void testApp::setup(){
 	timeline->addKeyframes("Keyframe 2", "keyframe_2.xml", ofRange(0, 1.0));
 	*/
 	
-	//timeline->setDuration(300);
+	timeline->setDuration(300);
 }
 
 //--------------------------------------------------------------

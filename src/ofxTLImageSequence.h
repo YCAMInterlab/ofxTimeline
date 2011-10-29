@@ -37,8 +37,6 @@ class ofxTLImageSequence : public ofxTLElement {
 	//main function to get values out of the timeline
 	virtual bool loadSequence(string directory);
 	
-	float heightPerFrame;
-	
 	float getImageWidth();
 	float getImageHeight();
 	
@@ -63,6 +61,9 @@ class ofxTLImageSequence : public ofxTLElement {
 	virtual void reset();
 	virtual void clear();
 	
+	virtual void drawRectChanged();
+	virtual void setZoomBounds(ofRange zoomBoundsPercent);
+		
 	void purgeFrames();
 	void purgeThumbs();
 	
@@ -78,15 +79,12 @@ class ofxTLImageSequence : public ofxTLElement {
 	bool loaded;
 
 	int getIndexAtPercent(float percent);
+	float getPercentAtIndex(int index);
 	
 	ofImageType imageType;
 	
 	float imageWidth, imageHeight;
 	float thumbWidth, thumbHeight;
-
-
-	int framesToShow;
-	float widthPerFrame;
 
 	vector<ofxTLImageSequenceFrame*> frames;
 	

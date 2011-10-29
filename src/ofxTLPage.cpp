@@ -39,7 +39,7 @@ ofxTLPage::~ofxTLPage(){
 #pragma mark utility
 void ofxTLPage::setup(){
 	
-	loadElementPositions();
+//	loadElementPositions();
 	ofAddListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
 	headerHeight = 20;
@@ -166,6 +166,9 @@ float ofxTLPage::getComputedHeight(){
 void ofxTLPage::loadElementPositions(){
 	ofxXmlSettings elementPositions;
 	if(elementPositions.loadFile(name + "_elementPositions.xml")){
+		
+		cout << "loading element position " << name << "_elementPositions.xml" << endl;
+		
 		elementPositions.pushTag("positions");
 		int numElements = elementPositions.getNumTags("element");
 		for(int i = 0; i < numElements; i++){

@@ -127,7 +127,7 @@ bool ofxTLImageSequenceFrame::loadFrame()
         thumbnail->resize(thumbWidth, thumbHeight);
         thumbnail->saveImage(thumbFilename);
         if(type != OF_IMAGE_UNDEFINED && thumbnail->getPixelsRef().getImageType() != type){
-            thumbnail->setImageType(type);
+//            thumbnail->setImageType(type);
         }
         thumbLoaded = true;
     }
@@ -177,7 +177,7 @@ bool ofxTLImageSequenceFrame::loadThumb()
     }
 	
 	if(type != OF_IMAGE_UNDEFINED && thumbnail->getPixelsRef().getImageType() != type){
-		thumbnail->setImageType( type );
+		//thumbnail->setImageType( type );
     }
 	
     thumbWidth = thumbnail->getWidth();
