@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */; };
+		A66FA2E4146F6E4F00C1B2F2 /* ofxTLVideoPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FA2E3146F6E4F00C1B2F2 /* ofxTLVideoPlayer.cpp */; };
+		A66FA301146F722500C1B2F2 /* ofxTLVideoThumb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A66FA300146F722500C1B2F2 /* ofxTLVideoThumb.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -89,6 +91,10 @@
 /* Begin PBXFileReference section */
 		A6020B7D13F19C3400634B4D /* ofxTLEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLEvents.h; sourceTree = "<group>"; };
 		A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLEvents.cpp; sourceTree = "<group>"; };
+		A66FA2E2146F6E4F00C1B2F2 /* ofxTLVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLVideoPlayer.h; sourceTree = "<group>"; };
+		A66FA2E3146F6E4F00C1B2F2 /* ofxTLVideoPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLVideoPlayer.cpp; sourceTree = "<group>"; };
+		A66FA2FF146F722500C1B2F2 /* ofxTLVideoThumb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLVideoThumb.h; sourceTree = "<group>"; };
+		A66FA300146F722500C1B2F2 /* ofxTLVideoThumb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLVideoThumb.cpp; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -210,10 +216,14 @@
 				E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */,
 				E7FBD08013D61DAC00938471 /* ofxTLElementHeader.h */,
 				E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */,
-				E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */,
 				E7F4B5C51458DF4B0031CC9A /* ofxTLImageSequence.h */,
+				E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */,
 				E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */,
 				E7F4B5C71458DF4B0031CC9A /* ofxTLImageSequenceFrame.h */,
+				A66FA2FF146F722500C1B2F2 /* ofxTLVideoThumb.h */,
+				A66FA300146F722500C1B2F2 /* ofxTLVideoThumb.cpp */,
+				A66FA2E2146F6E4F00C1B2F2 /* ofxTLVideoPlayer.h */,
+				A66FA2E3146F6E4F00C1B2F2 /* ofxTLVideoPlayer.cpp */,
 				E7FBD08613D61DAC00938471 /* ofxTLTicker.h */,
 				E7FBD08513D61DAC00938471 /* ofxTLTicker.cpp */,
 				E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */,
@@ -465,8 +475,9 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExample" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExampleVideoPlayer" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
@@ -553,6 +564,8 @@
 				E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */,
 				E7F4B5C81458DF4B0031CC9A /* ofxTLImageSequence.cpp in Sources */,
 				E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */,
+				A66FA2E4146F6E4F00C1B2F2 /* ofxTLVideoPlayer.cpp in Sources */,
+				A66FA301146F722500C1B2F2 /* ofxTLVideoThumb.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -801,7 +814,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExample" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "timelineExampleVideoPlayer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,
