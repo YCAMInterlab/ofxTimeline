@@ -24,4 +24,5 @@ class testApp : public ofBaseApp{
 	ofxTimeline* timeline;
 	ofxTLVideoPlayer* playerElement;
 	ofVideoPlayer player;
+	ofRectangle playerRect;
 };

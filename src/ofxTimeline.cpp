@@ -114,6 +114,7 @@ void ofxTimeline::setAutosave(bool doAutosave){
 
 void ofxTimeline::setOffset(ofVec2f newOffset){
 	offset = newOffset;
+	recalculateBoundingRects();
 	updatePagePositions();
 }
 
@@ -123,7 +124,7 @@ void ofxTimeline::setWidth(float newWidth){
 }
 
 void ofxTimeline::updatePagePositions(){
-	ofVec2f pageOffset = offset + ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
+	ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
 	for(int i = 0; i < pages.size(); i++){
 		pages[i]->setContainer(pageOffset, width);
 	}	
@@ -263,7 +264,6 @@ void ofxTimeline::setCurrentPage(string name){
 			return;
 		}
 	}
-	
 	ofLogError("ofxTimeline -- Page " + name + " not found");
 }
 
@@ -279,8 +279,8 @@ void ofxTimeline::setCurrentPage(int index){
 //can be used custom elements
 void ofxTimeline::addElement(string name, ofxTLElement* element){
 	currentPage->addElement(name, element);		
+	recalculateBoundingRects();
 }
-
 
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
 

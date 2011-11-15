@@ -9,7 +9,8 @@ void testApp::setup(){
 	
 	timeline = new ofxTimeline();
 	timeline->setup();
-
+	timeline->setOffset(ofVec2f(0, 480));
+	
 	playerElement = NULL;
 
 	timeline->setDuration(300);
@@ -17,13 +18,15 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+//	timeline->setOffset(ofVec2f(0, ofGetMouseY()));
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
 	ofBackground(.15*255);
-	
+	if (player.isLoaded()) {
+		player.draw(playerRect);
+	}
 	timeline->draw();
 }
 
@@ -37,6 +40,9 @@ void testApp::keyPressed(int key){
 			timeline->setDuration(player.getTotalNumFrames());
 			timeline->addElement("Video", playerElement);
 			playerElement->setVideoPlayer(player, ofFilePath::removeExt( r.filePath ) + "/thumbs");
+			
+			//set player rectangle 
+			playerRect = ofRectangle(0,0,480 * player.getWidth()/player.getHeight(), 480);
 		}
 	}
 }

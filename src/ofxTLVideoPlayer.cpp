@@ -93,7 +93,7 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
 	int totalPixels = int( bounds.width / zoomBounds.span() );
 	int framesToShow = totalPixels / frameWidth;
-	int frameStep = videoThumbs.size() / framesToShow; 
+	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
 	
 	cout << "bounds are " << bounds.width << " " << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
@@ -113,6 +113,26 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 		}
 	}
 }
+
+void ofxTLVideoPlayer::mousePressed(ofMouseEventArgs& args){
+		
+}
+
+void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
+
+}
+
+void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
+	int dragframe = indexForMousePoint(args.x);
+	cout << dragframe << " dragged " << endl;
+	player->setFrame(dragframe);
+	player->update();
+}
+
+void ofxTLVideoPlayer::mouseReleased(ofMouseEventArgs& args){
+
+}
+
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){
 	for(int i = 0; i < videoThumbs.size(); i++){
@@ -143,3 +163,10 @@ void ofxTLVideoPlayer::purgeOldThumbnails(){
 		//TODO
 	}
 }
+
+int ofxTLVideoPlayer::indexForMousePoint(int mouseX){
+	int startFrame = zoomBounds.min * player->getTotalNumFrames();
+	int endFrame = zoomBounds.max * player->getTotalNumFrames();
+	return ofMap(mouseX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+}
+

@@ -64,7 +64,7 @@ void ofxTLTicker::draw(){
 				ofSetLineWidth(1);
 			}
 			
-			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.height);
+			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
 			
 		/*
@@ -134,6 +134,7 @@ void ofxTLTicker::setFrameRate(int _framerate){
 		
 	}
 	else{
+		
 	}
 }
 	

@@ -35,6 +35,7 @@ class ofxTLPageEventArgs : public ofEventArgs {
 
 class ofxTLCoreEvents {
   public:
+	
 	ofEvent<ofxTLPlaybackEventArgs> playbackStarted;
 	ofEvent<ofxTLPlaybackEventArgs> playbackEnded;
 	ofEvent<ofxTLPlaybackEventArgs> playbackLooped;
