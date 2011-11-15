@@ -38,7 +38,6 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	
   protected:
 
-	int framesInView;
 	void calculateFramePositions();
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);

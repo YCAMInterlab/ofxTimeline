@@ -11,17 +11,18 @@
 
 #include "ofMain.h"
 #include "ofxTLElement.h"
-#include "ofxTLDepthImageSequenceFrame.h"
+#include "ofxTLVideoThumb.h"
+#include "ofxKinectPointcloudDecoder.h"
 
 class ofxTLDepthImageSequence : public ofxTLElement {
   public:	
-	ofxTLVideoPlayer();
-	~ofxTLVideoPlayer();
+	ofxTLDepthImageSequence();
+	~ofxTLDepthImageSequence();
 
 	void setup();
 	void draw();
 
-	vector<ofxTLDepthImageSequenceFrame> videoThumbs;
+	vector<ofxTLVideoThumb> videoThumbs;
 
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
@@ -29,9 +30,21 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 
 	virtual void drawRectChanged();
 
-	void loadDepthSequence();
-	void loadDepthSequence(string sequenceDirectory);
+	void loadSequence();
+	void loadSequence(string sequenceDirectory);
+	
 	
   protected:
+	bool sequenceLoaded;
+	
+	void calculateFramePositions();
+	void generateVideoThumbnails();
+	void generateThumbnailForFrame(int index);
+	
+	int indexForMousePoint(int mouseX);
 	string sequenceDirectory;
+	string thumbDirectory;
+	
+	
+	ofxKinectPointcloudDecoder decoder;
 };

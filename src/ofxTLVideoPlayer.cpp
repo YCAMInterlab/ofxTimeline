@@ -124,7 +124,6 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
 	int dragframe = indexForMousePoint(args.x);
-	cout << dragframe << " dragged " << endl;
 	player->setFrame(dragframe);
 	player->update();
 }

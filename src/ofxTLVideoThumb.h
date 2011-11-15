@@ -12,7 +12,7 @@
 #include "ofMain.h"
 
 class ofxTLVideoThumb {
- public:
+  public:
 	ofxTLVideoThumb();
 	~ofxTLVideoThumb();
 	
@@ -22,7 +22,9 @@ class ofxTLVideoThumb {
 	void load();
 	void unload();
 	
+	string sourcepath;
 	string filepath;
+	
 	int framenum;
 	bool loaded;
 	bool exists;
