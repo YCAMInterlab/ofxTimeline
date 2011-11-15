@@ -35,6 +35,7 @@
 #include "ofxTLTrigger.h"
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
+#include "ofxTLVideoPlayer.h"
 
 class ofxTimeline {
   public:
@@ -91,7 +92,7 @@ class ofxTimeline {
 	
 	
 	//for custom elements
-	virtual void addTimelineElement(string name, ofxTLElement* element);
+	virtual void addElement(string name, ofxTLElement* element);
 	
 	virtual void setAutosave(bool autosave);
 	

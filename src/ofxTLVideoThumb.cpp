@@ -20,9 +20,10 @@ ofxTLVideoThumb::~ofxTLVideoThumb(){
 
 }
 
-void ofxTLVideoThumb::setup(int framenum, string thumbpath){
+void ofxTLVideoThumb::setup(int frame, string thumbpath){
+	framenum = frame;
 	char fp[1024];
-	sprintf(fp, "%s/thum_%05d.png", thumbpath.c_str(), framenum);
+	sprintf(fp, "%s/thumb_%05d.png", thumbpath.c_str(), framenum);
 	filepath = string(fp);
 	exists = ofFile(filepath).exists();
 	loaded = false;
@@ -36,9 +37,10 @@ void ofxTLVideoThumb::create(ofImage& videoFrame){
 	}
 	
 	thumb.clone(videoFrame);
-	int targetHeight = videoFrame.getWidth()/targetWidth * videoFrame.getHeight();
-	thumb.resize(targetWidth, targetHeight);
+	targetHeight = float(videoFrame.getHeight()) / videoFrame.getWidth() * targetWidth;
+	thumb.resize(int(targetWidth), int(targetHeight));
 	thumb.saveImage(filepath);
+	
 	exists = true;
 	loaded = true;
 }
@@ -50,7 +52,14 @@ void ofxTLVideoThumb::load(){
 		return;
 	}
 	
-	thumb.loadImage(filepath);
+	if(!thumb.loadImage(filepath)){
+		ofLogError("ofxTLVideoThumb -- Trying to load " + filepath + " but hasn't been created first");
+		return;
+	}
+	
+	targetWidth = thumb.getWidth();
+	targetHeight = thumb.getHeight(); 
+	loaded = true;
 }
 
 void ofxTLVideoThumb::unload(){

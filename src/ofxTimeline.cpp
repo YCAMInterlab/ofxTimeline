@@ -277,7 +277,7 @@ void ofxTimeline::setCurrentPage(int index){
 }
 
 //can be used custom elements
-void ofxTimeline::addTimelineElement(string name, ofxTLElement* element){
+void ofxTimeline::addElement(string name, ofxTLElement* element){
 	currentPage->addElement(name, element);		
 }
 
@@ -286,7 +286,7 @@ ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRan
 
 	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
 	newKeyframer->setXMLFileName(xmlFileName);
-	addTimelineElement(name, newKeyframer);
+	addElement(name, newKeyframer);
 	
 	return newKeyframer;
 }
@@ -348,7 +348,7 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name){
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory){
 	ofxTLImageSequence*	newImageSequence = new ofxTLImageSequence();
 	newImageSequence->loadSequence(directory);
-	addTimelineElement(name, newImageSequence);
+	addElement(name, newImageSequence);
 	return newImageSequence;	
 }
 

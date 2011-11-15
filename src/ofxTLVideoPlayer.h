@@ -10,21 +10,36 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
 #include "ofxTLVideoThumb.h"
+#include "ofxTLElement.h"
 
 class ofxTLVideoPlayer : public ofxTLElement {
   public:
+	
 	ofxTLVideoPlayer();
 	~ofxTLVideoPlayer();
 	
 	void setup();
 	void draw();
+	
 	vector<ofxTLVideoThumb> videoThumbs;
 	
+	virtual void zoomStarted(ofxTLZoomEventArgs& args);
+	virtual void zoomDragged(ofxTLZoomEventArgs& args);
+	virtual void zoomEnded(ofxTLZoomEventArgs& args);
+
+	virtual void drawRectChanged();
+
 	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
 	
   protected:
+
+	int framesInView;
+	void calculateFramePositions();
+	void generateVideoThumbnails();
+	void generateThumbnailForFrame(int index);
+	void purgeOldThumbnails();
+	
 	ofVideoPlayer* player;
 	string thumbDirectory;
 };

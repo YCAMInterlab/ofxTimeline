@@ -1,4 +1,5 @@
 #include "testApp.h"
+#include "ofxTimeline.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -8,15 +9,9 @@ void testApp::setup(){
 	
 	timeline = new ofxTimeline();
 	timeline->setup();
-	
-	timeline->addKeyframes("Keyframe A", "keyframe_a.xml", ofRange(0, 1.0));
-	timeline->addKeyframes("Keyframe B", "keyframe_b.xml", ofRange(0, 1.0));
-	timeline->addKeyframes("Keyframe C", "keyframe_c.xml", ofRange(0, 1.0));
 
-	timeline->addPage("second page", true);
-	timeline->addKeyframes("Keyframe 1", "keyframe_1.xml", ofRange(0, 1.0));
-	timeline->addKeyframes("Keyframe 2", "keyframe_2.xml", ofRange(0, 1.0));
-	
+	playerElement = NULL;
+
 	timeline->setDuration(300);
 }
 
@@ -34,7 +29,16 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+	if(playerElement == NULL){
+		ofFileDialogResult r = ofSystemLoadDialog("Load Video File", false);
+		if(r.bSuccess && player.loadMovie(r.filePath)){
+			playerElement = new ofxTLVideoPlayer();
+			playerElement->setup();
+			timeline->setDuration(player.getTotalNumFrames());
+			timeline->addElement("Video", playerElement);
+			playerElement->setVideoPlayer(player, ofFilePath::removeExt( r.filePath ) + "/thumbs");
+		}
+	}
 }
 
 //--------------------------------------------------------------

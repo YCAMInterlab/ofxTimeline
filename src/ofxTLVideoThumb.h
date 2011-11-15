@@ -26,10 +26,13 @@ class ofxTLVideoThumb {
 	int framenum;
 	bool loaded;
 	bool exists;
-	
+
 	ofImage thumb;
 	
-	int targetWidth;
+	bool visible;
+	ofRectangle displayRect;
 	
+	float targetWidth;
+	float targetHeight;
 	float timeloaded;
 };
