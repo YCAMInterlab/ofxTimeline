@@ -11,17 +11,26 @@
 
 ofxTLDepthImageSequence::ofxTLDepthImageSequence(){
 	sequenceLoaded = false;
+	currentDepthRaw = NULL;
+	selectedFrame = 0;
 }
 
 ofxTLDepthImageSequence::~ofxTLDepthImageSequence(){
-
+	if(currentDepthRaw != NULL){
+		delete currentDepthRaw;
+	}
 }
 
 void ofxTLDepthImageSequence::setup(){
+	
 	enable();
+	
+	currentDepthRaw = new unsigned short[640*480];
+	
 }
 
 void ofxTLDepthImageSequence::draw(){
+
 	ofPushStyle();
 	ofSetColor(255);
 	
@@ -30,6 +39,20 @@ void ofxTLDepthImageSequence::draw(){
 			videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
 		}
 	}
+	
+	ofNoFill();
+	ofSetColor(255, 150, 0);
+	for(int i = 0; i < videoThumbs.size(); i++){
+		if(videoThumbs[i].visible){
+			ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
+			ofRect(videoThumbs[i].displayRect);
+		}
+	}
+	
+	int selectedFrameX = screenXForIndex(selectedFrame);
+	ofSetColor(0, 125, 255);
+	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
+	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
 	
 	ofPopStyle();
 }
@@ -48,6 +71,24 @@ void ofxTLDepthImageSequence::zoomEnded(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomEnded(args);
 	calculateFramePositions();
 	generateVideoThumbnails();	
+}
+
+void ofxTLDepthImageSequence::mousePressed(ofMouseEventArgs& args){
+}
+
+void ofxTLDepthImageSequence::mouseMoved(ofMouseEventArgs& args){
+}
+
+void ofxTLDepthImageSequence::mouseDragged(ofMouseEventArgs& args){
+	if( bounds.inside(args.x, args.y) ){
+		selectedFrame = indexForScreenX(args.x);
+		decoder.readDepthFrame(videoThumbs[selectedFrame].sourcepath, currentDepthRaw);
+		currentDepthImage = decoder.convertTo8BitImage(currentDepthRaw);
+	}
+}
+	   
+
+void ofxTLDepthImageSequence::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTLDepthImageSequence::drawRectChanged(){
@@ -71,7 +112,10 @@ void ofxTLDepthImageSequence::loadSequence(string seqdir){
 	thumbDirectory = seqdir + "/thumbs";
 	ofDirectory thumdir(thumbDirectory);
 	if(!thumdir.exists()){
-		thumdir.create(true);
+		if(!thumdir.create(true)){
+			ofLogError("ofxTLDepthImageSequence -- sequence directory " + seqdir + " cannot be created!");
+			return;
+		}
 	}
 	
 	sequenceList.allowExt("xkcd");
@@ -109,11 +153,8 @@ void ofxTLDepthImageSequence::calculateFramePositions(){
 	
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(i % frameStep == 0){
-			videoThumbs[i].displayRect = ofRectangle(minPixelIndex + (i/frameStep)*frameWidth, bounds.y, frameWidth, bounds.height);
-			videoThumbs[i].displayRect.x+=2;
-			videoThumbs[i].displayRect.y+=2;
-			videoThumbs[i].displayRect.width-=4;
-			videoThumbs[i].displayRect.height-=4;
+			int screenX = screenXForIndex(i);
+			videoThumbs[i].displayRect = ofRectangle(screenX, bounds.y, frameWidth, bounds.height);
 			videoThumbs[i].visible = videoThumbs[i].displayRect.x+videoThumbs[i].displayRect.width > 0 && videoThumbs[i].displayRect.x < bounds.width;
 		}
 		else {
@@ -137,22 +178,18 @@ void ofxTLDepthImageSequence::generateThumbnailForFrame(int i){
 		else {
 			ofImage grayConverted = decoder.readDepthFrametoImage(videoThumbs[i].sourcepath);
 			videoThumbs[i].create(grayConverted);
-			
-			/*
-			cout << "generating thumb " << videoThumbs[i].framenum << endl;
-			player->setFrame(videoThumbs[i].framenum);
-			player->update();
-			ofImage frameImage;
-			frameImage.setFromPixels(player->getPixelsRef());
-			cout << "found frame size of " << frameImage.getWidth() << " from video player with size " << player->getWidth() << endl;
-			videoThumbs[i].create(frameImage);
-			 */
 		}
 	}
 }
 
-int ofxTLDepthImageSequence::indexForMousePoint(int mouseX){
+int ofxTLDepthImageSequence::indexForScreenX(int screenX){
 	int startFrame = zoomBounds.min * videoThumbs.size();
 	int endFrame = zoomBounds.max * videoThumbs.size();
-	return ofMap(mouseX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+}
+
+int ofxTLDepthImageSequence::screenXForIndex(int index){
+	int startFrame = zoomBounds.min * videoThumbs.size();
+	int endFrame = zoomBounds.max * videoThumbs.size();
+	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
 }

@@ -22,22 +22,32 @@ void ofxTLVideoPlayer::setup(){
 }
 
 void ofxTLVideoPlayer::draw(){
+	if(selectedFrame != player->getCurrentFrame()){
+		player->setFrame(selectedFrame);
+		player->update();
+	}
+	   
 	ofPushStyle();
 	ofSetColor(255);
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(videoThumbs[i].visible){
 			videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
-
 		}
 	}
 	
 	ofNoFill();
-	ofSetColor(255, 0, 0);
+	ofSetColor(255, 150, 0);
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(videoThumbs[i].visible){
-			ofRectangle(videoThumbs[i].displayRect);
+			ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
+			ofRect(videoThumbs[i].displayRect);
 		}
 	}
+	
+	int selectedFrameX = screenXForIndex(selectedFrame);
+	ofSetColor(0, 125, 255);
+	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
+	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
 	
 	ofPopStyle();
 }
@@ -56,6 +66,7 @@ void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir)
 		t.setup(i, thumbDir);
 		videoThumbs.push_back(t);
 	}
+	
 	videoThumbs[0].visible = true;
 	generateThumbnailForFrame(0);
 	calculateFramePositions();
@@ -95,16 +106,14 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	int framesToShow = totalPixels / frameWidth;
 	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
-	
+
 	cout << "bounds are " << bounds.width << " " << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
 	
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(i % frameStep == 0){
-			videoThumbs[i].displayRect = ofRectangle(minPixelIndex + (i/frameStep)*frameWidth, bounds.y, frameWidth, bounds.height);
-			videoThumbs[i].displayRect.x+=2;
-			videoThumbs[i].displayRect.y+=2;
-			videoThumbs[i].displayRect.width-=4;
-			videoThumbs[i].displayRect.height-=4;
+			//videoThumbs[i].displayRect = ofRectangle(minPixelIndex + (i/frameStep)*frameWidth, bounds.y, frameWidth, bounds.height);
+			int screenX = screenXForIndex(i);
+			videoThumbs[i].displayRect = ofRectangle(screenX, bounds.y, frameWidth, bounds.height);
 			videoThumbs[i].visible = videoThumbs[i].displayRect.x+videoThumbs[i].displayRect.width > 0 && videoThumbs[i].displayRect.x < bounds.width;
 //			cout << "Frame " << i << " visible? " << videoThumbs[i].visible << " x is " << videoThumbs[i].displayRect.x << endl;
 		}
@@ -123,9 +132,11 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
-	int dragframe = indexForMousePoint(args.x);
-	player->setFrame(dragframe);
-	player->update();
+	if(bounds.inside(args.x, args.y)){
+		selectedFrame = indexForScreenX(args.x);
+		player->setFrame(selectedFrame);
+		player->update();
+	}
 }
 
 void ofxTLVideoPlayer::mouseReleased(ofMouseEventArgs& args){
@@ -163,9 +174,15 @@ void ofxTLVideoPlayer::purgeOldThumbnails(){
 	}
 }
 
-int ofxTLVideoPlayer::indexForMousePoint(int mouseX){
+int ofxTLVideoPlayer::indexForScreenX(int screenX){
 	int startFrame = zoomBounds.min * player->getTotalNumFrames();
 	int endFrame = zoomBounds.max * player->getTotalNumFrames();
-	return ofMap(mouseX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+}
+
+int ofxTLVideoPlayer::screenXForIndex(int index){
+	int startFrame = zoomBounds.min * player->getTotalNumFrames();
+	int endFrame = zoomBounds.max * player->getTotalNumFrames();
+	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
 }
 

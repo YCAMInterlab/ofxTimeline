@@ -117,14 +117,17 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
 		mouseIsDown = true;
 		focused = true;
+		
+		//did we click on the min-left handle?
 		float minScreenX = normalizedXtoScreenX(currentViewRange.min);
-		minGrabOffset = args.x - minScreenX ;
+		minGrabOffset = args.x - minScreenX;
 		if(fabs(minScreenX - args.x) < 5){
 			minSelected = true;
 			notifyZoomStarted();
 			return;
 		}
-
+		
+		//did we click on the max-right handle?
 		float maxScreenX = normalizedXtoScreenX(currentViewRange.max);
 		maxGrabOffset = args.x - maxScreenX;
 		if(fabs(maxScreenX - args.x) < 5){
@@ -132,11 +135,32 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 			notifyZoomStarted();
 			return;
 		}
-
+		
+		//did we click in the middle?
 		if(args.x > minScreenX && args.x < maxScreenX){
 			notifyZoomStarted();
 			midSelected = true;
+			return;
 		}
+		
+		//did we click to the right?
+		if(args.x > maxScreenX){
+			maxSelected = true;
+			maxGrabOffset = 0;
+			currentViewRange.max = screenXtoNormalizedX(args.x);
+			notifyZoomStarted();
+			return;
+		}
+		
+		//did we click to the left?
+		if(args.x < minScreenX){
+			minSelected = true;
+			minGrabOffset = 0;
+			currentViewRange.min = screenXtoNormalizedX(args.x);
+			notifyZoomStarted();
+			return;
+		}
+		
 	}
 }
 

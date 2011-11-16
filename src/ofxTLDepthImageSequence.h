@@ -24,6 +24,11 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 
 	vector<ofxTLVideoThumb> videoThumbs;
 
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+	
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
@@ -33,18 +38,23 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	void loadSequence();
 	void loadSequence(string sequenceDirectory);
 	
+	ofImage currentDepthImage;
+	unsigned short* currentDepthRaw;
+
 	
   protected:
+	int selectedFrame;
 	bool sequenceLoaded;
 	
 	void calculateFramePositions();
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);
 	
-	int indexForMousePoint(int mouseX);
+	int indexForScreenX(int mouseX);
+	int screenXForIndex(int index);
+	
 	string sequenceDirectory;
 	string thumbDirectory;
-	
 	
 	ofxKinectPointcloudDecoder decoder;
 };
