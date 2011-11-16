@@ -44,7 +44,10 @@ class ofxTLVideoDepthAlignmentScrubber : public ofxTLElement {
 	void save();
 	
 	void addAlignedPair(int videoFrame, int depthFrame);
-		
+	void removeAlignmentPair(int index);
+	
+	vector<VideoDepthPair> & getPairs();
+	
 	ofxTLVideoPlayer* videoSequence;
 	ofxTLDepthImageSequence* depthSequence;
 	

@@ -9,7 +9,7 @@
 
 #include "ofxTLVideoDepthAlignmentScrubber.h"
 bool pairsort(VideoDepthPair frameA, VideoDepthPair frameB){
-	return frameA.videoFrame > frameB.videoFrame;
+	return frameA.videoFrame < frameB.videoFrame;
 }
 
 ofxTLVideoDepthAlignmentScrubber::ofxTLVideoDepthAlignmentScrubber(){
@@ -93,10 +93,11 @@ void ofxTLVideoDepthAlignmentScrubber::addAlignedPair(int videoFrame, int depthF
 
 	cout << "addded " << videoFrame << " " << depthFrame << endl;
 
-//	alignedVideoFrames.push_back(videoFrame);
-//	alignedDepthFrames.push_back(depthFrame);
-//	sort(alignedVideoFrames.begin(), alignedVideoFrames.end(), framesort);
-//	sort(alignedDepthFrames.begin(), alignedDepthFrames.end(), framesort);
+	save();
+}
+
+void ofxTLVideoDepthAlignmentScrubber::removeAlignmentPair(int index){
+	alignedFrames.erase(alignedFrames.begin()+index);
 	save();
 }
 
@@ -146,12 +147,39 @@ void ofxTLVideoDepthAlignmentScrubber::load(){
 	}
 }
 
+vector<VideoDepthPair> & ofxTLVideoDepthAlignmentScrubber::getPairs(){
+	return alignedFrames;
+}
+
 int ofxTLVideoDepthAlignmentScrubber::getDepthFrameForVideoFrame(int videoFrame){
-//	for(int i = 0; i < alignedVideoFrames.size(); i++){
-//		TODO use more than just the first two values
-//	}	
-	return ofMap(videoFrame, alignedFrames[0].videoFrame, alignedFrames[1].videoFrame,
-							 alignedFrames[0].depthFrame, alignedFrames[1].depthFrame, false);
+	int startIndex, endIndex;
+	if(videoFrame < alignedFrames[0].videoFrame){
+		startIndex = 0;
+		endIndex = 1;
+	}
+	if(videoFrame > alignedFrames[alignedFrames.size()-1].videoFrame){
+		startIndex = alignedFrames.size()-2;
+		endIndex = alignedFrames.size()-1;
+	}
+	else {
+		startIndex = 0;
+		endIndex = 1;
+		while(videoFrame > alignedFrames[endIndex].videoFrame ){
+			startIndex++;
+			endIndex++;
+		}
+	}
+
+	
+	if(endIndex == alignedFrames.size()){
+		startIndex--;
+		endIndex--;
+	}
+	
+	cout << "looking for index " << videoFrame << " found to be between " << startIndex << " and " << endIndex << endl;
+	
+	return ofMap(videoFrame, alignedFrames[startIndex].videoFrame, alignedFrames[endIndex].videoFrame,
+							 alignedFrames[startIndex].depthFrame, alignedFrames[endIndex].depthFrame, false);
 	
 }
 
