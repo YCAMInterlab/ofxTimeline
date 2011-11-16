@@ -61,9 +61,12 @@ class ofxTLElement
 	
   protected:
 	
+
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
+	virtual int indexForScreenX(int mouseX, int durationInFrames);
+	virtual int screenXForIndex(int index, int durationInFrames);
 	virtual void drawRectChanged(){};
 	
 	bool hover;

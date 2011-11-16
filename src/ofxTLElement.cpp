@@ -81,7 +81,8 @@ bool ofxTLElement::hasFocus(){
 }
 
 bool ofxTLElement::pointInScreenBounds(ofVec2f screenpoint){
-	return isPointInRect(screenpoint, bounds);
+	//return isPointInRect(screenpoint, bounds);
+	return bounds.inside(screenpoint);
 }
 
 float ofxTLElement::screenXtoNormalizedX(float x){
@@ -91,3 +92,17 @@ float ofxTLElement::screenXtoNormalizedX(float x){
 float ofxTLElement::normalizedXtoScreenX(float x){
 	return ofMap(x, 0.0, 1.0, bounds.x, bounds.x+bounds.width, true);
 }
+
+int ofxTLElement::indexForScreenX(int screenX, int durationInFrames){
+	int startFrame = zoomBounds.min * durationInFrames;
+	int endFrame = zoomBounds.max * durationInFrames;
+	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+}
+
+int ofxTLElement::screenXForIndex(int index, int durationInFrames){
+	int startFrame = zoomBounds.min * durationInFrames;
+	int endFrame = zoomBounds.max * durationInFrames;
+	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
+}
+
+

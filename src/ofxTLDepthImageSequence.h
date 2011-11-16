@@ -40,7 +40,9 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	
 	ofImage currentDepthImage;
 	unsigned short* currentDepthRaw;
-
+	
+	int getSelectedFrame();
+	void selectFrame(int frame);
 	
   protected:
 	int selectedFrame;
@@ -50,8 +52,6 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);
 	
-	int indexForScreenX(int mouseX);
-	int screenXForIndex(int index);
 	
 	string sequenceDirectory;
 	string thumbDirectory;

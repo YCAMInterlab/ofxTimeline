@@ -44,7 +44,7 @@ void ofxTLVideoPlayer::draw(){
 		}
 	}
 	
-	int selectedFrameX = screenXForIndex(selectedFrame);
+	int selectedFrameX = screenXForIndex(selectedFrame, videoThumbs.size());
 	ofSetColor(0, 125, 255);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
 	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
@@ -112,7 +112,7 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(i % frameStep == 0){
 			//videoThumbs[i].displayRect = ofRectangle(minPixelIndex + (i/frameStep)*frameWidth, bounds.y, frameWidth, bounds.height);
-			int screenX = screenXForIndex(i);
+			int screenX = screenXForIndex(i, videoThumbs.size());
 			videoThumbs[i].displayRect = ofRectangle(screenX, bounds.y, frameWidth, bounds.height);
 			videoThumbs[i].visible = videoThumbs[i].displayRect.x+videoThumbs[i].displayRect.width > 0 && videoThumbs[i].displayRect.x < bounds.width;
 //			cout << "Frame " << i << " visible? " << videoThumbs[i].visible << " x is " << videoThumbs[i].displayRect.x << endl;
@@ -133,9 +133,7 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
 	if(bounds.inside(args.x, args.y)){
-		selectedFrame = indexForScreenX(args.x);
-		player->setFrame(selectedFrame);
-		player->update();
+		selectFrame( indexForScreenX(args.x, videoThumbs.size()) );
 	}
 }
 
@@ -143,6 +141,11 @@ void ofxTLVideoPlayer::mouseReleased(ofMouseEventArgs& args){
 
 }
 
+void ofxTLVideoPlayer::selectFrame(int frame){
+	selectedFrame = ofClamp(frame, 0, videoThumbs.size()-1);
+	player->setFrame(selectedFrame);
+	player->update();
+}
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){
 	for(int i = 0; i < videoThumbs.size(); i++){
@@ -153,19 +156,24 @@ void ofxTLVideoPlayer::generateVideoThumbnails(){
 void ofxTLVideoPlayer::generateThumbnailForFrame(int i){
 	if(videoThumbs[i].visible && !videoThumbs[i].loaded){
 		if(videoThumbs[i].exists){
-			cout << "Loading existing thumb " << i << endl;
+//			cout << "Loading existing thumb " << i << endl;
 			videoThumbs[i].load();
 		}
 		else {
-			cout << "generating thumb " << videoThumbs[i].framenum << endl;
+//			cout << "generating thumb " << videoThumbs[i].framenum << endl;
 			player->setFrame(videoThumbs[i].framenum);
 			player->update();
 			ofImage frameImage;
 			frameImage.setFromPixels(player->getPixelsRef());
-			cout << "found frame size of " << frameImage.getWidth() << " from video player with size " << player->getWidth() << endl;
+//			cout << "found frame size of " << frameImage.getWidth() << " from video player with size " << player->getWidth() << endl;
 			videoThumbs[i].create(frameImage);
 		}
 	}
+}
+
+
+int ofxTLVideoPlayer::getSelectedFrame(){
+	return selectedFrame;
 }
 
 void ofxTLVideoPlayer::purgeOldThumbnails(){
@@ -174,15 +182,15 @@ void ofxTLVideoPlayer::purgeOldThumbnails(){
 	}
 }
 
-int ofxTLVideoPlayer::indexForScreenX(int screenX){
-	int startFrame = zoomBounds.min * player->getTotalNumFrames();
-	int endFrame = zoomBounds.max * player->getTotalNumFrames();
-	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
-}
-
-int ofxTLVideoPlayer::screenXForIndex(int index){
-	int startFrame = zoomBounds.min * player->getTotalNumFrames();
-	int endFrame = zoomBounds.max * player->getTotalNumFrames();
-	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
-}
+//int ofxTLVideoPlayer::indexForScreenX(int screenX){
+//	int startFrame = zoomBounds.min * player->getTotalNumFrames();
+//	int endFrame = zoomBounds.max * player->getTotalNumFrames();
+//	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+//}
+//
+//int ofxTLVideoPlayer::screenXForIndex(int index){
+//	int startFrame = zoomBounds.min * player->getTotalNumFrames();
+//	int endFrame = zoomBounds.max * player->getTotalNumFrames();
+//	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
+//}
 

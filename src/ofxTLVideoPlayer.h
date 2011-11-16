@@ -36,6 +36,9 @@ class ofxTLVideoPlayer : public ofxTLElement {
 
 	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
 	
+	int getSelectedFrame();
+	void selectFrame(int frame);
+	
   protected:
 	int selectedFrame;
 
@@ -48,6 +51,6 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	ofVideoPlayer* player;
 	string thumbDirectory;
 	
-	int indexForScreenX(int mouseX);
-	int screenXForIndex(int index);
+//	int indexForScreenX(int mouseX);
+//	int screenXForIndex(int index);
 };
