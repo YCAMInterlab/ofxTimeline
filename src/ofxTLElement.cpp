@@ -48,6 +48,14 @@ void ofxTLElement::offsetDrawRect(ofVec2f offset){
 	drawRectChanged();
 }
 
+void ofxTLElement::mouseMoved(ofMouseEventArgs& args){
+	hover = bounds.inside(args.x, args.y);
+}
+
+void ofxTLElement::mousePressed(ofMouseEventArgs& args){
+	focused = bounds.inside(args.x, args.y);
+}
+
 ofRectangle ofxTLElement::getDrawRect(){
 	return bounds;
 }

@@ -13,6 +13,7 @@ ofxTLDepthImageSequence::ofxTLDepthImageSequence(){
 	sequenceLoaded = false;
 	currentDepthRaw = NULL;
 	selectedFrame = 0;
+	thumbsEnabled = true;
 }
 
 ofxTLDepthImageSequence::~ofxTLDepthImageSequence(){
@@ -24,7 +25,6 @@ ofxTLDepthImageSequence::~ofxTLDepthImageSequence(){
 void ofxTLDepthImageSequence::setup(){
 	
 	enable();
-	
 	currentDepthRaw = new unsigned short[640*480];
 	
 }
@@ -32,18 +32,25 @@ void ofxTLDepthImageSequence::setup(){
 void ofxTLDepthImageSequence::draw(){
 
 	ofPushStyle();
-	ofSetColor(255);
 	
-	for(int i = 0; i < videoThumbs.size(); i++){
-		if(videoThumbs[i].visible){
-			videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
+	if(thumbsEnabled){
+		ofSetColor(255);
+		for(int i = 0; i < videoThumbs.size(); i++){
+			if(videoThumbs[i].visible){
+				videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
+			}
 		}
 	}
 	
-	ofNoFill();
-	ofSetColor(255, 150, 0);
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(videoThumbs[i].visible){
+			if(!thumbsEnabled){
+				ofFill();
+				ofSetColor(0);
+				ofRect(videoThumbs[i].displayRect);
+			}
+			ofNoFill();
+			ofSetColor(255, 150, 0);
 			ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
 			ofRect(videoThumbs[i].displayRect);
 		}
@@ -70,13 +77,17 @@ void ofxTLDepthImageSequence::zoomDragged(ofxTLZoomEventArgs& args){
 void ofxTLDepthImageSequence::zoomEnded(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomEnded(args);
 	calculateFramePositions();
-	generateVideoThumbnails();	
+	if(thumbsEnabled){
+		generateVideoThumbnails();	
+	}
 }
 
 void ofxTLDepthImageSequence::mousePressed(ofMouseEventArgs& args){
+	ofxTLElement::mousePressed(args);
 }
 
 void ofxTLDepthImageSequence::mouseMoved(ofMouseEventArgs& args){
+	ofxTLElement::mouseMoved(args);
 }
 
 void ofxTLDepthImageSequence::mouseDragged(ofMouseEventArgs& args){
@@ -85,12 +96,22 @@ void ofxTLDepthImageSequence::mouseDragged(ofMouseEventArgs& args){
 	}
 }
 
+void ofxTLDepthImageSequence::keyPressed(ofKeyEventArgs& args){
+	if(hover){
+		if(args.key == OF_KEY_LEFT){
+			selectFrame(MAX(selectedFrame-1, 0));
+		}
+		else if(args.key == OF_KEY_RIGHT){
+			selectFrame(MIN(selectedFrame+1, videoThumbs.size()-1));		
+		}
+	}
+}
+
 void ofxTLDepthImageSequence::selectFrame(int frame){
 	selectedFrame = ofClamp(frame, 0, videoThumbs.size()-1);
 	decoder.readDepthFrame(videoThumbs[selectedFrame].sourcepath, currentDepthRaw);
 	currentDepthImage = decoder.convertTo8BitImage(currentDepthRaw);
 }
-
 
 void ofxTLDepthImageSequence::mouseReleased(ofMouseEventArgs& args){
 }
@@ -149,7 +170,7 @@ void ofxTLDepthImageSequence::calculateFramePositions(){
 	
 	int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
 	int totalPixels = int( bounds.width / zoomBounds.span() );
-	int framesToShow = totalPixels / frameWidth;
+	int framesToShow = MAX(totalPixels / frameWidth, 1);
 	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
 	
@@ -184,6 +205,10 @@ void ofxTLDepthImageSequence::generateThumbnailForFrame(int i){
 			videoThumbs[i].create(grayConverted);
 		}
 	}
+}
+
+void ofxTLDepthImageSequence::toggleThumbs(){
+	thumbsEnabled = !thumbsEnabled;
 }
 
 int ofxTLDepthImageSequence::getSelectedFrame(){

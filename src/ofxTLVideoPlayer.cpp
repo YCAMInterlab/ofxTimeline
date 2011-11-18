@@ -11,6 +11,7 @@
 
 ofxTLVideoPlayer::ofxTLVideoPlayer() {
 	player = NULL;	
+	thumbsEnabled = true;
 }
 
 ofxTLVideoPlayer::~ofxTLVideoPlayer(){
@@ -28,17 +29,24 @@ void ofxTLVideoPlayer::draw(){
 	}
 	   
 	ofPushStyle();
-	ofSetColor(255);
-	for(int i = 0; i < videoThumbs.size(); i++){
-		if(videoThumbs[i].visible){
-			videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
+	if(thumbsEnabled){
+		ofSetColor(255);
+		for(int i = 0; i < videoThumbs.size(); i++){
+			if(videoThumbs[i].visible){
+				videoThumbs[i].thumb.draw(videoThumbs[i].displayRect);
+			}
 		}
 	}
 	
-	ofNoFill();
-	ofSetColor(255, 150, 0);
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(videoThumbs[i].visible){
+			if (!thumbsEnabled) {
+				ofFill();
+				ofSetColor(0);
+				ofRect(videoThumbs[i].displayRect);
+			}
+			ofNoFill();
+			ofSetColor(255, 150, 0);
 			ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
 			ofRect(videoThumbs[i].displayRect);
 		}
@@ -52,6 +60,7 @@ void ofxTLVideoPlayer::draw(){
 	ofPopStyle();
 }
 
+//void ofxTLVideoPlayer::setVideoPlayer(ofxQTKitVideoPlayer& newPlayer, string thumbDir){
 void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir){
 	ofDirectory checkCreateDirectory(thumbDir);
 	if (!checkCreateDirectory.exists()) {
@@ -91,8 +100,10 @@ void ofxTLVideoPlayer::zoomDragged(ofxTLZoomEventArgs& args){
 void ofxTLVideoPlayer::zoomEnded(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomEnded(args);
 	calculateFramePositions();
-	generateVideoThumbnails();
-	purgeOldThumbnails();
+	if(thumbsEnabled){
+		generateVideoThumbnails();
+		purgeOldThumbnails();
+	}
 }
 
 void ofxTLVideoPlayer::calculateFramePositions(){
@@ -103,7 +114,7 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	
 	int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
 	int totalPixels = int( bounds.width / zoomBounds.span() );
-	int framesToShow = totalPixels / frameWidth;
+	int framesToShow = MAX(totalPixels / frameWidth, 1);
 	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
 
@@ -124,11 +135,11 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 }
 
 void ofxTLVideoPlayer::mousePressed(ofMouseEventArgs& args){
-		
+	ofxTLElement::mousePressed(args);
 }
 
 void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
-
+	ofxTLElement::mouseMoved(args);
 }
 
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
@@ -138,7 +149,17 @@ void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTLVideoPlayer::mouseReleased(ofMouseEventArgs& args){
+}
 
+void ofxTLVideoPlayer::keyPressed(ofKeyEventArgs& args){
+	if(hover){
+		if(args.key == OF_KEY_LEFT){
+			selectFrame(MAX(selectedFrame-1, 0));
+		}
+		else if(args.key == OF_KEY_RIGHT){
+			selectFrame(MIN(selectedFrame+1, videoThumbs.size()-1));		
+		}
+	}	
 }
 
 void ofxTLVideoPlayer::selectFrame(int frame){
@@ -161,14 +182,21 @@ void ofxTLVideoPlayer::generateThumbnailForFrame(int i){
 		}
 		else {
 //			cout << "generating thumb " << videoThumbs[i].framenum << endl;
-			player->setFrame(videoThumbs[i].framenum);
+			player->setFrame(videoThumbs[i].framenum);			
 			player->update();
+
 			ofImage frameImage;
 			frameImage.setFromPixels(player->getPixelsRef());
+			//frameImage.setFromPixels(player->getPixels(), player->getWidth(), player->getHeight(), OF_IMAGE_COLOR_ALPHA);
+			
 //			cout << "found frame size of " << frameImage.getWidth() << " from video player with size " << player->getWidth() << endl;
 			videoThumbs[i].create(frameImage);
 		}
 	}
+}
+
+void ofxTLVideoPlayer::toggleThumbs(){
+	thumbsEnabled = !thumbsEnabled;
 }
 
 

@@ -28,6 +28,8 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
+
+	virtual void keyPressed(ofKeyEventArgs& args);
 	
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
@@ -43,10 +45,13 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	
 	int getSelectedFrame();
 	void selectFrame(int frame);
+	void toggleThumbs();
 	
   protected:
 	int selectedFrame;
 	bool sequenceLoaded;
+	
+	bool thumbsEnabled;
 	
 	void calculateFramePositions();
 	void generateVideoThumbnails();

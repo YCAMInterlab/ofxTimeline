@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
 #include "ofxTLElement.h"
+#include "ofxQTKitVideoPlayer.h"
 
 class ofxTLVideoPlayer : public ofxTLElement {
   public:
@@ -28,6 +29,8 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
+	virtual void keyPressed(ofKeyEventArgs& args);
+	
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
@@ -35,20 +38,25 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void drawRectChanged();
 
 	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
-	
+	//void setVideoPlayer(ofxQTKitVideoPlayer& player, string thumbDirectory);
 	int getSelectedFrame();
 	void selectFrame(int frame);
+	void toggleThumbs();
 	
   protected:
 	int selectedFrame;
-
+	bool thumbsEnabled;
+	
 	void calculateFramePositions();
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);
 	//TODO:
 	void purgeOldThumbnails();
 	
+	//ofVideoPlayer* player;
+	//ofxQTKitVideoPlayer* player;
 	ofVideoPlayer* player;
+	
 	string thumbDirectory;
 	
 //	int indexForScreenX(int mouseX);

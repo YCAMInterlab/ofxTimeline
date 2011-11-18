@@ -41,8 +41,8 @@ class ofxTLElement
 	virtual void setAutosave(bool autosave);
 	
 	//standard events
-	virtual void mousePressed(ofMouseEventArgs& args){};
-	virtual void mouseMoved(ofMouseEventArgs& args){};
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args){};
 	virtual void mouseReleased(ofMouseEventArgs& args){};
 	
@@ -70,8 +70,8 @@ class ofxTLElement
 	virtual void drawRectChanged(){};
 	
 	bool hover;
+	bool focused;
 	bool enabled; //it's up to the implementation to respect this
-	bool focused; //it's up to the implementation to modify this;
 	bool autosave; //it's up to the implementation to save when it's modified based on this var
 	
 	ofxXmlSettings settings;

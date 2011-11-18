@@ -134,10 +134,6 @@ void ofxTLVideoDepthAlignmentScrubber::load(){
 			p.videoFrame = settings.getValue("video", 0);
 			p.depthFrame = settings.getValue("depth", 0);
 			alignedFrames.push_back(p);			
-//			int videoframe = settings.getValue("video", 0);
-//			int depthframe = settings.getValue("depth", 0);
-//			alignedVideoFrames.push_back(videoframe);
-//			alignedDepthFrames.push_back(depthframe);
 			settings.popTag();
 			cout << "ofxTLVideoDepthAlignmentScrubber -- Loaded Pairs vid. " << p.videoFrame << " dep. " << p.depthFrame << endl;
 		}
@@ -170,13 +166,12 @@ int ofxTLVideoDepthAlignmentScrubber::getDepthFrameForVideoFrame(int videoFrame)
 		}
 	}
 
-	
 	if(endIndex == alignedFrames.size()){
 		startIndex--;
 		endIndex--;
 	}
 	
-	cout << "looking for index " << videoFrame << " found to be between " << startIndex << " and " << endIndex << endl;
+	//cout << "looking for index " << videoFrame << " found to be between " << startIndex << " and " << endIndex << endl;
 	
 	return ofMap(videoFrame, alignedFrames[startIndex].videoFrame, alignedFrames[endIndex].videoFrame,
 							 alignedFrames[startIndex].depthFrame, alignedFrames[endIndex].depthFrame, false);
