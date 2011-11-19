@@ -72,18 +72,6 @@ void ofxTLVideoDepthAlignmentScrubber::mouseDragged(ofMouseEventArgs& args){
 void ofxTLVideoDepthAlignmentScrubber::mouseReleased(ofMouseEventArgs& args){
 }
 
-//void ofxTLVideoDepthAlignmentScrubber::zoomStarted(ofxTLZoomEventArgs& args){
-//}
-//
-//void ofxTLVideoDepthAlignmentScrubber::zoomDragged(ofxTLZoomEventArgs& args){
-//}
-//
-//void ofxTLVideoDepthAlignmentScrubber::zoomEnded(ofxTLZoomEventArgs& args){
-//}
-
-void ofxTLVideoDepthAlignmentScrubber::drawRectChanged(){
-}
-
 void ofxTLVideoDepthAlignmentScrubber::addAlignedPair(int videoFrame, int depthFrame){
 	VideoDepthPair p;
 	p.videoFrame = videoFrame;

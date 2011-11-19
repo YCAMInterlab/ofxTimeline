@@ -34,12 +34,6 @@ class ofxTLVideoDepthAlignmentScrubber : public ofxTLElement {
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
-//	virtual void zoomStarted(ofxTLZoomEventArgs& args);
-//	virtual void zoomDragged(ofxTLZoomEventArgs& args);
-//	virtual void zoomEnded(ofxTLZoomEventArgs& args);
-	
-	virtual void drawRectChanged();
-	
 	void load();
 	void save();
 	
@@ -61,6 +55,4 @@ class ofxTLVideoDepthAlignmentScrubber : public ofxTLElement {
 	int getDepthFrameForVideoFrame(int videoFrame);
 	
 	vector<VideoDepthPair> alignedFrames;
-//	vector<int> alignedVideoFrames;
-//	vector<int> alignedDepthFrames;	
 };
