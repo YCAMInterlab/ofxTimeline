@@ -12,7 +12,7 @@
 #include "ofMain.h"
 #include "ofxTLElement.h"
 #include "ofxTLVideoThumb.h"
-#include "ofxKinectPointcloudDecoder.h"
+#include "ofxKinectPointcloudRecorder.h"
 
 class ofxTLDepthImageSequence : public ofxTLElement {
   public:	
@@ -42,6 +42,7 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	
 	ofImage currentDepthImage;
 	unsigned short* currentDepthRaw;
+	unsigned short* thumbnailDepthRaw;
 	
 	int getSelectedFrame();
 	void selectFrame(int frame);
@@ -61,5 +62,5 @@ class ofxTLDepthImageSequence : public ofxTLElement {
 	string sequenceDirectory;
 	string thumbDirectory;
 	
-	ofxKinectPointcloudDecoder decoder;
+	ofxKinectPointcloudRecorder decoder;
 };

@@ -12,6 +12,7 @@
 ofxTLDepthImageSequence::ofxTLDepthImageSequence(){
 	sequenceLoaded = false;
 	currentDepthRaw = NULL;
+	thumbnailDepthRaw = NULL;
 	selectedFrame = 0;
 	thumbsEnabled = true;
 }
@@ -20,13 +21,16 @@ ofxTLDepthImageSequence::~ofxTLDepthImageSequence(){
 	if(currentDepthRaw != NULL){
 		delete currentDepthRaw;
 	}
+	if(thumbnailDepthRaw != NULL){
+		delete thumbnailDepthRaw;
+	}
 }
 
 void ofxTLDepthImageSequence::setup(){
 	
 	enable();
 	currentDepthRaw = new unsigned short[640*480];
-	
+	thumbnailDepthRaw = new unsigned short[640*480];
 }
 
 void ofxTLDepthImageSequence::draw(){
@@ -109,7 +113,8 @@ void ofxTLDepthImageSequence::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLDepthImageSequence::selectFrame(int frame){
 	selectedFrame = ofClamp(frame, 0, videoThumbs.size()-1);
-	decoder.readDepthFrame(videoThumbs[selectedFrame].sourcepath, currentDepthRaw);
+	//decoder.readDepthFrame(videoThumbs[selectedFrame].sourcepath, currentDepthRaw);
+	decoder.readCompressedPng(videoThumbs[selectedFrame].sourcepath, currentDepthRaw);
 	currentDepthImage = decoder.convertTo8BitImage(currentDepthRaw);
 }
 
@@ -143,9 +148,13 @@ void ofxTLDepthImageSequence::loadSequence(string seqdir){
 		}
 	}
 	
-	sequenceList.allowExt("xkcd");
+	sequenceList.allowExt("png");
 	int numFiles = sequenceList.listDir();
 	for(int i = 0; i < numFiles; i++){
+		if(sequenceList.getPath(i).find("poster") != string::npos){
+			cout << "discarding poster frame " << sequenceList.getPath(i) << endl;
+			continue;
+		}
 		ofxTLVideoThumb	t;
 		t.setup(i, thumbDirectory);
 		t.sourcepath = sequenceList.getPath(i);
@@ -201,7 +210,8 @@ void ofxTLDepthImageSequence::generateThumbnailForFrame(int i){
 			videoThumbs[i].load();
 		}
 		else {
-			ofImage grayConverted = decoder.readDepthFrametoImage(videoThumbs[i].sourcepath);
+			decoder.readCompressedPng(videoThumbs[i].sourcepath, thumbnailDepthRaw);
+			ofImage grayConverted = decoder.convertTo8BitImage(thumbnailDepthRaw);
 			videoThumbs[i].create(grayConverted);
 		}
 	}
