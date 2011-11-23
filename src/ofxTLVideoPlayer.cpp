@@ -60,7 +60,7 @@ void ofxTLVideoPlayer::draw(){
 	ofPopStyle();
 }
 
-//void ofxTLVideoPlayer::setVideoPlayer(ofxQTKitVideoPlayer& newPlayer, string thumbDir){
+
 void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir){
 	ofDirectory checkCreateDirectory(thumbDir);
 	if (!checkCreateDirectory.exists()) {

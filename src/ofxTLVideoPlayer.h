@@ -12,7 +12,6 @@
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
 #include "ofxTLElement.h"
-#include "ofxQTKitVideoPlayer.h"
 
 class ofxTLVideoPlayer : public ofxTLElement {
   public:
@@ -38,7 +37,6 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void drawRectChanged();
 
 	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
-	//void setVideoPlayer(ofxQTKitVideoPlayer& player, string thumbDirectory);
 	int getSelectedFrame();
 	void selectFrame(int frame);
 	void toggleThumbs();
