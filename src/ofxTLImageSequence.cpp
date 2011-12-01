@@ -42,9 +42,6 @@ void ofxTLImageSequence::draw() {
 	
 }
 
-//main function to get values out of the timeline
-//bool ofxTLImageSequence::loadSequence(){
-//}
 
 bool ofxTLImageSequence::loadSequence(string directory){
 

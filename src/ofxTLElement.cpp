@@ -8,7 +8,7 @@
  */
 
 #include "ofxTLElement.h"
-#include "ofxTimelineUtils.h"
+#include "ofxTimeline.h"
 
 ofxTLElement::ofxTLElement()
 :	xmlFileName(""),
@@ -17,7 +17,9 @@ ofxTLElement::ofxTLElement()
 	enabled(true),
 	focused(false),
 	hover(false),
-	autosave(true)
+	createdByTimeline(false),
+	autosave(true),
+	timeline(NULL)
 {
 	//
 }
@@ -48,6 +50,14 @@ void ofxTLElement::offsetDrawRect(ofVec2f offset){
 	drawRectChanged();
 }
 
+ofxTimeline* ofxTLElement::getTimeline(){
+	return timeline;
+}
+	
+void ofxTLElement::setTimeline(ofxTimeline* _timeline){
+	timeline = _timeline;
+}
+
 void ofxTLElement::mouseMoved(ofMouseEventArgs& args){
 	hover = bounds.inside(args.x, args.y);
 }
@@ -58,6 +68,14 @@ void ofxTLElement::mousePressed(ofMouseEventArgs& args){
 
 ofRectangle ofxTLElement::getDrawRect(){
 	return bounds;
+}
+
+bool ofxTLElement::getCreatedByTimeline(){
+	return createdByTimeline;
+}
+
+void ofxTLElement::setCreatedByTimeline(bool created){
+	createdByTimeline = created;
 }
 
 void ofxTLElement::zoomStarted(ofxTLZoomEventArgs& args){
@@ -89,7 +107,6 @@ bool ofxTLElement::hasFocus(){
 }
 
 bool ofxTLElement::pointInScreenBounds(ofVec2f screenpoint){
-	//return isPointInRect(screenpoint, bounds);
 	return bounds.inside(screenpoint);
 }
 
@@ -99,6 +116,14 @@ float ofxTLElement::screenXtoNormalizedX(float x){
 
 float ofxTLElement::normalizedXtoScreenX(float x){
 	return ofMap(x, 0.0, 1.0, bounds.x, bounds.x+bounds.width, true);
+}
+
+int ofxTLElement::indexForScreenX(int screenX){
+	return indexForScreenX(screenX, timeline->getDurationInFrames());
+}
+
+int ofxTLElement::screenXForIndex(int index){
+	return screenXForIndex(index, timeline->getDurationInFrames());	
 }
 
 int ofxTLElement::indexForScreenX(int screenX, int durationInFrames){

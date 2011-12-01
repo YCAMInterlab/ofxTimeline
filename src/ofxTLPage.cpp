@@ -3,14 +3,10 @@
  *  timelineExample
  *
  *  Created by Jim on 10/2/11.
- *  Copyright 2011 FlightPhase. All rights reserved.
  *
  */
 
 #include "ofxTLPage.h"
-
-//#define HEADER_HEIGHT 20 //TODO: make this variable
-//#define DEFAULT_ELEMENT_HEIGHT 150 //TODO: make this variable
 
 ofxTLPage::ofxTLPage()
 :	autosave(false),
@@ -26,7 +22,9 @@ ofxTLPage::ofxTLPage()
 ofxTLPage::~ofxTLPage(){
 	if(isSetup){
 		for(int i = 0; i < headers.size(); i++){
-			delete elements[headers[i]->name];
+			if(elements[headers[i]->name]->getCreatedByTimeline()){
+				delete elements[headers[i]->name];
+			}
 			delete headers[i];
 		}
 		headers.clear();
@@ -39,7 +37,6 @@ ofxTLPage::~ofxTLPage(){
 #pragma mark utility
 void ofxTLPage::setup(){
 	
-//	loadElementPositions();
 	ofAddListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
 	headerHeight = 20;
@@ -121,9 +118,18 @@ void ofxTLPage::addElement(string elementName, ofxTLElement* element){
 
 	elements[elementName] = element;
 
-	//	for(int i = 0; i < headers.size(); i++){
-	//		cout << "	POST ADD header " << i << " is " << headers[i]->name << " y " << headers[i]->getDrawRect().y << " height " << headers[i]->getDrawRect().height << endl;
-	//	}
+}
+
+ofxTLElement* ofxTLPage::getElement(string elementName){
+	if(elements.find(elementName) == elements.end()){
+		ofLogError("ofxTLPage -- Couldn't find element named " + elementName + " on page " + name);
+		return NULL;
+	}
+	return elements[elementName];
+}
+
+void ofxTLPage::removeElement(string name){
+	//TODO:
 }
 
 void ofxTLPage::recalculateHeight(){
@@ -167,7 +173,7 @@ void ofxTLPage::loadElementPositions(){
 	ofxXmlSettings elementPositions;
 	if(elementPositions.loadFile(name + "_elementPositions.xml")){
 		
-		cout << "loading element position " << name << "_elementPositions.xml" << endl;
+		//cout << "loading element position " << name << "_elementPositions.xml" << endl;
 		
 		elementPositions.pushTag("positions");
 		int numElements = elementPositions.getNumTags("element");

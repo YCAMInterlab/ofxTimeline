@@ -28,3 +28,5 @@ apps/*/*/obj
 *modexp64.so
 */*/*.tags
 */bin/timelineExample
+
+example-videoplayer/bin/data/video_thumbs/

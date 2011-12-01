@@ -43,20 +43,42 @@ class ofxTimeline {
 	~ofxTimeline();
 
 	virtual void setup();
-
-	virtual void toggleShow();
-	virtual void togglePlay();
 	
 	virtual void enable();
 	virtual void disable();
+	virtual bool toggleEnabled();
+
+	virtual void show();
+	virtual void hide();
+	virtual bool toggleShow();
+
+	virtual void setCurrentFrame(int currentFrame);
+	virtual void setCurrentTime(float time);
+	virtual int getCurrentFrame();
+	virtual float getCurrentTime();
+
+	
+	virtual void play();
+	virtual void stop();
+	virtual bool togglePlay();
+	virtual bool getIsPlaying();
+	
+	//Setting the duration in seconds or frames determines 
+	//wether the timeline is frame-based or time-based
+	//FRAME-BASED timelines will progress one frame each call to update
+	//at whatever framerate openFrameworks is running at, and will never skip frames
+	//TIME-BASED timelines will progress in real time regardless of openFrameworks
+	//framerate.
+	virtual void setDurationInFrames(int frames);
+	virtual void setDurationInSeconds(float seconds);
+	virtual bool getIsFrameBased();
+	
+	virtual int getDurationInFrames();
+	virtual float getDurationInSeconds();
 
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
-										
-	virtual void setDuration(int frames);
-	virtual void setDuration(float seconds);
-	virtual void setFrameRate(int framerate);
-
+	
 	virtual void draw();
 
 	virtual void addPage(string name, bool makeCurrent = true);
@@ -93,12 +115,8 @@ class ofxTimeline {
 	
 	//for custom elements
 	virtual void addElement(string name, ofxTLElement* element);
-	
 	virtual void setAutosave(bool autosave);
-	
-	void enableEvents();
-	void disableEvents();
-	
+		
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -110,15 +128,23 @@ class ofxTimeline {
 	bool isSetup;
 	bool usingEvents;
 	
+	//only enabled while playing
+	virtual void update(ofEventArgs& updateArgs);
+
+	map<string, ofxTLPage*> elementNameToPage;
+	
 	ofxTLPage* currentPage;
 	vector<ofxTLPage*> pages;
-	
+
 	ofxTLTicker* ticker;
 	ofxTLPageTabs* tabs;
 	ofxTLZoomer* zoomer;
 
 	float width;
 	ofVec2f offset;
+
+	virtual void enableEvents();
+	virtual void disableEvents();
 
 	virtual void viewNeedsResize(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);
@@ -134,6 +160,10 @@ class ofxTimeline {
 	bool isShowing; //allows for viewing
 	bool isPlaying; //moves playhead along
 	
+	int currentFrame;
+	float currentTime;
+	
+	ofLoopType loopType;
 	int playbackStartFrame;
 	float playbackStartTime;	
 	float mouseoverPlayheadPosition;
@@ -141,8 +171,8 @@ class ofxTimeline {
 	
 	bool modalIsShown;
 	bool autosave;
+	
 	bool isFrameBased;
-	float durationInFrames;
+	int durationInFrames;
 	float durationInSeconds;
-	int currentFrameRate;
 };

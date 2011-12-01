@@ -8,13 +8,10 @@
  */
 
 #include "ofxTLTicker.h"
+#include "ofxTimeline.h"
 
 ofxTLTicker::ofxTLTicker() 
-:	isFrameBased(false),	
-	durationInFrames(0),
-	durationInSeconds(0),
-	framerate(25),
-	curHoverFrame(-1)
+:	curHoverFrame(-1)
 {
 	//default constructor
 	hovering = false;
@@ -31,26 +28,18 @@ void ofxTLTicker::draw(){
 	
 	ofPushStyle();
 	
-	if(isFrameBased){
+	if(timeline->getIsFrameBased()){
 		
-		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, durationInFrames);
-		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, durationInFrames);
+		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
+		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, timeline->getDurationInFrames());
 		framesInView = curEndFrame-curStartFrame;
 	
 		float framesPerPixel = framesInView / totalDrawRect.width;
 		int frameStepSize = 1;
 		
-		/*
-		if(framesPerPixel > 10){
-			frameStepSize = 10;
-		}
-		else if(framesPerPixel > 1){
-		}
-		else {
-			frameStepSize = 1;			
-		}
-		*/
 		
+		//TODO make adaptive
+		//draw ticker marks
 		for(int i = curStartFrame; i <= curEndFrame; i++){
 			float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
 			ofSetColor(200, 180, 40);
@@ -66,7 +55,7 @@ void ofxTLTicker::draw(){
 			
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
-			
+		
 		/*
 		//draw tickers with frame numbers
 		float d = bounds.width/(float)durationInFrames; //using a float results in uneven spread of keyframes
@@ -81,7 +70,29 @@ void ofxTLTicker::draw(){
 			}
 			counter++;
 		}
-		 */
+		*/
+		
+		//draw current frame
+		if(timeline->getIsPlaying()){
+			ofSetColor(100, 255, 0);
+		}
+		else{
+			ofSetColor(10, 10, 255);
+		}
+		
+		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+		string text = ofToString(currentFrameX);
+		int textH = 10;
+		int textW = (text.size()+1)*7;
+
+		ofRect(currentFrameX, bounds.y+bounds.height-textH, textW, textH);
+		ofSetColor(200, 180, 40);
+		ofDrawBitmapString(text, currentFrameX+5, bounds.y+bounds.height);
+		
+		//draw playhead line
+		ofSetLineWidth(1);
+		ofLine(currentFrameX, totalDrawRect.y-bounds.height, currentFrameX, totalDrawRect.y+totalDrawRect.height);
+		
 		
 		//highlite current mouse position
 		if(hovering){
@@ -89,9 +100,9 @@ void ofxTLTicker::draw(){
 			//draw background rect
 			ofSetColor(0);
 			
-			string text = ofToString(curHoverFrame);
-			int textH = 10;
-			int textW = (text.size()+1)*7;
+			text = ofToString(curHoverFrame);
+			textH = 10;
+			textW = (text.size()+1)*7;
 			ofRect(mousex, bounds.y+bounds.height-textH, textW, textH);
 			ofSetColor(200, 180, 40);
 			ofDrawBitmapString(text, mousex+5, bounds.y+bounds.height);
@@ -102,6 +113,7 @@ void ofxTLTicker::draw(){
 			ofLine(mousex, totalDrawRect.y-bounds.height, mousex, totalDrawRect.y+totalDrawRect.height);
 		}
 	}
+	//Time based
 	else {
 		//draw tickers with time
 	}
@@ -114,6 +126,7 @@ void ofxTLTicker::draw(){
 	
 }
 
+/*
 void ofxTLTicker::setDuration(int frames){
 	isFrameBased = true;
 	durationInFrames = frames;
@@ -137,10 +150,11 @@ void ofxTLTicker::setFrameRate(int _framerate){
 		
 	}
 }
-	
+*/
+
 void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
 	updateHover(args);
-	//TODO update time, trigger an event?
+
 }
 
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){
@@ -162,8 +176,7 @@ void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 void ofxTLTicker::updateHover(ofMouseEventArgs& args){
 	ofVec2f mousePos(args.x - totalDrawRect.x, args.y - totalDrawRect.y); //necessary or are mouse positions already mapped to the right region?
 	hovering = mousePos.x > 0 && mousePos.x < totalDrawRect.width && mousePos.y > 0 && mousePos.y < totalDrawRect.height;
-	
 	curHoverFrame = ofMap(mousePos.x, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
-	
 	mousex  = mousePos.x; 
 }
+

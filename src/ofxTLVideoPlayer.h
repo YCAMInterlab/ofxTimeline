@@ -48,15 +48,10 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	void calculateFramePositions();
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);
-	//TODO:
+	//TODO: make this work
 	void purgeOldThumbnails();
 	
-	//ofVideoPlayer* player;
-	//ofxQTKitVideoPlayer* player;
 	ofVideoPlayer* player;
 	
-	string thumbDirectory;
-	
-//	int indexForScreenX(int mouseX);
-//	int screenXForIndex(int index);
+	string thumbDirectory;	
 };

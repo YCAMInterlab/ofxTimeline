@@ -20,6 +20,10 @@ ofxTLZoomer::ofxTLZoomer()
 	//default constructor
 }
 
+ofxTLZoomer::~ofxTLZoomer(){
+	
+}
+
 void ofxTLZoomer::setup(){
 	enable();
 	load();
@@ -73,8 +77,7 @@ void ofxTLZoomer::draw(){
 	ofPopStyle();
 }
 
-void ofxTLZoomer::load()
-{
+void ofxTLZoomer::load() {
 	notifyZoomStarted();
 	
 	ofxXmlSettings settings;
@@ -92,8 +95,7 @@ void ofxTLZoomer::load()
 	notifyZoomEnded();
 }
 
-void ofxTLZoomer::save()
-{
+void ofxTLZoomer::save() {
 	ofxXmlSettings savedSettings;
 	savedSettings.addTag("zoom");
 	savedSettings.pushTag("zoom");
@@ -103,13 +105,11 @@ void ofxTLZoomer::save()
 	savedSettings.saveFile(xmlFileName);
 }
 
-void ofxTLZoomer::mouseMoved(ofMouseEventArgs& args)
-{
+void ofxTLZoomer::mouseMoved(ofMouseEventArgs& args) {
 	
 }
 
-void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
-{
+void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 
 	if(!enabled) return;
 
@@ -164,8 +164,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args)
 	}
 }
 
-void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args)
-{
+void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
 	if(!enabled) return;
 
 	ofRange oldRange = currentViewRange;
@@ -215,12 +214,10 @@ void ofxTLZoomer::notifyZoomEnded(){
 	ofNotifyEvent(ofxTLEvents.zoomEnded, zoomEvent);	
 }
 
-void ofxTLZoomer::keyPressed(ofKeyEventArgs& args)
-{
+void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
 	//TODO: nudge
 }
 
-ofRange ofxTLZoomer::getViewRange()
-{
+ofRange ofxTLZoomer::getViewRange() {
 	return currentViewRange;
 }

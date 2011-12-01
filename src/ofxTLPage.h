@@ -33,6 +33,8 @@ class ofxTLPage {
 	virtual float getComputedHeight();	
 	
 	virtual void addElement(string name, ofxTLElement* element);
+	virtual ofxTLElement* getElement(string name);
+	virtual void removeElement(string name);
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);

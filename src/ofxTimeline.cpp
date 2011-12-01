@@ -27,7 +27,6 @@ ofxTimeline::ofxTimeline()
 	isFrameBased(false),
 	durationInFrames(100),
 	durationInSeconds(100.0f/30.0f),
-	currentFrameRate(30),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
 	isSetup(false),
@@ -37,6 +36,10 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
+		if(isPlaying){
+			stop();
+		}
+		
 		delete currentPage;
 		for(int i = 0; i < pages.size(); i++){ 
 			delete pages[i];
@@ -49,6 +52,7 @@ ofxTimeline::~ofxTimeline(){
 		
 		ofRemoveListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
+		
 	}
 }
 
@@ -59,19 +63,22 @@ void ofxTimeline::setup(){
 	width = ofGetWidth();
 
 	tabs = new ofxTLPageTabs();
+	tabs->setTimeline(this);
 	tabs->setup();
 	tabs->setDrawRect(ofRectangle(0, 0, width, TICKER_HEIGHT));
 
 	ticker = new ofxTLTicker();
+	ticker->setTimeline(this);
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(0, TICKER_HEIGHT, width, TICKER_HEIGHT));
 	
 	zoomer = new ofxTLZoomer();
+	zoomer->setTimeline(this);
 	zoomer->setXMLFileName(filenamePrefix + "_zoomer.xml");
 	zoomer->setup();
 	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
 		
-	enableEvents();
+	enable();
 	
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
@@ -81,31 +88,122 @@ void ofxTimeline::setup(){
 }
 
 #pragma mark CONFIGURATION
-void ofxTimeline::toggleShow(){
+void ofxTimeline::show(){
+	isShowing = true;
+}
 	
+void ofxTimeline::hide(){
+	isShowing = false;
 }
 
-void ofxTimeline::togglePlay(){
+bool ofxTimeline::toggleShow(){
+	isShowing = !isShowing;
+	return isShowing;
 }
 
+void ofxTimeline::play(){
+	if(!isPlaying){
+		ofAddListener(ofEvents.update, this, &ofxTimeline::update);
+		isPlaying = true;
+		if (isFrameBased) {
+			playbackStartFrame = ofGetFrameNum();
+		}
+		else{
+			playbackStartTime = ofGetElapsedTimef();
+		}
+	}
+}
+
+void ofxTimeline::stop(){
+	if(isPlaying){
+		isPlaying = false;
+		ofRemoveListener(ofEvents.update, this, &ofxTimeline::update);
+	}
+}
+
+bool ofxTimeline::togglePlay(){
+	if(isPlaying){
+		stop();
+	}
+	else{
+		play();
+	}
+	return isPlaying;
+}
+
+bool ofxTimeline::getIsPlaying(){
+	return isPlaying;
+}
+
+void ofxTimeline::setCurrentFrame(int newFrame){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- setting current frame on a timebased timline has no effect.");
+	}
+	currentFrame = newFrame;
+}
+
+void ofxTimeline::setCurrentTime(float time){
+	if(isFrameBased){
+		ofLogWarning("ofxTimeline -- setting current time on a framebased timeline has no effect.");
+	}
+	currentTime = time;
+}
+
+bool ofxTimeline::getIsFrameBased(){
+	return isFrameBased;
+}
+
+int ofxTimeline::getCurrentFrame(){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- getting current frame on a timebased timline will return inaccurate results.");
+	}
+	return currentFrame;
+}
+
+float ofxTimeline::getCurrentTime(){
+	if(isFrameBased){
+		ofLogWarning("ofxTimeline -- getting current time on a framebased will return inaccurate results.");
+	}
+	return currentTime;
+}
+
+bool ofxTimeline::toggleEnabled(){
+	isEnabled = !isEnabled;
+	return isEnabled;
+}
 
 void ofxTimeline::enable(){
+	isEnabled = true;
+	enableEvents();
 }
 
 void ofxTimeline::disable(){
+	isEnabled = false;
+	disableEvents();
 }
 
-
-void ofxTimeline::setDuration(int frames){
-	ticker->setDuration(frames);
+void ofxTimeline::setDurationInFrames(int frames){
+	durationInFrames = frames;
+	isFrameBased = true;
 }
 
-void ofxTimeline::setDuration(float seconds){
-	ticker->setDuration(seconds);
+void ofxTimeline::setDurationInSeconds(float seconds){
+	durationInSeconds = seconds;
+	isFrameBased = false;
 }
 
-void ofxTimeline::setFrameRate(int framerate){
-	ticker->setFrameRate(framerate);
+int ofxTimeline::getDurationInFrames(){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- getting duration in frames on a timebased timline will return inaccurate results.");
+	}
+	return durationInFrames;
+}
+
+float ofxTimeline::getDurationInSeconds(){
+	if(isFrameBased){
+		ofLogWarning("ofxTimeline -- getting duration in time on a framebased will return inaccurate results.");
+	}
+	return durationInSeconds;
 }
 
 void ofxTimeline::setAutosave(bool doAutosave){
@@ -127,8 +225,7 @@ void ofxTimeline::updatePagePositions(){
 	ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
 	for(int i = 0; i < pages.size(); i++){
 		pages[i]->setContainer(pageOffset, width);
-	}	
-	
+	}
 	currentPage->recalculateHeight();
 }
 
@@ -216,7 +313,6 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 		if(pages[i]->getName() == args.currentPageName){
 			currentPage = pages[i];
 			recalculateBoundingRects();
-			
 			return;
 		}
 	}
@@ -224,11 +320,39 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
 }
 
+void ofxTimeline::update(ofEventArgs& updateArgs){
+	
+	if(isFrameBased){
+		currentFrame = ofGetFrameNum() - playbackStartFrame;
+		if(currentFrame >= durationInFrames){
+			if(loopType == OF_LOOP_NONE){
+				currentFrame = durationInFrames;
+				stop();
+			}
+			else if(loopType == OF_LOOP_NORMAL) {
+				currentFrame %= durationInFrames;
+			}
+		}
+	}
+	else{
+		currentTime = ofGetElapsedTimef() - playbackStartTime;
+		if(currentTime >= durationInSeconds){
+			if(loopType == OF_LOOP_NONE){
+				currentTime = durationInSeconds;
+				stop();
+			}
+			else if(loopType == OF_LOOP_NORMAL) {
+				currentTime = fmod(currentTime, durationInSeconds);
+			}
+		}
+	}
+}
+
 void ofxTimeline::draw(){	
 	tabs->draw();
-	ticker->draw();
 	currentPage->draw();
 	zoomer->draw();
+	ticker->draw();
 }
 
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS
@@ -276,15 +400,19 @@ void ofxTimeline::setCurrentPage(int index){
 	
 }
 
-//can be used custom elements
+//can be used to add custom elements
 void ofxTimeline::addElement(string name, ofxTLElement* element){
+	element->setTimeline( this );
 	currentPage->addElement(name, element);		
+	elementNameToPage[name] = currentPage;
 	recalculateBoundingRects();
 }
 
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
 
 	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
+	newKeyframer->setCreatedByTimeline(true);
+	newKeyframer->setValueRange(valueRange);
 	newKeyframer->setXMLFileName(xmlFileName);
 	addElement(name, newKeyframer);
 	
@@ -292,13 +420,30 @@ ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRan
 }
 
 float ofxTimeline::getKeyframeValue(string name){
-	
+	if(isFrameBased){
+		return getKeyframeValue(name, currentFrame);
+	}
+	else {
+		return getKeyframeValue(name, currentTime);
+	}
 }
 
 float ofxTimeline::getKeyframeValue(string name, float atTime){
+	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
+	if(keyframer == NULL){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return 0.0;
+	}
+	return keyframer->getValueAtPercent(atTime/durationInSeconds);
 }
 
 float ofxTimeline::getKeyframeValue(string name, int atFrame){
+	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
+	if(keyframer == NULL){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return 0.0;
+	}
+	return keyframer->getValueAtPercent(1.0*currentFrame/durationInFrames);
 }
 
 
@@ -347,6 +492,7 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name){
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory){
 	ofxTLImageSequence*	newImageSequence = new ofxTLImageSequence();
+	newImageSequence->setCreatedByTimeline(true);
 	newImageSequence->loadSequence(directory);
 	addElement(name, newImageSequence);
 	return newImageSequence;	

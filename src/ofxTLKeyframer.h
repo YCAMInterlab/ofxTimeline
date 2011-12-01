@@ -3,7 +3,6 @@
  *  THIS_Editor
  *
  *  Created by Jim on 6/26/11.
- *  Copyright 2011 FlightPhase. All rights reserved.
  *
  */
 
@@ -46,8 +45,9 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual void setup();
 	virtual void draw();
 
-	//main function to get values out of the timeline
-	virtual float sampleTimelineAt(float percent);
+	virtual void setValueRange(ofRange range);
+	//main function to get values out of the timeline, operates on the given value range
+	virtual float getValueAtPercent(float percent);
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
@@ -63,11 +63,15 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual void clear();
 	
   private:
+	
+	virtual float sampleAt(float percent);
+
 	ofxTLKeyframe* firstkey;
 	ofxTLKeyframe* lastkey;
 	ofVec2f grabOffset;
 	vector<ofxTLKeyframe*> keyframes;
 
+	ofRange valueRange;
 	
 	bool keyframeIsInBounds(ofxTLKeyframe* key);
 	

@@ -7,18 +7,24 @@ void testApp::setup(){
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	
-	timeline = new ofxTimeline();
-	timeline->setup();
-	timeline->setOffset(ofVec2f(0, 480));
+	timeline.setup();
+	timeline.setOffset(ofVec2f(0, 480));
 	
-	playerElement = NULL;
-
-	timeline->setDuration(300);
+	player.loadMovie("synchronizedswim.mp4");
+	
+	playerElement.setup();
+	timeline.setDurationInFrames(player.getTotalNumFrames());
+	timeline.addElement("Video", &playerElement);
+	playerElement.setVideoPlayer(player, "video_thumbs");
+	
+	//set player rectangle 
+	playerRect = ofRectangle(0,0,480 * player.getWidth()/player.getHeight(), 480);
+	
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-//	timeline->setOffset(ofVec2f(0, ofGetMouseY()));
+
 }
 
 //--------------------------------------------------------------
@@ -27,23 +33,17 @@ void testApp::draw(){
 	if (player.isLoaded()) {
 		player.draw(playerRect);
 	}
-	timeline->draw();
+	
+	timeline.draw();
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(playerElement == NULL){
-		ofFileDialogResult r = ofSystemLoadDialog("Load Video File", false);
-		if(r.bSuccess && player.loadMovie(r.filePath)){
-			playerElement = new ofxTLVideoPlayer();
-			playerElement->setup();
-			timeline->setDuration(player.getTotalNumFrames());
-			timeline->addElement("Video", playerElement);
-			playerElement->setVideoPlayer(player, ofFilePath::removeExt( r.filePath ) + "/thumbs");
-			
-			//set player rectangle 
-			playerRect = ofRectangle(0,0,480 * player.getWidth()/player.getHeight(), 480);
-		}
+	if(player.isPlaying()){
+		player.stop();
+	}
+	else {
+		player.play();
 	}
 }
 
@@ -74,7 +74,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	timeline->setWidth(w);
+	timeline.setWidth(w);
 }
 
 //--------------------------------------------------------------

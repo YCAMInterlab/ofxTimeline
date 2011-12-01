@@ -8,6 +8,7 @@
  */
 
 #include "ofxTLVideoPlayer.h"
+#include "ofxTimeline.h"
 
 ofxTLVideoPlayer::ofxTLVideoPlayer() {
 	player = NULL;	
@@ -23,10 +24,24 @@ void ofxTLVideoPlayer::setup(){
 }
 
 void ofxTLVideoPlayer::draw(){
-	if(selectedFrame != player->getCurrentFrame()){
-		player->setFrame(selectedFrame);
-		player->update();
+	if(player == NULL){
+		return;
 	}
+	
+	if(player->isPlaying()){
+		if(timeline->getIsFrameBased()){
+			timeline->stop();
+			timeline->setCurrentFrame( player->getCurrentFrame() );
+		}
+		else {
+			timeline->setCurrentTime( player->getPosition() * player->getDuration());
+		}
+	}
+	//if we were scrubbing we need to reset the player's current frame
+	else if(selectedFrame != player->getCurrentFrame()){
+		player->setFrame(selectedFrame);
+	}
+	player->update();
 	   
 	ofPushStyle();
 	if(thumbsEnabled){
@@ -52,7 +67,7 @@ void ofxTLVideoPlayer::draw(){
 		}
 	}
 	
-	int selectedFrameX = screenXForIndex(selectedFrame, videoThumbs.size());
+	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofSetColor(0, 125, 255);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
 	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
@@ -118,15 +133,13 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
 
-	cout << "bounds are " << bounds.width << " " << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
+	//cout << "bounds are " << bounds.width << " " << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
 	
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(i % frameStep == 0){
-			//videoThumbs[i].displayRect = ofRectangle(minPixelIndex + (i/frameStep)*frameWidth, bounds.y, frameWidth, bounds.height);
-			int screenX = screenXForIndex(i, videoThumbs.size());
+			int screenX = screenXForIndex(i);
 			videoThumbs[i].displayRect = ofRectangle(screenX, bounds.y, frameWidth, bounds.height);
 			videoThumbs[i].visible = videoThumbs[i].displayRect.x+videoThumbs[i].displayRect.width > 0 && videoThumbs[i].displayRect.x < bounds.width;
-//			cout << "Frame " << i << " visible? " << videoThumbs[i].visible << " x is " << videoThumbs[i].displayRect.x << endl;
 		}
 		else {
 			videoThumbs[i].visible = false;
@@ -144,7 +157,7 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
 	if(bounds.inside(args.x, args.y)){
-		selectFrame( indexForScreenX(args.x, videoThumbs.size()) );
+		selectFrame( indexForScreenX(args.x) );
 	}
 }
 
@@ -177,19 +190,14 @@ void ofxTLVideoPlayer::generateVideoThumbnails(){
 void ofxTLVideoPlayer::generateThumbnailForFrame(int i){
 	if(videoThumbs[i].visible && !videoThumbs[i].loaded){
 		if(videoThumbs[i].exists){
-//			cout << "Loading existing thumb " << i << endl;
 			videoThumbs[i].load();
 		}
 		else {
-//			cout << "generating thumb " << videoThumbs[i].framenum << endl;
 			player->setFrame(videoThumbs[i].framenum);			
 			player->update();
 
 			ofImage frameImage;
-			frameImage.setFromPixels(player->getPixelsRef());
-			//frameImage.setFromPixels(player->getPixels(), player->getWidth(), player->getHeight(), OF_IMAGE_COLOR_ALPHA);
-			
-//			cout << "found frame size of " << frameImage.getWidth() << " from video player with size " << player->getWidth() << endl;
+			frameImage.setFromPixels(player->getPixelsRef());			
 			videoThumbs[i].create(frameImage);
 		}
 	}
@@ -209,16 +217,4 @@ void ofxTLVideoPlayer::purgeOldThumbnails(){
 		//TODO
 	}
 }
-
-//int ofxTLVideoPlayer::indexForScreenX(int screenX){
-//	int startFrame = zoomBounds.min * player->getTotalNumFrames();
-//	int endFrame = zoomBounds.max * player->getTotalNumFrames();
-//	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
-//}
-//
-//int ofxTLVideoPlayer::screenXForIndex(int index){
-//	int startFrame = zoomBounds.min * player->getTotalNumFrames();
-//	int endFrame = zoomBounds.max * player->getTotalNumFrames();
-//	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
-//}
 

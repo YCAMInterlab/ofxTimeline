@@ -126,7 +126,6 @@
 		E7F4B5C71458DF4B0031CC9A /* ofxTLImageSequenceFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequenceFrame.h; sourceTree = "<group>"; };
 		E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeline.cpp; sourceTree = "<group>"; };
 		E7FBD07B13D61DAC00938471 /* ofxTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimeline.h; sourceTree = "<group>"; };
-		E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimelineUtils.h; sourceTree = "<group>"; };
 		E7FBD07D13D61DAC00938471 /* ofxTLElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLElement.cpp; sourceTree = "<group>"; };
 		E7FBD07E13D61DAC00938471 /* ofxTLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLElement.h; sourceTree = "<group>"; };
 		E7FBD07F13D61DAC00938471 /* ofxTLElementHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLElementHeader.cpp; sourceTree = "<group>"; };
@@ -224,7 +223,6 @@
 				E7FBD08913D61DAC00938471 /* ofxTLZoomer.cpp */,
 				A6020B7D13F19C3400634B4D /* ofxTLEvents.h */,
 				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
-				E7FBD07C13D61DAC00938471 /* ofxTimelineUtils.h */,
 			);
 			name = base;
 			sourceTree = "<group>";

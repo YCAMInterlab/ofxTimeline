@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxTimeline.h"
+#include "ofxTLVideoPlayer.h"
 
-class ofxTLVideoPlayer;
-class ofxTimeline;
 class testApp : public ofBaseApp{
 
   public:
@@ -21,8 +21,8 @@ class testApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
-	ofxTimeline* timeline;
-	ofxTLVideoPlayer* playerElement;
+	ofxTimeline timeline;
+	ofxTLVideoPlayer playerElement;
 	ofVideoPlayer player;
 	ofRectangle playerRect;
 };

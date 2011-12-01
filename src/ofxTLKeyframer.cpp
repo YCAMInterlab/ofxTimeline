@@ -8,7 +8,6 @@
  */
 
 #include "ofxTLKeyframer.h"
-#include "ofxTimelineUtils.h"
 
 bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 	return a->position.x < b->position.x;
@@ -18,6 +17,8 @@ ofxTLKeyframer::ofxTLKeyframer(){
 
 	initializeEasings();
 	reset();
+	
+	valueRange = ofRange(0.0, 1.0);
 	
 	selectedKeyframe = NULL;
 	drawingEasingWindow = false;
@@ -38,7 +39,19 @@ void ofxTLKeyframer::setup(){
 	load();
 }
 
-float ofxTLKeyframer::sampleTimelineAt(float percent){
+void ofxTLKeyframer::setValueRange(ofRange range){
+	valueRange = range;
+}
+
+//main function to get values out of the timeline, operates on the given value range
+float ofxTLKeyframer::getValueAtPercent(float percent){
+	float sample = sampleAt(percent);
+	float retval = ofMap(sample, 0.0, 1.0, valueRange.min, valueRange.max, false);
+	cout << "getting value at percent " << percent << " with sample " << sample << " and value range " << valueRange.min << " " << valueRange.max <<  " returning " << retval << endl;
+	return retval;
+}
+
+float ofxTLKeyframer::sampleAt(float percent){
 	percent = ofClamp(percent, 0, 1.0);
 	
 	//edge case
@@ -57,6 +70,7 @@ float ofxTLKeyframer::sampleTimelineAt(float percent){
 	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(percent, 4));
 	return 0;
 }
+
 
 void ofxTLKeyframer::draw(){
 	
@@ -89,7 +103,7 @@ void ofxTLKeyframer::draw(){
 	ofNoFill();
 	ofBeginShape();
 	for(int p = 0; p <= bounds.width; p++){
-		ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleTimelineAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
+		ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
 	}
 	ofEndShape(false);
 	
@@ -238,14 +252,14 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		drawingEasingWindow = false;
 
 		for(int i = 0; i < easingFunctions.size(); i++){
-			if(isPointInRect(screenpoint-easingWindowPosition, easingFunctions[i]->bounds)){
+			if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
 				selectedKeyframe->easeFunc = easingFunctions[i];
 				if(autosave) save();
 				return;
 			}
 		}
 		for(int i = 0; i < easingTypes.size(); i++){
-			if(isPointInRect(screenpoint-easingWindowPosition, easingTypes[i]->bounds)){
+			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
 				selectedKeyframe->easeType = easingTypes[i];
 				if(autosave) save();
 				return;
@@ -417,7 +431,7 @@ ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint){
 }
 
 bool ofxTLKeyframer::screenpointIsInBounds(ofVec2f screenpoint){
-	return isPointInRect(screenpoint, bounds);
+	return bounds.inside(screenpoint);
 }
 
 ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord){
