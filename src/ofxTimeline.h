@@ -14,13 +14,12 @@
 //STAGE 1
 //TODO: Add getting values back
 //TODO: Add loop modes
-//TODO: Add timing functions and play
 //TODO: Add modality
-//TODO: Add collapsable members
 
 //TODO: Create events for modal
 //TODO: Add global undo
 //TODO: Add changable colors
+//TODO: Add multi-keyframe select
 
 #pragma once
 
@@ -36,6 +35,7 @@
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoPlayer.h"
+#include "ofxTLColors.h"
 
 class ofxTimeline {
   public:
@@ -124,6 +124,8 @@ class ofxTimeline {
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void windowResized(ofResizeEventArgs& args);
 
+	ofxTLColors& getColors();
+	
   protected:
 	bool isSetup;
 	bool usingEvents;
@@ -131,6 +133,7 @@ class ofxTimeline {
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
 
+	ofxTLColors colors;
 	map<string, ofxTLPage*> elementNameToPage;
 	
 	ofxTLPage* currentPage;
@@ -152,6 +155,7 @@ class ofxTimeline {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
 	
+
     ofxXmlSettings settings;
 	string filenamePrefix;
 	

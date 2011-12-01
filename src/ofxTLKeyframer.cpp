@@ -8,6 +8,7 @@
  */
 
 #include "ofxTLKeyframer.h"
+#include "ofxTimeline.h"
 
 bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 	return a->position.x < b->position.x;
@@ -45,10 +46,7 @@ void ofxTLKeyframer::setValueRange(ofRange range){
 
 //main function to get values out of the timeline, operates on the given value range
 float ofxTLKeyframer::getValueAtPercent(float percent){
-	float sample = sampleAt(percent);
-	float retval = ofMap(sample, 0.0, 1.0, valueRange.min, valueRange.max, false);
-	cout << "getting value at percent " << percent << " with sample " << sample << " and value range " << valueRange.min << " " << valueRange.max <<  " returning " << retval << endl;
-	return retval;
+	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
 }
 
 float ofxTLKeyframer::sampleAt(float percent){
@@ -86,20 +84,23 @@ void ofxTLKeyframer::draw(){
 	//**** DRAW BORDER
 	ofNoFill();
 	if(hover){
-		ofSetColor(255, 0, 0);
+		//ofSetColor(255, 0, 0);
+		ofSetColor(timeline->getColors().highlightColor);
 	}
 	else if(focused){
-		ofSetColor(255, 200, 0); //focused outline color
+		//ofSetColor(255, 200, 0); //focused outline color
+		ofSetColor(timeline->getColors().highlightColor);
 	}
 	else{
-		ofSetColor(150, 150, 0); //unfocused outline color
+		//ofSetColor(150, 150, 0); //unfocused outline color
+		ofSetColor(timeline->getColors().outlineColor);
 	}
 
-	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	
-	ofSetColor(100, 0, 0);
 	//**** DRAW KEYFRAME LINES
+	//ofSetColor(100, 0, 0);
+	ofSetColor(timeline->getColors().highlightColor);
 	ofNoFill();
 	ofBeginShape();
 	for(int p = 0; p <= bounds.width; p++){
@@ -108,7 +109,9 @@ void ofxTLKeyframer::draw(){
 	ofEndShape(false);
 	
 	//**** DRAW KEYFRAME DOTS
-	ofSetColor(255, 255, 100);
+	//ofSetColor(255, 255, 100);
+	ofSetColor(timeline->getColors().textColor);
+
 	for(int i = 0; i < keyframes.size(); i++){
 		if(!keyframeIsInBounds(keyframes[i])){
 			continue;

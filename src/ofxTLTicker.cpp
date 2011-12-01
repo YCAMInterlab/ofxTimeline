@@ -73,22 +73,23 @@ void ofxTLTicker::draw(){
 		*/
 		
 		//draw current frame
+		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+		string text = ofToString(timeline->getCurrentFrame());
+		int textH = 10;
+		int textW = (text.size()+1)*7;		
+		ofSetColor(timeline->getColors().backgroundColor);
+		ofRect(currentFrameX, bounds.y, textW, textH);
+		//ofSetColor(200, 180, 40);
+		ofSetColor(timeline->getColors().textColor);
+		ofDrawBitmapString(text, currentFrameX+5, bounds.y+textH);
+
+		
 		if(timeline->getIsPlaying()){
-			ofSetColor(100, 255, 0);
+			ofSetColor(timeline->getColors().keyColor);
 		}
 		else{
-			ofSetColor(10, 10, 255);
+			ofSetColor(timeline->getColors().outlineColor);
 		}
-		
-		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
-		string text = ofToString(currentFrameX);
-		int textH = 10;
-		int textW = (text.size()+1)*7;
-
-		ofRect(currentFrameX, bounds.y+bounds.height-textH, textW, textH);
-		ofSetColor(200, 180, 40);
-		ofDrawBitmapString(text, currentFrameX+5, bounds.y+bounds.height);
-		
 		//draw playhead line
 		ofSetLineWidth(1);
 		ofLine(currentFrameX, totalDrawRect.y-bounds.height, currentFrameX, totalDrawRect.y+totalDrawRect.height);
@@ -98,17 +99,17 @@ void ofxTLTicker::draw(){
 		if(hovering){
 			ofEnableAlphaBlending();
 			//draw background rect
-			ofSetColor(0);
+			ofSetColor(timeline->getColors().backgroundColor);
 			
 			text = ofToString(curHoverFrame);
 			textH = 10;
 			textW = (text.size()+1)*7;
-			ofRect(mousex, bounds.y+bounds.height-textH, textW, textH);
-			ofSetColor(200, 180, 40);
-			ofDrawBitmapString(text, mousex+5, bounds.y+bounds.height);
-			
+			ofRect(mousex, bounds.y+bounds.height, textW, textH);
 			//draw playhead line
-			ofSetColor(255, 0, 0, 150);
+			ofSetColor(timeline->getColors().textColor);
+			ofDrawBitmapString(text, mousex+5, bounds.y+textH);
+			
+			ofSetColor(timeline->getColors().highlightColor);
 			ofSetLineWidth(1);
 			ofLine(mousex, totalDrawRect.y-bounds.height, mousex, totalDrawRect.y+totalDrawRect.height);
 		}
@@ -125,32 +126,6 @@ void ofxTLTicker::draw(){
 	ofPopStyle();
 	
 }
-
-/*
-void ofxTLTicker::setDuration(int frames){
-	isFrameBased = true;
-	durationInFrames = frames;
-	durationInSeconds = 1.0*frames/framerate;
-}
-
-void ofxTLTicker::setDuration(float seconds){
-	isFrameBased = false;
-	durationInSeconds = seconds;
-	durationInFrames = seconds*framerate;
-}
-
-void ofxTLTicker::setFrameRate(int _framerate){
-	framerate = _framerate;
-	
-	//TODO: maintain duration
-	if(isFrameBased){
-		
-	}
-	else{
-		
-	}
-}
-*/
 
 void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
 	updateHover(args);

@@ -30,7 +30,8 @@ ofxTimeline::ofxTimeline()
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
 	isSetup(false),
-	usingEvents(false)
+	usingEvents(false),
+	isPlaying(false)
 {
 }
 
@@ -40,7 +41,6 @@ ofxTimeline::~ofxTimeline(){
 			stop();
 		}
 		
-		delete currentPage;
 		for(int i = 0; i < pages.size(); i++){ 
 			delete pages[i];
 		}
@@ -77,7 +77,9 @@ void ofxTimeline::setup(){
 	zoomer->setXMLFileName(filenamePrefix + "_zoomer.xml");
 	zoomer->setup();
 	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
-		
+	
+	colors.loadColors();
+	
 	enable();
 	
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
@@ -99,6 +101,10 @@ void ofxTimeline::hide(){
 bool ofxTimeline::toggleShow(){
 	isShowing = !isShowing;
 	return isShowing;
+}
+
+ofxTLColors& ofxTimeline::getColors(){
+	return colors;
 }
 
 void ofxTimeline::play(){
@@ -349,10 +355,12 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 }
 
 void ofxTimeline::draw(){	
-	tabs->draw();
-	currentPage->draw();
-	zoomer->draw();
-	ticker->draw();
+	if(isShowing){
+		tabs->draw();
+		currentPage->draw();
+		zoomer->draw();
+		ticker->draw();
+	}
 }
 
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS
