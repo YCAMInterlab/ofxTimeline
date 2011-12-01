@@ -326,8 +326,11 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
 }
 
+bool ofxTimeline::setLoopType(ofLoopType newType){
+	loopType = newType;
+}
+
 void ofxTimeline::update(ofEventArgs& updateArgs){
-	
 	if(isFrameBased){
 		currentFrame = ofGetFrameNum() - playbackStartFrame;
 		if(currentFrame >= durationInFrames){

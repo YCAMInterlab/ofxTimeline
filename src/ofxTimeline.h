@@ -73,6 +73,8 @@ class ofxTimeline {
 	virtual void setDurationInSeconds(float seconds);
 	virtual bool getIsFrameBased();
 	
+	virtual bool setLoopType(ofLoopType newType);
+	
 	virtual int getDurationInFrames();
 	virtual float getDurationInSeconds();
 

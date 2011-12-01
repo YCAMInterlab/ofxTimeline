@@ -16,7 +16,8 @@ void testApp::setup(){
 	timeline.addKeyframes("Keyframer 1", "keyframe_1.xml", ofRange(0, 1.0));
 	timeline.addKeyframes("Keyframer 2", "keyframe_2.xml", ofRange(0, 1.0));
 	
-	timeline.setDurationInFrames(300);
+	timeline.setLoopType(OF_LOOP_NORMAL);
+	timeline.setDurationInFrames(90);
 }
 
 //--------------------------------------------------------------

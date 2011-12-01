@@ -20,11 +20,6 @@ class ofxTLTicker : public ofxTLElement
 	virtual void setup();
 	virtual void draw();
 	
-//	virtual void setDuration(int frames);
-//	virtual void setDuration(float seconds);
-//	virtual void setFrameRate(int framerate);
-
-	
 	//set the draw rect for the whole keyframer interface
 	virtual void setTotalDrawRect(ofRectangle drawRect);
 	
@@ -37,12 +32,7 @@ class ofxTLTicker : public ofxTLElement
 	virtual void updateHover(ofMouseEventArgs& args);
 	
 	ofRectangle totalDrawRect;
-	
-//	bool isFrameBased;
-//	int durationInFrames;
-//	float durationInSeconds;
-//	int framerate;
-	
+		
 	float curHoverPoint;
 	int curStartFrame;
 	int curEndFrame;

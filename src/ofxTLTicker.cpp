@@ -129,7 +129,6 @@ void ofxTLTicker::draw(){
 
 void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
 	updateHover(args);
-
 }
 
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){

@@ -8,8 +8,6 @@
  */
 
 #include "ofxTLImageSequenceFrame.h"
-
-#include "ofxTLImageSequenceFrame.h"
 #include "ofFileUtils.h"
 
 ofxTLImageSequenceFrame::ofxTLImageSequenceFrame()
