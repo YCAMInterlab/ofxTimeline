@@ -228,11 +228,13 @@ void ofxTimeline::setWidth(float newWidth){
 }
 
 void ofxTimeline::updatePagePositions(){
-	ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
-	for(int i = 0; i < pages.size(); i++){
-		pages[i]->setContainer(pageOffset, width);
+	if(isSetup){
+		ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
+		for(int i = 0; i < pages.size(); i++){
+			pages[i]->setContainer(pageOffset, width);
+		}
+		currentPage->recalculateHeight();
 	}
-	currentPage->recalculateHeight();
 }
 
 #pragma mark EVENTS
