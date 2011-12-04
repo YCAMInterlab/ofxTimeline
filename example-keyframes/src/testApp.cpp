@@ -19,6 +19,8 @@ void testApp::setup(){
 	
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	timeline.setDurationInFrames(90);
+	
+	ofAddListener(ofxTLEvents.trigger, this, &testApp::timelineTriggerReceived);
 }
 
 //--------------------------------------------------------------
@@ -34,6 +36,12 @@ void testApp::draw(){
 	float size = timeline.getKeyframeValue("Keyframer A");
 	ofRect(ofGetWidth()/2, ofGetHeight()/2, size, size);
 }
+
+//--------------------------------------------------------------
+void testApp::timelineTriggerReceived(ofxTLTriggerEventArgs& trigger){
+	cout << "Trigger from " << trigger.triggerGroupName << " says color " << trigger.triggerName << endl;
+}
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){

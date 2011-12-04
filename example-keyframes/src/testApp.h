@@ -21,4 +21,7 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 		
 	ofxTimeline timeline;
+	
+	void timelineTriggerReceived(ofxTLTriggerEventArgs& trigger);
+	
 };

@@ -367,6 +367,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 				stop();
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
+				playbackStartFrame += getDurationInFrames();
 				currentFrame %= durationInFrames;
 				ofxTLPlaybackEventArgs args = createPlaybackEvent();
 				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
@@ -382,6 +383,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
 				currentTime = fmod(currentTime, durationInSeconds);
+				playbackStartTime += getDurationInSeconds();
 				ofxTLPlaybackEventArgs args = createPlaybackEvent();
 				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
 			}
@@ -503,7 +505,6 @@ bool ofxTimeline::getSwitcherOn(string name, float atTime){
 bool ofxTimeline::getSwitcherOn(string name, int atFrame){
 }
 
-
 ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
 	ofxTLTrigger* newTrigger = new ofxTLTrigger();
 	newTrigger->setCreatedByTimeline(true);
@@ -522,7 +523,6 @@ string ofxTimeline::getNextTrigger(string name, float atTime){
 string ofxTimeline::getNextTrigger(string name, int atFrame){
 }
 
-
 string ofxTimeline::getLastTrigger(string name){
 }
 
@@ -538,7 +538,6 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name){
 		addImageSequence(name, result.getPath());
 	}
 }
-
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory){
 	ofxTLImageSequence*	newImageSequence = new ofxTLImageSequence();

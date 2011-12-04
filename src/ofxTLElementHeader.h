@@ -37,6 +37,7 @@ class ofxTLElementHeader : public ofxTLElement
 	
 	ofRectangle footerRect;
 	
+	bool hoveringFooter;
 	bool draggingSize;
 	float dragOffset;
 	float dragAnchor;

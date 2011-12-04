@@ -46,7 +46,7 @@ class ofxTLTrigger : public ofxTLElement
 	ofxTextInputField textfield;
 	
 	void update(ofEventArgs& args);
-	
+	void sortTriggers();
 						   
 	int dragOffset;
 	Trigger* getTriggerForScreenPosition(float screenx, int& offset);

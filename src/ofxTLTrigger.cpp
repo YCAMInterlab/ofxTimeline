@@ -20,7 +20,6 @@ ofxTLTrigger::ofxTLTrigger(){
 }
 
 ofxTLTrigger::~ofxTLTrigger(){
-	
 }
 
 void ofxTLTrigger::setup(){
@@ -31,12 +30,13 @@ void ofxTLTrigger::setup(){
 }
 
 void ofxTLTrigger::draw(){
+	
+	if(bounds.height < 2){
+		return;
+	}
+	
 	ofPushStyle();
-	//**** DRAW BORDER
 	ofNoFill();
-	
-	cout << "zoom bounds? " << zoomBounds.min << " " << zoomBounds.max << endl;
-	
 	if(hover){
 		ofSetColor(timeline->getColors().highlightColor);
 	}
@@ -119,12 +119,14 @@ void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args){
 void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){
 	ofxTLElement::mouseReleased(args);	
 	if(selectedTrigger != NULL){
-		sort(triggers.begin(), triggers.end(), triggersort);
+		sortTriggers();
+		hoverTrigger = NULL;
 		if(autosave) save();
 	}
 }
 
 void ofxTLTrigger::keyPressed(ofKeyEventArgs& args){
+	
 	if(args.key == OF_KEY_DEL && selectedTrigger != NULL){
 		for(int i = triggers.size()-1; i>=0; i--){
 			if(&triggers[i] == selectedTrigger){
@@ -168,6 +170,7 @@ void ofxTLTrigger::update(ofEventArgs& args){
 			ofNotifyEvent(ofxTLEvents.trigger, args);
 		}
 	}
+	lastTimelinePoint = thisTimelinePoint;
 }
 
 void ofxTLTrigger::playbackStarted(ofxTLPlaybackEventArgs& args){
@@ -180,6 +183,7 @@ void ofxTLTrigger::playbackEnded(ofxTLPlaybackEventArgs& args){
 }
 
 void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
+	cout << "playback looped" << endl;
 	lastTimelinePoint = 0;
 }
 
@@ -199,9 +203,7 @@ void ofxTLTrigger::save(){
 	}
 	
 	save.popTag();
-	
 	save.saveFile(xmlFileName);
-	
 }
 
 void ofxTLTrigger::load(){
@@ -224,6 +226,24 @@ void ofxTLTrigger::load(){
 	else{
 		ofLogError("ofxTLTrigger -- Couldn't load trigger file " + xmlFileName);
 	}
+}
+
+void ofxTLTrigger::sortTriggers(){
+	float selectedPt;
+	if(selectedTrigger != NULL){
+		selectedPt = selectedTrigger->pt;
+	}
+	sort(triggers.begin(), triggers.end(), triggersort);
+	
+	if(selectedTrigger != NULL){
+		for(int i = 0; i < triggers.size(); i++){
+			if(triggers[i].pt == selectedPt){
+				selectedTrigger = &triggers[i];
+				break;
+			}
+		}
+	}
+		
 }
 
 void ofxTLTrigger::clear(){
