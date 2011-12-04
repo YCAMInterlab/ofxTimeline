@@ -92,33 +92,33 @@ void ofxTLKeyframer::draw(){
 	//**** DRAW BORDER
 	ofNoFill();
 	if(hover){
-		//ofSetColor(255, 0, 0);
 		ofSetColor(timeline->getColors().highlightColor);
 	}
 	else if(focused){
-		//ofSetColor(255, 200, 0); //focused outline color
 		ofSetColor(timeline->getColors().highlightColor);
 	}
 	else{
-		//ofSetColor(150, 150, 0); //unfocused outline color
 		ofSetColor(timeline->getColors().outlineColor);
-	}
-	
+	}	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	
 	
 	//**** DRAW KEYFRAME LINES
-	//ofSetColor(100, 0, 0);
 	ofSetColor(timeline->getColors().highlightColor);
 	ofNoFill();
 	ofBeginShape();
-	for(int p = 0; p <= bounds.width; p++){
-		ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
+	if(keyframes.size() == 0 || keyframes.size() == 1){
+		ofVertex(bounds.x, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
+		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
+	}
+	else{
+		for(int p = 0; p <= bounds.width; p++){
+			ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
+		}
 	}
 	ofEndShape(false);
 	
 	//**** DRAW KEYFRAME DOTS
-	//ofSetColor(255, 255, 100);
 	ofSetColor(timeline->getColors().textColor);
 
 	for(int i = 0; i < keyframes.size(); i++){
@@ -127,7 +127,11 @@ void ofxTLKeyframer::draw(){
 		}
 		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
 		if(keyframes[i] == selectedKeyframe){
-			ofDrawBitmapString(ofToString(selectedKeyframe->position.y*100, 2) + "%", screenpoint.x+5, screenpoint.y+10);
+			float keysValue = ofMap(selectedKeyframe->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
+			string frameString = timeline->getIsFrameBased() ? 
+				ofToString(int(selectedKeyframe->position.x*timeline->getDurationInFrames())) : 
+				ofToString(selectedKeyframe->position.y*timeline->getDurationInSeconds());
+			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y+10);
 			ofFill();
 		}
 		else{
@@ -137,6 +141,7 @@ void ofxTLKeyframer::draw(){
 		ofCircle(screenpoint.x, screenpoint.y, 5);
 	}
 	
+	//****** DRAW EASING CONTROLS
 	if(drawingEasingWindow){
 		for(int i = 0; i < easingFunctions.size(); i++){
 			if(easingFunctions[i] == selectedKeyframe->easeFunc){

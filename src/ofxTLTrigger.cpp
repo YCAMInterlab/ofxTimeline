@@ -86,10 +86,22 @@ void ofxTLTrigger::draw(){
 
 //main function to get values out of the timeline, operates on the given value range
 void ofxTLTrigger::mousePressed(ofMouseEventArgs& args){
-	ofxTLElement::mousePressed(args);
-	
+
 	enterText = false;
 	selectedTrigger = NULL;
+
+	bool clickIsInRect = bounds.inside(args.x, args.y);
+	if(clickIsInRect){
+		if(!focused){
+			focused = true;
+			return;
+		}
+	}
+	else{
+		focused = false;
+		return;
+	}
+	
 	if(focused){
 		selectedTrigger = getTriggerForScreenPosition(args.x, dragOffset);
 		if(selectedTrigger == NULL){
