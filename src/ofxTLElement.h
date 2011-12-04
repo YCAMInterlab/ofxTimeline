@@ -63,7 +63,9 @@ class ofxTLElement
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
 	void setTimeline(ofxTimeline* timeline); 
-	
+	string getName();
+	void setName(string name);
+		
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
 	
@@ -74,7 +76,10 @@ class ofxTLElement
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
-	
+
+	virtual float screenXtoNormalizedX(float x, ofRange outputRange);
+	virtual float normalizedXtoScreenX(float x, ofRange inputRange);
+
 	virtual int indexForScreenX(int mouseX);
 	virtual int screenXForIndex(int index);
 	virtual int indexForScreenX(int screenX, int durationInFrames);
@@ -90,6 +95,7 @@ class ofxTLElement
 	bool createdByTimeline;
 	
 	ofxXmlSettings settings;
+	string name;
 	string xmlFileName;
 	ofRectangle bounds;
 	ofRange zoomBounds;

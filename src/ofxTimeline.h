@@ -56,7 +56,7 @@ class ofxTimeline {
 	virtual void setCurrentTime(float time);
 	virtual int getCurrentFrame();
 	virtual float getCurrentTime();
-
+	virtual float getPercentComplete();
 	
 	virtual void play();
 	virtual void stop();
@@ -157,7 +157,8 @@ class ofxTimeline {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
 	
-
+	ofxTLPlaybackEventArgs createPlaybackEvent();
+	
     ofxXmlSettings settings;
 	string filenamePrefix;
 	

@@ -107,23 +107,40 @@ ofxTLColors& ofxTimeline::getColors(){
 	return colors;
 }
 
+ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
+	ofxTLPlaybackEventArgs args;
+	args.frameBased = isFrameBased;
+	args.durationInFrames = durationInFrames;
+	args.durationInSeconds = durationInSeconds;
+	args.currentTime = currentTime;
+	args.currentFrame = currentFrame;
+	args.currentPercent = getPercentComplete();
+	return args;
+}
+
 void ofxTimeline::play(){
 	if(!isPlaying){
 		ofAddListener(ofEvents.update, this, &ofxTimeline::update);
 		isPlaying = true;
 		if (isFrameBased) {
-			playbackStartFrame = ofGetFrameNum();
+			playbackStartFrame = ofGetFrameNum() - currentFrame;
 		}
 		else{
-			playbackStartTime = ofGetElapsedTimef();
-		}
+			playbackStartTime = ofGetElapsedTimef() - currentTime;
+		}		
+		ofxTLPlaybackEventArgs args = createPlaybackEvent();
+		ofNotifyEvent(ofxTLEvents.playbackStarted, args);
 	}
 }
+
+
 
 void ofxTimeline::stop(){
 	if(isPlaying){
 		isPlaying = false;
 		ofRemoveListener(ofEvents.update, this, &ofxTimeline::update);
+		ofxTLPlaybackEventArgs args = createPlaybackEvent();
+		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
 	}
 }
 
@@ -171,6 +188,15 @@ float ofxTimeline::getCurrentTime(){
 		ofLogWarning("ofxTimeline -- getting current time on a framebased will return inaccurate results.");
 	}
 	return currentTime;
+}
+
+float ofxTimeline::getPercentComplete(){
+	if(isFrameBased){
+		return float(currentFrame)/durationInFrames;
+	}
+	else{
+		return currentTime / durationInSeconds;
+	}
 }
 
 bool ofxTimeline::toggleEnabled(){
@@ -342,6 +368,8 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
 				currentFrame %= durationInFrames;
+				ofxTLPlaybackEventArgs args = createPlaybackEvent();
+				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
 			}
 		}
 	}
@@ -354,6 +382,8 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
 				currentTime = fmod(currentTime, durationInSeconds);
+				ofxTLPlaybackEventArgs args = createPlaybackEvent();
+				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
 			}
 		}
 	}
@@ -416,6 +446,7 @@ void ofxTimeline::setCurrentPage(int index){
 //can be used to add custom elements
 void ofxTimeline::addElement(string name, ofxTLElement* element){
 	element->setTimeline( this );
+	element->setName( name );
 	currentPage->addElement(name, element);		
 	elementNameToPage[name] = currentPage;
 	recalculateBoundingRects();

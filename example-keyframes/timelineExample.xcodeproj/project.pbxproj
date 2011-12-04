@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A6020B7F13F19C3400634B4D /* ofxTLEvents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */; };
+		A6063E91148B0A4500D154C3 /* ofxTextInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6063E90148B0A4500D154C3 /* ofxTextInputField.cpp */; };
 		A60B6A0E148704E1008196FE /* ofxTLColors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A60B6A0D148704E1008196FE /* ofxTLColors.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -90,6 +91,8 @@
 /* Begin PBXFileReference section */
 		A6020B7D13F19C3400634B4D /* ofxTLEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLEvents.h; sourceTree = "<group>"; };
 		A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLEvents.cpp; sourceTree = "<group>"; };
+		A6063E8F148B0A4500D154C3 /* ofxTextInputField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTextInputField.h; sourceTree = "<group>"; };
+		A6063E90148B0A4500D154C3 /* ofxTextInputField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTextInputField.cpp; sourceTree = "<group>"; };
 		A60B6A0C148704E1008196FE /* ofxTLColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLColors.h; sourceTree = "<group>"; };
 		A60B6A0D148704E1008196FE /* ofxTLColors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLColors.cpp; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -201,6 +204,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A6063E8C148B0A3B00D154C3 /* ofxTextInputField */ = {
+			isa = PBXGroup;
+			children = (
+				A6063E8D148B0A3B00D154C3 /* src */,
+			);
+			name = ofxTextInputField;
+			path = ../../ofxTextInputField;
+			sourceTree = SOURCE_ROOT;
+		};
+		A6063E8D148B0A3B00D154C3 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				A6063E8F148B0A4500D154C3 /* ofxTextInputField.h */,
+				A6063E90148B0A4500D154C3 /* ofxTextInputField.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		A60C520D13F5E4DC00BB5789 /* base */ = {
 			isa = PBXGroup;
 			children = (
@@ -246,6 +267,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				A6063E8C148B0A3B00D154C3 /* ofxTextInputField */,
 				E7FBD0C213D61DC900938471 /* ofxXmlSettings */,
 				E7FBD09513D61DBE00938471 /* ofxTween */,
 				E7FBD09313D61DB800938471 /* ofxRange */,
@@ -558,6 +580,7 @@
 				E7F4B5C81458DF4B0031CC9A /* ofxTLImageSequence.cpp in Sources */,
 				E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */,
 				A60B6A0E148704E1008196FE /* ofxTLColors.cpp in Sources */,
+				A6063E91148B0A4500D154C3 /* ofxTextInputField.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

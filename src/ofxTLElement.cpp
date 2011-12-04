@@ -58,6 +58,14 @@ void ofxTLElement::setTimeline(ofxTimeline* _timeline){
 	timeline = _timeline;
 }
 
+void ofxTLElement::setName(string _name){
+	name = _name;
+}
+
+string ofxTLElement::getName(){
+	return name;
+}
+
 void ofxTLElement::mouseMoved(ofMouseEventArgs& args){
 	hover = bounds.inside(args.x, args.y);
 }
@@ -116,6 +124,14 @@ float ofxTLElement::screenXtoNormalizedX(float x){
 
 float ofxTLElement::normalizedXtoScreenX(float x){
 	return ofMap(x, 0.0, 1.0, bounds.x, bounds.x+bounds.width, true);
+}
+
+float ofxTLElement::screenXtoNormalizedX(float x, ofRange outputRange){
+	return ofMap(x, bounds.x, bounds.x+bounds.width, outputRange.min, outputRange.max, false);
+}
+
+float ofxTLElement::normalizedXtoScreenX(float x, ofRange inputRange){
+	return ofMap(x, inputRange.min, inputRange.max, bounds.x, bounds.x+bounds.width, false);
 }
 
 int ofxTLElement::indexForScreenX(int screenX){

@@ -14,6 +14,8 @@
 
 class ofxTLPlaybackEventArgs : public ofEventArgs {
   public: 	
+	float currentPercent; //always valid
+	bool frameBased; //use this to decide whether to look at frames or seconds
 	float currentTime;
 	int currentFrame;
 	float durationInSeconds;
@@ -32,6 +34,11 @@ class ofxTLPageEventArgs : public ofEventArgs {
 	string oldPageName;
 };
 
+class ofxTLTriggerEventArgs : public ofEventArgs {
+  public:
+	string triggerGroupName;
+	string triggerName;
+};
 
 class ofxTLCoreEvents {
   public:
@@ -43,9 +50,11 @@ class ofxTLCoreEvents {
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
+
+	ofEvent<ofxTLTriggerEventArgs> trigger;
 	
 	ofEvent<ofxTLPageEventArgs> pageChanged;
-	
+		
 	ofEvent<ofEventArgs> viewNeedsResize;
 };
 
@@ -53,14 +62,14 @@ extern ofxTLCoreEvents ofxTLEvents;
 
 template<class ListenerClass>
 void ofxTLRegisterPlaybackEvents(ListenerClass * listener){
-    ofAddListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackBegan);
+    ofAddListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackStarted);
     ofAddListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
     ofAddListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
 }
 
 template<class ListenerClass>
 void ofxTLRemovePlaybackEvents(ListenerClass * listener){
-    ofRemoveListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackBegan);
+    ofRemoveListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackStarted);
     ofRemoveListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
     ofRemoveListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
 }

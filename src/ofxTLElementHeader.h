@@ -35,6 +35,8 @@ class ofxTLElementHeader : public ofxTLElement
   protected:
 	ofxTLElement* element;
 	
+	ofRectangle footerRect;
+	
 	bool draggingSize;
 	float dragOffset;
 	float dragAnchor;

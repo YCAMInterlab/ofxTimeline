@@ -10,6 +10,7 @@
 #pragma once
 #include "ofMain.h"
 #include "ofxTLElement.h"
+#include "ofxTextInputField.h"
 
 typedef struct {
 	float pt;
@@ -36,12 +37,23 @@ class ofxTLTrigger : public ofxTLElement
 	virtual void load();
 	
 	virtual void clear();
-		
+
+	void playbackStarted(ofxTLPlaybackEventArgs& args);
+	void playbackLooped(ofxTLPlaybackEventArgs& args);
+	void playbackEnded(ofxTLPlaybackEventArgs& args);
+	
   protected:
+	ofxTextInputField textfield;
+	
+	void update(ofEventArgs& args);
+	
+						   
 	int dragOffset;
 	Trigger* getTriggerForScreenPosition(float screenx, int& offset);
 	Trigger* selectedTrigger;
 	Trigger* hoverTrigger;
 	vector<Trigger> triggers;
 	bool enterText;
+	
+	float lastTimelinePoint;
 };

@@ -8,6 +8,7 @@
  */
 
 #include "ofxTLElementHeader.h"
+#include "ofxTimeline.h"
 
 ofxTLElementHeader::ofxTLElementHeader(){
 	element = NULL;
@@ -29,13 +30,18 @@ void ofxTLElementHeader::setElement(ofxTLElement* newElement){
 void ofxTLElementHeader::draw(){
 	ofPushStyle();
 	
-	ofSetColor(250, 180, 80);
+	ofSetColor(element->getTimeline()->getColors().outlineColor);
 	
 	ofNoFill();
 	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 15) );
 	ofRect(bounds);
 	
-	//draw border on child element
+	//draw grippy lines on the footer draggable element
+	ofSetColor(element->getTimeline()->getColors().outlineColor);
+	float footerStartY = element->getDrawRect().y + element->getDrawRect().height;
+	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
+		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+FOOTER_HEIGHT);
+	}
 	
 	ofPopStyle();
 }
@@ -51,6 +57,7 @@ void ofxTLElementHeader::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTLElementHeader::mouseMoved(ofMouseEventArgs& args){
+	
 }
 
 void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
