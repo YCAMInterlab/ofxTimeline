@@ -52,9 +52,17 @@ float ofxTLKeyframer::getValueAtPercent(float percent){
 float ofxTLKeyframer::sampleAt(float percent){
 	percent = ofClamp(percent, 0, 1.0);
 	
-	//edge case
-	if(percent == 0.0){
-		return firstkey->position.x;
+	//edge cases
+	if(keyframes.size() == 0){
+		return .5;
+	}
+	
+	if(percent < keyframes[0]->position.x){
+		return keyframes[0]->position.y;
+	}
+	
+	if(percent > keyframes[keyframes.size()-1]->position.x){
+		return keyframes[keyframes.size()-1]->position.y;
 	}
 	
 	for(int i = 1; i < keyframes.size(); i++){
@@ -220,9 +228,6 @@ void ofxTLKeyframer::clear(){
 
 void ofxTLKeyframer::reset(){
 	clear();
-	//add first and last keyframe always
-	firstkey = newKeyframe( ofVec2f(0, .5) );
-	lastkey = newKeyframe( ofVec2f(1.0, .5) );
 }
 
 void ofxTLKeyframer::save(){
@@ -297,25 +302,28 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		grabOffset = ofVec2f(0,0);
 		updateKeyframeSort();
 		//find bounds
-		for(int i = 1; i < keyframes.size()-1; i++){
+		for(int i = 0; i < keyframes.size(); i++){
 			if(keyframes[i] == selectedKeyframe){
 				selectedKeyframeIndex = i;
-				minBound = keyframes[selectedKeyframeIndex-1]->position.x;
-				maxBound = keyframes[selectedKeyframeIndex+1]->position.x;
 			}
 		}
 	}
+	
 	//grabbed a keyframe
-	else {
+	if(selectedKeyframe != NULL){
 		if(args.button == 0){
 			grabOffset = screenpoint - coordForKeyframePoint(selectedKeyframe->position);
-			if(selectedKeyframe == firstkey){
-				minBound = maxBound = 0.0;
-				//cout << "selected first key" << endl;
+			if(keyframes.size() == 1){
+				minBound = 0.0;
+				maxBound = 1.0;
 			}
-			else if(selectedKeyframe == lastkey){
-				minBound = maxBound = 1.0;
-				//cout << "selected last key" << endl;
+			else if(selectedKeyframeIndex == 0){
+				minBound = 0.0;
+				maxBound = keyframes[selectedKeyframeIndex+1]->position.x;
+			}
+			else if(selectedKeyframeIndex == keyframes.size()-1){
+				minBound = keyframes[selectedKeyframeIndex-1]->position.x;
+				maxBound = 1.0;
 			}
 			else{
 				minBound = keyframes[selectedKeyframeIndex-1]->position.x;
@@ -351,8 +359,6 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args){
 
 void ofxTLKeyframer::updateKeyframeSort(){
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
-	firstkey = keyframes[0];
-	lastkey = keyframes[keyframes.size()-1];	
 }
 
 void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
@@ -368,8 +374,8 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	
 	bool modified = false;
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
-		if(focused && selectedKeyframe != NULL && selectedKeyframe != firstkey && selectedKeyframe != lastkey){
-			for(int i = 1; i < keyframes.size()-1; i++){
+		if(focused && selectedKeyframe != NULL){
+			for(int i = 0; i < keyframes.size(); i++){
 				if (keyframes[i] == selectedKeyframe) {
 					delete keyframes[i];
 					keyframes.erase(keyframes.begin()+i);
@@ -393,15 +399,13 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 			modified = true;
 		}
 		
-		if(selectedKeyframe != firstkey && selectedKeyframe != lastkey){
-			if(args.key == OF_KEY_RIGHT){
-				selectedKeyframe->position.x = MIN(selectedKeyframe->position.x+.0001, maxBound);			
-				modified = true;
-			}
-			if(args.key == OF_KEY_LEFT){
-				selectedKeyframe->position.x = MAX(selectedKeyframe->position.x-.0001, minBound);			
-				modified = true;
-			}
+		if(args.key == OF_KEY_RIGHT){
+			selectedKeyframe->position.x = MIN(selectedKeyframe->position.x+.0001, maxBound);			
+			modified = true;
+		}
+		if(args.key == OF_KEY_LEFT){
+			selectedKeyframe->position.x = MAX(selectedKeyframe->position.x-.0001, minBound);			
+			modified = true;
 		}
 	}
 	
@@ -426,7 +430,7 @@ ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 bool ofxTLKeyframer::keyframeIsInBounds(ofxTLKeyframe* key){
 	if(zoomBounds.min == 0.0 && zoomBounds.max == 1.0) return true;
 	
-	return key->position.x > zoomBounds.min && key->position.x < zoomBounds.max;
+	return key->position.x >= zoomBounds.min && key->position.x <= zoomBounds.max;
 }
 
 ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint){

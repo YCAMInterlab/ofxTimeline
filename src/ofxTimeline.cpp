@@ -555,4 +555,3 @@ ofImage* ofxTimeline::getImage(string name, float atTime){
 
 ofImage* ofxTimeline::getImage(string name, int atFrame){
 }
-

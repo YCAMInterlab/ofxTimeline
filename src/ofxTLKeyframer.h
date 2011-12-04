@@ -66,8 +66,6 @@ class ofxTLKeyframer : public ofxTLElement
 	
 	virtual float sampleAt(float percent);
 
-	ofxTLKeyframe* firstkey;
-	ofxTLKeyframe* lastkey;
 	ofVec2f grabOffset;
 	vector<ofxTLKeyframe*> keyframes;
 
