@@ -11,6 +11,7 @@ void testApp::setup(){
 	timeline.addKeyframes("Keyframer A", "keyframe_a.xml", ofRange(5, 100));
 	timeline.addKeyframes("Keyframer B", "keyframe_b.xml", ofRange(0, 1.0));
 	timeline.addKeyframes("Keyframer C", "keyframe_c.xml", ofRange(0, 1.0));
+	timeline.addTriggers("Color Trigger", "color_triggers.xml");
 
 	timeline.addPage("second page", true);
 	timeline.addKeyframes("Keyframer 1", "keyframe_1.xml", ofRange(0, 1.0));

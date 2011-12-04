@@ -95,8 +95,9 @@ void ofxTLKeyframer::draw(){
 		//ofSetColor(150, 150, 0); //unfocused outline color
 		ofSetColor(timeline->getColors().outlineColor);
 	}
-
+	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	
 	
 	//**** DRAW KEYFRAME LINES
 	//ofSetColor(100, 0, 0);

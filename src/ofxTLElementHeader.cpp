@@ -35,6 +35,8 @@ void ofxTLElementHeader::draw(){
 	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 15) );
 	ofRect(bounds);
 	
+	//draw border on child element
+	
 	ofPopStyle();
 }
 

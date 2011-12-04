@@ -474,6 +474,12 @@ bool ofxTimeline::getSwitcherOn(string name, int atFrame){
 
 
 ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
+	ofxTLTrigger* newTrigger = new ofxTLTrigger();
+	newTrigger->setCreatedByTimeline(true);
+	newTrigger->setXMLFileName(xmlFileName);
+	addElement(name, newTrigger);
+
+	return newTrigger;
 }
 
 string ofxTimeline::getNextTrigger(string name){
