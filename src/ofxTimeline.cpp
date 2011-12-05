@@ -85,6 +85,7 @@ void ofxTimeline::setup(){
 	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
+	//You can change this name by calling setPageName()
 	addPage("_defaultPage", true);
 	
 }
@@ -331,12 +332,17 @@ void ofxTimeline::viewNeedsResize(ofEventArgs& args){
 
 void ofxTimeline::recalculateBoundingRects(){
 	
-	tabs->setDrawRect( ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT) );
-	ticker->setDrawRect( ofRectangle(offset.x, offset.y+TICKER_HEIGHT, width, TICKER_HEIGHT) );
+	if(pages.size() > 1){
+		tabs->setDrawRect(ofRectangle(0, 0, width, TICKER_HEIGHT));
+	}
+	else{
+		tabs->setDrawRect(ofRectangle(0, 0, width, 0));
+	}
+	ticker->setDrawRect( ofRectangle(offset.x, offset.y+tabs->getDrawRect().height, width, TICKER_HEIGHT) );
 	updatePagePositions();
 
-	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
-	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+TICKER_HEIGHT*2,
+	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
+	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+ticker->getDrawRect().height+tabs->getDrawRect().height,
 											width,currentPage->getComputedHeight()+ZOOMER_HEIGHT);
 	ticker->setTotalDrawRect(totalDrawRect);	
 }
@@ -393,7 +399,9 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 
 void ofxTimeline::draw(){	
 	if(isShowing){
-		tabs->draw();
+		if (pages.size() > 1) {
+			tabs->draw();			
+		}
 		currentPage->draw();
 		zoomer->draw();
 		ticker->draw();
@@ -419,11 +427,17 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 	newPage->setup();
 	newPage->setAutosave(autosave);
 	tabs->addPage(name);
-	
+
 	pages.push_back(newPage);
 	if(makeCurrent){
 		tabs->selectPage(name);
 	}
+}
+
+void ofxTimeline::setPageName(string newName){
+	tabs->changeName(currentPage->getName(), newName);
+	currentPage->setName( newName );
+	currentPage->loadElementPositions();
 }
 
 void ofxTimeline::setCurrentPage(string name){

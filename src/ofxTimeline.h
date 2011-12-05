@@ -1,6 +1,4 @@
 /*
- *  THISTimeline.h
- *  THIS_Editor
  *
  *  Created by Jim on 9/23/10.
  *  Copyright 2010 FlightPhase. All rights reserved.
@@ -8,18 +6,13 @@
 
 
 //controls to add:
-// ofxTLFilmstrip
-// ofxTLGradient
+// ofxTLColorTween
+// ofxTLSwitcher
 
-//STAGE 1
-//TODO: Add getting values back
-//TODO: Add loop modes
-//TODO: Add modality
-
-//TODO: Create events for modal
 //TODO: Add global undo
-//TODO: Add changable colors
 //TODO: Add multi-keyframe select
+//TODO: Add modal function
+//TODO: Account for image sequences and movies with different durations than the timeline
 
 #pragma once
 
@@ -84,6 +77,7 @@ class ofxTimeline {
 	virtual void draw();
 
 	virtual void addPage(string name, bool makeCurrent = true);
+	virtual void setPageName(string newName);
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	

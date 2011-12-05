@@ -43,6 +43,9 @@ class ofxTLPage {
 		
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
+	virtual void saveElementPositions();
+	virtual void loadElementPositions();
+	
 	virtual void recalculateHeight();
 	
   protected:
@@ -51,8 +54,6 @@ class ofxTLPage {
 	map<string, ofxTLElement*> elements;
 	
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
-	virtual void saveElementPositions();
-	virtual void loadElementPositions();
 	
 	bool isSetup;
 	bool autosave;

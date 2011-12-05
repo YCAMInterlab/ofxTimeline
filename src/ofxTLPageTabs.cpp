@@ -50,6 +50,14 @@ void ofxTLPageTabs::addPage(string name){
 	drawRectChanged();
 }
 
+void ofxTLPageTabs::changeName(string oldName, string newName){
+	for(int i = 0; i < pages.size(); i++){
+		if(pages[i].name == oldName){
+			pages[i].name = newName;
+		}	
+	}
+}
+
 void ofxTLPageTabs::selectPage(int index){
 	if(index >= pages.size()){
 		ofLogError("ofxTLPageTabs -- Selecting page " + ofToString(index) + " out of range");

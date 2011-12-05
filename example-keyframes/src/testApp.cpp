@@ -8,6 +8,7 @@ void testApp::setup(){
 	
 	timeline.setup();
 	
+	timeline.setPageName("first page"); //changes the first page name
 	timeline.addKeyframes("Keyframer A", "keyframe_a.xml", ofRange(5, 100));
 	timeline.addKeyframes("Keyframer B", "keyframe_b.xml", ofRange(0, 1.0));
 	timeline.addKeyframes("Keyframer C", "keyframe_c.xml", ofRange(0, 1.0));

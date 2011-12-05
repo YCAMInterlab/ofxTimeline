@@ -27,6 +27,7 @@ class ofxTLPageTabs : public ofxTLElement {
 	virtual void addPage(string name);
 	virtual void selectPage(string name);
 	virtual void selectPage(int index);
+	virtual void changeName(string oldName, string newName);
 	
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	

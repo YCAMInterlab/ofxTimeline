@@ -20,7 +20,7 @@ ofxTLKeyframer::ofxTLKeyframer(){
 	reset();
 	
 	valueRange = ofRange(0.0, 1.0);
-	
+	hoverKeyframe = NULL;
 	selectedKeyframe = NULL;
 	drawingEasingWindow = false;
 	
@@ -120,11 +120,12 @@ void ofxTLKeyframer::draw(){
 	
 	//**** DRAW KEYFRAME DOTS
 	ofSetColor(timeline->getColors().textColor);
-
 	for(int i = 0; i < keyframes.size(); i++){
 		if(!keyframeIsInBounds(keyframes[i])){
 			continue;
 		}
+		
+		ofSetColor(timeline->getColors().textColor);
 		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
 		if(keyframes[i] == selectedKeyframe){
 			float keysValue = ofMap(selectedKeyframe->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
@@ -138,7 +139,15 @@ void ofxTLKeyframer::draw(){
 			ofNoFill();
 		}
 		
-		ofCircle(screenpoint.x, screenpoint.y, 5);
+		if(keyframes[i] == hoverKeyframe){
+			ofPushStyle();
+			ofFill();			
+			ofSetColor(timeline->getColors().highlightColor);
+			ofCircle(screenpoint.x, screenpoint.y, 8);
+			ofPopStyle();
+		}
+		
+		ofCircle(screenpoint.x, screenpoint.y, 4);
 	}
 	
 	//****** DRAW EASING CONTROLS
@@ -344,12 +353,9 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
-	if(bounds.inside(args.x, args.y)){
-		hover = true;
-	}
-	else{
-		hover = false;
-	}
+	ofxTLElement::mouseMoved(args);
+	int unused;
+	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y), unused );
 }
 
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args){

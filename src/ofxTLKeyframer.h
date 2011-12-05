@@ -74,6 +74,8 @@ class ofxTLKeyframer : public ofxTLElement
 	bool keyframeIsInBounds(ofxTLKeyframe* key);
 	
 	ofxTLKeyframe* selectedKeyframe;
+	ofxTLKeyframe* hoverKeyframe;
+	
 	int selectedKeyframeIndex;
 	ofVec2f keyframeGrabOffset;
 	float minBound; //TODO: replace with range
