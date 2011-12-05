@@ -8,6 +8,9 @@ void testApp::setup(){
 	
 	glEnable(GL_DEPTH_TEST);
 	ofEnableLighting();
+	
+	currentColor = ofColor(255);
+	
 	light.setPosition(ofGetWidth()*.5, ofGetHeight()*.25, 0);
 	light.enable();
 	
@@ -15,11 +18,11 @@ void testApp::setup(){
 	timeline.setDurationInFrames(90);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
-	
 	timeline.addKeyframes("RotateX", "rotate_x.xml", ofRange(0, 360));
 	timeline.addKeyframes("RotateY", "rotate_y.xml", ofRange(0, 360));
 	
-	//ofAddListener(ofxTLEvents.trigger, this, &testApp::timelineTriggerReceived);
+	timeline.addTriggers("Color", "color_triggers.xml");
+	ofAddListener(ofxTLEvents.trigger, this, &testApp::timelineTriggerReceived);
 }
 
 //--------------------------------------------------------------
@@ -30,22 +33,34 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-
 	ofBackground(.15*255);
 	ofPushMatrix();
-	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5, 40);
+	
+	ofSetColor(currentColor);
+	
+	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5, 40);	
 	ofRotate(timeline.getKeyframeValue("RotateX"), 1, 0, 0);
 	ofRotate(timeline.getKeyframeValue("RotateY"), 0, 1, 0);
+	
 	ofBox(0,0,0, 200);
+	
 	ofPopMatrix();
 	
 	timeline.draw();
 }
 
 //--------------------------------------------------------------
-//void testApp::timelineTriggerReceived(ofxTLTriggerEventArgs& trigger){
-//	cout << "Trigger from " << trigger.triggerGroupName << " says color " << trigger.triggerName << endl;
-//}
+void testApp::timelineTriggerReceived(ofxTLTriggerEventArgs& trigger){
+	if(trigger.triggerName == "RED"){
+		currentColor = ofColor(255,0,0);
+	}
+	else if(trigger.triggerName == "GREEN"){
+		currentColor = ofColor(0,255,0);		
+	}
+	else if(trigger.triggerName == "BLUE"){
+		currentColor = ofColor(0,0,255);
+	}
+}
 
 
 //--------------------------------------------------------------

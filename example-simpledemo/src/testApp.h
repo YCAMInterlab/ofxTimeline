@@ -22,6 +22,8 @@ class testApp : public ofBaseApp{
 	
 	ofLight light;
 	
+	ofColor currentColor;
+	
 	ofxTimeline timeline;
 	
 	void timelineTriggerReceived(ofxTLTriggerEventArgs& trigger);
