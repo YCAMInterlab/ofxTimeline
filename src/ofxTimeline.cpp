@@ -1,10 +1,35 @@
-/*
- *  THISTimeline.cpp
- *  THIS_Editor
+/**
+ * ofxTimeline
+ *	
+ * Copyright (c) 2011 James George
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase 
  *
- *  Created by Jim on 9/23/10.
- *  Copyright 2010 FlightPhase. All rights reserved.
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
  *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * ----------------------
+ *
+ * ofxTimeline 
+ * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTimeline.h"
@@ -65,18 +90,18 @@ void ofxTimeline::setup(){
 	tabs = new ofxTLPageTabs();
 	tabs->setTimeline(this);
 	tabs->setup();
-	tabs->setDrawRect(ofRectangle(0, 0, width, TICKER_HEIGHT));
+	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
 
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
 	ticker->setup();
-	ticker->setDrawRect(ofRectangle(0, TICKER_HEIGHT, width, TICKER_HEIGHT));
+	ticker->setDrawRect(ofRectangle(offset.x, offset.y+TICKER_HEIGHT, width, TICKER_HEIGHT));
 	
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
 	zoomer->setXMLFileName(filenamePrefix + "_zoomer.xml");
 	zoomer->setup();
-	zoomer->setDrawRect(ofRectangle(0, TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
+	zoomer->setDrawRect(ofRectangle(offset.y, offset.y+TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
 	
 	colors.loadColors();
 	
@@ -134,8 +159,6 @@ void ofxTimeline::play(){
 	}
 }
 
-
-
 void ofxTimeline::stop(){
 	if(isPlaying){
 		isPlaying = false;
@@ -164,6 +187,15 @@ void ofxTimeline::setCurrentFrame(int newFrame){
 		ofLogWarning("ofxTimeline -- setting current frame on a timebased timline has no effect.");
 	}
 	currentFrame = newFrame;
+}
+
+void ofxTimeline::setPercentComplete(float percent){
+	if(isFrameBased){
+		currentFrame = durationInFrames*percent;
+	}
+	else{
+		//TODO: timebased
+	}
 }
 
 void ofxTimeline::setCurrentTime(float time){
@@ -294,6 +326,7 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+	ticker->mousePressed(args);
 	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
 }
@@ -311,6 +344,7 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
+	ticker->mouseReleased(args);
 	tabs->mouseReleased(args);
 	currentPage->mouseReleased(args);
 	zoomer->mouseReleased(args);
@@ -333,17 +367,17 @@ void ofxTimeline::viewNeedsResize(ofEventArgs& args){
 void ofxTimeline::recalculateBoundingRects(){
 	
 	if(pages.size() > 1){
-		tabs->setDrawRect(ofRectangle(0, 0, width, TICKER_HEIGHT));
+		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
 	}
 	else{
-		tabs->setDrawRect(ofRectangle(0, 0, width, 0));
+		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
 	ticker->setDrawRect( ofRectangle(offset.x, offset.y+tabs->getDrawRect().height, width, TICKER_HEIGHT) );
 	updatePagePositions();
 
 	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
-	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+ticker->getDrawRect().height+tabs->getDrawRect().height,
-											width,currentPage->getComputedHeight()+ZOOMER_HEIGHT);
+	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
+											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
 	ticker->setTotalDrawRect(totalDrawRect);	
 }
 
@@ -399,12 +433,17 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 
 void ofxTimeline::draw(){	
 	if(isShowing){
+		glPushAttrib(GL_ENABLE_BIT);
+		glDisable(GL_DEPTH_TEST);
+
 		if (pages.size() > 1) {
 			tabs->draw();			
 		}
 		currentPage->draw();
 		zoomer->draw();
 		ticker->draw();
+		
+		glPopAttrib();
 	}
 }
 

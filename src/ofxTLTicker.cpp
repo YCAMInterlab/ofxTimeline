@@ -1,20 +1,42 @@
-/*
- *  ofxTLTicker.cpp
- *  timelineExample
+/**
+ * ofxTimeline
+ *	
+ * Copyright (c) 2011 James George
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase 
  *
- *  Created by Jim on 7/19/11.
- *  Copyright 2011 FlightPhase. All rights reserved.
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
  *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * ----------------------
+ *
+ * ofxTimeline 
+ * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLTicker.h"
 #include "ofxTimeline.h"
 
-ofxTLTicker::ofxTLTicker() 
-:	curHoverFrame(-1)
-{
-	//default constructor
-	hovering = false;
+ofxTLTicker::ofxTLTicker() {
+	dragging = false;
 }
 
 ofxTLTicker::~ofxTLTicker(){
@@ -30,9 +52,9 @@ void ofxTLTicker::draw(){
 	
 	if(timeline->getIsFrameBased()){
 		
-		curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
-		curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, timeline->getDurationInFrames());
-		framesInView = curEndFrame-curStartFrame;
+		int curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
+		int curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, timeline->getDurationInFrames());
+		int framesInView = curEndFrame-curStartFrame;
 	
 		float framesPerPixel = framesInView / totalDrawRect.width;
 		int frameStepSize = 1;
@@ -56,22 +78,7 @@ void ofxTLTicker::draw(){
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
 		
-		/*
-		//draw tickers with frame numbers
-		float d = bounds.width/(float)durationInFrames; //using a float results in uneven spread of keyframes
-		 ofSetColor(200, 180, 40);
-		int counter = 0;
-		for (float i = bounds.x; i < bounds.width; i+=d){
-			ofLine(i, bounds.y, i, bounds.y+bounds.height);
-			if(counter%10 == 0){
-				ofSetLineWidth(3);
-				ofLine(i, bounds.y+bounds.height*.85, i, bounds.height);
-				ofSetLineWidth(1);
-			}
-			counter++;
-		}
-		*/
-		
+
 		//draw current frame
 		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
 		string text = ofToString(timeline->getCurrentFrame());
@@ -79,7 +86,6 @@ void ofxTLTicker::draw(){
 		int textW = (text.size()+1)*7;		
 		ofSetColor(timeline->getColors().backgroundColor);
 		ofRect(currentFrameX, bounds.y, textW, textH);
-		//ofSetColor(200, 180, 40);
 		ofSetColor(timeline->getColors().textColor);
 		ofDrawBitmapString(text, currentFrameX+5, bounds.y+textH);
 
@@ -90,28 +96,31 @@ void ofxTLTicker::draw(){
 		else{
 			ofSetColor(timeline->getColors().outlineColor);
 		}
+		
 		//draw playhead line
 		ofSetLineWidth(1);
-		ofLine(currentFrameX, totalDrawRect.y-bounds.height, currentFrameX, totalDrawRect.y+totalDrawRect.height);
+		ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
 		
 		
 		//highlite current mouse position
-		if(hovering){
+		if(hover){
 			ofEnableAlphaBlending();
 			//draw background rect
 			ofSetColor(timeline->getColors().backgroundColor);
 			
+			int curHoverFrame = indexForScreenX(ofGetMouseX());
 			text = ofToString(curHoverFrame);
 			textH = 10;
 			textW = (text.size()+1)*7;
-			ofRect(mousex, bounds.y+bounds.height, textW, textH);
+			ofRect(ofGetMouseX(), bounds.y+textH, textW, textH);
+			
 			//draw playhead line
 			ofSetColor(timeline->getColors().textColor);
-			ofDrawBitmapString(text, mousex+5, bounds.y+textH);
+			ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+textH*2);
 			
 			ofSetColor(timeline->getColors().highlightColor);
 			ofSetLineWidth(1);
-			ofLine(mousex, totalDrawRect.y-bounds.height, mousex, totalDrawRect.y+totalDrawRect.height);
+			ofLine(ofGetMouseX(), totalDrawRect.y, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
 		}
 	}
 	//Time based
@@ -127,30 +136,41 @@ void ofxTLTicker::draw(){
 	
 }
 
-void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
-	updateHover(args);
-}
-
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){
-	updateHover(args);
+	hover = totalDrawRect.inside(args.x, args.y);
 }
 
 void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
+	//TODO change playhead position
+	dragging = bounds.inside(args.x, args.y);
+	if(dragging){
+		updateTimelinePosition();
+	}
+}
 
+void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
+	if(dragging){
+		updateTimelinePosition();
+	}	
 }
 
 void ofxTLTicker::mouseReleased(ofMouseEventArgs& args){
+	//TODO change playhead position
+	dragging = false;
 }
 
 void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 	totalDrawRect = drawRect;
 }
 
-
-void ofxTLTicker::updateHover(ofMouseEventArgs& args){
-	ofVec2f mousePos(args.x - totalDrawRect.x, args.y - totalDrawRect.y); //necessary or are mouse positions already mapped to the right region?
-	hovering = mousePos.x > 0 && mousePos.x < totalDrawRect.width && mousePos.y > 0 && mousePos.y < totalDrawRect.height;
-	curHoverFrame = ofMap(mousePos.x, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, curStartFrame, curEndFrame, true);
-	mousex  = mousePos.x; 
+void ofxTLTicker::updateTimelinePosition(){
+	if(timeline->getIsFrameBased()){
+		cout << "udpating timeline " << endl;
+		timeline->setCurrentFrame(indexForScreenX(ofGetMouseX()));
+	}
+	else{
+		//TODO: timebased scrubbing
+//		timeline->setCurrentTime(<#float time#>)
+	}
+	
 }
-
