@@ -21,11 +21,9 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 	
 	ofLight light;
-	
 	ofColor currentColor;
 	
 	ofxTimeline timeline;
 	
-	void timelineTriggerReceived(ofxTLTriggerEventArgs& trigger);
-	
+	void receivedTrigger(ofxTLTriggerEventArgs& trigger);
 };
