@@ -13,16 +13,16 @@ void testApp::setup(){
 	
 	light.setPosition(ofGetWidth()*.5, ofGetHeight()*.25, 0);
 	light.enable();
-	
+		
 	timeline.setup();
 	timeline.setDurationInFrames(90);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
-	timeline.addKeyframes("RotateX", "rotate_x.xml", ofRange(0, 360));
-	timeline.addKeyframes("RotateY", "rotate_y.xml", ofRange(0, 360));
+	timeline.addKeyframes("Rotate X", "rotatex.xml", ofRange(0, 360));
+	timeline.addKeyframes("Rotate Y", "rotatey.xml", ofRange(0, 360));
 	
-	timeline.addTriggers("Color", "color_triggers.xml");
-	ofAddListener(ofxTLEvents.trigger, this, &testApp::timelineTriggerReceived);
+	timeline.addTriggers("Colors", "colors.xml");
+	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 }
 
 //--------------------------------------------------------------
@@ -39,18 +39,18 @@ void testApp::draw(){
 	ofSetColor(currentColor);
 	
 	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5, 40);	
-	ofRotate(timeline.getKeyframeValue("RotateX"), 1, 0, 0);
-	ofRotate(timeline.getKeyframeValue("RotateY"), 0, 1, 0);
+	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
+	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
 	
 	ofBox(0,0,0, 200);
 	
 	ofPopMatrix();
-	
+
 	timeline.draw();
 }
 
 //--------------------------------------------------------------
-void testApp::timelineTriggerReceived(ofxTLTriggerEventArgs& trigger){
+void testApp::receivedTrigger(ofxTLTriggerEventArgs& trigger){
 	if(trigger.triggerName == "RED"){
 		currentColor = ofColor(255,0,0);
 	}
@@ -68,7 +68,9 @@ void testApp::keyPressed(int key){
 	if(key == ' '){
 		timeline.togglePlay();
 	}
-	
+	if(key == 'h'){
+		timeline.toggleShow();
+	}
 }
 
 //--------------------------------------------------------------
@@ -98,7 +100,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	timeline.setWidth(w);
+
 }
 
 //--------------------------------------------------------------

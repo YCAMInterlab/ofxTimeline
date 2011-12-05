@@ -62,10 +62,6 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
-		if(isPlaying){
-			stop();
-		}
-		
 		for(int i = 0; i < pages.size(); i++){ 
 			delete pages[i];
 		}
