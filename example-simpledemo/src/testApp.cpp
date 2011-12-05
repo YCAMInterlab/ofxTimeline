@@ -22,6 +22,9 @@ void testApp::setup(){
 	timeline.addKeyframes("Rotate Y", "rotatey.xml", ofRange(0, 360));
 	
 	timeline.addTriggers("Colors", "colors.xml");
+	
+	timeline.getColors().loadColors("defaultColors.xml");
+
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 }
 
