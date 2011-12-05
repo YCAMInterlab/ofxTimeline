@@ -167,7 +167,8 @@ void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){
 
 void ofxTLTrigger::keyPressed(ofKeyEventArgs& args){
 	
-	if((args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) && selectedTrigger != NULL){
+	
+	if((args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) && selectedTrigger != NULL && !enterText){
 		for(int i = triggers.size()-1; i>=0; i--){
 			if(&triggers[i] == selectedTrigger){
 				triggers.erase(triggers.begin()+i);
