@@ -169,6 +169,9 @@ bool ofxTimeline::togglePlay(){
 		stop();
 	}
 	else{
+		if(loopType == OF_LOOP_NONE && getPercentComplete() == 1.0){
+			setPercentComplete(0.0);
+		}
 		play();
 	}
 	return isPlaying;

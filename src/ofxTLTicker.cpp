@@ -59,8 +59,7 @@ void ofxTLTicker::draw(){
 		float framesPerPixel = framesInView / totalDrawRect.width;
 		int frameStepSize = 1;
 		
-		
-		//TODO make adaptive
+		//TODO make adaptive if we are way zoomed in don't draw so many
 		//draw ticker marks
 		for(int i = curStartFrame; i <= curEndFrame; i++){
 			float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
@@ -78,7 +77,6 @@ void ofxTLTicker::draw(){
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
 		
-
 		//draw current frame
 		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
 		string text = ofToString(timeline->getCurrentFrame());
