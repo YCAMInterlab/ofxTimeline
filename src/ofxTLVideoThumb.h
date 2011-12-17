@@ -21,6 +21,7 @@ class ofxTLVideoThumb {
 
 	void load();
 	void unload();
+	long timestamp; //generally millis from the beginning of the sequence
 	
 	string sourcepath;
 	string filepath;
