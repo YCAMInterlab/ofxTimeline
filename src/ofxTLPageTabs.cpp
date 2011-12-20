@@ -117,7 +117,6 @@ void ofxTLPageTabs::drawRectChanged(){
 	float rectWidth = bounds.width/pages.size();
 	for(int i = 0; i < pages.size(); i++){
 		pages[i].bounds = ofRectangle(bounds.x + rectWidth*i, bounds.y, rectWidth, bounds.height);
-		cout << "# pages " << pages.size() << " Draw rect is " << pages[i].bounds.x << " " << pages[i].bounds.y << " " << pages[i].bounds.width << " " << pages[i].bounds.height << endl;
 	}
 }
 

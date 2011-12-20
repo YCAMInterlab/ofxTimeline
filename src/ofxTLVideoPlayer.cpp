@@ -75,6 +75,9 @@ void ofxTLVideoPlayer::draw(){
 	ofPopStyle();
 }
 
+ofVideoPlayer & ofxTLVideoPlayer::getPlayer(){
+	return *player;
+}
 
 void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir){
 	ofDirectory checkCreateDirectory(thumbDir);
@@ -207,6 +210,9 @@ void ofxTLVideoPlayer::toggleThumbs(){
 	thumbsEnabled = !thumbsEnabled;
 }
 
+float ofxTLVideoPlayer::getCurrentTime(){
+	return player->getPosition()*player->getDuration();
+}
 
 int ofxTLVideoPlayer::getSelectedFrame(){
 	return selectedFrame;
