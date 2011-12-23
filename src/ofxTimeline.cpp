@@ -464,6 +464,7 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 	newPage->setName(name);
 	newPage->setup();
 	newPage->setAutosave(autosave);
+	newPage->setZoomBounds(zoomer->getViewRange());
 	tabs->addPage(name);
 
 	pages.push_back(newPage);

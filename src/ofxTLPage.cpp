@@ -246,6 +246,10 @@ void ofxTLPage::saveElementPositions(){
 }
 
 #pragma mark getters/setters
+void ofxTLPage::setZoomBounds(ofRange zoomBounds){
+	currentZoomBounds = zoomBounds;
+}
+
 void ofxTLPage::zoomEnded(ofxTLZoomEventArgs& args){
 	currentZoomBounds = args.currentZoom;
 }

@@ -55,7 +55,9 @@ class ofxTLPage {
 	virtual void setContainer(ofVec2f offset, float width);
 	virtual void setHeaderHeight(float newHeaderHeight);
 	virtual void setDefaultElementHeight(float newDefaultElementHeight);
-
+	
+	virtual void setZoomBounds(ofRange zoomBounds);
+	
 	virtual float getComputedHeight();	
 	
 	virtual void addElement(string name, ofxTLElement* element);
@@ -73,6 +75,8 @@ class ofxTLPage {
 	virtual void loadElementPositions();
 	
 	virtual void recalculateHeight();
+	
+	
 	
   protected:
 	
