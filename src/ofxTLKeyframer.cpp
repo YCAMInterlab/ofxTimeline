@@ -358,16 +358,20 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	
 	//wasn't holding down shift and clicked somewhere else, make a new
 	if(selectedKeyframe == NULL && !ofGetModifierKeyShift()){
-		selectedKeyframes.clear();
-		//add a new one
-		selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
-		
-		selectedKeyframe->grabOffset = ofVec2f(0,0);
-		updateKeyframeSort();
-		//find bounds
-		for(int i = 0; i < keyframes.size(); i++){
-			if(keyframes[i] == selectedKeyframe){
-				selectedKeyframeIndex = i;
+		if(selectedKeyframes.size() != 0){
+			selectedKeyframes.clear();
+		}
+		else{
+			//add a new one
+			selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
+			
+			selectedKeyframe->grabOffset = ofVec2f(0,0);
+			updateKeyframeSort();
+			//find bounds
+			for(int i = 0; i < keyframes.size(); i++){
+				if(keyframes[i] == selectedKeyframe){
+					selectedKeyframeIndex = i;
+				}
 			}
 		}
 	}
@@ -432,7 +436,6 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args){
 	if(!enabled) return;
 	
-//	if(focused && selectedKeyframe != NULL){
 	if(focused && selectedKeyframes.size() != 0){
 		ofVec2f screenpoint(args.x,args.y);
 		for(int k = 0; k < selectedKeyframes.size(); k++){
