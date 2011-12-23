@@ -154,7 +154,9 @@ class ofxTimeline {
 	ofxTLColors& getColors();
 	
 	string formatTime(float time);
-	
+	float getNudgePercent();
+	float getBigNudgePercent();
+
   protected:
 	bool isSetup;
 	bool usingEvents;

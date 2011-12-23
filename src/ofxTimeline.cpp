@@ -193,7 +193,7 @@ void ofxTimeline::setPercentComplete(float percent){
 		currentFrame = durationInFrames*percent;
 	}
 	else{
-		//TODO: timebased
+		currentTime = percent*durationInSeconds;
 	}
 }
 
@@ -610,11 +610,31 @@ ofImage* ofxTimeline::getImage(string name, int atFrame){
 }
 
 string ofxTimeline::formatTime(float time){
-	int millis = int(time * 10000) % 10000;
-	int seconds = int(time) % 60;
-	int minutes = int(time/60) % 60;
-	int hours = int(time/60/60);
+	if(isFrameBased){
+		ofLogError("ofxTimeline -- formatting time for framebased timeline doesn't make sense");
+	}
+	
 	char out[1024];
+	int millis,seconds,minutes,hours;
+	millis = int(time * 10000) % 10000;
+	seconds = int(time) % 60;
+	minutes = int(time/60) % 60;
+	hours = int(time/60/60);
 	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,millis);
+	//truncate for shorter timelines
+	if(minutes == 0){
+		return string(out).substr(6, 7);
+	}
+	if(hours == 0){
+		return string(out).substr(3, 10);
+	}
 	return string(out);
+}
+
+float ofxTimeline::getNudgePercent(){
+	return (zoomer->getViewRange().max - zoomer->getViewRange().min)/500.0;
+}
+
+float ofxTimeline::getBigNudgePercent(){
+	return (zoomer->getViewRange().max - zoomer->getViewRange().min)/100.0;	
 }

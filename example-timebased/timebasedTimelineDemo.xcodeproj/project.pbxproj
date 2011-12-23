@@ -120,6 +120,7 @@
 		E7B29A0C143873C40014A410 /* ofxTLPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPage.cpp; sourceTree = "<group>"; };
 		E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLPageTabs.h; sourceTree = "<group>"; };
 		E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPageTabs.cpp; sourceTree = "<group>"; };
+		E7D3625414A4468C00AD9151 /* ofxTLUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLUtils.h; sourceTree = "<group>"; };
 		E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequence.cpp; sourceTree = "<group>"; };
 		E7F4B5C51458DF4B0031CC9A /* ofxTLImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequence.h; sourceTree = "<group>"; };
 		E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequenceFrame.cpp; sourceTree = "<group>"; };
@@ -247,6 +248,7 @@
 				A6020B7E13F19C3400634B4D /* ofxTLEvents.cpp */,
 				A60B6A0C148704E1008196FE /* ofxTLColors.h */,
 				A60B6A0D148704E1008196FE /* ofxTLColors.cpp */,
+				E7D3625414A4468C00AD9151 /* ofxTLUtils.h */,
 			);
 			name = base;
 			sourceTree = "<group>";

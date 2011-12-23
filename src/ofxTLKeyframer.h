@@ -63,6 +63,9 @@ typedef struct
 	EasingFunction* easeFunc;
 	EasingType* easeType;
 	ofVec2f position; // x is value, y is time, all 0 - 1.0
+	
+	//ui interaction vars -- only set when dragging
+	ofVec2f grabOffset; 
 } ofxTLKeyframe;
 
 class ofxTLKeyframer : public ofxTLElement
@@ -95,22 +98,27 @@ class ofxTLKeyframer : public ofxTLElement
 	
 	virtual float sampleAt(float percent);
 
-	ofVec2f grabOffset;
+	bool keyframeSelected(ofxTLKeyframe* k);
+	
+	//vector<ofVec2f> grabOffsets; //keyframe grab offsets for dragging.
 	vector<ofxTLKeyframe*> keyframes;
 
 	ofRange valueRange;
 	
-	bool keyframeIsInBounds(ofxTLKeyframe* key);
+	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
+	bool isKeyframeSelected(ofxTLKeyframe* k);
+
+	void nudgeSelectedKeyframes(ofVec2f nudge);
 	
-	ofxTLKeyframe* selectedKeyframe;
+	//ofxTLKeyframe* selectedKeyframe;
+	vector<ofxTLKeyframe*> selectedKeyframes;
 	ofxTLKeyframe* hoverKeyframe;
 	
 	int selectedKeyframeIndex;
-	ofVec2f keyframeGrabOffset;
-	float minBound; //TODO: replace with range
-	float maxBound;
 	
 	void updateKeyframeSort();
+	void updateDragOffsets(ofVec2f screenpoint);
+
 	ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);

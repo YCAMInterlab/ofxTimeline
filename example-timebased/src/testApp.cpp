@@ -1,4 +1,5 @@
 #include "testApp.h"
+#include "ofxTLUtils.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -15,7 +16,7 @@ void testApp::setup(){
 	light.enable();
 		
 	timeline.setup();
-	timeline.setDurationInSeconds(60*4);
+	timeline.setDurationInSeconds(60*.5);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
 	timeline.addKeyframes("Rotate X", "rotatex.xml", ofRange(0, 360));
@@ -26,16 +27,33 @@ void testApp::setup(){
 	timeline.getColors().loadColors("defaultColors.xml");
 
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
+	
 }
+
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+	
+	
+	/*
+	if(ofGetModifierKeyAlt()){
+		cout << "ALT!!!" << endl;
+	}
+		
+	//----------------------------------------
+	if(ofGetModifierKeyShift()){	
+		cout << "SHIFTT!!!ZZzz" << endl;
+	}
+	
+	//----------------------------------------
+	if(ofGetModifierKeyControl()){
+		cout << "CONTROLLZZZZ" << endl;
+	}
+	*/
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
 	ofBackground(.15*255);
 	ofPushMatrix();
 	
@@ -45,7 +63,7 @@ void testApp::draw(){
 	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
 	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
 	
-	ofBox(0,0,0, 200);
+	ofBox(0,0,0,200);
 	
 	ofPopMatrix();
 

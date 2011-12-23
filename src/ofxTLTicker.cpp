@@ -214,12 +214,10 @@ void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 
 void ofxTLTicker::updateTimelinePosition(){
 	if(timeline->getIsFrameBased()){
-		cout << "udpating timeline " << endl;
 		timeline->setCurrentFrame(indexForScreenX(ofGetMouseX()));
 	}
 	else{
-		//TODO: timebased scrubbing
-//		timeline->setCurrentTime(<#float time#>)
+		timeline->setCurrentTime(timeForScreenX(ofGetMouseX()));
 	}
 	
 }
