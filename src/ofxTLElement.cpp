@@ -159,6 +159,7 @@ float ofxTLElement::normalizedXtoScreenX(float x, ofRange inputRange){
 	return ofMap(x, inputRange.min, inputRange.max, bounds.x, bounds.x+bounds.width, false);
 }
 
+
 int ofxTLElement::indexForScreenX(int screenX){
 	return indexForScreenX(screenX, timeline->getDurationInFrames());
 }
@@ -179,4 +180,23 @@ int ofxTLElement::screenXForIndex(int index, int durationInFrames){
 	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
 }
 
+int ofxTLElement::screenXForTime(float time){
+	return screenXForTime(time, timeline->getDurationInSeconds());
+}
+
+float ofxTLElement::timeForScreenX(int screenX){
+	return timeForScreenX(screenX, timeline->getDurationInSeconds());
+}
+
+int ofxTLElement::screenXForTime(float time, float durationInSeconds){
+	float startTime = zoomBounds.min * durationInSeconds;
+	float endTime = zoomBounds.max *durationInSeconds;
+	return ofMap(time, startTime, endTime, bounds.x, bounds.x+bounds.width, false);
+}
+
+float ofxTLElement::timeForScreenX(int screenX, float durationInSeconds){
+	float startTime = zoomBounds.min * durationInSeconds;
+	float endTime = zoomBounds.max *durationInSeconds;
+	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startTime, endTime, true);	
+}
 

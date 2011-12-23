@@ -110,6 +110,11 @@ class ofxTLElement
 	virtual int indexForScreenX(int screenX, int durationInFrames);
 	virtual int screenXForIndex(int index, int durationInFrames);
 	
+	virtual int screenXForTime(float time);
+	virtual float timeForScreenX(int screenX);
+	virtual int screenXForTime(float time, float durationInSeconds);
+	virtual float timeForScreenX(int screenX, float durationInSeconds);
+		
 	virtual void drawRectChanged(){};
 	
 	bool hover;

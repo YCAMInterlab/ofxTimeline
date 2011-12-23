@@ -50,13 +50,15 @@ void ofxTLTicker::draw(){
 	
 	ofPushStyle();
 	
+	int textH, textW;
+	string text;
 	if(timeline->getIsFrameBased()){
 		
 		int curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
 		int curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, timeline->getDurationInFrames());
 		int framesInView = curEndFrame-curStartFrame;
 	
-		float framesPerPixel = framesInView / totalDrawRect.width;
+		float framesPerPixel = framesInView / bounds.width;
 		int frameStepSize = 1;
 		
 		//TODO make adaptive if we are way zoomed in don't draw so many
@@ -70,68 +72,117 @@ void ofxTLTicker::draw(){
 				heightMultiplier = .5;
 			}
 			else {
-				heightMultiplier = .75;
 				ofSetLineWidth(1);
+				heightMultiplier = .75;
 			}
 			
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
 		
-		//draw current frame
-		int currentFrameX = screenXForIndex(timeline->getCurrentFrame());
-		string text = ofToString(timeline->getCurrentFrame());
-		int textH = 10;
-		int textW = (text.size()+1)*7;		
-		ofSetColor(timeline->getColors().backgroundColor);
-		ofRect(currentFrameX, bounds.y, textW, textH);
-		ofSetColor(timeline->getColors().textColor);
-		ofDrawBitmapString(text, currentFrameX+5, bounds.y+textH);
-
 		
-		if(timeline->getIsPlaying()){
-			ofSetColor(timeline->getColors().keyColor);
-		}
-		else{
-			ofSetColor(timeline->getColors().outlineColor);
-		}
-		
-		//draw playhead line
-		ofSetLineWidth(1);
-		ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
-		
-		
-		//highlite current mouse position
-		if(hover){
-			ofEnableAlphaBlending();
-			//draw background rect
-			ofSetColor(timeline->getColors().backgroundColor);
-			
-			int curHoverFrame = indexForScreenX(ofGetMouseX());
-			text = ofToString(curHoverFrame);
-			textH = 10;
-			textW = (text.size()+1)*7;
-			ofRect(ofGetMouseX(), bounds.y+textH, textW, textH);
-			
-			//draw playhead line
-			ofSetColor(timeline->getColors().textColor);
-			ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+textH*2);
-			
-			ofSetColor(timeline->getColors().highlightColor);
-			ofSetLineWidth(1);
-			ofLine(ofGetMouseX(), totalDrawRect.y, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
-		}
 	}
 	//Time based
 	else {
 		//draw tickers with time
+		float startTime = zoomBounds.min * timeline->getDurationInSeconds();
+		float endTime = zoomBounds.max * timeline->getDurationInSeconds();
+		float durationInview = endTime-startTime;
+		float secondsPerPixel = durationInview / bounds.width;
+		
+
+		//draw ticker marks
+		ofSetLineWidth(1);
+		ofSetColor(200, 180, 40);
+		float heightMultiplier = .75;
+		for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
+			//float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
+			float x = screenXForTime(i);
+			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+		}
+		
+		//draw regular increments
+		int bigTickStep;
+		if(durationInview < 1){ //draw big tick every 100 millis
+			bigTickStep = .1;
+		}
+		else if(durationInview < 60){ // draw big tick every second
+			bigTickStep = 1;
+		}
+		else {
+			bigTickStep = 60;
+		}
+		ofSetLineWidth(3);
+		heightMultiplier = .5;		
+		for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
+			float x = screenXForTime(i);
+			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+		}
+		
 	}
 
+	//highlite current mouse position
+	if(hover){
+		ofEnableAlphaBlending();
+		//draw background rect
+		ofSetColor(timeline->getColors().backgroundColor);
+		if (timeline->getIsFrameBased()) {
+			text = ofToString(indexForScreenX(ofGetMouseX()));
+		}
+		else{
+			//text = ofToString();
+			text = timeline->formatTime(timeForScreenX(ofGetMouseX()));
+		}
+		
+		textH = 10;
+		textW = (text.size()+1)*7;
+		ofRect(ofGetMouseX(), bounds.y+textH, textW, textH);
+		
+		//draw playhead line
+		ofSetColor(timeline->getColors().textColor);
+		ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+textH*2);
+		
+		ofSetColor(timeline->getColors().highlightColor);
+		ofSetLineWidth(1);
+		ofLine(ofGetMouseX(), totalDrawRect.y, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
+	}
+	
+	//draw current frame
+	int currentFrameX;
+	if (timeline->getIsFrameBased()) {
+		text = ofToString(timeline->getCurrentFrame());
+		currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+	}
+	else{
+		//text = ofToString();
+		text = timeline->formatTime(timeline->getCurrentTime());
+		currentFrameX = screenXForTime(timeline->getCurrentTime());
+	}
+	
+	textH = 10;
+	textW = (text.size()+1)*7;
+	
+	ofSetColor(timeline->getColors().backgroundColor);
+	ofRect(currentFrameX, bounds.y, textW, textH);
+	ofSetColor(timeline->getColors().textColor);
+	ofDrawBitmapString(text, currentFrameX+5, bounds.y+textH);
+	
+	
+	if(timeline->getIsPlaying()){
+		ofSetColor(timeline->getColors().keyColor);
+	}
+	else{
+		ofSetColor(timeline->getColors().outlineColor);
+	}
+	
+	//draw playhead line
+	ofSetLineWidth(1);
+	ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
+	
 	ofNoFill();
 	ofSetColor(200, 180, 40);
 	ofRect(bounds);
 	
 	ofPopStyle();
-	
 }
 
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){

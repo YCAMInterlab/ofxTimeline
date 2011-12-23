@@ -153,6 +153,8 @@ class ofxTimeline {
 
 	ofxTLColors& getColors();
 	
+	string formatTime(float time);
+	
   protected:
 	bool isSetup;
 	bool usingEvents;

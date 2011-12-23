@@ -607,3 +607,13 @@ ofImage* ofxTimeline::getImage(string name, float atTime){
 
 ofImage* ofxTimeline::getImage(string name, int atFrame){
 }
+
+string ofxTimeline::formatTime(float time){
+	int millis = int(time * 10000) % 10000;
+	int seconds = int(time) % 60;
+	int minutes = int(time/60) % 60;
+	int hours = int(time/60/60);
+	char out[1024];
+	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,millis);
+	return string(out);
+}
