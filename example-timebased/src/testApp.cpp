@@ -23,6 +23,7 @@ void testApp::setup(){
 	timeline.addKeyframes("Rotate Y", "rotatey.xml", ofRange(0, 360));
 	
 	timeline.addTriggers("Colors", "colors.xml");
+	timeline.addSwitcher("Switcher", "switcher.xml");
 	
 	timeline.getColors().loadColors("defaultColors.xml");
 
@@ -35,21 +36,6 @@ void testApp::setup(){
 void testApp::update(){
 	
 	
-	/*
-	if(ofGetModifierKeyAlt()){
-		cout << "ALT!!!" << endl;
-	}
-		
-	//----------------------------------------
-	if(ofGetModifierKeyShift()){	
-		cout << "SHIFTT!!!ZZzz" << endl;
-	}
-	
-	//----------------------------------------
-	if(ofGetModifierKeyControl()){
-		cout << "CONTROLLZZZZ" << endl;
-	}
-	*/
 }
 
 //--------------------------------------------------------------
