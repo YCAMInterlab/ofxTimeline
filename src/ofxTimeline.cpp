@@ -547,15 +547,46 @@ float ofxTimeline::getKeyframeValue(string name, int atFrame){
 
 
 ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
+	ofxTLSwitcher* newSwitcher = new ofxTLSwitcher();
+	newSwitcher->setCreatedByTimeline(true);
+	newSwitcher->setXMLFileName(xmlFileName);
+	addElement(name, newSwitcher);
+	
+	return newSwitcher;
 }
 
 bool ofxTimeline::getSwitcherOn(string name){
+	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
+	if(switcher == NULL){
+		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
+		return false;
+	}
+	return switcher->isOn(getPercentComplete());
 }
 
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
+	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
+	if(switcher == NULL){
+		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
+		return false;
+	}
+	if(isFrameBased){
+		ofLogError("ofxTimeline -- Getting time based switcher status on a framebased timeline will return in accurate results.");
+	}
+	
+	return switcher->isOn(atTime/durationInSeconds);	
 }
 
 bool ofxTimeline::getSwitcherOn(string name, int atFrame){
+	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
+	if(switcher == NULL){
+		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
+		return false;
+	}
+	if(!isFrameBased){
+		ofLogError("ofxTimeline -- Getting frame based switcher status on a timebased timeline will return in accurate results.");
+	}
+	return switcher->isOn(float(atFrame)/durationInFrames);	
 }
 
 ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){

@@ -38,8 +38,64 @@
 #pragma once 
 #include "ofxTLElement.h"
 
+typedef struct {
+	ofRange time;
+	
+	//ui stuff
+	ofRange dragOffsets;
+	
+	bool startSelected;
+	bool endSelected;
+} ofxTLSwitchOn;
+
 class ofxTLSwitcher : public ofxTLElement
 {
   public:
+	ofxTLSwitcher();
+	~ofxTLSwitcher();
 	
+	virtual void setup();
+	virtual void draw();
+	
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+	
+	virtual void keyPressed(ofKeyEventArgs& args);
+	
+	virtual void save();
+	virtual void load();
+	
+	virtual void clear();
+	
+	void playbackStarted(ofxTLPlaybackEventArgs& args);
+	void playbackLooped(ofxTLPlaybackEventArgs& args);
+	void playbackEnded(ofxTLPlaybackEventArgs& args);
+	
+	virtual bool isOn(float percent);
+	
+	//Finds the closest switch behind a given point
+	//if the point is inside a switch, it will return NULL.
+	ofxTLSwitchOn* nearestSwitchBeforePoint(float percent);
+	//Finds the closest switch after a given point
+	ofxTLSwitchOn* nearestSwitchAfterPoint(float percent);
+	
+  protected:
+	virtual void update(ofEventArgs& args);
+	bool isSwitchInBounds(ofxTLSwitchOn* s);
+	bool hoveringOn(float hoverY);
+	
+	void updateDragOffsets(float clickX);
+	void deselectAllSwitches();
+	bool areAnySwitchesSelected();
+	
+	ofxTLSwitchOn* switchHandleForScreenX(float screenPos, bool& startTimeSelected);
+	ofxTLSwitchOn* switchForScreenX(float screenPos);
+	ofxTLSwitchOn* switchForPoint(float percent);
+	
+	vector<ofxTLSwitchOn*> switches;
+	ofxTLSwitchOn* hoverSwitch;
+	bool hoveringStartTime;
+	bool hoveringHandle;
 };

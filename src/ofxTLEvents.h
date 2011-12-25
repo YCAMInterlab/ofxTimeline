@@ -65,6 +65,12 @@ class ofxTLTriggerEventArgs : public ofEventArgs {
 	string triggerName;
 };
 
+class ofxTLSwitchEventArgs : public ofEventArgs {
+  public:
+	string switchName;
+	bool on;
+};
+
 class ofxTLCoreEvents {
   public:
 	
@@ -77,6 +83,8 @@ class ofxTLCoreEvents {
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
 
 	ofEvent<ofxTLTriggerEventArgs> trigger;
+
+	ofEvent<ofxTLSwitchEventArgs> switched;
 	
 	ofEvent<ofxTLPageEventArgs> pageChanged;
 		

@@ -50,7 +50,6 @@ ofxTLKeyframer::ofxTLKeyframer(){
 	
 	valueRange = ofRange(0.0, 1.0);
 	hoverKeyframe = NULL;
-//	selectedKeyframe = NULL;
 	drawingEasingWindow = false;
 	
 	xmlFileName = "_keyframes.xml";
