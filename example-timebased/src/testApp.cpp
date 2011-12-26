@@ -23,7 +23,7 @@ void testApp::setup(){
 	timeline.addKeyframes("Rotate Y", "rotatey.xml", ofRange(0, 360));
 	
 	timeline.addTriggers("Colors", "colors.xml");
-	timeline.addSwitcher("Switcher", "switcher.xml");
+	timeline.addSwitcher("big box", "switcher.xml");
 	
 	timeline.getColors().loadColors("defaultColors.xml");
 
@@ -49,7 +49,12 @@ void testApp::draw(){
 	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
 	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
 	
-	ofBox(0,0,0,200);
+	if (timeline.getSwitcherOn("big box")) {
+		ofBox(0,0,0,200);
+	}
+	else {
+		ofBox(0,0,0,50);
+	}
 	
 	ofPopMatrix();
 
@@ -67,6 +72,10 @@ void testApp::receivedTrigger(ofxTLTriggerEventArgs& trigger){
 	else if(trigger.triggerName == "BLUE"){
 		currentColor = ofColor(0,0,255);
 	}
+	else if(trigger.triggerName == "MAROON"){
+		currentColor = ofColor(255,0,198);
+	}
+	
 }
 
 

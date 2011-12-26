@@ -43,7 +43,6 @@ typedef struct {
 	
 	//ui stuff
 	ofRange dragOffsets;
-	
 	bool startSelected;
 	bool endSelected;
 } ofxTLSwitchOn;

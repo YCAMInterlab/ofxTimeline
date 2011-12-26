@@ -204,11 +204,8 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		deselectAllSwitches();
 		bool startAlreadySelected = clickedSwitchA->startSelected;
 		bool endAlreadySelected = clickedSwitchA->endSelected;
-//		if((didSelectedStartTime && !clickedSwitchA->startSelected) || (!didSelectedStartTime && clickedSwitchA->endSelected)){
-//		}
 		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
 		clickedSwitchA->endSelected   = !didSelectedStartTime || (ofGetModifierKeyShift() && endAlreadySelected);
-//		shouldDeselect = ((!startAlreadySelected && clickedSwitchA->startSelected) || (!endAlreadySelected != clickedSwitchA->endSelected));
 	}
 	else{
 		
@@ -216,7 +213,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		bool shouldCreateNewSwitch = false;
 		clickedSwitchA = switchForScreenX(args.x);
 		if(clickedSwitchA != NULL){
-			cout << "clicked a switch!" << endl;
+
 			//if we clicked the upper part, select that switch
 			if(hoveringOn(args.y)){
 				//if we haven't already selected these, flag deselect
@@ -283,8 +280,8 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 				ofxTLSwitchOn* before = nearestSwitchBeforePoint(normalizedCoord);
 				ofxTLSwitchOn* after  = nearestSwitchAfterPoint(normalizedCoord);
 				
-				if(before != NULL) cout << "	before is  " << before->time << endl;
-				if(after != NULL) cout << "	after  is  " << after->time  << endl;
+//				if(before != NULL) cout << "	before is  " << before->time << endl;
+//				if(after != NULL) cout << "	after  is  " << after->time  << endl;
 				if(before == NULL || before->time.max < zoomBounds.min){
 					clickedSwitchA->time.min = ofMap(.5, 0, 1.0, zoomBounds.min, normalizedCoord);
 				}
@@ -301,32 +298,16 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 				
 				clickedSwitchA->endSelected = true;
 				clickedSwitchA->startSelected = true;
-				cout << "new is " << clickedSwitchA->time << endl;
+//				cout << "new is " << clickedSwitchA->time << endl;
 			}
 			
 			switches.push_back( clickedSwitchA );
 			sort(switches.begin(), switches.end(), switchsort);
+			if(autosave) save();
 		}
-//		else if(shouldDeselect){
-//			deselectAllSwitches();
-//		}
 	}
 	
 	updateDragOffsets(args.x);
-
-//	if(clickedSwitch != NULL){
-//
-//		cout << "setting drag bounds! " << endl;
-//
-//		clickedSwitch->dragOffsets = clickedSwitch->time - screenpoint.x;
-//		clickedSwitch->startSelected = didSelectedStartTime;
-//		clickedSwitch->endSelected = !didSelectedStartTime;
-//		
-//		if(!isSwitchSelected(clickedSwitch)){
-//			cout << "adding switch! " << endl;
-//			selectedSwitches.push_back( clickedSwitch );
-//		}
-//	}
 		
 }
 
@@ -353,9 +334,32 @@ void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
+	if(autosave) save();
 }
 
 void ofxTLSwitcher::keyPressed(ofKeyEventArgs& args){
+	//TODO: nudging!
+	
+	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
+		
+		//if an 'on' is selected, delete it
+		for(int i = switches.size()-1; i >= 0; i--){
+			if(switches[i]->startSelected && switches[i]->endSelected){
+				delete switches[i];
+				switches.erase(switches.begin()+i);
+			}
+		}
+		//if an off valley is selected, merge the adjascent switches
+		for(int i = switches.size()-1; i >= 1; i--){
+			if(switches[i-1]->endSelected && switches[i]->startSelected){
+				//merge
+				switches[i-1]->time.max = switches[i]->time.max;
+				delete switches[i];
+				switches.erase(switches.begin()+i);
+			}
+		}
+		if(autosave) save();
+	}
 }
 
 bool ofxTLSwitcher::isOn(float percent){
@@ -376,14 +380,50 @@ ofxTLSwitchOn* ofxTLSwitcher::switchForPoint(float percent){
 }
 
 void ofxTLSwitcher::save(){
-	
+	ofxXmlSettings settings;
+	settings.addTag("switches");
+	settings.pushTag("switches");
+	for(int i = 0; i < switches.size(); i++){
+		settings.addTag("switch");
+		settings.pushTag("switch",i);
+		settings.addValue("startTime", switches[i]->time.min);
+		settings.addValue("endTime", switches[i]->time.max);
+		settings.popTag();
+	}
+	settings.popTag();
+	settings.saveFile(xmlFileName);
+	cout << "saving to " << xmlFileName << endl;
 }
 
 void ofxTLSwitcher::load(){
+	clear();
 	
+	ofxXmlSettings settings;
+	if(settings.loadFile(xmlFileName)){
+		settings.pushTag("switches");
+		int numSwitches = settings.getNumTags("switch");
+		for(int i = 0; i < numSwitches; i++){
+			ofxTLSwitchOn* newSwitch = new ofxTLSwitchOn();
+			newSwitch->startSelected = newSwitch->endSelected = false;
+			settings.pushTag("switch", i);
+			newSwitch->time.min = settings.getValue("startTime",0.0);
+			newSwitch->time.max = settings.getValue("endTime",0.0);
+			switches.push_back(newSwitch);
+			settings.popTag();
+		}
+		settings.popTag();
+		sort(switches.begin(), switches.end(), switchsort);
+	}
+	else{
+		ofLogError("ofxTLSwitcher -- Error loading from xml file " + xmlFileName);
+	}
 }
 
 void ofxTLSwitcher::clear(){
+	for(int i = 0; i < switches.size(); i++){
+		delete switches[i];
+	}
+	switches.clear();
 }
 
 void ofxTLSwitcher::playbackStarted(ofxTLPlaybackEventArgs& args){
@@ -438,14 +478,6 @@ ofxTLSwitchOn* ofxTLSwitcher::switchHandleForScreenX(float screenPos, bool& star
 	return NULL;
 }
 
-//bool ofxTLSwitcher::isSwitchSelected(ofxTLSwitchOn* s){
-//	for(int i = 0; i < selectedSwitches.size(); i++){
-//		if(selectedSwitches[i] == s){
-//			return true;
-//		}
-//	}
-//	return false;
-//}
 
 //Finds the closest switch behind a given point
 //if the point is inside a switch, it will return NULL.
