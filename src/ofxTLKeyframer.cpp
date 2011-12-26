@@ -503,6 +503,7 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	}
 	
 	if(autosave && modified){
+		updateKeyframeSort();
 		save();
 	}
 }
