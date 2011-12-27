@@ -391,27 +391,6 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 			//move the playhead
 			timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
 			
-			/*
-			 //REMOVING Drag bounds
-			 //After effects doesn't enforce this.. it's probably not necessary. 
-			if(keyframes.size() == selectedKeyframes.size()){ //all keys are selected
-				dragBounds.min = 0.0;
-				dragBounds.max = 1.0;
-			}
-			else if(isKeyframeSelected(keyframes[0]){
-				dragBounds.min = 0.0;
-				dragBounds.max = keyframes[selectedKeyframeIndex+1]->position.x;
-			}
-			else if(selectedKeyframeIndex == keyframes.size()-1){
-				minBound = keyframes[selectedKeyframeIndex-1]->position.x;
-				maxBound = 1.0;
-			}
-			else{
-				minBound = keyframes[selectedKeyframeIndex-1]->position.x;
-				maxBound = keyframes[selectedKeyframeIndex+1]->position.x;
-				//cout << "keyframe point is " << selectedKeyframe->position.x << " min bound is " << minBound << " max bound is " << maxBound << endl;
-			}
-			 */
 		}
 		else if(args.button == 2){
 			easingWindowPosition = screenpoint;
@@ -432,24 +411,53 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y), unused );
 }
 
-void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args){
+void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(!enabled) return;
 	
 	if(focused && selectedKeyframes.size() != 0){
 		ofVec2f screenpoint(args.x,args.y);
+		
+
 		for(int k = 0; k < selectedKeyframes.size(); k++){
-			ofVec2f newposition = keyframePointForCoord(screenpoint - selectedKeyframes[k]->grabOffset);
-			newposition.x = ofClamp(newposition.x, 0, 1.0); //TODO stop all keyframes from moving if one is dragged up against the edge 
+			ofVec2f newScreenPosition;
+			newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
+			newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
+			ofVec2f newposition = keyframePointForCoord(newScreenPosition);
 			selectedKeyframes[k]->position = newposition;
 		}
 		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
 		if(dragkey != NULL){
+			if(snapped){
+				//ignore drag offset on the main keyframe
+				dragkey->position.x = screenXtoNormalizedX(args.x, zoomBounds);
+			}
 			timeline->setPercentComplete(dragkey->position.x);
 		}
-
+		
 		updateKeyframeSort();
 	}
 }
+
+//this is called when snapping is enabled instead of mouseDragged
+//importantly it passes in the exact percent of the snapped to value
+//void ofxTLKeyframer::mouseSnapped(ofMouseEventArgs& args, float snapPercent){
+//	if(!enabled) return;
+//	
+//	if(focused && selectedKeyframes.size() != 0){
+//		ofVec2f screenpoint(args.x,args.y);
+//		for(int k = 0; k < selectedKeyframes.size(); k++){
+//			ofVec2f newposition = keyframePointForCoord(screenpoint - selectedKeyframes[k]->grabOffset);
+//			newposition.x = ofClamp(newposition.x, 0, 1.0); 
+//			selectedKeyframes[k]->position = newposition;
+//		}
+//		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
+//		if(dragkey != NULL){
+//			timeline->setPercentComplete(dragkey->position.x);
+//		}
+//		
+//		updateKeyframeSort();
+//	}		
+//}
 
 void ofxTLKeyframer::updateKeyframeSort(){
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
@@ -459,6 +467,16 @@ void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
 	if(pointInScreenBounds(ofVec2f(args.x, args.y))){
 		if(autosave){
 			save();
+		}
+	}
+}
+
+void ofxTLKeyframer::getSnappingPoints(vector<float>& points){
+	for(int i = 0; i < keyframes.size(); i++){
+		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
+			points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
+			//points.push_back( keyframes[i]->position.x );
+
 		}
 	}
 }
@@ -482,29 +500,19 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	}
 				   
 	if(focused && selectedKeyframes.size() != 0){
-
 		 //TODO add nudging!
 		if(args.key == OF_KEY_UP){
 			nudgeSelectedKeyframes(ofVec2f(0, .01));
-			modified = true;
 		}
 		if(args.key == OF_KEY_DOWN){
 			nudgeSelectedKeyframes(ofVec2f(0, -.01));
-			modified = true;
 		}
 		if(args.key == OF_KEY_RIGHT){
 			nudgeSelectedKeyframes(ofVec2f(timeline->getNudgePercent(),0.0));		
-			modified = true;
 		}
 		if(args.key == OF_KEY_LEFT){
 			nudgeSelectedKeyframes(ofVec2f(-timeline->getNudgePercent(),0.0));
-			modified = true;
 		}
-	}
-	
-	if(autosave && modified){
-		updateKeyframeSort();
-		save();
 	}
 }
 
@@ -513,6 +521,13 @@ void ofxTLKeyframer::nudgeSelectedKeyframes(ofVec2f nudge){
 		selectedKeyframes[i]->position.x = ofClamp(selectedKeyframes[i]->position.x + nudge.x, 0, 1.0);
 		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudge.y, 0, 1.0);
 	}
+	
+	updateKeyframeSort();
+	
+	if(autosave){
+		save();
+	}
+	
 }
 
 ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){

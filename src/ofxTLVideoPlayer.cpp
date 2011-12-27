@@ -158,7 +158,7 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 	ofxTLElement::mouseMoved(args);
 }
 
-void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args){
+void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
 	}

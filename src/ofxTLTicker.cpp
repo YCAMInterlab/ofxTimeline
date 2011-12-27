@@ -44,6 +44,7 @@ ofxTLTicker::~ofxTLTicker(){
 
 void ofxTLTicker::setup(){
 	enable();
+	hasBPM = false;
 }
 
 void ofxTLTicker::draw(){
@@ -183,6 +184,29 @@ void ofxTLTicker::draw(){
 	ofRect(bounds);
 	
 	ofPopStyle();
+}
+
+void ofxTLTicker::setBPM(float newBpm){
+	bpm = newBpm;
+	hasBPM = true;
+}
+
+//250 bpm = 250/60 beats per second
+//1 beat = 1/(250/60) seconds
+//1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
+void ofxTLTicker::getSnappingPoints(vector<float>& points){
+	//for now just add 
+	if(!timeline->getIsFrameBased()){
+		float currentPoint = 0;
+		float oneBeat = 1.0/(bpm/60);
+		float halfBeat = oneBeat/2;
+		float quarterBeat = halfBeat/2;
+		while(currentPoint < timeline->getDurationInSeconds()){
+			currentPoint += oneBeat;
+			points.push_back( screenXForTime(currentPoint) );
+			points.push_back( screenXForTime(currentPoint+halfBeat) );
+		}
+	}
 }
 
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){

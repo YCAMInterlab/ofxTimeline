@@ -54,9 +54,15 @@ class ofxTLTicker : public ofxTLElement
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 
+	virtual void setBPM(float bpm);
+	virtual void getSnappingPoints(vector<float>& points);
+	
   protected:
 	void updateTimelinePosition();
 	ofRectangle totalDrawRect;
 		
+	bool hasBPM;
+	float bpm;
+	
 	bool dragging;
 };

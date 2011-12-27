@@ -25,7 +25,7 @@ class ofxTLVideoPlayer : public ofxTLElement {
 
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);

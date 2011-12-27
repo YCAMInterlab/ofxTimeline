@@ -39,6 +39,7 @@
 #include "ofxTLElementHeader.h"
 #include "ofxTLEvents.h"
 
+class ofxTLTicker;
 class ofxTLPage {
   public:
 	
@@ -64,6 +65,8 @@ class ofxTLPage {
 	virtual ofxTLElement* getElement(string name);
 	virtual void removeElement(string name);
 	
+	virtual void setSnapping(bool snapping);
+	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -76,22 +79,30 @@ class ofxTLPage {
 	
 	virtual void recalculateHeight();
 	
-	
+	virtual void setTicker(ofxTLTicker* ticker);
 	
   protected:
+	//used for getting BPM snaps
+	ofxTLTicker* ticker;
 	
+	bool draggingInside;
 	vector<ofxTLElementHeader*> headers;
 	map<string, ofxTLElement*> elements;
-	
+
+	bool snappingEnabled;
+	vector<float> snapPoints;
+	//in pixels. TODO: make variable through API
+	float snappingTolerance;
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
 	bool isSetup;
 	bool autosave;
 	string name;
 	
-	ofVec2f containerOffset;
-	float containerWidth;
-	float computedHeight;
+	ofRectangle elementContainerRect;
+	//ofVec2f containerOffset;
+//	float containerWidth;
+//	float computedHeight;
 	float headerHeight;
 	float defaultElementHeight;
 	ofRange currentZoomBounds;

@@ -68,7 +68,7 @@ class ofxTLElement
 	//standard events
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args){};
+	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped){};
 	virtual void mouseReleased(ofMouseEventArgs& args){};
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
@@ -83,6 +83,9 @@ class ofxTLElement
 	
 	virtual void reset(){};
 	virtual void clear(){};
+	
+	//add any points (in screenspace x) that should be snapped to
+	virtual void getSnappingPoints(vector<float>& points){};
 	
 	
 	ofxTimeline* getTimeline();

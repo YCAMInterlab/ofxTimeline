@@ -97,6 +97,14 @@ class ofxTimeline {
 	virtual void setDurationInSeconds(float seconds);
 	virtual bool getIsFrameBased();
 	
+	
+	virtual void setSnapping(bool snapping);
+	virtual void toggleSnapping();
+	
+	//setting a BPM allows for a global measure across the timeline
+	//this is useful for snapping to intervals 
+	virtual float setBPM(float bpm); //beats per measure
+	
 	virtual bool setLoopType(ofLoopType newType);
 	
 	virtual int getDurationInFrames();
@@ -160,6 +168,7 @@ class ofxTimeline {
   protected:
 	bool isSetup;
 	bool usingEvents;
+	bool snappingEnabled;
 	
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);

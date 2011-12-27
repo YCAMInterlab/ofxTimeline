@@ -36,14 +36,16 @@
  */
 
 #include "ofxTLPage.h"
+#include "ofxTLTicker.h"
 
 ofxTLPage::ofxTLPage()
 :	autosave(false),
-	computedHeight(0),
-	containerWidth(0),
+	elementContainerRect(ofRectangle(0,0,0,0)),
 	headerHeight(0),
 	defaultElementHeight(0),
-	isSetup(false)
+	isSetup(false),
+	snappingTolerance(12),
+	ticker(NULL)
 {
 	//
 }
@@ -73,41 +75,93 @@ void ofxTLPage::setup(){
 	loadElementPositions(); //name must be set
 }
 
-void ofxTLPage::draw(){
+void ofxTLPage::setTicker(ofxTLTicker* t){
+	ticker = t;
+}
+
+void ofxTLPage::draw(){	
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->draw();
 		elements[headers[i]->name]->draw();
 	}	
+	if(draggingInside && snappingEnabled){
+		ofPushStyle();
+		ofSetColor(255,255,255,100);
+		for(int i = 0; i < snapPoints.size(); i++){
+			ofLine(snapPoints[i], elementContainerRect.y, snapPoints[i], elementContainerRect.y+elementContainerRect.height);
+		}
+		ofPopStyle();
+	}
 }
 
 #pragma mark events
 void ofxTLPage::mousePressed(ofMouseEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mousePressed(args);
-		elements[headers[i]->name]->mousePressed(args);
-	}	
+	draggingInside = elementContainerRect.inside(args.x, args.y);
+	if(draggingInside){
+		for(int i = 0; i < headers.size(); i++){
+			headers[i]->mousePressed(args);
+			elements[headers[i]->name]->mousePressed(args);
+		}	
+	}
 }
 
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
 		elements[headers[i]->name]->mouseMoved(args);
-	}
-	
+	}	
 }
 
 void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mouseDragged(args);
-		elements[headers[i]->name]->mouseDragged(args);
+	if(draggingInside){
+		bool snapped = false;
+		float snapPercent = 0;
+		if(snappingEnabled){
+			//get the snapping points
+			snapPoints.clear();
+			for(int i = 0; i < headers.size(); i++){
+				elements[headers[i]->name]->getSnappingPoints(snapPoints);	
+			}
+			if(ticker != NULL){
+				ticker->getSnappingPoints(snapPoints);
+			}
+			float closestSnapDistance = snappingTolerance;
+			float closestSnapPoint;
+			//modify drag X if it should be snapped
+			for(int i = 0; i < snapPoints.size(); i++){
+				float distanceToPoint = abs(args.x - snapPoints[i]);
+				if(distanceToPoint < closestSnapDistance){
+					closestSnapPoint = i;
+					closestSnapDistance = distanceToPoint; 
+				}
+			}
+			
+			if(closestSnapDistance < snappingTolerance){
+				cout << "snap x is " << snapPoints[closestSnapPoint] << endl;
+				//args.x = snapPoints[closestSnapPoint];
+				//snapAdjustment =  args.x - snapPoints[closestSnapPoint];
+				args.x = snapPoints[closestSnapPoint];
+				snapPercent = snapPoints[closestSnapPoint];
+//				cout << "args x is " << args.x << endl;
+				snapped = true;
+			}
+		}
+		
+		for(int i = 0; i < headers.size(); i++){
+			headers[i]->mouseDragged(args);
+			elements[headers[i]->name]->mouseDragged(args, snapped);
+		}
 	}
 }
 
 void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		headers[i]->mouseReleased(args);
-		elements[headers[i]->name]->mouseReleased(args);
-	}		
+	if(draggingInside){
+		for(int i = 0; i < headers.size(); i++){
+			headers[i]->mouseReleased(args);
+			elements[headers[i]->name]->mouseReleased(args);
+		}		
+		draggingInside = false;
+	}
 }
 
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){
@@ -124,7 +178,7 @@ void ofxTLPage::addElement(string elementName, ofxTLElement* element){
 
 	//	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
 
-	ofRectangle newHeaderRect = ofRectangle(containerOffset.x, computedHeight, containerWidth, headerHeight);
+	ofRectangle newHeaderRect = ofRectangle(elementContainerRect.x, elementContainerRect.height, elementContainerRect.width, headerHeight);
 	newHeader->setDrawRect(newHeaderRect);
 	newHeader->name = elementName;
 
@@ -162,8 +216,8 @@ void ofxTLPage::removeElement(string name){
 }
 
 void ofxTLPage::recalculateHeight(){
-	
-	float currentY = containerOffset.y;
+	float currentY = elementContainerRect.y;
+	//float currentY = containerOffset.y;
 	float totalHeight = 0;
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
@@ -172,11 +226,11 @@ void ofxTLPage::recalculateHeight(){
 		float startY = thisHeader.y+thisHeader.height;
 		float endY = startY + elementRectangle.height;
 		
-		thisHeader.width = containerWidth;
+		thisHeader.width = elementContainerRect.width;
 		thisHeader.y = currentY;
 		headers[i]->setDrawRect(thisHeader);
 		elementRectangle.y = startY;
-		elementRectangle.width = containerWidth;
+		elementRectangle.width = elementContainerRect.width;
 		
 		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
 		currentY += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
@@ -186,15 +240,20 @@ void ofxTLPage::recalculateHeight(){
 
 	}
 	
-	computedHeight = totalHeight;
-	
+	//computedHeight = totalHeight;
+	elementContainerRect.height = totalHeight;
 	if(autosave){
 		saveElementPositions();
 	}
 }
 
 float ofxTLPage::getComputedHeight(){
-	return computedHeight;
+	//return computedHeight;
+	return elementContainerRect.height;
+}
+
+void ofxTLPage::setSnapping(bool snapping){
+	snappingEnabled = snapping;
 }
 
 #pragma mark saving/restoring state
@@ -245,6 +304,7 @@ void ofxTLPage::saveElementPositions(){
 	elementPositions.saveFile(name + "_elementPositions.xml");
 }
 
+
 #pragma mark getters/setters
 void ofxTLPage::setZoomBounds(ofRange zoomBounds){
 	currentZoomBounds = zoomBounds;
@@ -267,8 +327,11 @@ void ofxTLPage::setAutosave(bool doAutosave){
 }
 
 void ofxTLPage::setContainer(ofVec2f offset, float width){
-	containerOffset = offset;
-	containerWidth = width;
+	elementContainerRect.x = offset.x;
+	elementContainerRect.y = offset.y;
+	//containerOffset = offset;
+	//containerWidth = width;
+	elementContainerRect.width = width;
 	recalculateHeight();
 }
 

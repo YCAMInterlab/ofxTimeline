@@ -56,7 +56,8 @@ ofxTimeline::ofxTimeline()
 	filenamePrefix("defaultTimeline_"),
 	isSetup(false),
 	usingEvents(false),
-	isPlaying(false)
+	isPlaying(false),
+	snappingEnabled(false)
 {
 }
 
@@ -251,6 +252,10 @@ void ofxTimeline::setDurationInFrames(int frames){
 	isFrameBased = true;
 }
 
+float ofxTimeline::setBPM(float bpm){
+	ticker->setBPM(bpm);
+}
+
 void ofxTimeline::setDurationInSeconds(float seconds){
 	durationInSeconds = seconds;
 	isFrameBased = false;
@@ -293,6 +298,17 @@ void ofxTimeline::updatePagePositions(){
 		}
 		currentPage->recalculateHeight();
 	}
+}
+
+void ofxTimeline::setSnapping(bool snapping){
+	snappingEnabled = snapping;
+	for(int i = 0; i < pages.size(); i++){
+		pages[i]->setSnapping(snappingEnabled);
+	}
+}
+
+void ofxTimeline::toggleSnapping(){
+	setSnapping(!snappingEnabled);
 }
 
 #pragma mark EVENTS
@@ -465,6 +481,7 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 	newPage->setup();
 	newPage->setAutosave(autosave);
 	newPage->setZoomBounds(zoomer->getViewRange());
+	newPage->setTicker(ticker);
 	tabs->addPage(name);
 
 	pages.push_back(newPage);

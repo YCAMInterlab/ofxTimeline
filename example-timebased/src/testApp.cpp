@@ -27,6 +27,9 @@ void testApp::setup(){
 	
 	timeline.getColors().loadColors("defaultColors.xml");
 
+	timeline.setSnapping(true);
+	timeline.setBPM(180.0f);
+	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 	
 }

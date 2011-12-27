@@ -322,7 +322,8 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
 	}
 }
 
-void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args){
+//TODO: account for snapping
+void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	for(int i = 0; i < switches.size(); i++){
 		if(switches[i]->startSelected){
 			switches[i]->time.min = screenXtoNormalizedX(args.x, zoomBounds) + switches[i]->dragOffsets.min;

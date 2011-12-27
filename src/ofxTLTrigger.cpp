@@ -149,8 +149,8 @@ void ofxTLTrigger::mouseMoved(ofMouseEventArgs& args){
 	hoverTrigger = getTriggerForScreenPosition(args.x, unused);
 }
 
-void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args){
-	ofxTLElement::mouseDragged(args);
+void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args, bool snapped){
+//	ofxTLElement::mouseDragged(args);
 	if(selectedTrigger != NULL){
 		selectedTrigger->pt = screenXtoNormalizedX(args.x - dragOffset, zoomBounds);
 	}
@@ -168,7 +168,7 @@ void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){
 void ofxTLTrigger::keyPressed(ofKeyEventArgs& args){
 	
 	
-	if((args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) && selectedTrigger != NULL && !enterText	){
+	if((args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE) && selectedTrigger != NULL && !enterText){
 		for(int i = triggers.size()-1; i>=0; i--){
 			if(&triggers[i] == selectedTrigger){
 				triggers.erase(triggers.begin()+i);
