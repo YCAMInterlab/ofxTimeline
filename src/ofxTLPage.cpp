@@ -173,10 +173,46 @@ void ofxTLPage::refreshSnapPoints(){
 	}	
 }
 
+//copy paste
+string ofxTLPage::copyRequest(){
+	string buf;
+	for(int i = 0; i < headers.size(); i++){
+		buf += elements[headers[i]->name]->copyRequest();
+	}	
+	return buf;	
+}
+
+string ofxTLPage::cutRequest(){
+	string buf;
+	for(int i = 0; i < headers.size(); i++){
+		buf += elements[headers[i]->name]->cutRequest();
+	}	
+	return buf;
+}
+
+void ofxTLPage::pasteSent(string pasteboard){
+	for(int i = 0; i < headers.size(); i++){
+		//only paste into where we are hovering
+		if(elements[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
+			elements[headers[i]->name]->pasteSent(pasteboard);
+		}
+	}	
+}
+
+		
+void ofxTLPage::selectAll(){
+	for(int i = 0; i < headers.size(); i++){
+		//only paste into where we are hovering
+		if(elements[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
+			elements[headers[i]->name]->selectAll();
+		}
+	}
+}
+
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->keyPressed(args);
-	}
+	}		
 }
 
 void ofxTLPage::addElement(string elementName, ofxTLElement* element){

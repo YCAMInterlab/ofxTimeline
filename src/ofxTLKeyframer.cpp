@@ -241,26 +241,52 @@ void ofxTLKeyframer::load(){
 	}
 	
 	clear();
-	
-	savedkeyframes.pushTag("keyframes");
-	int numKeyTags = savedkeyframes.getNumTags("key");
-	
-	for(int i = 0; i < numKeyTags; i++){
-		savedkeyframes.pushTag("key", i);
-		ofxTLKeyframe* key = newKeyframe(ofVec2f(savedkeyframes.getValue("x", 0.0),
-												 savedkeyframes.getValue("y", 0.0)));
-								 
-		key->easeFunc = easingFunctions[ofClamp(savedkeyframes.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
-		key->easeType = easingTypes[ofClamp(savedkeyframes.getValue("easetype", 0), 0, easingTypes.size()-1)];
-										
-		savedkeyframes.popTag(); //key
 
-	}
-	
-	savedkeyframes.popTag();//keyframes
+	createKeyframesFromXML(savedkeyframes, keyframes);
+//	savedkeyframes.pushTag("keyframes");
+//	int numKeyTags = savedkeyframes.getNumTags("key");
+//	
+//	for(int i = 0; i < numKeyTags; i++){
+//		savedkeyframes.pushTag("key", i);
+//		ofxTLKeyframe* key = newKeyframe(ofVec2f(savedkeyframes.getValue("x", 0.0),
+//												 savedkeyframes.getValue("y", 0.0)));
+//								 
+//		key->easeFunc = easingFunctions[ofClamp(savedkeyframes.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
+//		key->easeType = easingTypes[ofClamp(savedkeyframes.getValue("easetype", 0), 0, easingTypes.size()-1)];
+//										
+//		savedkeyframes.popTag(); //key
+//
+//	}
+//	
+//	savedkeyframes.popTag();//keyframes
 	
 	updateKeyframeSort();
 }
+
+void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxTLKeyframe*>& keyContainer){
+	int numKeyframeStores = xmlStore.getNumTags("keyframes");
+	for(int store = 0; store < numKeyframeStores; store++){
+		xmlStore.pushTag("keyframes",store);
+		int numKeyTags = xmlStore.getNumTags("key");
+		
+		for(int i = 0; i < numKeyTags; i++){
+			xmlStore.pushTag("key", i);
+			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),
+													 xmlStore.getValue("y", 0.0)));
+			
+			key->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
+			key->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
+			
+			xmlStore.popTag(); //key
+			
+			keyContainer.push_back( key );
+		}
+		
+		xmlStore.popTag();//keyframes
+	}
+	
+}
+
 
 void ofxTLKeyframer::clear(){
 	for(int i = 0; i < keyframes.size(); i++){
@@ -277,6 +303,7 @@ void ofxTLKeyframer::save(){
 	
 	cout << "Saving keyframe file " << xmlFileName << endl;
 
+	/*
 	ofxXmlSettings savedkeyframes;
 	savedkeyframes.addTag("keyframes");
 	savedkeyframes.pushTag("keyframes");
@@ -293,6 +320,32 @@ void ofxTLKeyframer::save(){
 	
 	savedkeyframes.popTag();//keyframes
 	savedkeyframes.saveFile(xmlFileName);
+	 */
+	string xmlRep = getXMLStringForKeyframes(keyframes);
+	ofxXmlSettings savedkeyframes;
+	savedkeyframes.loadFromBuffer(xmlRep);
+	savedkeyframes.saveFile(xmlFileName);
+}
+
+string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
+	ofxXmlSettings savedkeyframes;
+	savedkeyframes.addTag("keyframes");
+	savedkeyframes.pushTag("keyframes");
+	
+	for(int i = 0; i < keys.size(); i++){
+		savedkeyframes.addTag("key");
+		savedkeyframes.pushTag("key", i);
+		savedkeyframes.addValue("x", keys[i]->position.x);
+		savedkeyframes.addValue("y", keys[i]->position.y);
+		savedkeyframes.addValue("easefunc", keys[i]->easeFunc->id);
+		savedkeyframes.addValue("easetype", keys[i]->easeType->id);
+		savedkeyframes.popTag(); //key
+	}
+	
+	savedkeyframes.popTag();//keyframes
+	string str;
+	savedkeyframes.copyXmlToString(str);
+	return str;
 }
 
 void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
@@ -363,7 +416,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		else{
 			//add a new one
 			selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
-			
+			keyframes.push_back(selectedKeyframe);
 			selectedKeyframe->grabOffset = ofVec2f(0,0);
 			updateKeyframeSort();
 			//find bounds
@@ -438,36 +491,13 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	}
 }
 
-//this is called when snapping is enabled instead of mouseDragged
-//importantly it passes in the exact percent of the snapped to value
-//void ofxTLKeyframer::mouseSnapped(ofMouseEventArgs& args, float snapPercent){
-//	if(!enabled) return;
-//	
-//	if(focused && selectedKeyframes.size() != 0){
-//		ofVec2f screenpoint(args.x,args.y);
-//		for(int k = 0; k < selectedKeyframes.size(); k++){
-//			ofVec2f newposition = keyframePointForCoord(screenpoint - selectedKeyframes[k]->grabOffset);
-//			newposition.x = ofClamp(newposition.x, 0, 1.0); 
-//			selectedKeyframes[k]->position = newposition;
-//		}
-//		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
-//		if(dragkey != NULL){
-//			timeline->setPercentComplete(dragkey->position.x);
-//		}
-//		
-//		updateKeyframeSort();
-//	}		
-//}
-
 void ofxTLKeyframer::updateKeyframeSort(){
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
 }
 
 void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
-	if(pointInScreenBounds(ofVec2f(args.x, args.y))){
-		if(autosave){
-			save();
-		}
+	if(autosave){
+		save();
 	}
 }
 
@@ -476,45 +506,74 @@ void ofxTLKeyframer::getSnappingPoints(vector<float>& points){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
 			points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
 			//points.push_back( keyframes[i]->position.x );
-
 		}
 	}
 }
 
-void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
-	if(!enabled || !focused) return;
-	
-	bool modified = false;
-	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
-		if(focused && selectedKeyframes.size() != 0){
-			//for(int i = 0; i < keyframes.size(); i++){
-			for(int i = keyframes.size() - 1; i >= 0; i--){
-				//if (keyframes[i] == selectedKeyframe) {
-				if(isKeyframeSelected(keyframes[i])){
-					delete keyframes[i];
-					keyframes.erase(keyframes.begin()+i);
-					modified = true;
+string ofxTLKeyframer::copyRequest(){
+	return getXMLStringForKeyframes(selectedKeyframes);
+}
+
+string ofxTLKeyframer::cutRequest(){
+	string xmlrep = getXMLStringForKeyframes(selectedKeyframes);
+	cout << "xml rep is " << xmlrep << endl;
+	deleteSelectedKeyframes();
+	return xmlrep;	
+}
+
+void ofxTLKeyframer::pasteSent(string pasteboard){
+	vector<ofxTLKeyframe*> keyContainer;
+	ofxXmlSettings pastedKeys;
+	if(pastedKeys.loadFromBuffer(pasteboard)){
+		createKeyframesFromXML(pastedKeys, keyContainer);
+		if(keyContainer.size() != 0){
+			selectedKeyframes.clear();
+			//normalize and add at playhead
+			for(int i = 0; i < keyContainer.size(); i++){
+				if(i != 0){
+					keyContainer[i]->position.x -= keyContainer[0]->position.x;
+					keyContainer[i]->position.x += timeline->getPercentComplete();
+
 				}
+				selectedKeyframes.push_back(keyContainer[i]);
+				keyframes.push_back(keyContainer[i]);
+			}
+			keyContainer[0]->position.x = timeline->getPercentComplete();
+			timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );
+			updateKeyframeSort();
+			if(autosave){
+				save();
 			}
 		}
 	}
-				   
-	if(focused && selectedKeyframes.size() != 0){
-		 //TODO add nudging!
-		if(args.key == OF_KEY_UP){
-			nudgeSelectedKeyframes(ofVec2f(0, .01));
-		}
-		if(args.key == OF_KEY_DOWN){
-			nudgeSelectedKeyframes(ofVec2f(0, -.01));
-		}
-		if(args.key == OF_KEY_RIGHT){
-			nudgeSelectedKeyframes(ofVec2f(timeline->getNudgePercent(),0.0));		
-		}
-		if(args.key == OF_KEY_LEFT){
-			nudgeSelectedKeyframes(ofVec2f(-timeline->getNudgePercent(),0.0));
-		}
+}
+
+void ofxTLKeyframer::selectAll(){
+	cout << "selecting all " << endl;
+	selectedKeyframes = keyframes;
+}
+
+void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
+	if(!enabled || !focused) 
+		return;
+	
+	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
+		deleteSelectedKeyframes();
+	}
+	if(args.key == OF_KEY_UP){
+		nudgeSelectedKeyframes(ofVec2f(0, .01));
+	}
+	if(args.key == OF_KEY_DOWN){
+		nudgeSelectedKeyframes(ofVec2f(0, -.01));
+	}
+	if(args.key == OF_KEY_RIGHT){
+		nudgeSelectedKeyframes(ofVec2f(timeline->getNudgePercent(),0.0));		
+	}
+	if(args.key == OF_KEY_LEFT){
+		nudgeSelectedKeyframes(ofVec2f(-timeline->getNudgePercent(),0.0));
 	}
 }
+
 
 void ofxTLKeyframer::nudgeSelectedKeyframes(ofVec2f nudge){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
@@ -526,8 +585,21 @@ void ofxTLKeyframer::nudgeSelectedKeyframes(ofVec2f nudge){
 	
 	if(autosave){
 		save();
+	}	
+}
+
+void ofxTLKeyframer::deleteSelectedKeyframes(){
+	for(int i = keyframes.size() - 1; i >= 0; i--){
+		//if (keyframes[i] == selectedKeyframe) {
+		if(isKeyframeSelected(keyframes[i])){
+			delete keyframes[i];
+			keyframes.erase(keyframes.begin()+i);
+		}
 	}
-	
+	updateKeyframeSort();
+	if(autosave){
+		save();
+	}
 }
 
 ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
@@ -579,7 +651,7 @@ ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point){
 	k->position = point;
 	k->easeFunc = easingFunctions[0];
 	k->easeType = easingTypes[0];
-	keyframes.push_back( k );
+	//keyframes.push_back( k );
 	return k;
 }
 

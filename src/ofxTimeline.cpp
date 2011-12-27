@@ -33,6 +33,7 @@
  */
 
 #include "ofxTimeline.h"
+#include "ofxTLUtils.h"
 
 bool headersort(ofxTLElementHeader* a, ofxTLElementHeader* b){
 	return a->getDrawRect().y < b->getDrawRect().y;
@@ -128,6 +129,10 @@ bool ofxTimeline::toggleShow(){
 
 ofxTLColors& ofxTimeline::getColors(){
 	return colors;
+}
+
+string ofxTimeline::getPasteboard(){
+	return pasteboard;
 }
 
 ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
@@ -374,8 +379,34 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	currentPage->keyPressed(args);
-	zoomer->keyPressed(args);
+	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+	if(ofGetModifierKeyControl() && args.key == 3){ //copy
+//		cout << "CTRL + C" << endl;
+		string copyattempt = currentPage->copyRequest();
+		if(copyattempt != ""){
+			pasteboard = copyattempt;
+		}
+	}
+	else if(ofGetModifierKeyControl() && args.key == 24){ //cut
+		string copyattempt = currentPage->cutRequest();
+		if(copyattempt != ""){
+			pasteboard = copyattempt;
+		}
+	}
+	else if(ofGetModifierKeyControl() && args.key == 22){ //paste
+		if (pasteboard != "") {
+			currentPage->pasteSent(pasteboard);
+		}				
+	}
+	else if(ofGetModifierKeyControl() && args.key == 1){ //select all
+		currentPage->selectAll();						
+	}
+	
+	else{
+		ticker->keyPressed(args);
+		currentPage->keyPressed(args);
+		zoomer->keyPressed(args);
+	}
 }
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){

@@ -96,6 +96,12 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual void reset();
 	virtual void clear();
 	
+	//copy paste
+	virtual string copyRequest();
+	virtual string cutRequest();
+	virtual void pasteSent(string pasteboard);
+	virtual void selectAll();
+	
   private:
 	
 	virtual float sampleAt(float percent);
@@ -104,13 +110,14 @@ class ofxTLKeyframer : public ofxTLElement
 	
 	//vector<ofVec2f> grabOffsets; //keyframe grab offsets for dragging.
 	vector<ofxTLKeyframe*> keyframes;
-
+	
 	ofRange valueRange;
 	
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
 
 	void nudgeSelectedKeyframes(ofVec2f nudge);
+	void deleteSelectedKeyframes();
 	
 	//ofxTLKeyframe* selectedKeyframe;
 	vector<ofxTLKeyframe*> selectedKeyframes;
@@ -121,6 +128,9 @@ class ofxTLKeyframer : public ofxTLElement
 	void updateKeyframeSort();
 	void updateDragOffsets(ofVec2f screenpoint);
 
+	string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
+	void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);
+	
 	ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);

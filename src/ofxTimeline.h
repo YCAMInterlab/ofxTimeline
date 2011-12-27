@@ -115,6 +115,8 @@ class ofxTimeline {
 	virtual void enableDrawBPMGrid(bool enableGrid);
 //	virtual float setBPMGranularity(float granularity); //beats per measure
 	
+	string getPasteboard();
+	
 	virtual void draw();
 
 	virtual void addPage(string name, bool makeCurrent = true);
@@ -167,7 +169,10 @@ class ofxTimeline {
 	float getNudgePercent();
 	float getBigNudgePercent();
 
+	
   protected:
+	string pasteboard;
+	
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;

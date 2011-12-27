@@ -73,6 +73,12 @@ class ofxTLElement
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	
+	//copy+poast
+	virtual string copyRequest(){return "";};
+	virtual string cutRequest(){return "";};
+	virtual void pasteSent(string pasteboard){};
+	virtual void selectAll(){};
+	
 	//zoom events
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
@@ -96,6 +102,7 @@ class ofxTLElement
 		
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
+	
 	
   protected:
 	

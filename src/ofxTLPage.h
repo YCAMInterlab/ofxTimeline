@@ -81,6 +81,12 @@ class ofxTLPage {
 	
 	virtual void setTicker(ofxTLTicker* ticker);
 	
+	//copy paste
+	virtual string copyRequest();
+	virtual string cutRequest();
+	virtual void pasteSent(string pasteboard);
+	virtual void selectAll();
+	
   protected:
 	//used for getting BPM snaps
 	ofxTLTicker* ticker;
