@@ -252,10 +252,6 @@ void ofxTimeline::setDurationInFrames(int frames){
 	isFrameBased = true;
 }
 
-float ofxTimeline::setBPM(float bpm){
-	ticker->setBPM(bpm);
-}
-
 void ofxTimeline::setDurationInSeconds(float seconds){
 	durationInSeconds = seconds;
 	isFrameBased = false;
@@ -309,6 +305,18 @@ void ofxTimeline::setSnapping(bool snapping){
 
 void ofxTimeline::toggleSnapping(){
 	setSnapping(!snappingEnabled);
+}
+
+void ofxTimeline::setBPM(float bpm){
+	ticker->setBPM(bpm);
+}
+
+void ofxTimeline::toggleDrawBPMGrid(){
+	ticker->setDrawBPMGrid(!ticker->getDrawBPMGrid());		
+}
+
+void ofxTimeline::enableDrawBPMGrid(bool enableGrid){
+	ticker->setDrawBPMGrid(enableGrid);
 }
 
 #pragma mark EVENTS

@@ -36,6 +36,10 @@
 
 #include "ofMain.h"
 #include "ofxTLElement.h"
+typedef struct{
+	float screenX;
+	int weight;
+} ofxTLBPMPoint;
 
 class ofxTLTicker : public ofxTLElement
 {
@@ -56,13 +60,20 @@ class ofxTLTicker : public ofxTLElement
 
 	virtual void setBPM(float bpm);
 	virtual void getSnappingPoints(vector<float>& points);
+	virtual bool getDrawBPMGrid();
+	virtual void setDrawBPMGrid(bool drawGrid);
+	
 	
   protected:
 	void updateTimelinePosition();
+	void updateBPMPoints();
+
 	ofRectangle totalDrawRect;
-		
+	vector<ofxTLBPMPoint> bpmScreenPoints;
+	
 	bool hasBPM;
 	float bpm;
+	bool drawBPMGrid;
 	
 	bool dragging;
 };

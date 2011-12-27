@@ -98,6 +98,9 @@ void ofxTLPage::draw(){
 void ofxTLPage::mousePressed(ofMouseEventArgs& args){
 	draggingInside = elementContainerRect.inside(args.x, args.y);
 	if(draggingInside){
+		if(snappingEnabled){
+			refreshSnapPoints();
+		}
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
 			elements[headers[i]->name]->mousePressed(args);
@@ -117,14 +120,9 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 		bool snapped = false;
 		float snapPercent = 0;
 		if(snappingEnabled){
-			//get the snapping points
-			snapPoints.clear();
-			for(int i = 0; i < headers.size(); i++){
-				elements[headers[i]->name]->getSnappingPoints(snapPoints);	
-			}
-			if(ticker != NULL){
-				ticker->getSnappingPoints(snapPoints);
-			}
+			
+			refreshSnapPoints();
+			
 			float closestSnapDistance = snappingTolerance;
 			float closestSnapPoint;
 			//modify drag X if it should be snapped
@@ -162,6 +160,17 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
 		}		
 		draggingInside = false;
 	}
+}
+
+void ofxTLPage::refreshSnapPoints(){
+	//get the snapping points
+	snapPoints.clear();
+	for(int i = 0; i < headers.size(); i++){
+		elements[headers[i]->name]->getSnappingPoints(snapPoints);	
+	}
+	if(ticker != NULL){
+		ticker->getSnappingPoints(snapPoints);
+	}	
 }
 
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){

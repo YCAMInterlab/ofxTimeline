@@ -97,14 +97,6 @@ class ofxTimeline {
 	virtual void setDurationInSeconds(float seconds);
 	virtual bool getIsFrameBased();
 	
-	
-	virtual void setSnapping(bool snapping);
-	virtual void toggleSnapping();
-	
-	//setting a BPM allows for a global measure across the timeline
-	//this is useful for snapping to intervals 
-	virtual float setBPM(float bpm); //beats per measure
-	
 	virtual bool setLoopType(ofLoopType newType);
 	
 	virtual int getDurationInFrames();
@@ -112,6 +104,16 @@ class ofxTimeline {
 
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
+	
+	virtual void setSnapping(bool snapping);
+	virtual void toggleSnapping();
+	
+	//setting a BPM allows for a global measure across the timeline
+	//this is useful for snapping to intervals 
+	virtual void setBPM(float bpm); //beats per minute
+	virtual void toggleDrawBPMGrid();
+	virtual void enableDrawBPMGrid(bool enableGrid);
+//	virtual float setBPMGranularity(float granularity); //beats per measure
 	
 	virtual void draw();
 

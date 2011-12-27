@@ -120,6 +120,8 @@ class ofxTLElement
 		
 	virtual void drawRectChanged(){};
 	
+	virtual bool isOnScreen(float screenX);
+	
 	bool hover;
 	bool focused;
 	bool enabled; //it's up to the implementation to respect this

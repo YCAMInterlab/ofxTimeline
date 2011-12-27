@@ -200,3 +200,6 @@ float ofxTLElement::timeForScreenX(int screenX, float durationInSeconds){
 	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startTime, endTime, true);	
 }
 
+bool ofxTLElement::isOnScreen(float screenX){
+	return screenX > bounds.x && screenX < bounds.x+bounds.width;
+}

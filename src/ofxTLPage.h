@@ -95,6 +95,8 @@ class ofxTLPage {
 	float snappingTolerance;
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
+	void refreshSnapPoints();
+	
 	bool isSetup;
 	bool autosave;
 	string name;

@@ -45,6 +45,7 @@ ofxTLTicker::~ofxTLTicker(){
 void ofxTLTicker::setup(){
 	enable();
 	hasBPM = false;
+	drawBPMGrid = false;
 }
 
 void ofxTLTicker::draw(){
@@ -119,6 +120,16 @@ void ofxTLTicker::draw(){
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
 		
+		if(drawBPMGrid){
+			updateBPMPoints();
+			ofPushStyle();
+			ofSetColor(255, 255, 255, 50);
+			for(int i = 0; i < bpmScreenPoints.size(); i++){
+				ofSetLineWidth(bpmScreenPoints[i].weight);
+				ofLine(bpmScreenPoints[i].screenX, totalDrawRect.y, bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height);
+			}
+			ofPopStyle();
+		}
 	}
 
 	//highlite current mouse position
@@ -195,18 +206,52 @@ void ofxTLTicker::setBPM(float newBpm){
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
 void ofxTLTicker::getSnappingPoints(vector<float>& points){
-	//for now just add 
+	//for now just add
+	if(!drawBPMGrid){
+		updateBPMPoints();
+	}
+	for(int i = 0; i < bpmScreenPoints.size(); i++){
+		points.push_back(bpmScreenPoints[i].screenX);
+	}
+}
+
+void ofxTLTicker::updateBPMPoints(){
+	
+	bpmScreenPoints.clear();
 	if(!timeline->getIsFrameBased()){
 		float currentPoint = 0;
-		float oneBeat = 1.0/(bpm/60);
-		float halfBeat = oneBeat/2;
-		float quarterBeat = halfBeat/2;
+		float oneMeasure = 1.0/(bpm/60);
+		float halfMeasure = oneMeasure/2;
+		float quarterMeasure = halfMeasure/2;
 		while(currentPoint < timeline->getDurationInSeconds()){
-			currentPoint += oneBeat;
-			points.push_back( screenXForTime(currentPoint) );
-			points.push_back( screenXForTime(currentPoint+halfBeat) );
+			ofxTLBPMPoint measures[4];
+			
+			measures[0].screenX = screenXForTime(currentPoint);
+			measures[0].weight = 4;
+			measures[1].screenX = screenXForTime(currentPoint+halfMeasure);
+			measures[1].weight = 2;
+			measures[2].screenX = screenXForTime(currentPoint+quarterMeasure);
+			measures[2].weight = 1;
+			measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
+			measures[3].weight = 1;
+			
+			for(int m = 0; m < 4; m++){
+				if( isOnScreen(measures[m].screenX) ){
+					bpmScreenPoints.push_back( measures[m] );
+				}
+			}
+
+			currentPoint += oneMeasure;
 		}
-	}
+	}	
+}
+
+bool ofxTLTicker::getDrawBPMGrid(){
+	return drawBPMGrid;
+}
+
+void ofxTLTicker::setDrawBPMGrid(bool drawGrid){
+	drawBPMGrid = drawGrid;
 }
 
 void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){

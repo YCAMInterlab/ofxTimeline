@@ -29,6 +29,7 @@ void testApp::setup(){
 
 	timeline.setSnapping(true);
 	timeline.setBPM(180.0f);
+	timeline.enableDrawBPMGrid(true);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 	
