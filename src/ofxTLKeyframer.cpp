@@ -241,25 +241,7 @@ void ofxTLKeyframer::load(){
 	}
 	
 	clear();
-
 	createKeyframesFromXML(savedkeyframes, keyframes);
-//	savedkeyframes.pushTag("keyframes");
-//	int numKeyTags = savedkeyframes.getNumTags("key");
-//	
-//	for(int i = 0; i < numKeyTags; i++){
-//		savedkeyframes.pushTag("key", i);
-//		ofxTLKeyframe* key = newKeyframe(ofVec2f(savedkeyframes.getValue("x", 0.0),
-//												 savedkeyframes.getValue("y", 0.0)));
-//								 
-//		key->easeFunc = easingFunctions[ofClamp(savedkeyframes.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
-//		key->easeType = easingTypes[ofClamp(savedkeyframes.getValue("easetype", 0), 0, easingTypes.size()-1)];
-//										
-//		savedkeyframes.popTag(); //key
-//
-//	}
-//	
-//	savedkeyframes.popTag();//keyframes
-	
 	updateKeyframeSort();
 }
 
@@ -423,7 +405,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 				
 		if(selectedKeyframe != NULL && args.button == 0){
 			updateDragOffsets(screenpoint);
-
+			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
 			//move the playhead
 			timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
 			
@@ -458,15 +440,18 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 			ofVec2f newScreenPosition;
 			newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
 			newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
+//			if(snapped){
+//				newScreenPosition.x += timeline->getDragAnchor();
+//			}
 			ofVec2f newposition = keyframePointForCoord(newScreenPosition);
 			selectedKeyframes[k]->position = newposition;
 		}
 		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
 		if(dragkey != NULL){
-			if(snapped){
+//			if(snapped){
 				//ignore drag offset on the main keyframe
-				dragkey->position.x = screenXtoNormalizedX(args.x, zoomBounds);
-			}
+				//dragkey->position.x = screenXtoNormalizedX(args.x, zoomBounds);
+//			}
 			timeline->setPercentComplete(dragkey->position.x);
 		}
 		

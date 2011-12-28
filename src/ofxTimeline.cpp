@@ -354,9 +354,12 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+	dragAnchorSet = false;
 	ticker->mousePressed(args);
 	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
+
+	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
@@ -381,7 +384,6 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
-//		cout << "CTRL + C" << endl;
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
@@ -703,19 +705,31 @@ string ofxTimeline::formatTime(float time){
 	
 	char out[1024];
 	int millis,seconds,minutes,hours;
-	millis = int(time * 1000) % 1000;
+	millis = int(time * 10000) % 10000;
 	seconds = int(time) % 60;
 	minutes = int(time/60) % 60;
 	hours = int(time/60/60);
-	sprintf(out, "%02d:%02d:%02d:%03d", hours, minutes,seconds,(millis+1));
+	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,(millis+1));
 	//truncate for shorter timelines
 	if(minutes == 0){
-		return string(out).substr(6, 6);
+		return string(out).substr(6, 7);
 	}
 	if(hours == 0){
-		return string(out).substr(3, 9);
+		return string(out).substr(3, 10);
 	}
 	return string(out);
+}
+
+void ofxTimeline::setDragAnchor(float dragAnchor){
+	globalDragAnchor = dragAnchor;
+	for(int i = 0; i < pages.size(); i++){
+		pages[i]->setDragAnchor( dragAnchor );
+	}
+	dragAnchorSet = true;
+}
+
+float ofxTimeline::getDragAnchor(){
+	return globalDragAnchor;
 }
 
 float ofxTimeline::getNudgePercent(){

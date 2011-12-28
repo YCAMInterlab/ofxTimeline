@@ -169,13 +169,26 @@ class ofxTimeline {
 	float getNudgePercent();
 	float getBigNudgePercent();
 
+	//do not call this yourself, called from within TLElement
+	//This is a bit subtle why it's here
+	//when multi keys are being dragged and snapping is enabled
+	//we need to compensate by the drag offset between the grabbed key
+	//and the mouse.  
+	//TL elements should call this on mousedown if one of their elements is
+	//should be snapped directly to snap lines
+	void setDragAnchor(float dragAnchor);
+	float getDragAnchor();
 	
   protected:
-	string pasteboard;
 	
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
+	float globalDragAnchor;
+	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
+	
+	string pasteboard;
+
 	
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);

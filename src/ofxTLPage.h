@@ -87,6 +87,7 @@ class ofxTLPage {
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
 	
+	virtual void setDragAnchor(float anchor);
   protected:
 	//used for getting BPM snaps
 	ofxTLTicker* ticker;
@@ -102,6 +103,8 @@ class ofxTLPage {
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
 	void refreshSnapPoints();
+	
+	float dragAnchor;
 	
 	bool isSetup;
 	bool autosave;
