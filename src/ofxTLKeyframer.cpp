@@ -285,6 +285,7 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 		xmlStore.popTag();//keyframes
 	}
 	
+	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
 }
 
 
@@ -303,24 +304,6 @@ void ofxTLKeyframer::save(){
 	
 	cout << "Saving keyframe file " << xmlFileName << endl;
 
-	/*
-	ofxXmlSettings savedkeyframes;
-	savedkeyframes.addTag("keyframes");
-	savedkeyframes.pushTag("keyframes");
-	
-	for(int i = 0; i < keyframes.size(); i++){
-		savedkeyframes.addTag("key");
-		savedkeyframes.pushTag("key", i);
-		savedkeyframes.addValue("x", keyframes[i]->position.x);
-		savedkeyframes.addValue("y", keyframes[i]->position.y);
-		savedkeyframes.addValue("easefunc", keyframes[i]->easeFunc->id);
-		savedkeyframes.addValue("easetype", keyframes[i]->easeType->id);
-		savedkeyframes.popTag(); //key
-	}
-	
-	savedkeyframes.popTag();//keyframes
-	savedkeyframes.saveFile(xmlFileName);
-	 */
 	string xmlRep = getXMLStringForKeyframes(keyframes);
 	ofxXmlSettings savedkeyframes;
 	savedkeyframes.loadFromBuffer(xmlRep);
@@ -528,15 +511,20 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 		createKeyframesFromXML(pastedKeys, keyContainer);
 		if(keyContainer.size() != 0){
 			selectedKeyframes.clear();
+			
 			//normalize and add at playhead
 			for(int i = 0; i < keyContainer.size(); i++){
 				if(i != 0){
 					keyContainer[i]->position.x -= keyContainer[0]->position.x;
 					keyContainer[i]->position.x += timeline->getPercentComplete();
-
 				}
-				selectedKeyframes.push_back(keyContainer[i]);
-				keyframes.push_back(keyContainer[i]);
+				if(keyContainer[i]->position.x < 1.0){
+					selectedKeyframes.push_back(keyContainer[i]);
+					keyframes.push_back(keyContainer[i]);
+				}
+				else{
+					delete keyContainer[i];
+				}
 			}
 			keyContainer[0]->position.x = timeline->getPercentComplete();
 			timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );

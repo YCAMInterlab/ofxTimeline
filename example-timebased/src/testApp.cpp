@@ -16,7 +16,7 @@ void testApp::setup(){
 	light.enable();
 		
 	timeline.setup();
-	timeline.setDurationInSeconds(60*.5);
+	timeline.setDurationInSeconds(2);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
 	timeline.addKeyframes("Rotate X", "rotatex.xml", ofRange(0, 360));
@@ -28,7 +28,7 @@ void testApp::setup(){
 	timeline.getColors().loadColors("defaultColors.xml");
 
 	timeline.setSnapping(true);
-	timeline.setBPM(180.0f);
+	timeline.setBPM(120.f);
 	timeline.enableDrawBPMGrid(true);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
@@ -79,7 +79,6 @@ void testApp::receivedTrigger(ofxTLTriggerEventArgs& trigger){
 	else if(trigger.triggerName == "MAROON"){
 		currentColor = ofColor(255,0,198);
 	}
-	
 }
 
 
