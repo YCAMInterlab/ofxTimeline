@@ -135,12 +135,8 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 			}
 			
 			if(closestSnapDistance < snappingTolerance){
-//				cout << "snap x is " << snapPoints[closestSnapPoint] << endl;
-				//args.x = snapPoints[closestSnapPoint];
-				//snapAdjustment =  args.x - snapPoints[closestSnapPoint];
 				args.x = snapPoints[closestSnapPoint] + dragAnchor;
 				snapPercent = snapPoints[closestSnapPoint];
-//				cout << "args x is " << args.x << endl;
 				snapped = true;
 			}
 		}

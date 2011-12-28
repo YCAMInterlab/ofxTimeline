@@ -236,7 +236,7 @@ void ofxTLTicker::updateBPMPoints(){
 			measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
 			measures[3].weight = 1;
 			
-			cout << "measures " << measures[0].screenX << endl;
+//			cout << "measures " << measures[0].screenX << endl;
 			for(int m = 0; m < 4; m++){
 				if( isOnScreen(measures[m].screenX) ){
 					bpmScreenPoints.push_back( measures[m] );

@@ -1,0 +1,12 @@
+//THE PATH TO THE ROOT OF OUR OF PATH RELATIVE TO THIS PROJECT.
+//THIS NEEDS TO BE DEFINED BEFORE CoreOF.xcconfig IS INCLUDED
+OF_PATH = ../../..
+
+//THIS HAS ALL THE HEADER AND LIBS FOR OF CORE
+#include "../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig"
+
+KISS_INCLUDE = $(OF_PATH)/addons/ofxTimeline/libs/kiss/include $(OF_PATH)/addons/ofxTimeline/libs/kiss/src $(OF_PATH)/addons/ofxTimeline/libs/kiss/src
+SND_INCLUDE = $(OF_PATH)/addons/ofxTimeline/libs/sndfile/osx/include/
+
+OTHER_LDFLAGS = $(OF_CORE_LIBS) 
+HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS) $(KISS_INCLUDE) $(SND_INCLUDE)
