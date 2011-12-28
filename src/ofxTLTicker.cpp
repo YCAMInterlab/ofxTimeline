@@ -219,10 +219,11 @@ void ofxTLTicker::updateBPMPoints(){
 	
 	bpmScreenPoints.clear();
 	if(!timeline->getIsFrameBased()){
-		float currentPoint = 0;
-		float oneMeasure = 1.0/(bpm/60);
-		float halfMeasure = oneMeasure/2;
-		float quarterMeasure = halfMeasure/2;
+		double currentPoint = 0;
+		double oneMeasure = 1.0/(bpm/60.);
+		double halfMeasure = oneMeasure/2;
+		double quarterMeasure = halfMeasure/2;
+		
 		while(currentPoint < timeline->getDurationInSeconds()){
 			ofxTLBPMPoint measures[4];
 			
@@ -235,6 +236,7 @@ void ofxTLTicker::updateBPMPoints(){
 			measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
 			measures[3].weight = 1;
 			
+			cout << "measures " << measures[0].screenX << endl;
 			for(int m = 0; m < 4; m++){
 				if( isOnScreen(measures[m].screenX) ){
 					bpmScreenPoints.push_back( measures[m] );

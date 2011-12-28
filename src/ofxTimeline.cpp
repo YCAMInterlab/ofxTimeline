@@ -703,17 +703,17 @@ string ofxTimeline::formatTime(float time){
 	
 	char out[1024];
 	int millis,seconds,minutes,hours;
-	millis = int(time * 10000) % 10000;
+	millis = int(time * 1000) % 1000;
 	seconds = int(time) % 60;
 	minutes = int(time/60) % 60;
 	hours = int(time/60/60);
-	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,millis);
+	sprintf(out, "%02d:%02d:%02d:%03d", hours, minutes,seconds,(millis+1));
 	//truncate for shorter timelines
 	if(minutes == 0){
-		return string(out).substr(6, 7);
+		return string(out).substr(6, 6);
 	}
 	if(hours == 0){
-		return string(out).substr(3, 10);
+		return string(out).substr(3, 9);
 	}
 	return string(out);
 }
