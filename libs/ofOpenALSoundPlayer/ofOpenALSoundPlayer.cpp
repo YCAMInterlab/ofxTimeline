@@ -569,6 +569,10 @@ float ofOpenALSoundPlayer::getDuration(){
 	return duration;
 }
 
+int ofOpenALSoundPlayer::getNumChannels(){
+	return channels;
+}
+
 //------------------------------------------------------------
 vector<short> & ofOpenALSoundPlayer::getBuffer(){
 	return buffer;
