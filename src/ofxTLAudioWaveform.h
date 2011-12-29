@@ -29,6 +29,7 @@ class ofxTLAudioWaveform : public ofxTLElement
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
+	
 
   protected:
 	ofOpenALSoundPlayer player;

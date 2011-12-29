@@ -41,24 +41,33 @@ void ofxTLAudioWaveform::draw(){
 		ofNoFill();
 		
 		float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration(); //need to figure this out for framebased...but for now we are doing time based
+		float trackHeight = bounds.height/(1+player.getNumChannels());
 		for(int c = 0; c < player.getNumChannels(); c++){
+			int lastFrameIndex = 0;
 			ofBeginShape();
 			for(float i = bounds.x; i < bounds.x+bounds.width; i++){
 				float pointInTrack = screenXtoNormalizedX( i, zoomBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
-				float trackCenter = bounds.y + bounds.height/(1+player.getNumChannels())*(c+1);
+				float trackCenter = bounds.y + trackHeight * (c+1);
 				if(pointInTrack <= 1.0){
 					//draw sample at pointInTrack * waveDuration;
-					int sampleIndex = pointInTrack * player.getBuffer().size();
-					sampleIndex /= player.getNumChannels();
-					sampleIndex += c;
-					short sample = player.getBuffer()[sampleIndex];
-					ofVertex(i, trackCenter + sample/1000.0);
+					int frameIndex = pointInTrack * (player.getBuffer().size() / player.getNumChannels());					
+					float sample = 0;
+					for(int f = lastFrameIndex; f < frameIndex; f++){		
+						int sampleIndex = f * player.getNumChannels() + c;
+						float subpixelSample = player.getBuffer()[sampleIndex]/32565.0;
+						if ( fabs(subpixelSample) > fabs(sample)) {
+							sample = subpixelSample;
+						}
+
+					}
+					ofVertex(i, trackCenter - sample * trackHeight);
+					lastFrameIndex = frameIndex;
 				}
 				else{
 					ofVertex(i, trackCenter);
 				}
 			}
-			ofEndShape(false);
+			ofEndShape();
 		}
 		
 		ofPopStyle();
