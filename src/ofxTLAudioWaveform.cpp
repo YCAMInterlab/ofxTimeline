@@ -58,7 +58,6 @@ void ofxTLAudioWaveform::draw(){
 						if ( fabs(subpixelSample) > fabs(sample)) {
 							sample = subpixelSample;
 						}
-
 					}
 					ofVertex(i, trackCenter - sample * trackHeight);
 					lastFrameIndex = frameIndex;

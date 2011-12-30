@@ -16,18 +16,20 @@ void testApp::setup(){
 	light.enable();
 		
 	timeline.setup();
-	timeline.setDurationInSeconds(2);
+	timeline.setDurationInSeconds(5);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
 	timeline.getColors().loadColors("defaultColors.xml");
 
 	timeline.setSnapping(true);
 	timeline.setBPM(120.f);
-	timeline.enableDrawBPMGrid(true);
+//	timeline.enableDrawBPMGrid(true);
 	
 	
 	waveform.setup();
-	waveform.loadSoundfile("drumloop_mono.wav");
+//	waveform.loadSoundfile("wave120bpm.wav");
+	waveform.loadSoundfile("4chan.wav");
+//	waveform.loadSoundfile("gunshot.wav");
 	timeline.addElement("Track", &waveform);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
