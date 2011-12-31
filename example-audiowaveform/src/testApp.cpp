@@ -52,7 +52,7 @@ void testApp::draw(){
 //	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
 //	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
 	
-	ofBox(0,0,0,200);
+//	ofBox(0,0,0,200);
 	
 	ofPopMatrix();
 
@@ -79,7 +79,8 @@ void testApp::receivedTrigger(ofxTLTriggerEventArgs& trigger){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	if(key == ' '){
-		timeline.togglePlay();
+		//timeline.togglePlay();
+		waveform.togglePlay();
 	}
 	if(key == 'h'){
 		timeline.toggleShow();
