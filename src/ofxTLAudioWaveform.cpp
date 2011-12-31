@@ -28,12 +28,23 @@ void ofxTLAudioWaveform::loadSoundfile(string filepath){
 	cout << "num samples " << player.getBuffer().size() << endl;
 }
 
+void ofxTLAudioWaveform::update(ofEventArgs& args){
+	if(timeline->getIsFrameBased()){
+		//TODO: figure out how to do this with a frame based timeline
+	}
+	else{
+//		cout << player.getPosition() << endl;
+		timeline->setCurrentTime(player.getPosition() * player.getDuration());
+	}
+}
+
 void ofxTLAudioWaveform::draw(){
 	if(player.getBuffer().size() == 0){
 		ofSetColor(timeline->getColors().disabledColor);
 		ofRectangle(bounds);
 		return;
 	}
+	
 	if(!timeline->getIsFrameBased()){
 		ofPushStyle();
 		ofSetColor(timeline->getColors().keyColor);
@@ -51,15 +62,30 @@ void ofxTLAudioWaveform::draw(){
 				if(pointInTrack <= 1.0){
 					//draw sample at pointInTrack * waveDuration;
 					int frameIndex = pointInTrack * (player.getBuffer().size() / player.getNumChannels());					
-					float sample = 0;
+					float losample = 0;
+					float hisample = 0;
 					for(int f = lastFrameIndex; f < frameIndex; f++){		
 						int sampleIndex = f * player.getNumChannels() + c;
 						float subpixelSample = player.getBuffer()[sampleIndex]/32565.0;
-						if ( fabs(subpixelSample) > fabs(sample)) {
-							sample = subpixelSample;
+						if ( subpixelSample < losample) {
+							losample = subpixelSample;
+						}
+						if ( subpixelSample > hisample) {
+							hisample = subpixelSample;
 						}
 					}
-					ofVertex(i, trackCenter - sample * trackHeight);
+					if(losample == 0 && hisample == 0){
+						ofVertex(i, trackCenter);
+					}
+					else {
+						if(losample != 0){
+							ofVertex(i, trackCenter - losample * trackHeight);
+						}
+						if(hisample != 0){
+							ofVertex(i, trackCenter - hisample * trackHeight);
+						}
+					}
+					
 					lastFrameIndex = frameIndex;
 				}
 				else{
@@ -91,3 +117,30 @@ void ofxTLAudioWaveform::mouseReleased(ofMouseEventArgs& args){
 
 void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
 }
+
+void ofxTLAudioWaveform::play(){
+	if(!player.getIsPlaying()){
+		player.setPosition(timeline->getPercentComplete());
+		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
+		player.play();
+		ofAddListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+	}	   
+}
+
+void ofxTLAudioWaveform::stop(){
+	if(player.getIsPlaying()){
+		//player.stop();
+		player.setPaused(true);
+		ofRemoveListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+	}
+}
+
+void ofxTLAudioWaveform::togglePlay(){
+	if(player.getIsPlaying()){
+		stop();
+	}
+	else {
+		play();
+	}
+}
+   

@@ -450,8 +450,12 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
 }
 
-bool ofxTimeline::setLoopType(ofLoopType newType){
+void ofxTimeline::setLoopType(ofLoopType newType){
 	loopType = newType;
+}
+
+ofLoopType ofxTimeline::getLoopType(){
+	return loopType;
 }
 
 void ofxTimeline::update(ofEventArgs& updateArgs){

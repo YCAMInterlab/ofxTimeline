@@ -619,10 +619,11 @@ float ofOpenALSoundPlayer::getPosition(){
 #endif
 	if(streamf){
 		pos = float(stream_samples_read) / float(channels) / float(samplerate);
+		return pos/duration;
 	}else{
-		alGetSourcef(sources[sources.size()-1],AL_SEC_OFFSET,&pos);
+		alGetSourcef(sources[sources.size()-1],AL_SAMPLE_OFFSET,&pos);
+		return channels*(pos/buffer.size());
 	}
-	return pos/duration;
 }
 
 //------------------------------------------------------------

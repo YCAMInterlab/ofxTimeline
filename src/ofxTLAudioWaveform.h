@@ -30,7 +30,13 @@ class ofxTLAudioWaveform : public ofxTLElement
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
-
+	//this will play the timeline along to the song
+	virtual void play();
+	virtual void stop();
+	virtual void togglePlay();
+	
   protected:
+	
+	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer player;
 };
