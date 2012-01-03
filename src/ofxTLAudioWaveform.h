@@ -37,6 +37,7 @@ class ofxTLAudioWaveform : public ofxTLElement
 	
   protected:
 	
+	float lastPercent;
 	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer player;
 };

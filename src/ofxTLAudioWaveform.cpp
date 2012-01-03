@@ -29,6 +29,12 @@ void ofxTLAudioWaveform::loadSoundfile(string filepath){
 }
 
 void ofxTLAudioWaveform::update(ofEventArgs& args){
+	if(player.getPosition() < lastPercent){
+		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(ofxTLEvents.playbackLooped, args);
+	}
+	lastPercent = player.getPosition();
+ 
 	if(timeline->getIsFrameBased()){
 		//TODO: figure out how to do this with a frame based timeline
 	}
@@ -120,18 +126,27 @@ void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLAudioWaveform::play(){
 	if(!player.getIsPlaying()){
-		player.setPosition(timeline->getPercentComplete());
+		
+		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
+		player.setPosition(lastPercent);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
+
 		player.play();
 		ofAddListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		
+		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(ofxTLEvents.playbackStarted, args);
+		
 	}	   
 }
 
 void ofxTLAudioWaveform::stop(){
 	if(player.getIsPlaying()){
-		//player.stop();
 		player.setPaused(true);
 		ofRemoveListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		
+		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
 	}
 }
 

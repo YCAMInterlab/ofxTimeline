@@ -182,6 +182,8 @@ class ofxTimeline {
 	void setDragAnchor(float dragAnchor);
 	float getDragAnchor();
 	
+	ofxTLPlaybackEventArgs createPlaybackEvent();
+	
   protected:
 	
 	bool isSetup;
@@ -218,7 +220,7 @@ class ofxTimeline {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
 	
-	ofxTLPlaybackEventArgs createPlaybackEvent();
+
 	
     ofxXmlSettings settings;
 	string filenamePrefix;
