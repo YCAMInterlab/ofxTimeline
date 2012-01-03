@@ -153,7 +153,7 @@ void ofxTLKeyframer::draw(){
 		
 		ofSetColor(timeline->getColors().textColor);
 		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
-		//if(keyframes[i] == selectedKeyframe){
+
 		if(isKeyframeSelected( keyframes[i] )){
 			float keysValue = ofMap(keyframes[i]->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
 			string frameString = timeline->getIsFrameBased() ? 
@@ -177,6 +177,12 @@ void ofxTLKeyframer::draw(){
 		ofCircle(screenpoint.x, screenpoint.y, 4);
 	}
 	
+	ofPopMatrix();
+	ofPopStyle();
+}
+
+void ofxTLKeyframer::drawModalContent(){
+	
 	//****** DRAW EASING CONTROLS
 	if(drawingEasingWindow){
 		for(int i = 0; i < easingFunctions.size(); i++){
@@ -198,8 +204,7 @@ void ofxTLKeyframer::draw(){
 			ofNoFill();
 			ofSetColor(40, 40, 40);
 			ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
-			
+				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
 		}
 		
 		for(int i = 0; i < easingTypes.size(); i++){
@@ -225,9 +230,8 @@ void ofxTLKeyframer::draw(){
 		}
 	}
 	
-	ofPopMatrix();
-	ofPopStyle();
 }
+
 
 void ofxTLKeyframer::load(){
 	ofxXmlSettings savedkeyframes;
@@ -408,10 +412,12 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
 			//move the playhead
 			timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
-			
 		}
 		else if(args.button == 2){
-			easingWindowPosition = screenpoint;
+			easingWindowPosition = ofVec2f(MIN(screenpoint.x, bounds.width - easingBoxWidth),
+										   MIN(screenpoint.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+			cout << " screen y " << screenpoint.y << " calculated min bottom " << (timeline->getDrawRect().y + timeline->getDrawRect().height) - easingBoxHeight*easingFunctions.size() << endl;
+
 			drawingEasingWindow = true;
 		}
 	}
@@ -440,18 +446,11 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 			ofVec2f newScreenPosition;
 			newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
 			newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
-//			if(snapped){
-//				newScreenPosition.x += timeline->getDragAnchor();
-//			}
 			ofVec2f newposition = keyframePointForCoord(newScreenPosition);
 			selectedKeyframes[k]->position = newposition;
 		}
 		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
 		if(dragkey != NULL){
-//			if(snapped){
-				//ignore drag offset on the main keyframe
-				//dragkey->position.x = screenXtoNormalizedX(args.x, zoomBounds);
-//			}
 			timeline->setPercentComplete(dragkey->position.x);
 		}
 		
@@ -503,7 +502,7 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 					keyContainer[i]->position.x -= keyContainer[0]->position.x;
 					keyContainer[i]->position.x += timeline->getPercentComplete();
 				}
-				if(keyContainer[i]->position.x < 1.0){
+				if(keyContainer[i]->position.x <= 1.0){
 					selectedKeyframes.push_back(keyContainer[i]);
 					keyframes.push_back(keyContainer[i]);
 				}
@@ -522,7 +521,6 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 }
 
 void ofxTLKeyframer::selectAll(){
-	cout << "selecting all " << endl;
 	selectedKeyframes = keyframes;
 }
 
@@ -546,7 +544,6 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 		nudgeSelectedKeyframes(ofVec2f(-timeline->getNudgePercent(),0.0));
 	}
 }
-
 
 void ofxTLKeyframer::nudgeSelectedKeyframes(ofVec2f nudge){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
@@ -718,5 +715,6 @@ void ofxTLKeyframer::initializeEasings(){
 		easingTypes[i]->bounds = ofRectangle(0, (i+easingFunctions.size())*easingBoxHeight + easingWindowSeperatorHeight, easingBoxWidth, easingBoxHeight);
 		easingTypes[i]->id = i;
 	}
+	
 }
 

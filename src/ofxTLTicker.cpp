@@ -134,7 +134,6 @@ void ofxTLTicker::draw(){
 
 	//highlite current mouse position
 	if(hover){
-		ofEnableAlphaBlending();
 		//draw background rect
 		ofSetColor(timeline->getColors().backgroundColor);
 		if (timeline->getIsFrameBased()) {

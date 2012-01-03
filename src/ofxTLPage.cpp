@@ -92,6 +92,11 @@ void ofxTLPage::draw(){
 		}
 		ofPopStyle();
 	}
+	
+	for(int i = 0; i < headers.size(); i++){
+		elements[headers[i]->name]->drawModalContent();
+	}	
+	
 }
 
 #pragma mark events
@@ -135,7 +140,10 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 			}
 			
 			if(closestSnapDistance < snappingTolerance){
+//				cout << "x was " << args.x << endl;
 				args.x = snapPoints[closestSnapPoint] + dragAnchor;
+//				cout << "is " << args.x << endl;
+//				cout << "x was " << args.x << " drag anchor is " << dragAnchor << " to snap point " << snapPoints[closestSnapPoint] << endl;
 				snapPercent = snapPoints[closestSnapPoint];
 				snapped = true;
 			}

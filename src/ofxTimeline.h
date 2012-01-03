@@ -106,6 +106,8 @@ class ofxTimeline {
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
 	
+	virtual ofRectangle getDrawRect();
+	
 	virtual void setSnapping(bool snapping);
 	virtual void toggleSnapping();
 	
@@ -221,7 +223,7 @@ class ofxTimeline {
     ofxXmlSettings settings;
 	string filenamePrefix;
 	
-	ofRectangle bounds;
+	ofRectangle totalDrawRect;
 	bool isEnabled; //allows for editing
 	bool isShowing; //allows for viewing
 	bool isPlaying; //moves playhead along

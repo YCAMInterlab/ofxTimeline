@@ -291,6 +291,10 @@ void ofxTimeline::setWidth(float newWidth){
 	updatePagePositions();
 }
 
+ofRectangle ofxTimeline::getDrawRect(){
+	return totalDrawRect;
+}
+
 void ofxTimeline::updatePagePositions(){
 	if(isSetup){
 		ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
@@ -432,7 +436,7 @@ void ofxTimeline::recalculateBoundingRects(){
 	updatePagePositions();
 
 	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
-	ofRectangle totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
+	totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
 											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
 	ticker->setTotalDrawRect(totalDrawRect);	
 }
@@ -493,9 +497,12 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 
 void ofxTimeline::draw(){	
 	if(isShowing){
+		ofPushStyle();
+		
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
-
+		ofEnableAlphaBlending();
+		
 		if (pages.size() > 1) {
 			tabs->draw();			
 		}
@@ -504,6 +511,7 @@ void ofxTimeline::draw(){
 		ticker->draw();
 		
 		glPopAttrib();
+		ofPopStyle();
 	}
 }
 
@@ -590,6 +598,10 @@ float ofxTimeline::getKeyframeValue(string name){
 }
 
 float ofxTimeline::getKeyframeValue(string name, float atTime){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return 0.0;
+	}
 	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
 	if(keyframer == NULL){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
@@ -599,6 +611,11 @@ float ofxTimeline::getKeyframeValue(string name, float atTime){
 }
 
 float ofxTimeline::getKeyframeValue(string name, int atFrame){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return 0.0;
+	}
+	
 	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
 	if(keyframer == NULL){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
@@ -618,6 +635,11 @@ ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 }
 
 bool ofxTimeline::getSwitcherOn(string name){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return false;
+	}
+	
 	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
 	if(switcher == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
@@ -627,6 +649,10 @@ bool ofxTimeline::getSwitcherOn(string name){
 }
 
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return false;
+	}	
 	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
 	if(switcher == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
@@ -640,6 +666,11 @@ bool ofxTimeline::getSwitcherOn(string name, float atTime){
 }
 
 bool ofxTimeline::getSwitcherOn(string name, int atFrame){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return false;
+	}
+	
 	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
 	if(switcher == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);

@@ -49,6 +49,7 @@ class ofxTLElement
 	
 	virtual void setup() = 0;
 	virtual void draw() = 0;
+	virtual void drawModalContent(){}; //for pop up window-ish stuff
 	
 	virtual void enable();
 	virtual void disable();

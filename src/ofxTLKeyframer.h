@@ -76,6 +76,7 @@ class ofxTLKeyframer : public ofxTLElement
 
 	virtual void setup();
 	virtual void draw();
+	virtual void drawModalContent(); //for pop up window-ish stuff
 
 	virtual void setValueRange(ofRange range);
 	//main function to get values out of the timeline, operates on the given value range

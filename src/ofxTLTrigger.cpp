@@ -140,6 +140,7 @@ void ofxTLTrigger::mousePressed(ofMouseEventArgs& args){
 			selectedTrigger = &triggers[triggers.size()-1];
 			dragOffset = 0;
 		}
+		timeline->setDragAnchor(dragOffset);
 	}
 }
 
