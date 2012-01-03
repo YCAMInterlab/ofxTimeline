@@ -332,15 +332,23 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
 void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	for(int i = 0; i < switches.size(); i++){
 		if(switches[i]->startSelected){
-			switches[i]->time.min = screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds);
+			switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
 		}
 		if(switches[i]->endSelected){
-			switches[i]->time.max = screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds);
+			switches[i]->time.max = MAX(screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
 		}		
 	}
+	
 }
 
 void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
+	for(int i = switches.size()-1; i >= 0; i--){
+		if(switches[i]->time.min == switches[i]->time.max){
+			delete switches[i];
+			switches.erase(switches.begin()+i);
+			
+		}
+	}	
 	if(autosave) save();
 }
 
@@ -448,7 +456,9 @@ void ofxTLSwitcher::updateDragOffsets(float clickX){
 	for(int i = 0; i < switches.size(); i++){
 		switches[i]->dragOffsets = ofRange(clickX - normalizedXtoScreenX(switches[i]->time.min, zoomBounds),
 										   clickX - normalizedXtoScreenX(switches[i]->time.max, zoomBounds));										   
+		
 	}
+	
 }
 
 bool ofxTLSwitcher::areAnySwitchesSelected() {

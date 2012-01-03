@@ -146,6 +146,11 @@ class ofxTLKeyframer : public ofxTLElement
 	float easingBoxHeight;
 	float easingWindowSeperatorHeight;
 	
+	bool drawingSelectRect;
+	ofVec2f selectRectStartPoint;
+	ofRectangle selectRect;
+	vector<ofxTLKeyframe*> selectRectSelection;
+	
 	void initializeEasings();
 	ofxTLKeyframe* newKeyframe(ofVec2f point);
 };

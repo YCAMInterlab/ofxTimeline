@@ -54,7 +54,7 @@ ofxTLKeyframer::ofxTLKeyframer(){
 	
 	xmlFileName = "_keyframes.xml";
 	
-	
+	drawingSelectRect = false;
 }
 
 ofxTLKeyframer::~ofxTLKeyframer(){
@@ -177,6 +177,17 @@ void ofxTLKeyframer::draw(){
 		ofCircle(screenpoint.x, screenpoint.y, 4);
 	}
 	
+	//**** DRAW SELECT RECT
+	if(drawingSelectRect){
+		ofFill();
+		ofSetColor(timeline->getColors().keyColor, 30);
+		ofRect(selectRect);
+		
+		ofNoFill();
+		ofSetColor(timeline->getColors().keyColor, 255);
+		ofRect(selectRect);
+		
+	}
 	ofPopMatrix();
 	ofPopStyle();
 }
@@ -378,22 +389,31 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	}
 	
 	//wasn't holding down shift and clicked somewhere else, make a new
-	if(selectedKeyframe == NULL && !ofGetModifierKeyShift()){
-		if(selectedKeyframes.size() != 0){
-			selectedKeyframes.clear();
-		}
-		else{
-			//add a new one
-			selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
-			keyframes.push_back(selectedKeyframe);
-			selectedKeyframe->grabOffset = ofVec2f(0,0);
-			updateKeyframeSort();
-			//find bounds
-			for(int i = 0; i < keyframes.size(); i++){
-				if(keyframes[i] == selectedKeyframe){
-					selectedKeyframeIndex = i;
+	if(selectedKeyframe == NULL){
+		if(!ofGetModifierKeyShift()){
+			if(selectedKeyframes.size() != 0){
+				selectedKeyframes.clear();
+			}
+			else{
+				//add a new one
+				selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
+				keyframes.push_back(selectedKeyframe);
+				selectedKeyframe->grabOffset = ofVec2f(0,0);
+				updateKeyframeSort();
+				//find bounds
+				for(int i = 0; i < keyframes.size(); i++){
+					if(keyframes[i] == selectedKeyframe){
+						selectedKeyframeIndex = i;
+					}
 				}
 			}
+		}
+		//clicked outside of a keyframe while shift was pressed -- start drawing select rect
+		else {
+			drawingSelectRect = true;
+			selectRectStartPoint = screenpoint;
+			selectRect = ofRectangle(screenpoint.x, screenpoint.y, 0, 0);
+			return;
 		}
 	}
 
@@ -416,7 +436,6 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		else if(args.button == 2){
 			easingWindowPosition = ofVec2f(MIN(screenpoint.x, bounds.width - easingBoxWidth),
 										   MIN(screenpoint.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
-			cout << " screen y " << screenpoint.y << " calculated min bottom " << (timeline->getDrawRect().y + timeline->getDrawRect().height) - easingBoxHeight*easingFunctions.size() << endl;
 
 			drawingEasingWindow = true;
 		}
@@ -438,23 +457,44 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(!enabled) return;
 	
-	if(focused && selectedKeyframes.size() != 0){
-		ofVec2f screenpoint(args.x,args.y);
-		
+	if(focused){
+		if(drawingSelectRect){
+			selectRect = ofRectangle(selectRectStartPoint.x, selectRectStartPoint.y, 
+									 args.x-selectRectStartPoint.x, args.y-selectRectStartPoint.y);
+			if(selectRect.width < 0){
+				selectRect.x = selectRect.x+selectRect.width;
+				selectRect.width = -selectRect.width;
+			}
+			if(selectRect.height < 0){
+				selectRect.y = selectRect.y+selectRect.height;
+				selectRect.height = -selectRect.height;
+			}
+			
+			selectRectSelection.clear();
+			for(int i = 0; i < keyframes.size(); i++){
+				if( selectRect.inside(coordForKeyframePoint(keyframes[i]->position)) ){
+					selectRectSelection.push_back( keyframes[i] );
+				}
+			}
+		}
+		else {
+			if(selectedKeyframes.size() != 0){
+				ofVec2f screenpoint(args.x,args.y);
 
-		for(int k = 0; k < selectedKeyframes.size(); k++){
-			ofVec2f newScreenPosition;
-			newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
-			newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
-			ofVec2f newposition = keyframePointForCoord(newScreenPosition);
-			selectedKeyframes[k]->position = newposition;
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					ofVec2f newScreenPosition;
+					newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
+					newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
+					ofVec2f newposition = keyframePointForCoord(newScreenPosition);
+					selectedKeyframes[k]->position = newposition;
+				}
+				ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
+				if(dragkey != NULL){
+					timeline->setPercentComplete(dragkey->position.x);
+				}
+				updateKeyframeSort();
+			}
 		}
-		ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
-		if(dragkey != NULL){
-			timeline->setPercentComplete(dragkey->position.x);
-		}
-		
-		updateKeyframeSort();
 	}
 }
 
@@ -463,6 +503,17 @@ void ofxTLKeyframer::updateKeyframeSort(){
 }
 
 void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
+	if(drawingSelectRect){
+
+		for(int i = 0; i < selectRectSelection.size(); i++){
+			if(!isKeyframeSelected(selectRectSelection[i])){
+				selectedKeyframes.push_back(selectRectSelection[i]);
+			}
+		}
+		sort(selectedKeyframes.begin(), selectedKeyframes.end(), keyframesort);
+		drawingSelectRect = false;
+	}
+		   
 	if(autosave){
 		save();
 	}
