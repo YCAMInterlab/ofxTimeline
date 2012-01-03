@@ -424,7 +424,7 @@ void ofxTLSwitcher::save(){
 //	}
 //	settings.popTag();
 //	settings.saveFile(xmlFileName);
-
+	ofxXmlSettings settings;
 	string xmlRep = getXMLStringForSwitches(false);
 	settings.loadFromBuffer(xmlRep);
 	settings.saveFile(xmlFileName);
@@ -432,7 +432,7 @@ void ofxTLSwitcher::save(){
 
 void ofxTLSwitcher::load(){
 	clear();
-	
+	ofxXmlSettings settings;
 	if(settings.loadFile(xmlFileName)){
 		switches = switchesFromXML(settings);
 		
@@ -458,7 +458,7 @@ void ofxTLSwitcher::load(){
 }
 
 string ofxTLSwitcher::getXMLStringForSwitches(bool selectedOnly){
-	settings.clear();
+	ofxXmlSettings settings;
 	settings.addTag("switches");
 	settings.pushTag("switches");
 	int switchesAdded = 0;

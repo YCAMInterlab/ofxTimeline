@@ -139,7 +139,7 @@ class ofxTLElement
 	
 	bool createdByTimeline;
 	
-	ofxXmlSettings settings;
+//	ofxXmlSettings settings;
 	string name;
 	string xmlFileName;
 	ofRectangle bounds;
