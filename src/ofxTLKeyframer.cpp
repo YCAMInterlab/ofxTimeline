@@ -486,7 +486,6 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 		else {
 			if(selectedKeyframes.size() != 0){
 				ofVec2f screenpoint(args.x,args.y);
-
 				for(int k = 0; k < selectedKeyframes.size(); k++){
 					ofVec2f newScreenPosition;
 					newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;

@@ -72,7 +72,12 @@ class ofxTLTrigger : public ofxTLElement
 	void playbackLooped(ofxTLPlaybackEventArgs& args);
 	void playbackEnded(ofxTLPlaybackEventArgs& args);
 
-  protected:
+	virtual string copyRequest();
+	virtual string cutRequest();
+	virtual void pasteSent(string pasteboard);
+	virtual void selectAll();
+	
+protected:
 	ofxTextInputField textfield;
 	
 	void update(ofEventArgs& args);

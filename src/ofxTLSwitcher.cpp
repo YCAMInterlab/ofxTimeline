@@ -304,17 +304,14 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 				
 				clickedSwitchA->endSelected = true;
 				clickedSwitchA->startSelected = true;
-//				cout << "new is " << clickedSwitchA->time << endl;
 			}
 			
 			switches.push_back( clickedSwitchA );
 			sort(switches.begin(), switches.end(), switchsort);
 			if(autosave) save();
 		}
+		updateDragOffsets(args.x);
 	}
-	
-	//updateDragOffsets(args.x);
-		
 }
 
 void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
@@ -335,10 +332,18 @@ void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
 			switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
 		}
 		if(switches[i]->endSelected){
-			switches[i]->time.max = MAX(screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
-		}		
+			switches[i]->time.max = MAX( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
+		}
 	}
 	
+	bool didSelectedStartTime;
+	ofxTLSwitchOn* switchHandle = switchHandleForScreenX(args.x, didSelectedStartTime);
+	if(switchHandle != NULL){
+		timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
+	}
+	else{
+		timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+	}
 }
 
 void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
@@ -385,6 +390,8 @@ void ofxTLSwitcher::nudgeBy(ofVec2f nudgePercent){
 			switches[i]->time.max += nudgePercent.x; 
 		}		
 	}
+	
+	if(autosave) save();
 }
 
 bool ofxTLSwitcher::isOn(float percent){
@@ -405,43 +412,170 @@ ofxTLSwitchOn* ofxTLSwitcher::switchForPoint(float percent){
 }
 
 void ofxTLSwitcher::save(){
-	ofxXmlSettings settings;
-	settings.addTag("switches");
-	settings.pushTag("switches");
-	for(int i = 0; i < switches.size(); i++){
-		settings.addTag("switch");
-		settings.pushTag("switch",i);
-		settings.addValue("startTime", switches[i]->time.min);
-		settings.addValue("endTime", switches[i]->time.max);
-		settings.popTag();
-	}
-	settings.popTag();
+//	ofxXmlSettings settings;
+//	settings.addTag("switches");
+//	settings.pushTag("switches");
+//	for(int i = 0; i < switches.size(); i++){
+//		settings.addTag("switch");
+//		settings.pushTag("switch",i);
+//		settings.addValue("startTime", switches[i]->time.min);
+//		settings.addValue("endTime", switches[i]->time.max);
+//		settings.popTag();
+//	}
+//	settings.popTag();
+//	settings.saveFile(xmlFileName);
+
+	string xmlRep = getXMLStringForSwitches(false);
+	settings.loadFromBuffer(xmlRep);
 	settings.saveFile(xmlFileName);
-	cout << "saving to " << xmlFileName << endl;
 }
 
 void ofxTLSwitcher::load(){
 	clear();
 	
-	ofxXmlSettings settings;
 	if(settings.loadFile(xmlFileName)){
-		settings.pushTag("switches");
-		int numSwitches = settings.getNumTags("switch");
-		for(int i = 0; i < numSwitches; i++){
-			ofxTLSwitchOn* newSwitch = new ofxTLSwitchOn();
-			newSwitch->startSelected = newSwitch->endSelected = false;
-			settings.pushTag("switch", i);
-			newSwitch->time.min = settings.getValue("startTime",0.0);
-			newSwitch->time.max = settings.getValue("endTime",0.0);
-			switches.push_back(newSwitch);
-			settings.popTag();
-		}
-		settings.popTag();
-		sort(switches.begin(), switches.end(), switchsort);
+		switches = switchesFromXML(settings);
+		
+		//insertSwitchesFromXML(settings);
+		
+//		settings.pushTag("switches");
+//		int numSwitches = settings.getNumTags("switch");
+//		for(int i = 0; i < numSwitches; i++){
+//			ofxTLSwitchOn* newSwitch = new ofxTLSwitchOn();
+//			newSwitch->startSelected = newSwitch->endSelected = false;
+//			settings.pushTag("switch", i);
+//			newSwitch->time.min = settings.getValue("startTime",0.0);
+//			newSwitch->time.max = settings.getValue("endTime",0.0);
+//			switches.push_back(newSwitch);
+//			settings.popTag();
+//		}
+//		settings.popTag();
+//		sort(switches.begin(), switches.end(), switchsort);
 	}
 	else{
 		ofLogError("ofxTLSwitcher -- Error loading from xml file " + xmlFileName);
 	}
+}
+
+string ofxTLSwitcher::getXMLStringForSwitches(bool selectedOnly){
+	settings.clear();
+	settings.addTag("switches");
+	settings.pushTag("switches");
+	int switchesAdded = 0;
+	for(int i = 0; i < switches.size(); i++){
+		if(!selectedOnly || (switches[i]->startSelected && switches[i]->endSelected)){
+			settings.addTag("switch");
+			settings.pushTag("switch",switchesAdded);
+			settings.addValue("startTime", switches[i]->time.min);
+			settings.addValue("endTime", switches[i]->time.max);
+			settings.popTag();
+			switchesAdded++;
+		}
+	}
+	settings.popTag();
+
+	string ret;
+	settings.copyXmlToString(ret);
+//	cout << " xml request rep " << ret << endl;
+	return ret;
+}
+
+vector<ofxTLSwitchOn*> ofxTLSwitcher::switchesFromXML(ofxXmlSettings xmlStore){
+	vector<ofxTLSwitchOn*> newSwitches;
+
+	int numSwitchStores = xmlStore.getNumTags("switches");
+//	cout << " num switches " << numSwitchStores << endl;
+	for(int s = 0; s < numSwitchStores; s++){
+		xmlStore.pushTag("switches", s);
+		int numSwitches = xmlStore.getNumTags("switch");
+
+		for(int i = 0; i < numSwitches; i++){
+			ofxTLSwitchOn* newSwitch = new ofxTLSwitchOn();
+			newSwitch->startSelected = newSwitch->endSelected = false;
+			xmlStore.pushTag("switch", i);
+			newSwitch->time.min = xmlStore.getValue("startTime",0.0);
+			newSwitch->time.max = xmlStore.getValue("endTime",0.0);
+			newSwitches.push_back(newSwitch);
+			xmlStore.popTag();
+		}
+		xmlStore.popTag();
+	}
+	
+//	cout << "loaded " << newSwitches.size() << endl;
+	
+	sort(newSwitches.begin(), newSwitches.end(), switchsort);
+	return newSwitches;
+}
+
+string ofxTLSwitcher::copyRequest(){
+//	cout << "copy request" << endl;
+	return getXMLStringForSwitches(true);
+}
+
+string ofxTLSwitcher::cutRequest(){
+	string switchString = getXMLStringForSwitches(true);
+	
+	//if an 'on' is selected, delete it
+	for(int i = switches.size()-1; i >= 0; i--){
+		if(switches[i]->startSelected && switches[i]->endSelected){
+			delete switches[i];
+			switches.erase(switches.begin()+i);
+		}
+	}	
+	
+	if(autosave) save();
+	
+	return switchString;
+}
+
+void ofxTLSwitcher::pasteSent(string pasteboard){
+//	cout << "pasting " << pasteboard << endl;
+	ofxXmlSettings pasted;
+	pasted.loadFromBuffer(pasteboard);
+	vector<ofxTLSwitchOn*> newSwitches = switchesFromXML(pasted);
+	if(newSwitches.size() == 0){
+		return;
+	}
+	
+	//move switches relative to the playhead
+	float playheadPercent = timeline->getPercentComplete();
+	float basePercent = newSwitches[0]->time.min;
+	for(int i = 0; i < newSwitches.size(); i++){
+//		cout << "pasted time is " << newSwitches[i]->time << endl;
+		newSwitches[i]->time += playheadPercent - basePercent;
+//		cout << "repositioned time " << newSwitches[i]->time << endl;
+		newSwitches[i]->time.clamp(ofRange(0,1.0)); 
+//		cout << "clamped time " << newSwitches[i]->time << endl;
+	}
+	
+	//validate switch as not overlapping with any other switches
+	float playheadJumpPoint = -1;
+	for(int i = 0; i < newSwitches.size(); i++){
+		for(int s = 0; s < switches.size(); s++){
+			if(newSwitches[i]->time.intersects(switches[s]->time)){
+				delete newSwitches[i];
+				newSwitches[i] = NULL;
+				break;
+			}
+		}
+		if(newSwitches[i] != NULL){
+			switches.push_back(newSwitches[i]);
+			playheadJumpPoint = newSwitches[i]->time.max; 
+		}
+		
+	}
+	if(playheadJumpPoint != -1){
+		timeline->setPercentComplete( playheadJumpPoint );
+	}
+	
+	sort(switches.begin(), switches.end(), switchsort);
+	if(autosave) save();
+}
+
+void ofxTLSwitcher::selectAll(){
+	for(int i = 0; i < switches.size(); i++){
+		switches[i]->startSelected = switches[i]->endSelected = true;
+	}	
 }
 
 void ofxTLSwitcher::clear(){
@@ -466,9 +600,7 @@ void ofxTLSwitcher::updateDragOffsets(float clickX){
 	for(int i = 0; i < switches.size(); i++){
 		switches[i]->dragOffsets = ofRange(clickX - normalizedXtoScreenX(switches[i]->time.min, zoomBounds),
 										   clickX - normalizedXtoScreenX(switches[i]->time.max, zoomBounds));										   
-		
 	}
-	
 }
 
 bool ofxTLSwitcher::areAnySwitchesSelected() {

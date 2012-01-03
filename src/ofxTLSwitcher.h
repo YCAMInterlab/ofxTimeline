@@ -76,6 +76,11 @@ class ofxTLSwitcher : public ofxTLElement
 	
 	virtual bool isOn(float percent);
 	
+	virtual string copyRequest();
+	virtual string cutRequest();
+	virtual void pasteSent(string pasteboard);
+	virtual void selectAll();
+	
 	//Finds the closest switch behind a given point
 	//if the point is inside a switch, it will return NULL.
 	ofxTLSwitchOn* nearestSwitchBeforePoint(float percent);
@@ -90,6 +95,9 @@ class ofxTLSwitcher : public ofxTLElement
 	void updateDragOffsets(float clickX);
 	void deselectAllSwitches();
 	bool areAnySwitchesSelected();
+	
+	string getXMLStringForSwitches(bool selectedOnly);
+	vector<ofxTLSwitchOn*> switchesFromXML(ofxXmlSettings xml);
 	
 	ofxTLSwitchOn* switchHandleForScreenX(float screenPos, bool& startTimeSelected);
 	ofxTLSwitchOn* switchForScreenX(float screenPos);

@@ -235,6 +235,22 @@ void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = 0;
 }
 
+string ofxTLTrigger::copyRequest(){
+	
+}
+
+string ofxTLTrigger::cutRequest(){
+	
+}
+
+void ofxTLTrigger::pasteSent(string pasteboard){
+	
+}
+
+void ofxTLTrigger::selectAll(){
+	//TODO:
+}
+
 void ofxTLTrigger::save(){
 	ofxXmlSettings save;
 	save.addTag("triggers");
@@ -291,7 +307,6 @@ void ofxTLTrigger::sortTriggers(){
 			}
 		}
 	}
-		
 }
 
 void ofxTLTrigger::clear(){
