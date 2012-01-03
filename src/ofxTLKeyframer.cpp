@@ -611,6 +611,9 @@ void ofxTLKeyframer::deleteSelectedKeyframes(){
 			keyframes.erase(keyframes.begin()+i);
 		}
 	}
+	
+	selectedKeyframes.clear();
+	
 	updateKeyframeSort();
 	if(autosave){
 		save();
