@@ -353,7 +353,6 @@ void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTLSwitcher::keyPressed(ofKeyEventArgs& args){
-	//TODO: nudging!
 	
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
 		
@@ -374,6 +373,17 @@ void ofxTLSwitcher::keyPressed(ofKeyEventArgs& args){
 			}
 		}
 		if(autosave) save();
+	}
+}
+
+void ofxTLSwitcher::nudgeBy(ofVec2f nudgePercent){
+	for(int i = 0; i < switches.size(); i++){
+		if(switches[i]->startSelected){
+			switches[i]->time.min += nudgePercent.x; 
+		}
+		if(switches[i]->endSelected){
+			switches[i]->time.max += nudgePercent.x; 
+		}		
 	}
 }
 

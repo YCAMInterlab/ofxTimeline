@@ -202,6 +202,12 @@ void ofxTLTrigger::keyPressed(ofKeyEventArgs& args){
 	}
 }
 
+void ofxTLTrigger::nudgeBy(ofVec2f nudgePercent){
+	if(selectedTrigger != NULL){
+		selectedTrigger->pt += nudgePercent.x;
+	}
+}
+
 void ofxTLTrigger::update(ofEventArgs& args){
 	float thisTimelinePoint = timeline->getPercentComplete();
 	for(int i = 0; i < triggers.size(); i++){

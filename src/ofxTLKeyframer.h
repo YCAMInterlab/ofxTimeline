@@ -86,7 +86,9 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
 	virtual void mouseReleased(ofMouseEventArgs& args);
-		
+	
+	virtual void nudgeBy(ofVec2f nudgePercent);
+	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
 	virtual void getSnappingPoints(vector<float>& points);

@@ -205,7 +205,6 @@ void ofxTLPage::pasteSent(string pasteboard){
 		}
 	}	
 }
-
 		
 void ofxTLPage::selectAll(){
 	for(int i = 0; i < headers.size(); i++){
@@ -219,7 +218,13 @@ void ofxTLPage::selectAll(){
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		elements[headers[i]->name]->keyPressed(args);
-	}		
+	}
+}
+
+void ofxTLPage::nudgeBy(ofVec2f nudgePercent){
+	for(int i = 0; i < headers.size(); i++){
+		elements[headers[i]->name]->nudgeBy(nudgePercent);
+	}
 }
 
 void ofxTLPage::addElement(string elementName, ofxTLElement* element){

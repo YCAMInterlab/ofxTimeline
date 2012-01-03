@@ -63,6 +63,8 @@ class ofxTLSwitcher : public ofxTLElement
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
+	virtual void nudgeBy(ofVec2f nudgePercent);
+	
 	virtual void save();
 	virtual void load();
 	

@@ -470,6 +470,12 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 				selectRect.height = -selectRect.height;
 			}
 			
+			//somehow get it to stop going above
+//			selectRect.x = MAX(bounds.x, selectRect.x);
+//			selectRect.y = MAX(bounds.y, selectRect.y);
+			selectRect.width = MIN(selectRect.width, bounds.x+bounds.width-selectRect.x);
+			selectRect.height = MIN(selectRect.height, bounds.y+bounds.height-selectRect.y);
+			
 			selectRectSelection.clear();
 			for(int i = 0; i < keyframes.size(); i++){
 				if( selectRect.inside(coordForKeyframePoint(keyframes[i]->position)) ){
@@ -582,24 +588,13 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
 		deleteSelectedKeyframes();
 	}
-	if(args.key == OF_KEY_UP){
-		nudgeSelectedKeyframes(ofVec2f(0, .01));
-	}
-	if(args.key == OF_KEY_DOWN){
-		nudgeSelectedKeyframes(ofVec2f(0, -.01));
-	}
-	if(args.key == OF_KEY_RIGHT){
-		nudgeSelectedKeyframes(ofVec2f(timeline->getNudgePercent(),0.0));		
-	}
-	if(args.key == OF_KEY_LEFT){
-		nudgeSelectedKeyframes(ofVec2f(-timeline->getNudgePercent(),0.0));
-	}
+	
 }
 
-void ofxTLKeyframer::nudgeSelectedKeyframes(ofVec2f nudge){
+void ofxTLKeyframer::nudgeBy(ofVec2f nudgePercent){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
-		selectedKeyframes[i]->position.x = ofClamp(selectedKeyframes[i]->position.x + nudge.x, 0, 1.0);
-		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudge.y, 0, 1.0);
+		selectedKeyframes[i]->position.x = ofClamp(selectedKeyframes[i]->position.x + nudgePercent.x, 0, 1.0);
+		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudgePercent.y, 0, 1.0);
 	}
 	
 	updateKeyframeSort();

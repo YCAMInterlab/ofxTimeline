@@ -60,6 +60,8 @@ class ofxTLTrigger : public ofxTLElement
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
+
+	virtual void nudgeBy(ofVec2f nudgePercent);
 	
 	virtual void save();
 	virtual void load();
@@ -69,7 +71,7 @@ class ofxTLTrigger : public ofxTLElement
 	void playbackStarted(ofxTLPlaybackEventArgs& args);
 	void playbackLooped(ofxTLPlaybackEventArgs& args);
 	void playbackEnded(ofxTLPlaybackEventArgs& args);
-	
+
   protected:
 	ofxTextInputField textfield;
 	

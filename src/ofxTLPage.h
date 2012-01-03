@@ -72,6 +72,8 @@ class ofxTLPage {
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 		
+	virtual void nudgeBy(ofVec2f nudgePercent);
+	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
 	virtual void saveElementPositions();

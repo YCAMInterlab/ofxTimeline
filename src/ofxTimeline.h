@@ -169,8 +169,8 @@ class ofxTimeline {
 	ofxTLColors& getColors();
 	
 	string formatTime(float time);
-	float getNudgePercent();
-	float getBigNudgePercent();
+	ofVec2f getNudgePercent();
+	ofVec2f getBigNudgePercent();
 
 	//do not call this yourself, called from within TLElement
 	//This is a bit subtle why it's here

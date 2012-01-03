@@ -409,6 +409,26 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	}
 	
 	else{
+		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
+			ofVec2f nudgeAmount = ofGetModifierKeyShift() ? getBigNudgePercent() : getNudgePercent();
+			if(args.key == OF_KEY_UP){
+				nudgeAmount.x = 0;
+			}
+			if(args.key == OF_KEY_DOWN){
+				nudgeAmount.x = 0;
+				nudgeAmount.y = -nudgeAmount.y;
+			}
+			if(args.key == OF_KEY_RIGHT){
+				nudgeAmount.y = 0;
+			}
+			if(args.key == OF_KEY_LEFT){
+				nudgeAmount.x = -nudgeAmount.x;
+				nudgeAmount.y = 0;
+			}
+			currentPage->nudgeBy(nudgeAmount);
+
+		}
+		
 		ticker->keyPressed(args);
 		currentPage->keyPressed(args);
 		zoomer->keyPressed(args);
@@ -767,10 +787,10 @@ float ofxTimeline::getDragAnchor(){
 	return globalDragAnchor;
 }
 
-float ofxTimeline::getNudgePercent(){
-	return (zoomer->getViewRange().max - zoomer->getViewRange().min)/500.0;
+ofVec2f ofxTimeline::getNudgePercent(){
+	return ofVec2f(zoomer->getViewRange().span()*.001, .001);
 }
 
-float ofxTimeline::getBigNudgePercent(){
-	return (zoomer->getViewRange().max - zoomer->getViewRange().min)/100.0;	
+ofVec2f ofxTimeline::getBigNudgePercent(){
+	return ofVec2f(zoomer->getViewRange().span()*.02, 0.02);	
 }

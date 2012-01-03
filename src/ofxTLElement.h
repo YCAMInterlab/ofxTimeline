@@ -74,6 +74,8 @@ class ofxTLElement
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	
+	virtual void nudgeBy(ofVec2f nudgePercent){};
+	
 	//copy+poast
 	virtual string copyRequest(){return "";};
 	virtual string cutRequest(){return "";};
