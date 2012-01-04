@@ -117,8 +117,9 @@ class ofxTimeline {
 	virtual void setBPM(float bpm); //beats per minute
 	virtual void toggleDrawBPMGrid();
 	virtual void enableDrawBPMGrid(bool enableGrid);
-//	virtual float setBPMGranularity(float granularity); //beats per measure
-	
+
+	virtual void setMovePlayheadOnPaste(bool move);
+	virtual bool getMovePlayheadOnPaste();
 	string getPasteboard();
 	
 	virtual void draw();
@@ -190,6 +191,7 @@ class ofxTimeline {
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
+	bool movePlayheadOnPaste;
 	float globalDragAnchor;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
 	

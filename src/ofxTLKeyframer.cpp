@@ -567,7 +567,9 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 				}
 			}
 			keyContainer[0]->position.x = timeline->getPercentComplete();
-			timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );
+			if(timeline->getMovePlayheadOnPaste()){
+				timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );
+			}
 			updateKeyframeSort();
 			if(autosave){
 				save();

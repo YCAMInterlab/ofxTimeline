@@ -86,10 +86,6 @@ void ofxTLElementHeader::draw(){
 }
 
 void ofxTLElementHeader::mousePressed(ofMouseEventArgs& args){
-//	ofRectangle elementRect = element->getDrawRect();
-//	float footerStartY = elementRect.y + elementRect.height;
-		
-	//if (args.y > footerStartY && args.y < footerStartY + FOOTER_HEIGHT) {
 	if(footerRect.inside(ofPoint(args.x,args.y))){
 		dragOffset = args.y - footerRect.y;
 		draggingSize = true;
@@ -106,13 +102,7 @@ void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
 		elementRect.height = MAX(0, args.y - elementRect.y - dragOffset);
 		element->setDrawRect(elementRect);
 		
-		recalculateFooter();
-		
-//		float footerStartY = elementRect.y + elementRect.height;
-//		footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
-//		
-//		ofEventArgs a;
-//		ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
+		recalculateFooter();		
 	}
 }
 

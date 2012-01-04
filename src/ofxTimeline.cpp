@@ -58,7 +58,8 @@ ofxTimeline::ofxTimeline()
 	isSetup(false),
 	usingEvents(false),
 	isPlaying(false),
-	snappingEnabled(false)
+	snappingEnabled(false),
+	movePlayheadOnPaste(true)
 {
 }
 
@@ -129,6 +130,15 @@ bool ofxTimeline::toggleShow(){
 
 ofxTLColors& ofxTimeline::getColors(){
 	return colors;
+}
+
+void ofxTimeline::setMovePlayheadOnPaste(bool move){
+	cout << "playhead on paste " << movePlayheadOnPaste << endl;
+	movePlayheadOnPaste = move;
+}
+
+bool ofxTimeline::getMovePlayheadOnPaste(){
+	return movePlayheadOnPaste;
 }
 
 string ofxTimeline::getPasteboard(){

@@ -564,7 +564,7 @@ void ofxTLSwitcher::pasteSent(string pasteboard){
 		}
 		
 	}
-	if(playheadJumpPoint != -1){
+	if(playheadJumpPoint != -1 && timeline->getMovePlayheadOnPaste()){
 		timeline->setPercentComplete( playheadJumpPoint );
 	}
 	
