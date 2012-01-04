@@ -105,6 +105,7 @@ class ofxTimeline {
 
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
+	virtual void collapseAllElements(); //collapses all element heights to 0;
 	
 	virtual ofRectangle getDrawRect();
 	

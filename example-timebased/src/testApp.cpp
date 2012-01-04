@@ -91,6 +91,9 @@ void testApp::keyPressed(int key){
 	if(key == 'h'){
 		timeline.toggleShow();
 	}
+	if(key == 'H'){
+		timeline.collapseAllElements();
+	}
 }
 
 //--------------------------------------------------------------

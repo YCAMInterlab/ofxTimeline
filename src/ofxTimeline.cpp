@@ -291,6 +291,10 @@ void ofxTimeline::setWidth(float newWidth){
 	updatePagePositions();
 }
 
+void ofxTimeline::collapseAllElements(){
+	currentPage->collapseAllElements();
+}
+
 ofRectangle ofxTimeline::getDrawRect(){
 	return totalDrawRect;
 }

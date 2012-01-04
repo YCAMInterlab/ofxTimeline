@@ -103,16 +103,33 @@ void ofxTLElementHeader::mouseMoved(ofMouseEventArgs& args){
 void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
 	if(draggingSize){
 		ofRectangle elementRect = element->getDrawRect();
-		float oldHeight = elementRect.height;
 		elementRect.height = MAX(0, args.y - elementRect.y - dragOffset);
 		element->setDrawRect(elementRect);
 		
-		float footerStartY = elementRect.y + elementRect.height;
-		footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
+		recalculateFooter();
 		
-		ofEventArgs a;
-		ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
+//		float footerStartY = elementRect.y + elementRect.height;
+//		footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
+//		
+//		ofEventArgs a;
+//		ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
 	}
+}
+
+void ofxTLElementHeader::collapseElement(){
+	ofRectangle elementRect = element->getDrawRect();
+	elementRect.height = 0;
+	element->setDrawRect(elementRect);	
+	recalculateFooter();
+}
+
+void ofxTLElementHeader::recalculateFooter(){
+	ofRectangle elementRect = element->getDrawRect();
+	float footerStartY = elementRect.y + elementRect.height;
+	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
+	
+	ofEventArgs a;
+	ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
 }
 
 void ofxTLElementHeader::mouseReleased(ofMouseEventArgs& args){

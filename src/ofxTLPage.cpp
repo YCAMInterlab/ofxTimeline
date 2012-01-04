@@ -268,6 +268,13 @@ ofxTLElement* ofxTLPage::getElement(string elementName){
 	return elements[elementName];
 }
 
+void ofxTLPage::collapseAllElements(){
+	for(int i = 0; i < headers.size(); i++){
+		headers[i]->collapseElement();
+	}
+	recalculateHeight();
+}
+
 void ofxTLPage::removeElement(string name){
 	//TODO:
 }

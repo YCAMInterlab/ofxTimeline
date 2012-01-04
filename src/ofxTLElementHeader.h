@@ -57,8 +57,12 @@ class ofxTLElementHeader : public ofxTLElement
 	
 	virtual void setElement(ofxTLElement* element);
 	
+	virtual void collapseElement();
+	
   protected:
 	ofxTLElement* element;
+	
+	void recalculateFooter();
 	
 	ofRectangle footerRect;
 	
@@ -66,6 +70,6 @@ class ofxTLElementHeader : public ofxTLElement
 	bool draggingSize;
 	float dragOffset;
 	float dragAnchor;
-	bool collapsed;
+
 };
 

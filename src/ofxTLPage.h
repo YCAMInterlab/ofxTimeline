@@ -57,6 +57,8 @@ class ofxTLPage {
 	virtual void setHeaderHeight(float newHeaderHeight);
 	virtual void setDefaultElementHeight(float newDefaultElementHeight);
 	
+	virtual void collapseAllElements(); //collapses all element heights to 0;
+	
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual float getComputedHeight();	
