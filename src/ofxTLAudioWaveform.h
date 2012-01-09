@@ -22,6 +22,7 @@ class ofxTLAudioWaveform : public ofxTLElement
 	virtual void draw();
 	
 	virtual void loadSoundfile(string filepath);
+	virtual float getDuration(); //in seconds
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);

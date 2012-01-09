@@ -33,6 +33,10 @@ void ofxTLAudioWaveform::loadSoundfile(string filepath){
 	shouldRecomputePreview = true;
 }
 
+float ofxTLAudioWaveform::getDuration(){
+	return player.getDuration();
+}
+
 void ofxTLAudioWaveform::update(ofEventArgs& args){
 	if(player.getPosition() < lastPercent){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
