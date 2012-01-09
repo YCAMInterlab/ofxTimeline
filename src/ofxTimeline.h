@@ -112,6 +112,8 @@ class ofxTimeline {
 	virtual void setSnapping(bool snapping);
 	virtual void toggleSnapping();
 	
+	virtual void unselectAll();
+	
 	//setting a BPM allows for a global measure across the timeline
 	//this is useful for snapping to intervals 
 	virtual void setBPM(float bpm); //beats per minute

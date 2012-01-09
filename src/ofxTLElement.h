@@ -81,6 +81,7 @@ class ofxTLElement
 	virtual string cutRequest(){return "";};
 	virtual void pasteSent(string pasteboard){};
 	virtual void selectAll(){};
+	virtual void unselectAll(){};
 	
 	//zoom events
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);

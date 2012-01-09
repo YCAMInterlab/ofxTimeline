@@ -107,7 +107,7 @@ float ofxTLKeyframer::sampleAt(float percent){
 void ofxTLKeyframer::draw(){
 	
 	if(bounds.width == 0 || bounds.height == 0){
-		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
+//		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
 		return;
 	}
 	

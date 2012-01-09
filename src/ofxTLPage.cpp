@@ -382,6 +382,12 @@ void ofxTLPage::setName(string newName){
 	name = newName;
 }
 
+void ofxTLPage::unselectAll(){
+	for(int i = 0; i < headers.size(); i++){
+		elements[headers[i]->name]->unselectAll();
+	}	
+}
+
 string ofxTLPage::getName(){
 	return name;
 }

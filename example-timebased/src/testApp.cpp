@@ -16,7 +16,7 @@ void testApp::setup(){
 	light.enable();
 		
 	timeline.setup();
-	timeline.setDurationInSeconds(2);
+	timeline.setDurationInSeconds(60*3);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
 	timeline.addKeyframes("Rotate X", "rotatex.xml", ofRange(0, 360));
@@ -30,6 +30,8 @@ void testApp::setup(){
 	timeline.setSnapping(true);
 	timeline.setBPM(120.f);
 	timeline.enableDrawBPMGrid(true);
+	
+//	timeline.setMovePlayheadOnPaste(false);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 	

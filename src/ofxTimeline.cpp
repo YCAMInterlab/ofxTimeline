@@ -133,7 +133,6 @@ ofxTLColors& ofxTimeline::getColors(){
 }
 
 void ofxTimeline::setMovePlayheadOnPaste(bool move){
-	cout << "playhead on paste " << movePlayheadOnPaste << endl;
 	movePlayheadOnPaste = move;
 }
 
@@ -324,6 +323,10 @@ void ofxTimeline::setSnapping(bool snapping){
 	for(int i = 0; i < pages.size(); i++){
 		pages[i]->setSnapping(snappingEnabled);
 	}
+}
+
+void ofxTimeline::unselectAll(){
+	currentPage->unselectAll();
 }
 
 void ofxTimeline::toggleSnapping(){

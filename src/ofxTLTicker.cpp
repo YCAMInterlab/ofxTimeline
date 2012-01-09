@@ -223,20 +223,42 @@ void ofxTLTicker::updateBPMPoints(){
 		double halfMeasure = oneMeasure/2;
 		double quarterMeasure = halfMeasure/2;
 		
+		bool showMeasure = false;
+		bool showHalfMeasure = false;
+		bool showQuarterMeasure = false;
+		showMeasure = screenXForTime(oneMeasure) - screenXForTime(0) > 20;
+		if(showMeasure){
+			showHalfMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
+			if (showHalfMeasure) {
+				showQuarterMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
+			}
+		}
+		
+			
 		while(currentPoint < timeline->getDurationInSeconds()){
 			ofxTLBPMPoint measures[4];
-			
-			measures[0].screenX = screenXForTime(currentPoint);
-			measures[0].weight = 4;
-			measures[1].screenX = screenXForTime(currentPoint+halfMeasure);
-			measures[1].weight = 2;
-			measures[2].screenX = screenXForTime(currentPoint+quarterMeasure);
-			measures[2].weight = 1;
-			measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
-			measures[3].weight = 1;
+			int numMeasures = 0;
+			if(showMeasure){
+				measures[0].screenX = screenXForTime(currentPoint);
+				measures[0].weight = 4;
+				numMeasures = 1;
+			}
+			if(showHalfMeasure){
+				measures[1].screenX = screenXForTime(currentPoint+halfMeasure);
+				measures[1].weight = 2;
+				numMeasures = 2;
+			}
+			if(showQuarterMeasure){
+				measures[2].screenX = screenXForTime(currentPoint+quarterMeasure);
+				measures[2].weight = 1;
+				measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
+				measures[3].weight = 1;
+				numMeasures = 4;
+			}
 			
 //			cout << "measures " << measures[0].screenX << endl;
-			for(int m = 0; m < 4; m++){
+			
+			for(int m = 0; m < numMeasures; m++){
 				if( isOnScreen(measures[m].screenX) ){
 					bpmScreenPoints.push_back( measures[m] );
 				}

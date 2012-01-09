@@ -31,6 +31,7 @@ void testApp::setup(){
 	waveform.loadSoundfile("4chan.wav");
 //	waveform.loadSoundfile("gunshot.wav");
 	timeline.addElement("Track", &waveform);
+	timeline.addTriggers("Colors", "color_triggers.xml");
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 }
@@ -52,7 +53,7 @@ void testApp::draw(){
 //	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
 //	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
 	
-//	ofBox(0,0,0,200);
+	ofBox(0,0,0,200);
 	
 	ofPopMatrix();
 

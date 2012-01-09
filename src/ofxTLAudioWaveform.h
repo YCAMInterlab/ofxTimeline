@@ -35,7 +35,17 @@ class ofxTLAudioWaveform : public ofxTLElement
 	virtual void stop();
 	virtual void togglePlay();
 	
-  protected:
+	virtual void zoomStarted(ofxTLZoomEventArgs& args);
+	virtual void zoomDragged(ofxTLZoomEventArgs& args);
+	virtual void zoomEnded(ofxTLZoomEventArgs& args);
+	
+	virtual void boundsChanged(ofEventArgs& args);
+	
+  protected:	
+	bool zoomChanging;
+	bool shouldRecomputePreview;
+	vector<ofPolyline> previews;
+	void recomputePreview();
 	
 	float lastPercent;
 	virtual void update(ofEventArgs& args);
