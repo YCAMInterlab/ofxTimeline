@@ -53,7 +53,14 @@ void testApp::keyPressed(int key){
 	if(key == 'h'){
 		timeline.toggleShow();
 	}
+
+	if(key == '1'){
+		timeline.setCurrentPage("first page");
+	}
 	
+	if(key == '2'){
+		timeline.setCurrentPage("second page");
+	}
 }
 
 //--------------------------------------------------------------

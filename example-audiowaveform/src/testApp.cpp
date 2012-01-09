@@ -22,7 +22,7 @@ void testApp::setup(){
 	timeline.getColors().loadColors("defaultColors.xml");
 
 	timeline.setSnapping(true);
-	timeline.setBPM(120.f);
+	timeline.enableSnapToBPM(120.f);
 //	timeline.enableDrawBPMGrid(true);
 	
 	

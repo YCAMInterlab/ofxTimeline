@@ -112,18 +112,19 @@ class ofxTimeline {
 	virtual void setSnapping(bool snapping);
 	virtual void toggleSnapping();
 	
-	virtual void unselectAll();
-	
 	//setting a BPM allows for a global measure across the timeline
 	//this is useful for snapping to intervals 
-	virtual void setBPM(float bpm); //beats per minute
+	virtual void enableSnapToBPM(float bpm); //beats per minute
 	virtual void toggleDrawBPMGrid();
 	virtual void enableDrawBPMGrid(bool enableGrid);
-
+	virtual void enableSnapToOtherElements(bool enableSnapToOther);
+	
 	virtual void setMovePlayheadOnPaste(bool move);
-	virtual bool getMovePlayheadOnPaste();
+	virtual bool getMovePlayheadOnPaste();	
 	string getPasteboard();
 	
+	virtual void unselectAll();
+
 	virtual void draw();
 
 	virtual void addPage(string name, bool makeCurrent = true);

@@ -68,54 +68,7 @@ void ofxTLAudioWaveform::draw(){
 		for(int i = 0; i < previews.size(); i++){
 			previews[i].draw();
 		}
-		
 		ofPopStyle();
-		
-//		float normalizationRatio = timeline->getDurationInSeconds() / player.getDuration(); //need to figure this out for framebased...but for now we are doing time based
-//		float trackHeight = bounds.height/(1+player.getNumChannels());
-//		int numSamples = player.getBuffer().size() / player.getNumChannels();
-//		int pixelsPerSample = numSamples / bounds.width;
-//		for(int c = 0; c < player.getNumChannels(); c++){
-//			int lastFrameIndex = 0;
-//			ofBeginShape();
-//			for(float i = bounds.x; i < bounds.x+bounds.width; i++){
-//				float pointInTrack = screenXtoNormalizedX( i, zoomBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
-//				float trackCenter = bounds.y + trackHeight * (c+1);
-//				if(pointInTrack <= 1.0){
-//					//draw sample at pointInTrack * waveDuration;
-//					int frameIndex = pointInTrack * numSamples;					
-//					float losample = 0;
-//					float hisample = 0;
-//					for(int f = lastFrameIndex; f < frameIndex; f++){
-//						int sampleIndex = f * player.getNumChannels() + c;
-//						float subpixelSample = player.getBuffer()[sampleIndex]/32565.0;
-//						if(subpixelSample < losample) {
-//							losample = subpixelSample;
-//						}
-//						if(subpixelSample > hisample) {
-//							hisample = subpixelSample;
-//						}
-//					}
-//					if(losample == 0 && hisample == 0){
-//						ofVertex(i, trackCenter);
-//					}
-//					else {
-//						if(losample != 0){
-//							ofVertex(i, trackCenter - losample * trackHeight);
-//						}
-//						if(hisample != 0){
-//							ofVertex(i, trackCenter - hisample * trackHeight);
-//						}
-//					}
-//					lastFrameIndex = frameIndex;
-//				}
-//				else{
-//					ofVertex(i, trackCenter);
-//				}
-//			}
-//			ofEndShape();
-//		}
-//		ofPopStyle();
 	}
 	else {
 		//TODO implement frame based with audio waveform

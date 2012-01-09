@@ -70,7 +70,7 @@ class ofxTLPage {
 	virtual void removeElement(string name);
 	
 	virtual void setSnapping(bool snapping);
-	
+	virtual void enableSnapToOtherElements(bool snapToOthes);
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -94,6 +94,7 @@ class ofxTLPage {
 	virtual void selectAll();
 	
 	virtual void setDragAnchor(float anchor);
+	
   protected:
 	//used for getting BPM snaps
 	ofxTLTicker* ticker;
@@ -103,6 +104,8 @@ class ofxTLPage {
 	map<string, ofxTLElement*> elements;
 
 	bool snappingEnabled;
+	bool snapToOtherElementsEnabled;
+	
 	vector<float> snapPoints;
 	//in pixels. TODO: make variable through API
 	float snappingTolerance;
@@ -117,9 +120,6 @@ class ofxTLPage {
 	string name;
 	
 	ofRectangle elementContainerRect;
-	//ofVec2f containerOffset;
-//	float containerWidth;
-//	float computedHeight;
 	float headerHeight;
 	float defaultElementHeight;
 	ofRange currentZoomBounds;

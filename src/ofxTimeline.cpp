@@ -333,8 +333,14 @@ void ofxTimeline::toggleSnapping(){
 	setSnapping(!snappingEnabled);
 }
 
-void ofxTimeline::setBPM(float bpm){
+void ofxTimeline::enableSnapToBPM(float bpm){
 	ticker->setBPM(bpm);
+}
+
+void ofxTimeline::enableSnapToOtherElements(bool enableSnapToOther){
+	for(int i = 0; i < pages.size(); i++){
+		currentPage->enableSnapToOtherElements(enableSnapToOther);
+	}
 }
 
 void ofxTimeline::toggleDrawBPMGrid(){
@@ -587,22 +593,28 @@ void ofxTimeline::setPageName(string newName){
 }
 
 void ofxTimeline::setCurrentPage(string name){
+	tabs->selectPage(name);
+/*
 	for(int i = 0; i < pages.size(); i++){
 		if(name == pages[i]->getName()){
+			
 			currentPage = pages[i];
 			return;
 		}
 	}
 	ofLogError("ofxTimeline -- Page " + name + " not found");
+ */
+	
 }
 
 void ofxTimeline::setCurrentPage(int index){
-	if(index >= pages.size()){
-		ofLogError("ofxTimeline -- Page at index " + ofToString(index) + " does not exist");
-		return;
-	}
-	currentPage = pages[index];
+//	if(index >= pages.size()){
+//		ofLogError("ofxTimeline -- Page at index " + ofToString(index) + " does not exist");
+//		return;
+//	}
+//	currentPage = pages[index];
 	
+	tabs->selectPage(index);
 }
 
 //can be used to add custom elements

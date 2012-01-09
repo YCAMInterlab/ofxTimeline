@@ -45,7 +45,8 @@ ofxTLPage::ofxTLPage()
 	defaultElementHeight(0),
 	isSetup(false),
 	snappingTolerance(12),
-	ticker(NULL)
+	ticker(NULL),
+	snapToOtherElementsEnabled(true)
 {
 	//
 }
@@ -172,8 +173,10 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
 void ofxTLPage::refreshSnapPoints(){
 	//get the snapping points
 	snapPoints.clear();
-	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->getSnappingPoints(snapPoints);	
+	if(snapToOtherElementsEnabled){
+		for(int i = 0; i < headers.size(); i++){
+			elements[headers[i]->name]->getSnappingPoints(snapPoints);	
+		}
 	}
 	if(ticker != NULL){
 		ticker->getSnappingPoints(snapPoints);
@@ -318,6 +321,10 @@ float ofxTLPage::getComputedHeight(){
 
 void ofxTLPage::setSnapping(bool snapping){
 	snappingEnabled = snapping;
+}
+
+void ofxTLPage::enableSnapToOtherElements(bool snapToOthes){
+	snapToOtherElementsEnabled = snapToOthes;
 }
 
 #pragma mark saving/restoring state
