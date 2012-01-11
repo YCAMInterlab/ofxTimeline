@@ -80,6 +80,7 @@ class ofxTLSwitcher : public ofxTLElement
 	virtual string cutRequest();
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
+	virtual void unselectAll();
 	
 	//Finds the closest switch behind a given point
 	//if the point is inside a switch, it will return NULL.
@@ -93,7 +94,7 @@ class ofxTLSwitcher : public ofxTLElement
 	bool hoveringOn(float hoverY);
 	
 	void updateDragOffsets(float clickX);
-	void deselectAllSwitches();
+//	void deselectAllSwitches();
 	bool areAnySwitchesSelected();
 	
 	string getXMLStringForSwitches(bool selectedOnly);

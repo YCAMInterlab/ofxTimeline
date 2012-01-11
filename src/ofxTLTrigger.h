@@ -76,6 +76,7 @@ class ofxTLTrigger : public ofxTLElement
 	virtual string cutRequest();
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
+	virtual void unselectAll();
 	
 protected:
 	ofxTextInputField textfield;

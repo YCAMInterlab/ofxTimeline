@@ -55,6 +55,8 @@ ofxTLKeyframer::ofxTLKeyframer(){
 	xmlFileName = "_keyframes.xml";
 	
 	drawingSelectRect = false;
+	
+	pointsAreDraggable = false;
 }
 
 ofxTLKeyframer::~ofxTLKeyframer(){
@@ -159,7 +161,7 @@ void ofxTLKeyframer::draw(){
 			string frameString = timeline->getIsFrameBased() ? 
 				ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
 				timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
-			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 2), screenpoint.x+5, screenpoint.y+10);
+			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
 			ofFill();
 		}
 		else{
@@ -358,11 +360,14 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		}
 	}
 	
+	pointsAreDraggable = !ofGetModifierKeyShift();
+	
+	updateDragOffsets(screenpoint);
 	bool clickIsInRect = screenpointIsInBounds(screenpoint);
 	if(!focused){
 		focused = clickIsInRect;
 		if(!focused){
-			selectedKeyframes.clear();
+//			selectedKeyframes.clear();
 			drawingEasingWindow = false;
 		}
 		return;
@@ -373,11 +378,11 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		//this let's us select keyframes across multiple keyframers
 		if(!ofGetModifierKeyShift()){
 			focused = false;
-			selectedKeyframes.clear();
+//			selectedKeyframes.clear();
 		}
-		else{
-			updateDragOffsets(screenpoint);
-		}
+//		else{
+			
+//		}
 		drawingEasingWindow = false;
 		return;
 	}
@@ -385,14 +390,17 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	ofxTLKeyframe* selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
 	//if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
 	if(selectedKeyframe != NULL && !ofGetModifierKeyShift() && !isKeyframeSelected(selectedKeyframe)){
-		selectedKeyframes.clear();
+		//clear the selections
+		timeline->unselectAll();
+		//selectedKeyframes.clear();
 	}
 	
 	//wasn't holding down shift and clicked somewhere else, make a new
 	if(selectedKeyframe == NULL){
 		if(!ofGetModifierKeyShift()){
 			if(selectedKeyframes.size() != 0){
-				selectedKeyframes.clear();
+				//selectedKeyframes.clear();
+				timeline->unselectAll();
 			}
 			else{
 				//add a new one
@@ -457,7 +465,7 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(!enabled) return;
 	
-	if(focused){
+//	if(focused){
 		if(drawingSelectRect){
 			selectRect = ofRectangle(selectRectStartPoint.x, selectRectStartPoint.y, 
 									 args.x-selectRectStartPoint.x, args.y-selectRectStartPoint.y);
@@ -484,7 +492,7 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 			}
 		}
 		else {
-			if(selectedKeyframes.size() != 0){
+			if(selectedKeyframes.size() != 0 && pointsAreDraggable){
 				ofVec2f screenpoint(args.x,args.y);
 				for(int k = 0; k < selectedKeyframes.size(); k++){
 					ofVec2f newScreenPosition;
@@ -500,7 +508,7 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 				updateKeyframeSort();
 			}
 		}
-	}
+//	}
 }
 
 void ofxTLKeyframer::updateKeyframeSort(){
@@ -582,8 +590,12 @@ void ofxTLKeyframer::selectAll(){
 	selectedKeyframes = keyframes;
 }
 
+void ofxTLKeyframer::unselectAll(){
+	selectedKeyframes.clear();
+}
+
 void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
-	if(!enabled || !focused) 
+	if(!enabled) 
 		return;
 	
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){

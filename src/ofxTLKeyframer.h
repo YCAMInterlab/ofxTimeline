@@ -104,6 +104,7 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual string cutRequest();
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
+	virtual void unselectAll();
 	
   private:
 	
@@ -127,6 +128,7 @@ class ofxTLKeyframer : public ofxTLElement
 	ofxTLKeyframe* hoverKeyframe;
 	
 	int selectedKeyframeIndex;
+	bool pointsAreDraggable;
 	
 	void updateKeyframeSort();
 	void updateDragOffsets(ofVec2f screenpoint);

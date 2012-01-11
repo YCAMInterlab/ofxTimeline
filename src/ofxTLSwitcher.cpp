@@ -188,7 +188,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 	
 	if(!clickInRect){
 		if(!ofGetModifierKeyShift()){
-			deselectAllSwitches();
+			unselectAll();
 			focused = false;
 		}
 		return;
@@ -201,7 +201,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 	ofxTLSwitchOn* clickedSwitchB = NULL;
 	clickedSwitchA = switchHandleForScreenX(args.x, didSelectedStartTime);
 	if(clickedSwitchA != NULL){
-		deselectAllSwitches();
+		unselectAll();
 		bool startAlreadySelected = clickedSwitchA->startSelected;
 		bool endAlreadySelected = clickedSwitchA->endSelected;
 		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
@@ -224,7 +224,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 			if(hoveringOn(args.y)){
 				//if we haven't already selected these, flag deselect
 				if(!clickedSwitchA->startSelected || !clickedSwitchA->endSelected){
-					deselectAllSwitches();
+					unselectAll();
 				}
 				clickedSwitchA->startSelected = true;
 				clickedSwitchA->endSelected   = true;
@@ -241,7 +241,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 				clickedSwitchA = nearestSwitchBeforePoint(normalizedCoord);
 				clickedSwitchB = nearestSwitchAfterPoint(normalizedCoord);
 				if( (clickedSwitchA != NULL && !clickedSwitchA->endSelected) || (clickedSwitchB != NULL && !clickedSwitchB->startSelected) ){
-					deselectAllSwitches();
+					unselectAll();
 				}
 				
 				if(clickedSwitchA != NULL){
@@ -265,7 +265,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		//if we clicked where to create a new switch, but still have a selection, first deselect
 		if(shouldCreateNewSwitch && areAnySwitchesSelected()){
 			shouldCreateNewSwitch = false;
-			deselectAllSwitches();
+			unselectAll();
 		}
 		
 		if(shouldCreateNewSwitch){
@@ -612,10 +612,11 @@ bool ofxTLSwitcher::areAnySwitchesSelected() {
 	return false;
 }
 
-void ofxTLSwitcher::deselectAllSwitches(){
-	if(ofGetModifierKeyShift()){
-		return;
-	}
+void ofxTLSwitcher::unselectAll(){
+//	if(ofGetModifierKeyShift()){
+//		return;
+//	}
+	
 	for(int i = 0; i < switches.size(); i++){
 		switches[i]->startSelected = false;
 		switches[i]->endSelected = false;

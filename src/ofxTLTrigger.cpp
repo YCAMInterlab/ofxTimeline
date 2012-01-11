@@ -251,6 +251,10 @@ void ofxTLTrigger::selectAll(){
 	//TODO:
 }
 
+void ofxTLTrigger::unselectAll(){
+	//TODO:
+}
+
 void ofxTLTrigger::save(){
 	ofxXmlSettings save;
 	save.addTag("triggers");

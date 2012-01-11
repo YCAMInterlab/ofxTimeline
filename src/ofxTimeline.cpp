@@ -74,7 +74,7 @@ ofxTimeline::~ofxTimeline(){
 		delete tabs;
 		delete zoomer;
 		
-//		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 		
 	}
@@ -106,7 +106,7 @@ void ofxTimeline::setup(){
 	
 	enable();
 	
-//	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
 	//You can change this name by calling setPageName()
@@ -292,13 +292,19 @@ void ofxTimeline::setAutosave(bool doAutosave){
 void ofxTimeline::setOffset(ofVec2f newOffset){
 	offset = newOffset;
 	updatePagePositions();
-	recalculateBoundingRects();
+	//recalculateBoundingRects();
+	ofEventArgs args;
+	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+
 }
 
 void ofxTimeline::setWidth(float newWidth){
 	width = newWidth;
 	updatePagePositions();
-	recalculateBoundingRects();
+//	recalculateBoundingRects();
+	ofEventArgs args;
+	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+
 }
 
 void ofxTimeline::collapseAllElements(){
@@ -464,9 +470,9 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 #pragma mark DRAWING
-//void ofxTimeline::viewWasResized(ofEventArgs& args){
-//	recalculateBoundingRects();
-//}
+void ofxTimeline::viewWasResized(ofEventArgs& args){
+	recalculateBoundingRects();
+}
 
 void ofxTimeline::recalculateBoundingRects(){
 	
@@ -482,10 +488,7 @@ void ofxTimeline::recalculateBoundingRects(){
 	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
 	totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
 											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
-	ticker->setTotalDrawRect(totalDrawRect);	
-	
-	ofEventArgs args;
-	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+	ticker->setTotalDrawRect(totalDrawRect);		
 }
 
 
@@ -493,8 +496,9 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i]->getName() == args.currentPageName){
 			currentPage = pages[i];
-			recalculateBoundingRects();
-			
+//			recalculateBoundingRects();
+			ofEventArgs args;
+			ofNotifyEvent(ofxTLEvents.viewWasResized, args);
 			return;
 		}
 	}
@@ -628,7 +632,10 @@ void ofxTimeline::addElement(string name, ofxTLElement* element){
 	element->setName( name );
 	currentPage->addElement(name, element);		
 	elementNameToPage[name] = currentPage;
-	recalculateBoundingRects();
+//	recalculateBoundingRects();
+	ofEventArgs args;
+	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+
 }
 
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
