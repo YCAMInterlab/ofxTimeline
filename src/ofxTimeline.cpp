@@ -74,7 +74,7 @@ ofxTimeline::~ofxTimeline(){
 		delete tabs;
 		delete zoomer;
 		
-		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+//		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 		
 	}
@@ -106,7 +106,7 @@ void ofxTimeline::setup(){
 	
 	enable();
 	
-	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+//	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
 	//You can change this name by calling setPageName()
@@ -464,9 +464,9 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 #pragma mark DRAWING
-void ofxTimeline::viewWasResized(ofEventArgs& args){
-	recalculateBoundingRects();
-}
+//void ofxTimeline::viewWasResized(ofEventArgs& args){
+//	recalculateBoundingRects();
+//}
 
 void ofxTimeline::recalculateBoundingRects(){
 	
