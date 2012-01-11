@@ -96,6 +96,7 @@ class ofxTLSwitcher : public ofxTLElement
 	void updateDragOffsets(float clickX);
 //	void deselectAllSwitches();
 	bool areAnySwitchesSelected();
+	bool pointsAreDraggable;
 	
 	string getXMLStringForSwitches(bool selectedOnly);
 	vector<ofxTLSwitchOn*> switchesFromXML(ofxXmlSettings xml);

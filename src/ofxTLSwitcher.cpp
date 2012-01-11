@@ -188,12 +188,13 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 	
 	if(!clickInRect){
 		if(!ofGetModifierKeyShift()){
-			unselectAll();
+			//unselectAll();
 			focused = false;
 		}
 		return;
 	}
-
+	pointsAreDraggable = !ofGetModifierKeyShift();
+	
 	bool shouldDeselect = false;
 	bool didSelectedStartTime;
 	//at this point we are inside the rect and focused, make changes
@@ -201,7 +202,9 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 	ofxTLSwitchOn* clickedSwitchB = NULL;
 	clickedSwitchA = switchHandleForScreenX(args.x, didSelectedStartTime);
 	if(clickedSwitchA != NULL){
-		unselectAll();
+		if(!ofGetModifierKeyShift()){
+			timeline->unselectAll();
+		}
 		bool startAlreadySelected = clickedSwitchA->startSelected;
 		bool endAlreadySelected = clickedSwitchA->endSelected;
 		clickedSwitchA->startSelected = didSelectedStartTime || (ofGetModifierKeyShift() && startAlreadySelected);
@@ -223,8 +226,8 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 			//if we clicked the upper part, select that switch
 			if(hoveringOn(args.y)){
 				//if we haven't already selected these, flag deselect
-				if(!clickedSwitchA->startSelected || !clickedSwitchA->endSelected){
-					unselectAll();
+				if((!clickedSwitchA->startSelected || !clickedSwitchA->endSelected) && !ofGetModifierKeyShift()){
+					timeline->unselectAll();
 				}
 				clickedSwitchA->startSelected = true;
 				clickedSwitchA->endSelected   = true;
@@ -240,8 +243,9 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 			if(!hoveringOn(args.y)){
 				clickedSwitchA = nearestSwitchBeforePoint(normalizedCoord);
 				clickedSwitchB = nearestSwitchAfterPoint(normalizedCoord);
-				if( (clickedSwitchA != NULL && !clickedSwitchA->endSelected) || (clickedSwitchB != NULL && !clickedSwitchB->startSelected) ){
-					unselectAll();
+				if( !ofGetModifierKeyShift() && (clickedSwitchA != NULL && !clickedSwitchA->endSelected) || (clickedSwitchB != NULL && !clickedSwitchB->startSelected) ){
+					//unselectAll();
+					timeline->unselectAll();
 				}
 				
 				if(clickedSwitchA != NULL){
@@ -265,7 +269,8 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		//if we clicked where to create a new switch, but still have a selection, first deselect
 		if(shouldCreateNewSwitch && areAnySwitchesSelected()){
 			shouldCreateNewSwitch = false;
-			unselectAll();
+			//unselectAll();
+			timeline->unselectAll();
 		}
 		
 		if(shouldCreateNewSwitch){
@@ -327,6 +332,8 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
 
 //TODO: account for snapping
 void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
+	if(!pointsAreDraggable) return;
+	
 	for(int i = 0; i < switches.size(); i++){
 		if(switches[i]->startSelected){
 			switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
