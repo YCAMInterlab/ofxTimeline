@@ -87,7 +87,7 @@ class ofxTLCoreEvents {
 	
 	ofEvent<ofxTLPageEventArgs> pageChanged;
 		
-	ofEvent<ofEventArgs> viewNeedsResize;
+	ofEvent<ofEventArgs> viewWasResized;
 };
 
 extern ofxTLCoreEvents ofxTLEvents;

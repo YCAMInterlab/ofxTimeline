@@ -74,7 +74,7 @@ ofxTimeline::~ofxTimeline(){
 		delete tabs;
 		delete zoomer;
 		
-		ofRemoveListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
+		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 		
 	}
@@ -106,7 +106,7 @@ void ofxTimeline::setup(){
 	
 	enable();
 	
-	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTimeline::viewNeedsResize);
+	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
 	//You can change this name by calling setPageName()
@@ -291,13 +291,14 @@ void ofxTimeline::setAutosave(bool doAutosave){
 
 void ofxTimeline::setOffset(ofVec2f newOffset){
 	offset = newOffset;
-	recalculateBoundingRects();
 	updatePagePositions();
+	recalculateBoundingRects();
 }
 
 void ofxTimeline::setWidth(float newWidth){
 	width = newWidth;
 	updatePagePositions();
+	recalculateBoundingRects();
 }
 
 void ofxTimeline::collapseAllElements(){
@@ -463,7 +464,7 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 #pragma mark DRAWING
-void ofxTimeline::viewNeedsResize(ofEventArgs& args){
+void ofxTimeline::viewWasResized(ofEventArgs& args){
 	recalculateBoundingRects();
 }
 
@@ -482,6 +483,9 @@ void ofxTimeline::recalculateBoundingRects(){
 	totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
 											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
 	ticker->setTotalDrawRect(totalDrawRect);	
+	
+	ofEventArgs args;
+	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
 }
 
 
@@ -490,10 +494,11 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 		if(pages[i]->getName() == args.currentPageName){
 			currentPage = pages[i];
 			recalculateBoundingRects();
+			
 			return;
 		}
 	}
-	
+		
 	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
 }
 

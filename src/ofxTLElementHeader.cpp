@@ -119,7 +119,7 @@ void ofxTLElementHeader::recalculateFooter(){
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
 	
 	ofEventArgs a;
-	ofNotifyEvent(ofxTLEvents.viewNeedsResize, a);
+	ofNotifyEvent(ofxTLEvents.viewWasResized, a);
 }
 
 void ofxTLElementHeader::mouseReleased(ofMouseEventArgs& args){

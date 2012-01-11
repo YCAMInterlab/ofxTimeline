@@ -220,7 +220,7 @@ class ofxTimeline {
 	virtual void enableEvents();
 	virtual void disableEvents();
 
-	virtual void viewNeedsResize(ofEventArgs& args);
+	virtual void viewWasResized(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);
 
 	virtual void updatePagePositions();

@@ -23,7 +23,7 @@ ofxTLAudioWaveform::~ofxTLAudioWaveform(){
 void ofxTLAudioWaveform::setup(){
 	enable();
 	ofxTLRegisterZoomEvents(this);
-	ofAddListener(ofxTLEvents.viewNeedsResize, this, &ofxTLAudioWaveform::boundsChanged);
+	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);
 }
 
 void ofxTLAudioWaveform::loadSoundfile(string filepath){
@@ -54,7 +54,7 @@ void ofxTLAudioWaveform::update(ofEventArgs& args){
 
 void ofxTLAudioWaveform::draw(){
 	
-	if(shouldRecomputePreview && !zoomChanging){
+	if(shouldRecomputePreview){
 		recomputePreview();
 	}
 	
@@ -150,17 +150,16 @@ void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLAudioWaveform::zoomStarted(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomStarted(args);
-	zoomChanging = true;
+	shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomDragged(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomDragged(args);
+	shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomEnded(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomEnded(args);
-	
-	zoomChanging = false;
 	shouldRecomputePreview = true;
 }
 
