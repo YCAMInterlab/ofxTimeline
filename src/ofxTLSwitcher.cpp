@@ -44,6 +44,8 @@ bool switchsort(ofxTLSwitchOn* a, ofxTLSwitchOn* b){
 }
 
 ofxTLSwitcher::ofxTLSwitcher(){
+	draggingSelectionRange = false;
+	pointsAreDraggable = false;
 }
 
 ofxTLSwitcher::~ofxTLSwitcher(){
@@ -170,6 +172,14 @@ void ofxTLSwitcher::draw(){
 		}
 	}
 	
+	if(draggingSelectionRange){
+		ofSetColor(timeline->getColors().keyColor);	
+		ofLine(dragSelection.min, bounds.y, dragSelection.min, bounds.y+bounds.height);
+		ofLine(dragSelection.max, bounds.y, dragSelection.max, bounds.y+bounds.height);
+		ofSetColor(timeline->getColors().keyColor, 30);
+		ofFill();
+		ofRect(dragSelection.min, bounds.y, dragSelection.span(), bounds.height);
+	}
 	ofPopStyle();
 }
 
@@ -177,7 +187,8 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 	ofVec2f screenpoint(args.x,args.y);
 	
 	updateDragOffsets(args.x);
-	
+	pointsAreDraggable = !ofGetModifierKeyShift();
+
 	bool clickInRect = bounds.inside(screenpoint);
 	if(clickInRect){
 		if(!focused){
@@ -193,7 +204,6 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		}
 		return;
 	}
-	pointsAreDraggable = !ofGetModifierKeyShift();
 	
 	bool shouldDeselect = false;
 	bool didSelectedStartTime;
@@ -217,6 +227,12 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 		}
 	}
 	else{
+		if(ofGetModifierKeyShift()){
+			draggingSelectionRange = true;
+			selectionRangeAnchor = args.x;
+			dragSelection.min = dragSelection.max = selectionRangeAnchor;
+			return;
+		}
 		
 		float normalizedCoord = screenXtoNormalizedX(args.x, zoomBounds);
 		bool shouldCreateNewSwitch = false;
@@ -243,7 +259,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 			if(!hoveringOn(args.y)){
 				clickedSwitchA = nearestSwitchBeforePoint(normalizedCoord);
 				clickedSwitchB = nearestSwitchAfterPoint(normalizedCoord);
-				if( !ofGetModifierKeyShift() && (clickedSwitchA != NULL && !clickedSwitchA->endSelected) || (clickedSwitchB != NULL && !clickedSwitchB->startSelected) ){
+				if( (clickedSwitchA != NULL && !clickedSwitchA->endSelected) || (clickedSwitchB != NULL && !clickedSwitchB->startSelected) ){
 					//unselectAll();
 					timeline->unselectAll();
 				}
@@ -332,28 +348,45 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
 
 //TODO: account for snapping
 void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
-	if(!pointsAreDraggable) return;
-	
-	for(int i = 0; i < switches.size(); i++){
-		if(switches[i]->startSelected){
-			switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
-		}
-		if(switches[i]->endSelected){
-			switches[i]->time.max = MAX( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
-		}
+	if(draggingSelectionRange){
+		dragSelection.min = MIN(args.x, selectionRangeAnchor);
+		dragSelection.max = MAX(args.x, selectionRangeAnchor);
 	}
 	
-	bool didSelectedStartTime;
-	ofxTLSwitchOn* switchHandle = switchHandleForScreenX(args.x, didSelectedStartTime);
-	if(switchHandle != NULL){
-		timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
-	}
-	else{
-		timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+	else if(pointsAreDraggable){
+	
+		for(int i = 0; i < switches.size(); i++){
+			if(switches[i]->startSelected){
+				switches[i]->time.min = MIN( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.min, zoomBounds), switches[i]->time.max);
+			}
+			if(switches[i]->endSelected){
+				switches[i]->time.max = MAX( screenXtoNormalizedX(args.x - switches[i]->dragOffsets.max, zoomBounds), switches[i]->time.min);
+			}
+		}
+		
+		bool didSelectedStartTime;
+		ofxTLSwitchOn* switchHandle = switchHandleForScreenX(args.x, didSelectedStartTime);
+		if(switchHandle != NULL){
+			timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
+		}
+		else{
+			timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+		}
 	}
 }
 
 void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
+	if(draggingSelectionRange){
+		for(int i = 0; i < switches.size(); i++){
+			if(dragSelection.contains( normalizedXtoScreenX(switches[i]->time.min, zoomBounds))){
+				switches[i]->startSelected = true;				
+			}
+			if(dragSelection.contains( normalizedXtoScreenX(switches[i]->time.max, zoomBounds))){
+				switches[i]->endSelected = true;
+			}
+		}
+	}
+	
 	for(int i = switches.size()-1; i >= 0; i--){
 		if(switches[i]->time.min == switches[i]->time.max){
 			delete switches[i];
@@ -361,6 +394,7 @@ void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
 			
 		}
 	}	
+	draggingSelectionRange = false;
 	if(autosave) save();
 }
 
@@ -582,7 +616,15 @@ void ofxTLSwitcher::pasteSent(string pasteboard){
 void ofxTLSwitcher::selectAll(){
 	for(int i = 0; i < switches.size(); i++){
 		switches[i]->startSelected = switches[i]->endSelected = true;
-	}	
+	}
+//	for(int i = 0; i < switches.size(); i++){
+//		if(zoomBounds.contains(switches[i]->time.min)){
+//			switches[i]->startSelected = true;
+//		}
+//		if(zoomBounds.contains(switches[i]->time.max)){
+//			switches[i]->endSelected = true;
+//		}
+//	}	
 }
 
 void ofxTLSwitcher::clear(){

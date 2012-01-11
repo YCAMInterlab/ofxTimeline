@@ -97,6 +97,9 @@ class ofxTLSwitcher : public ofxTLElement
 //	void deselectAllSwitches();
 	bool areAnySwitchesSelected();
 	bool pointsAreDraggable;
+	bool draggingSelectionRange;
+	float selectionRangeAnchor;
+	ofRange dragSelection;
 	
 	string getXMLStringForSwitches(bool selectedOnly);
 	vector<ofxTLSwitchOn*> switchesFromXML(ofxXmlSettings xml);
@@ -109,4 +112,6 @@ class ofxTLSwitcher : public ofxTLElement
 	ofxTLSwitchOn* hoverSwitch;
 	bool hoveringStartTime;
 	bool hoveringHandle;
+	
+
 };

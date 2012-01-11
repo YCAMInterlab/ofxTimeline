@@ -587,6 +587,12 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 }
 
 void ofxTLKeyframer::selectAll(){
+//	selectedKeyframes.clear();
+//	for(int i = 0; i < keyframes.size(); i++){
+//		if(isKeyframeIsInBounds(keyframes[i])){
+//			selectedKeyframes.push_back(keyframes[i]);
+//		}
+//	}
 	selectedKeyframes = keyframes;
 }
 
@@ -665,7 +671,7 @@ bool ofxTLKeyframer::isKeyframeIsInBounds(ofxTLKeyframe* key){
 }
 
 ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint){
-	return ofVec2f(ofMap(keyframePoint.x, zoomBounds.min, zoomBounds.max, bounds.x, bounds.x+bounds.width, true),
+	return ofVec2f(ofMap(keyframePoint.x, zoomBounds.min, zoomBounds.max, bounds.x, bounds.x+bounds.width, false),
 				   ofMap(keyframePoint.y, 1.0, 0.0, bounds.y, bounds.y+bounds.height, true));
 }
 
@@ -674,7 +680,7 @@ bool ofxTLKeyframer::screenpointIsInBounds(ofVec2f screenpoint){
 }
 
 ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord){
-	return ofVec2f(ofMap(coord.x, bounds.x, bounds.x+bounds.width,  zoomBounds.min, zoomBounds.max, true),
+	return ofVec2f(ofMap(coord.x, bounds.x, bounds.x+bounds.width,  zoomBounds.min, zoomBounds.max, false),
 				   ofMap(coord.y, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true));
 }
 
