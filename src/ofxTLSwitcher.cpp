@@ -578,6 +578,7 @@ void ofxTLSwitcher::pasteSent(string pasteboard){
 		return;
 	}
 	
+	timeline->unselectAll();
 	//move switches relative to the playhead
 	float playheadPercent = timeline->getPercentComplete();
 	float basePercent = newSwitches[0]->time.min;

@@ -556,6 +556,7 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 	vector<ofxTLKeyframe*> keyContainer;
 	ofxXmlSettings pastedKeys;
 	if(pastedKeys.loadFromBuffer(pasteboard)){
+		timeline->unselectAll();
 		createKeyframesFromXML(pastedKeys, keyContainer);
 		if(keyContainer.size() != 0){
 			selectedKeyframes.clear();
