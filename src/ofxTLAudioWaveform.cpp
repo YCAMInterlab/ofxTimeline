@@ -150,12 +150,12 @@ void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLAudioWaveform::zoomStarted(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomStarted(args);
-	shouldRecomputePreview = true;
+//	shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomDragged(ofxTLZoomEventArgs& args){
 	ofxTLElement::zoomDragged(args);
-	shouldRecomputePreview = true;
+	//shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomEnded(ofxTLZoomEventArgs& args){
