@@ -155,6 +155,8 @@ void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(selectedTrigger != NULL){
 		selectedTrigger->pt = screenXtoNormalizedX(args.x - dragOffset, zoomBounds);
 	}
+	
+	//TODO respect timeline->getMovePlayheadOnPaste()
 }
 
 void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){

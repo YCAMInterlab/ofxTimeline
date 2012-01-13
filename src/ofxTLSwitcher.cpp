@@ -366,11 +366,13 @@ void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
 		
 		bool didSelectedStartTime;
 		ofxTLSwitchOn* switchHandle = switchHandleForScreenX(args.x, didSelectedStartTime);
-		if(switchHandle != NULL){
-			timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
-		}
-		else{
-			timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+		if(timeline->getMovePlayheadOnPaste()){
+			if(switchHandle != NULL){
+				timeline->setPercentComplete(didSelectedStartTime ? switchHandle->time.min : switchHandle->time.max);
+			}
+			else{
+				timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+			}
 		}
 	}
 }

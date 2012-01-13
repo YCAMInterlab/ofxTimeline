@@ -145,6 +145,14 @@ string ofxTimeline::getPasteboard(){
 	return pasteboard;
 }
 
+void ofxTimeline::setMovePlayheadOnDrag(bool movePlayhead){
+	movePlayheadOnDrag = movePlayhead;
+}
+
+bool ofxTimeline::getMovePlayheadOnDrag(){
+	return movePlayheadOnDrag;
+}
+
 ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	ofxTLPlaybackEventArgs args;
 	args.frameBased = isFrameBased;
@@ -205,6 +213,7 @@ void ofxTimeline::setCurrentFrame(int newFrame){
 }
 
 void ofxTimeline::setPercentComplete(float percent){
+
 	if(isFrameBased){
 		currentFrame = durationInFrames*percent;
 	}

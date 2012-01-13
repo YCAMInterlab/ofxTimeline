@@ -439,7 +439,9 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 			updateDragOffsets(screenpoint);
 			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
 			//move the playhead
-			timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
+			if(timeline->getMovePlayheadOnDrag()){
+				timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
+			}
 		}
 		else if(args.button == 2){
 			easingWindowPosition = ofVec2f(MIN(screenpoint.x, bounds.width - easingBoxWidth),
@@ -502,7 +504,8 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 					selectedKeyframes[k]->position = newposition;
 				}
 				ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
-				if(dragkey != NULL){
+				if(dragkey != NULL && timeline->getMovePlayheadOnPaste()){
+					cout << "moving playhead" << endl;
 					timeline->setPercentComplete(dragkey->position.x);
 				}
 				updateKeyframeSort();

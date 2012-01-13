@@ -31,8 +31,8 @@ void testApp::setup(){
 	timeline.enableSnapToBPM(120.f);
 	timeline.enableDrawBPMGrid(true);
 	timeline.enableSnapToOtherElements(true);
-	
-	timeline.setMovePlayheadOnPaste(false);
+	timeline.setMovePlayheadOnDrag(false);
+	timeline.setMovePlayheadOnPaste(true);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);	
 }

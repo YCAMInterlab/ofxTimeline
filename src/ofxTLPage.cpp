@@ -113,9 +113,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
 			headers[i]->mousePressed(args);
 			elements[headers[i]->name]->mousePressed(args);
 			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !elements[headers[i]->name]->getDrawRect().inside(args.x,args.y) );
-			//headerHasFocus |= ( headers[i]->getDrawRect().inside(args.x,args.y) );
 		}
-		cout << "header has focus? " << headerHasFocus << endl;
 	}
 }
 

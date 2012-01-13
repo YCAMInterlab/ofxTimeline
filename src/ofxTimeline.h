@@ -34,14 +34,9 @@
 
 //controls to add:
 // ofxTLColorTween
-// ofxTLSwitcher
 
-//TODO: Implement time-based side of things in many places
 //TODO: Add global undo
-//TODO: Add multi-keyframe select
-//TODO: Add modal function
 //TODO: Account for image sequences and movies with different durations than the timeline
-//TODO: Copy+Paste keyframes
 
 #pragma once
 
@@ -123,6 +118,9 @@ class ofxTimeline {
 	virtual bool getMovePlayheadOnPaste();	
 	string getPasteboard();
 	
+	virtual void setMovePlayheadOnDrag(bool updatePlayhead);
+	virtual bool getMovePlayheadOnDrag();
+	
 	virtual void unselectAll();
 
 	virtual void draw();
@@ -200,7 +198,7 @@ class ofxTimeline {
 	
 	string pasteboard;
 
-	
+	bool movePlayheadOnDrag;
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
 
