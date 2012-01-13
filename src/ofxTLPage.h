@@ -106,6 +106,8 @@ class ofxTLPage {
 	bool snappingEnabled;
 	bool snapToOtherElementsEnabled;
 	
+	bool headerHasFocus;
+	
 	vector<float> snapPoints;
 	//in pixels. TODO: make variable through API
 	float snappingTolerance;

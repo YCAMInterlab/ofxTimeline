@@ -46,7 +46,8 @@ ofxTLPage::ofxTLPage()
 	isSetup(false),
 	snappingTolerance(12),
 	ticker(NULL),
-	snapToOtherElementsEnabled(true)
+	snapToOtherElementsEnabled(true),
+	headerHasFocus(false)
 {
 	//
 }
@@ -107,10 +108,14 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
 		if(snappingEnabled){
 			refreshSnapPoints();
 		}
+		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
 			elements[headers[i]->name]->mousePressed(args);
-		}	
+			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !elements[headers[i]->name]->getDrawRect().inside(args.x,args.y) );
+			//headerHasFocus |= ( headers[i]->getDrawRect().inside(args.x,args.y) );
+		}
+		cout << "header has focus? " << headerHasFocus << endl;
 	}
 }
 
@@ -152,7 +157,9 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 		
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mouseDragged(args);
-			elements[headers[i]->name]->mouseDragged(args, snapped);
+			if(!headerHasFocus){
+				elements[headers[i]->name]->mouseDragged(args, snapped);
+			}
 		}
 	}
 }

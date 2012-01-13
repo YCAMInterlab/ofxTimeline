@@ -125,3 +125,7 @@ void ofxTLElementHeader::recalculateFooter(){
 void ofxTLElementHeader::mouseReleased(ofMouseEventArgs& args){
 	draggingSize = false;
 }
+
+ofRectangle ofxTLElementHeader::getFooterRect(){
+	return footerRect;
+}

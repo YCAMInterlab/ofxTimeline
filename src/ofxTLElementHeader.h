@@ -58,6 +58,7 @@ class ofxTLElementHeader : public ofxTLElement
 	virtual void setElement(ofxTLElement* element);
 	
 	virtual void collapseElement();
+	virtual ofRectangle getFooterRect();
 	
   protected:
 	ofxTLElement* element;
