@@ -51,4 +51,6 @@ class ofxTLAudioWaveform : public ofxTLElement
 	float lastPercent;
 	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer player;
+	
+	ofRange computedZoomBounds;
 };

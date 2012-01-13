@@ -70,7 +70,11 @@ void ofxTLAudioWaveform::draw(){
 		ofNoFill();
 		
 		for(int i = 0; i < previews.size(); i++){
+			ofPushMatrix();
+			ofTranslate( normalizedXtoScreenX(computedZoomBounds.min, zoomBounds)  - normalizedXtoScreenX(zoomBounds.min, zoomBounds), 0, 0);
+			ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
 			previews[i].draw();
+			ofPopMatrix();
 		}
 		ofPopStyle();
 	}
@@ -130,6 +134,7 @@ void ofxTLAudioWaveform::recomputePreview(){
 		}
 		previews.push_back(preview);
 	}
+	computedZoomBounds = zoomBounds;
 	shouldRecomputePreview = false;
 }
 
