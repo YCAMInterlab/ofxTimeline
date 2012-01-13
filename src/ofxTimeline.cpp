@@ -59,7 +59,8 @@ ofxTimeline::ofxTimeline()
 	usingEvents(false),
 	isPlaying(false),
 	snappingEnabled(false),
-	movePlayheadOnPaste(true)
+	movePlayheadOnPaste(true),
+	currentPage(NULL)
 {
 }
 
@@ -495,8 +496,10 @@ void ofxTimeline::recalculateBoundingRects(){
 void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i]->getName() == args.currentPageName){
+			if(currentPage != NULL){
+				currentPage->unselectAll();
+			}
 			currentPage = pages[i];
-//			recalculateBoundingRects();
 			ofEventArgs args;
 			ofNotifyEvent(ofxTLEvents.viewWasResized, args);
 			return;
