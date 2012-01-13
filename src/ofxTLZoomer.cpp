@@ -35,6 +35,7 @@
 #include "ofxTLZoomer.h"
 #include "ofxXmlSettings.h"
 #include "ofRange.h"
+#include "ofxTimeline.h"
 
 ofxTLZoomer::ofxTLZoomer()
 :	minSelected(false),
@@ -99,6 +100,9 @@ void ofxTLZoomer::draw(){
 	}
 	ofCircle(maxScreenX, screenY, 5);
 
+	//draw playhead reference
+	ofSetColor(timeline->getColors().keyColor);
+	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y, bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
 	ofPopStyle();
 }
 

@@ -126,7 +126,7 @@ void ofxTLTicker::draw(){
 			ofSetColor(255, 255, 255, 50);
 			for(int i = 0; i < bpmScreenPoints.size(); i++){
 				ofSetLineWidth(bpmScreenPoints[i].weight);
-				ofLine(bpmScreenPoints[i].screenX, totalDrawRect.y, bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height);
+				ofLine(bpmScreenPoints[i].screenX, totalDrawRect.y, bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height-20);
 			}
 			ofPopStyle();
 		}
