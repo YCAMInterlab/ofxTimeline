@@ -426,7 +426,7 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+//	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
