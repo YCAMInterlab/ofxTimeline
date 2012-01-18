@@ -265,6 +265,20 @@ void ofxTimeline::setOutPointAtPercent(float percent){
 	inoutRange.max = percent;
 }
 
+void ofxTimeline::setInPointAtFrame(int frame){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- setting in point by frame on timebased timeline will not work correctly.");
+	}
+	inoutRange.min = float(frame)/durationInFrames;
+}
+
+void ofxTimeline::setOutPointAtFrame(float frame){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- setting out point by frame on timebased timeline will not work correctly.");
+	}
+	inoutRange.max = float(frame)/durationInFrames;	
+}
+
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
 	inoutRange = inoutPercentRange;
 }

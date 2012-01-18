@@ -92,6 +92,7 @@ void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir)
 		checkCreateDirectory.create(true);
 	}
 	
+	videoThumbs.clear();
 	player = &newPlayer;
 	thumbDirectory = thumbDir;
 	for(int i = 0; i < newPlayer.getTotalNumFrames(); i++){
@@ -167,6 +168,10 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
+		if(timeline->getMovePlayheadOnDrag()){
+			timeline->setPercentComplete(1.0*selectedFrame/player->getTotalNumFrames());
+		}
+		
 	}
 }
 
@@ -187,18 +192,6 @@ void ofxTLVideoPlayer::keyPressed(ofKeyEventArgs& args){
 void ofxTLVideoPlayer::selectFrame(int frame){
 	selectedFrame = ofClamp(frame, 0, videoThumbs.size()-1);
 	player->setFrame(selectedFrame);
-//	bool playing = player->isPaused();
-//	if(!playing){
-//		player->play();
-//	}
-//	player->update();
-//	if(!playing){
-//		player->stop();
-//	}
-	
-	if(timeline->getMovePlayheadOnDrag()){
-		timeline->setPercentComplete(1.0*selectedFrame/player->getTotalNumFrames());
-	}
 }
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){
