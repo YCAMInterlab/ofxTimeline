@@ -23,7 +23,7 @@ void testApp::setup(){
 
 	timeline.setSnapping(true);
 	timeline.enableSnapToBPM(120.f);
-//	timeline.enableDrawBPMGrid(true);
+	timeline.enableDrawBPMGrid(true);
 	
 	
 	waveform.setup();

@@ -82,6 +82,18 @@ class ofxTimeline {
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
 	
+	virtual void setInPointAtPercent(float percent);
+	virtual void setOutPointAtPercent(float percent);
+	virtual void setInOutRange(ofRange inoutPercentRange);
+	virtual ofRange getInOutRange();
+	virtual int getInFrame();
+	virtual int getOutFrame();
+	virtual float getInTime();
+	virtual float getOutTime();
+
+	virtual void setCurrentTimeToInPoint();
+	virtual void setCurrentTimeToOutPoint();
+	
 	//Setting the duration in seconds or frames determines 
 	//wether the timeline is frame-based or time-based
 	//FRAME-BASED timelines will progress one frame each call to update
@@ -224,7 +236,7 @@ class ofxTimeline {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
 	
-
+	ofRange inoutRange;
 	
     ofxXmlSettings settings;
 	string filenamePrefix;
