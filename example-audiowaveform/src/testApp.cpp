@@ -14,24 +14,20 @@ void testApp::setup(){
 	
 	light.setPosition(ofGetWidth()*.5, ofGetHeight()*.25, 0);
 	light.enable();
-		
+			
+	waveform.setup();
+	waveform.loadSoundfile("LAZERS_QUADRO.wav");
 	timeline.setup();
-	timeline.setDurationInSeconds(5);
+	timeline.setDurationInSeconds(waveform.getDuration());
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
-	timeline.getColors().loadColors("defaultColors.xml");
-
-	timeline.setSnapping(true);
-	timeline.enableSnapToBPM(120.f);
-//	timeline.enableDrawBPMGrid(true);
-	
-	
-	waveform.setup();
-//	waveform.loadSoundfile("wave120bpm.wav");
-	waveform.loadSoundfile("4chan.wav");
-//	waveform.loadSoundfile("gunshot.wav");
 	timeline.addElement("Track", &waveform);
 	timeline.addTriggers("Colors", "color_triggers.xml");
+	timeline.getColors().loadColors("defaultColors.xml");
+	
+	timeline.setSnapping(true);
+	timeline.enableSnapToBPM(120.f);
+	//	timeline.enableDrawBPMGrid(true);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 }
