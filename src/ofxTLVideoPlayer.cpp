@@ -24,25 +24,31 @@ void ofxTLVideoPlayer::setup(){
 }
 
 void ofxTLVideoPlayer::draw(){
+	
 	if(player == NULL){
 		return;
 	}
 	
-	if(player->isPlaying()){
+	if(player->isPlaying() && player->getSpeed() > 0.0){
 		if(timeline->getIsFrameBased()){
-			timeline->stop();
-			timeline->setCurrentFrame( player->getCurrentFrame() );
+			if(timeline->getOutFrame() < player->getCurrentFrame() || timeline->getInFrame() > player->getCurrentFrame() ){				
+				if(timeline->getInFrame() > player->getCurrentFrame() && timeline->getLoopType() == OF_LOOP_NONE){
+					player->stop();
+				}
+				else {
+					player->setFrame( timeline->getInFrame() );
+				}
+			}
+			timeline->setCurrentFrame(player->getCurrentFrame());
 		}
-		else {
+		else{
+			if(timeline->getOutTime() < player->getPosition()*player->getDuration() || timeline->getInTime() > player->getPosition()*player->getDuration() ){
+				player->setFrame(timeline->getInOutRange().min * player->getTotalNumFrames());
+			}
 			timeline->setCurrentTime( player->getPosition() * player->getDuration());
 		}
 	}
-	//if we were scrubbing we need to reset the player's current frame
-	else if(selectedFrame != player->getCurrentFrame()){
-		player->setFrame(selectedFrame);
-	}
-	player->update();
-	   
+	
 	ofPushStyle();
 	if(thumbsEnabled){
 		ofSetColor(255);
@@ -86,6 +92,7 @@ void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir)
 		checkCreateDirectory.create(true);
 	}
 	
+	videoThumbs.clear();
 	player = &newPlayer;
 	thumbDirectory = thumbDir;
 	for(int i = 0; i < newPlayer.getTotalNumFrames(); i++){
@@ -161,6 +168,10 @@ void ofxTLVideoPlayer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLVideoPlayer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
+		if(timeline->getMovePlayheadOnDrag()){
+			timeline->setPercentComplete(1.0*selectedFrame/player->getTotalNumFrames());
+		}
+		
 	}
 }
 
@@ -181,7 +192,6 @@ void ofxTLVideoPlayer::keyPressed(ofKeyEventArgs& args){
 void ofxTLVideoPlayer::selectFrame(int frame){
 	selectedFrame = ofClamp(frame, 0, videoThumbs.size()-1);
 	player->setFrame(selectedFrame);
-	player->update();
 }
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){

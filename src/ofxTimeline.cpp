@@ -60,6 +60,8 @@ ofxTimeline::ofxTimeline()
 	isPlaying(false),
 	snappingEnabled(false),
 	movePlayheadOnPaste(true),
+	movePlayheadOnDrag(true),
+	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL)
 {
 }
@@ -213,7 +215,6 @@ void ofxTimeline::setCurrentFrame(int newFrame){
 }
 
 void ofxTimeline::setPercentComplete(float percent){
-
 	if(isFrameBased){
 		currentFrame = durationInFrames*percent;
 	}
@@ -255,6 +256,79 @@ float ofxTimeline::getPercentComplete(){
 		return currentTime / durationInSeconds;
 	}
 }
+
+void ofxTimeline::setInPointAtPercent(float percent){
+	inoutRange.min = percent;
+}
+
+void ofxTimeline::setOutPointAtPercent(float percent){
+	inoutRange.max = percent;
+}
+
+void ofxTimeline::setInPointAtFrame(int frame){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- setting in point by frame on timebased timeline will not work correctly.");
+	}
+	inoutRange.min = float(frame)/durationInFrames;
+}
+
+void ofxTimeline::setOutPointAtFrame(float frame){
+	if(!isFrameBased){
+		ofLogWarning("ofxTimeline -- setting out point by frame on timebased timeline will not work correctly.");
+	}
+	inoutRange.max = float(frame)/durationInFrames;	
+}
+
+void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
+	inoutRange = inoutPercentRange;
+}
+
+void ofxTimeline::setCurrentTimeToInPoint(){
+	inoutRange.min = getPercentComplete();
+	if(inoutRange.max < inoutRange.min){
+		inoutRange.max = 1.0;
+	}
+}
+
+void ofxTimeline::setCurrentTimeToOutPoint(){
+	inoutRange.max = getPercentComplete();
+	if(inoutRange.min > inoutRange.max){
+		inoutRange.min = 0.0;
+	}	
+}
+
+ofRange ofxTimeline::getInOutRange(){
+	return inoutRange;
+}
+
+int ofxTimeline::getInFrame(){
+	if (!isFrameBased) {
+		ofLogWarning("ofxTimeline -- Getting in frame with timebased timeline");
+	}
+	return durationInFrames*inoutRange.min;
+}
+
+int ofxTimeline::getOutFrame(){
+	if (!isFrameBased) {
+		ofLogWarning("ofxTimeline -- Getting out frame with timebased timeline");
+	}
+	return durationInFrames*inoutRange.max;
+}
+
+float ofxTimeline::getInTime(){
+	if (isFrameBased) {
+		ofLogWarning("ofxTimeline -- Getting in time with framebased timeline");
+	}
+	return durationInSeconds*inoutRange.min;
+}
+
+float ofxTimeline::getOutTime(){
+	if (isFrameBased) {
+		ofLogWarning("ofxTimeline -- Getting out time with framebased timeline");
+	}
+	return durationInSeconds*inoutRange.max;
+}
+
 
 bool ofxTimeline::toggleEnabled(){
 	isEnabled = !isEnabled;
@@ -426,7 +500,7 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+//	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
@@ -529,14 +603,15 @@ ofLoopType ofxTimeline::getLoopType(){
 void ofxTimeline::update(ofEventArgs& updateArgs){
 	if(isFrameBased){
 		currentFrame = ofGetFrameNum() - playbackStartFrame;
-		if(currentFrame >= durationInFrames){
+		if(currentFrame >= durationInFrames*inoutRange.max){
 			if(loopType == OF_LOOP_NONE){
-				currentFrame = durationInFrames;
+				currentFrame = durationInFrames*inoutRange.max;
 				stop();
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
-				playbackStartFrame += getDurationInFrames();
-				currentFrame %= durationInFrames;
+				playbackStartFrame += getDurationInFrames() * inoutRange.span();
+				currentFrame %= int(durationInFrames * inoutRange.span());
+				currentFrame += durationInFrames*inoutRange.min;
 				ofxTLPlaybackEventArgs args = createPlaybackEvent();
 				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
 			}
@@ -544,14 +619,14 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 	}
 	else{
 		currentTime = ofGetElapsedTimef() - playbackStartTime;
-		if(currentTime >= durationInSeconds){
+		if(currentTime >= durationInSeconds*inoutRange.max){
 			if(loopType == OF_LOOP_NONE){
-				currentTime = durationInSeconds;
+				currentTime = durationInSeconds*inoutRange.max;
 				stop();
 			}
 			else if(loopType == OF_LOOP_NORMAL) {
-				currentTime = fmod(currentTime, durationInSeconds);
-				playbackStartTime += getDurationInSeconds();
+				currentTime = durationInSeconds*inoutRange.min + fmod(currentTime, durationInSeconds*inoutRange.span());
+				playbackStartTime += getDurationInSeconds()*inoutRange.span();
 				ofxTLPlaybackEventArgs args = createPlaybackEvent();
 				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
 			}

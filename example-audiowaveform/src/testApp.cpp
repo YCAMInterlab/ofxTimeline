@@ -27,7 +27,15 @@ void testApp::setup(){
 	
 	timeline.setSnapping(true);
 	timeline.enableSnapToBPM(120.f);
-	//	timeline.enableDrawBPMGrid(true);
+	timeline.enableDrawBPMGrid(true);
+	
+	
+	waveform.setup();
+//	waveform.loadSoundfile("wave120bpm.wav");
+	waveform.loadSoundfile("4chan.wav");
+//	waveform.loadSoundfile("gunshot.wav");
+	timeline.addElement("Track", &waveform);
+	timeline.addTriggers("Colors", "color_triggers.xml");
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 }
