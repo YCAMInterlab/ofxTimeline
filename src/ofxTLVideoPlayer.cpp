@@ -143,7 +143,7 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 	int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
 	int minPixelIndex = -(zoomBounds.min * totalPixels);
 
-	//cout << "bounds are " << bounds.width << " " << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
+	//cout << "bounds are " << bounds.width << " "f  << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
 	
 	for(int i = 0; i < videoThumbs.size(); i++){
 		if(i % frameStep == 0){

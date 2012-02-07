@@ -35,6 +35,7 @@ void testApp::setup(){
 	timeline.setMovePlayheadOnPaste(true);
 	
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);	
+	
 }
 
 //--------------------------------------------------------------
