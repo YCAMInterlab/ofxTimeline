@@ -263,9 +263,7 @@ void ofxTLPage::addElement(string elementName, ofxTLElement* element){
 	element->setDrawRect(drawRect);
 	element->setZoomBounds(currentZoomBounds);
 
-
 	elements[elementName] = element;
-
 }
 
 ofxTLElement* ofxTLPage::getElement(string elementName){

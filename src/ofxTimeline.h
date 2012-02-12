@@ -145,6 +145,8 @@ class ofxTimeline {
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
+	virtual ofxTLElement* getElement(string name);
+	
 	//adding elements always adds to the current page
 	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange);
 	virtual float getKeyframeValue(string name); 

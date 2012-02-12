@@ -82,7 +82,7 @@ float ofxTLKeyframer::sampleAt(float percent){
 	
 	//edge cases
 	if(keyframes.size() == 0){
-		return .5;
+		return .0;
 	}
 	
 	if(percent < keyframes[0]->position.x){
@@ -505,7 +505,6 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 				}
 				ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
 				if(dragkey != NULL && timeline->getMovePlayheadOnPaste()){
-					cout << "moving playhead" << endl;
 					timeline->setPercentComplete(dragkey->position.x);
 				}
 				updateKeyframeSort();

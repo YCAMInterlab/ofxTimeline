@@ -37,16 +37,26 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void drawRectChanged();
 
 	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
-	ofVideoPlayer & getPlayer();
+	ofVideoPlayer& getPlayer();
 	
 	int getSelectedFrame();
+	int getCurrentFrame();
+
 	float getCurrentTime();
-	void selectFrame(int frame);
+	int selectFrame(int frame); //returns the true selected frame in video
 	void toggleThumbs();
 	
+	void setInFrame(int inFrame);
+	void setOutFrame(int outFrame);
+		
   protected:
 	int selectedFrame;
+	int currentLoop;
 	bool thumbsEnabled;
+	int lastFrame;
+		
+	int inFrame;
+	int outFrame;
 	
 	void calculateFramePositions();
 	void generateVideoThumbnails();

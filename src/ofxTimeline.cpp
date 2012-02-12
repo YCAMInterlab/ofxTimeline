@@ -211,6 +211,7 @@ void ofxTimeline::setCurrentFrame(int newFrame){
 	if(!isFrameBased){
 		ofLogWarning("ofxTimeline -- setting current frame on a timebased timline has no effect.");
 	}
+//	cout << "setting frame to " << newFrame << endl;
 	currentFrame = newFrame;
 }
 
@@ -570,9 +571,12 @@ void ofxTimeline::recalculateBoundingRects(){
 	updatePagePositions();
 
 	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
-	totalDrawRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
+	
+	ofRectangle tickerRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
 											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
-	ticker->setTotalDrawRect(totalDrawRect);		
+	ticker->setTotalDrawRect(tickerRect);		
+	
+	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+ZOOMER_HEIGHT - offset.y);
 }
 
 
@@ -772,6 +776,13 @@ float ofxTimeline::getKeyframeValue(string name, int atFrame){
 	return keyframer->getValueAtPercent(1.0*currentFrame/durationInFrames);
 }
 
+ofxTLElement* ofxTimeline::getElement(string name){
+	if(elementNameToPage.find(name) == elementNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		return NULL;
+	}
+	return elementNameToPage[name]->getElement(name);
+}
 
 ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 	ofxTLSwitcher* newSwitcher = new ofxTLSwitcher();

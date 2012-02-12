@@ -91,7 +91,6 @@ void ofxTLTicker::draw(){
 		float durationInview = endTime-startTime;
 		float secondsPerPixel = durationInview / bounds.width;
 		
-
 		//draw ticker marks
 		ofSetLineWidth(1);
 		ofSetColor(200, 180, 40);
