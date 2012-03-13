@@ -250,7 +250,7 @@ int ofxTLVideoPlayer::selectFrame(int frame){
 	currentLoop = frame / (outFrame-inFrame);
 	player->setFrame(selectedFrame);
 	
-	cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
+	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;
 }
 
