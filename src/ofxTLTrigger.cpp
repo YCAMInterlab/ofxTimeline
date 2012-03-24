@@ -238,11 +238,11 @@ void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
 }
 
 string ofxTLTrigger::copyRequest(){
-	
+	return "";	
 }
 
 string ofxTLTrigger::cutRequest(){
-	
+	return "";	
 }
 
 void ofxTLTrigger::pasteSent(string pasteboard){
