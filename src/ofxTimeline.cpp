@@ -168,7 +168,7 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 
 void ofxTimeline::play(){
 	if(!isPlaying){
-		ofAddListener(ofEvents.update, this, &ofxTimeline::update);
+		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		isPlaying = true;
 		if (isFrameBased) {
 			playbackStartFrame = ofGetFrameNum() - currentFrame;
@@ -184,7 +184,7 @@ void ofxTimeline::play(){
 void ofxTimeline::stop(){
 	if(isPlaying){
 		isPlaying = false;
-		ofRemoveListener(ofEvents.update, this, &ofxTimeline::update);
+		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
 	}
@@ -446,13 +446,13 @@ void ofxTimeline::enableDrawBPMGrid(bool enableGrid){
 #pragma mark EVENTS
 void ofxTimeline::enableEvents() {
 	if (!usingEvents) {
-		ofAddListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-		ofAddListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-		ofAddListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-		ofAddListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		ofAddListener(ofEvents().mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofAddListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
+		ofAddListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofAddListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
-		ofAddListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-		ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		ofAddListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofAddListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = true;
 	}
@@ -460,13 +460,13 @@ void ofxTimeline::enableEvents() {
 
 void ofxTimeline::disableEvents() {
 	if (usingEvents) {
-		ofRemoveListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-		ofRemoveListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-		ofRemoveListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-		ofRemoveListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		ofRemoveListener(ofEvents().mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofRemoveListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
+		ofRemoveListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofRemoveListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
-		ofRemoveListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-		ofRemoveListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		ofRemoveListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = false;
 	}

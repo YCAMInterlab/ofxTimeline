@@ -225,11 +225,11 @@ void ofxTLTrigger::update(ofEventArgs& args){
 
 void ofxTLTrigger::playbackStarted(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = timeline->getPercentComplete();
-	ofAddListener(ofEvents.update, this, &ofxTLTrigger::update);
+	ofAddListener(ofEvents().update, this, &ofxTLTrigger::update);
 }
 
 void ofxTLTrigger::playbackEnded(ofxTLPlaybackEventArgs& args){
-	ofRemoveListener(ofEvents.update, this, &ofxTLTrigger::update);
+	ofRemoveListener(ofEvents().update, this, &ofxTLTrigger::update);
 }
 
 void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
