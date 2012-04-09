@@ -20,9 +20,10 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	
 	void setup();
 	void draw();
-	
+    
 	vector<ofxTLVideoThumb> videoThumbs;
-
+    
+	virtual void update(ofEventArgs& args);
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);

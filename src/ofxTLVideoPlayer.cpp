@@ -24,28 +24,28 @@ ofxTLVideoPlayer::~ofxTLVideoPlayer(){
 
 void ofxTLVideoPlayer::setup(){
 	enable();
+    ofAddListener(ofEvents().update, this, &ofxTLVideoPlayer::update);
 }
 
-void ofxTLVideoPlayer::draw(){
-	
+void ofxTLVideoPlayer::update(ofEventArgs& args){
 	if(player == NULL){
 		return;
 	}
 	
-	if(player->isPlaying() && player->getSpeed() > 0.0){
+   	if(player->isPlaying() && player->getSpeed() > 0.0){
 		
-//		cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
+        //		cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
 		if(timeline->getIsFrameBased()){
-
+            
 			if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
-//				cout << "reset in frame from " << player->getCurrentFrame() << endl;
+                //				cout << "reset in frame from " << player->getCurrentFrame() << endl;
 				player->setFrame(inFrame);
-//				cout << "	to: " << player->getCurrentFrame() << endl;
+                //				cout << "	to: " << player->getCurrentFrame() << endl;
 			}
 			
 			if(lastFrame > player->getCurrentFrame()){
 				currentLoop++;
-//				cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
+                //				cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
 			}
 			
 			if(timeline->getOutFrame() < getCurrentFrame() || timeline->getInFrame() > getCurrentFrame() ){				
@@ -57,7 +57,7 @@ void ofxTLVideoPlayer::draw(){
 					selectFrame(timeline->getInFrame());
 				}
 			}
-						
+            
 			timeline->setCurrentFrame(getCurrentFrame());
 			lastFrame = player->getCurrentFrame();
 		}
@@ -67,6 +67,14 @@ void ofxTLVideoPlayer::draw(){
 			}
 			timeline->setCurrentTime( player->getPosition() * player->getDuration());
 		}
+	}
+    
+}
+
+void ofxTLVideoPlayer::draw(){
+	
+	if(player == NULL){
+		return;
 	}
 	
 //	cout << "in out is " << inFrame << " " << outFrame << endl;

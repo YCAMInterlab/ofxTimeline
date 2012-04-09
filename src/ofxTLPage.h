@@ -68,7 +68,10 @@ class ofxTLPage {
 	virtual void addElement(string name, ofxTLElement* element);
 	virtual ofxTLElement* getElement(string name);
 	virtual void removeElement(string name);
-	
+    
+    //given a folder the page will look for xml files to load within that
+	virtual void loadElementsFromFolder(string folderPath);
+    
 	virtual void setSnapping(bool snapping);
 	virtual void enableSnapToOtherElements(bool snapToOthes);
 	virtual void mousePressed(ofMouseEventArgs& args);

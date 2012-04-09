@@ -248,16 +248,15 @@ void ofxTLKeyframer::drawModalContent(){
 
 void ofxTLKeyframer::load(){
 	ofxXmlSettings savedkeyframes;
-	
+    clear();
+
 	cout << "Loading keyframe file " << xmlFileName << endl;
 	
 	if(!savedkeyframes.loadFile(xmlFileName)){
 		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- couldn't load xml file " + xmlFileName);
-		reset();
 		return;
 	}
 	
-	clear();
 	createKeyframesFromXML(savedkeyframes, keyframes);
 	updateKeyframeSort();
 }

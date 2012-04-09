@@ -117,6 +117,12 @@ void ofxTimeline::setup(){
 	
 }
 
+void ofxTimeline::loadElementsFromFolder(string folderPath){
+    for(int i = 0; i < pages.size(); i++){
+        pages[i]->loadElementsFromFolder(folderPath);
+    }
+}
+
 #pragma mark CONFIGURATION
 void ofxTimeline::show(){
 	isShowing = true;
@@ -257,6 +263,7 @@ float ofxTimeline::getPercentComplete(){
 		return currentTime / durationInSeconds;
 	}
 }
+
 
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = percent;

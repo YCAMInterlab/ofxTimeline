@@ -63,6 +63,9 @@ class ofxTLElement
 	
 	virtual void setZoomBounds(ofRange zoomBoundsPercent); //allows you to zoom in!
 	
+    virtual string getXMLFilePath();
+    virtual string getXMLFileName();
+    
 	virtual void setXMLFileName(string filename);
 	virtual void setAutosave(bool autosave);
 	
