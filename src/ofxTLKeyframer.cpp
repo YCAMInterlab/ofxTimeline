@@ -367,9 +367,13 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	if(!focused){
 		focused = clickIsInRect;
 		if(!focused){
-//			selectedKeyframes.clear();
 			drawingEasingWindow = false;
 		}
+        else{
+            if(keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex) == NULL){
+                timeline->unselectAll();
+            }
+        }
 		return;
 	}
 	
@@ -378,11 +382,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		//this let's us select keyframes across multiple keyframers
 		if(!ofGetModifierKeyShift()){
 			focused = false;
-//			selectedKeyframes.clear();
 		}
-//		else{
-			
-//		}
 		drawingEasingWindow = false;
 		return;
 	}
