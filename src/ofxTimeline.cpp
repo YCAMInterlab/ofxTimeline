@@ -171,6 +171,17 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	args.currentPercent = getPercentComplete();
 	return args;
 }
+//internal elements call this when the value has changed
+void ofxTimeline::flagUserChangedValue(){
+	userChangedValue = true;
+}
+
+//this returns and clears the flag, generally call once per frame
+bool ofxTimeline::getUserChangedValue(){
+	bool hasChanged = userChangedValue;
+    userChangedValue = false;
+    return hasChanged;
+}
 
 void ofxTimeline::play(){
 	if(!isPlaying){

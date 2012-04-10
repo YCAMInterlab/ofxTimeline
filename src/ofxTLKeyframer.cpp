@@ -258,6 +258,7 @@ void ofxTLKeyframer::load(){
 	}
 	
 	createKeyframesFromXML(savedkeyframes, keyframes);
+    timeline->flagUserChangedValue();
 	updateKeyframeSort();
 }
 
@@ -406,6 +407,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 				selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
 				keyframes.push_back(selectedKeyframe);
 				selectedKeyframe->grabOffset = ofVec2f(0,0);
+                timeline->flagUserChangedValue();
 				updateKeyframeSort();
 				//find bounds
 				for(int i = 0; i < keyframes.size(); i++){
@@ -466,7 +468,7 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(!enabled) return;
 	
-//	if(focused){
+
 		if(drawingSelectRect){
 			selectRect = ofRectangle(selectRectStartPoint.x, selectRectStartPoint.y, 
 									 args.x-selectRectStartPoint.x, args.y-selectRectStartPoint.y);
@@ -480,8 +482,6 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 			}
 			
 			//somehow get it to stop going above
-//			selectRect.x = MAX(bounds.x, selectRect.x);
-//			selectRect.y = MAX(bounds.y, selectRect.y);
 			selectRect.width = MIN(selectRect.width, bounds.x+bounds.width-selectRect.x);
 			selectRect.height = MIN(selectRect.height, bounds.y+bounds.height-selectRect.y);
 			
@@ -503,9 +503,10 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 					selectedKeyframes[k]->position = newposition;
 				}
 				ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
-				if(dragkey != NULL && timeline->getMovePlayheadOnPaste()){
+				if(dragkey != NULL && timeline->getMovePlayheadOnDrag()){
 					timeline->setPercentComplete(dragkey->position.x);
 				}
+                timeline->flagUserChangedValue();
 				updateKeyframeSort();
 			}
 		}
@@ -618,6 +619,7 @@ void ofxTLKeyframer::nudgeBy(ofVec2f nudgePercent){
 		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudgePercent.y, 0, 1.0);
 	}
 	
+    timeline->flagUserChangedValue();
 	updateKeyframeSort();
 	
 	if(autosave){
@@ -635,7 +637,8 @@ void ofxTLKeyframer::deleteSelectedKeyframes(){
 	}
 	
 	selectedKeyframes.clear();
-	
+    
+    timeline->flagUserChangedValue();
 	updateKeyframeSort();
 	if(autosave){
 		save();

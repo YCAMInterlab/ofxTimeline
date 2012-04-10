@@ -79,6 +79,9 @@ class ofxTimeline {
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
 	
+    virtual void flagUserChangedValue(); //internal elements call this when the value has changed
+    virtual bool getUserChangedValue(); //this returns and clears the flag, generally call once per frame
+    
 	virtual void play();
 	virtual void stop();
 	virtual bool togglePlay();
@@ -252,7 +255,8 @@ class ofxTimeline {
 	bool isEnabled; //allows for editing
 	bool isShowing; //allows for viewing
 	bool isPlaying; //moves playhead along
-	
+	bool userChangedValue; //did value change this frame;
+    
 	int currentFrame;
 	float currentTime;
 	
