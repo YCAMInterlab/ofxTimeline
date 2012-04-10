@@ -851,28 +851,35 @@ ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
 }
 
 string ofxTimeline::getNextTrigger(string name){
+	return "";
 }
 
 string ofxTimeline::getNextTrigger(string name, float atTime){
+	return "";
 }
 
 string ofxTimeline::getNextTrigger(string name, int atFrame){
+	return "";
 }
 
 string ofxTimeline::getLastTrigger(string name){
+	return "";
 }
 
 string ofxTimeline::getLastTrigger(string name, float atTime){
+	return "";
 }
 
 string ofxTimeline::getLastTrigger(string name, int atFrame){
+	return "";
 }
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name){
 	ofFileDialogResult result = ofSystemLoadDialog("Load Sequence", true);
 	if(result.bSuccess && ofDirectory::doesDirectoryExist(result.filePath, false)){
-		addImageSequence(name, result.getPath());
+		return addImageSequence(name, result.getPath());
 	}
+	return NULL;
 }
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory){
@@ -884,12 +891,15 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory)
 }
 
 ofImage* ofxTimeline::getImage(string name){
+	return NULL;
 }
 
 ofImage* ofxTimeline::getImage(string name, float atTime){
+	return NULL;
 }
 
 ofImage* ofxTimeline::getImage(string name, int atFrame){
+	return NULL;
 }
 
 string ofxTimeline::formatTime(float time){

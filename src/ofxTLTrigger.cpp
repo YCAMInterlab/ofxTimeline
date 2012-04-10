@@ -36,7 +36,7 @@
  */
 
 #include "ofxTLTrigger.h"
-#include "ofxTimeline.h";
+#include "ofxTimeline.h"
 
 bool triggersort(Trigger a, Trigger b){
 	return a.pt < b.pt;
@@ -238,11 +238,11 @@ void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
 }
 
 string ofxTLTrigger::copyRequest(){
-	
+	return "";	
 }
 
 string ofxTLTrigger::cutRequest(){
-	
+	return "";	
 }
 
 void ofxTLTrigger::pasteSent(string pasteboard){

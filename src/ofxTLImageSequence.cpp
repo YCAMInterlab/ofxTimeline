@@ -147,7 +147,7 @@ float ofxTLImageSequence::getThumbHeight(){
 }
 
 ofImage* ofxTLImageSequence::getImageAtTime(float time){
-	return getImageAtTime(time*frames.size()-1);
+	return getImageAtFrame(time*frames.size()-1);
 }
 
 ofImage* ofxTLImageSequence::getImageAtFrame(int frame){
