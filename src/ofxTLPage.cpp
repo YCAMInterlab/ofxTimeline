@@ -73,7 +73,7 @@ void ofxTLPage::setup(){
 	ofAddListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
 	headerHeight = 20;
-	defaultElementHeight = 200;
+	defaultElementHeight = 50;
 	loadElementPositions(); //name must be set
 }
 
@@ -144,10 +144,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 			}
 			
 			if(closestSnapDistance < snappingTolerance){
-//				cout << "x was " << args.x << endl;
 				args.x = snapPoints[closestSnapPoint] + dragAnchor;
-//				cout << "is " << args.x << endl;
-//				cout << "x was " << args.x << " drag anchor is " << dragAnchor << " to snap point " << snapPoints[closestSnapPoint] << endl;
 				snapPercent = snapPoints[closestSnapPoint];
 				snapped = true;
 			}
