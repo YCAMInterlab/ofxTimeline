@@ -59,6 +59,9 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	int inFrame;
 	int outFrame;
 	
+    float thumbnailUpdatedWidth;
+    float thumbnailUpdatedHeight;
+    
 	void calculateFramePositions();
 	void generateVideoThumbnails();
 	void generateThumbnailForFrame(int index);

@@ -153,7 +153,7 @@ class ofxTimeline {
 	virtual ofxTLElement* getElement(string name);
 	
 	//adding elements always adds to the current page
-	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange);
+	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);

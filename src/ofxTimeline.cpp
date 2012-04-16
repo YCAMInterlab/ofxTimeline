@@ -747,11 +747,11 @@ void ofxTimeline::addElement(string name, ofxTLElement* element){
 
 }
 
-ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
+ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
 
 	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
 	newKeyframer->setCreatedByTimeline(true);
-	newKeyframer->setValueRange(valueRange);
+	newKeyframer->setValueRange(valueRange, defaultValue);
 	newKeyframer->setXMLFileName(xmlFileName);
 	addElement(name, newKeyframer);
 	

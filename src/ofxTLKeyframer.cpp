@@ -68,8 +68,9 @@ void ofxTLKeyframer::setup(){
 	load();
 }
 
-void ofxTLKeyframer::setValueRange(ofRange range){
+void ofxTLKeyframer::setValueRange(ofRange range, float newDefaultValue){
 	valueRange = range;
+    defaultValue = newDefaultValue;
 }
 
 //main function to get values out of the timeline, operates on the given value range
@@ -82,7 +83,7 @@ float ofxTLKeyframer::sampleAt(float percent){
 	
 	//edge cases
 	if(keyframes.size() == 0){
-		return .0;
+		return defaultValue;
 	}
 	
 	if(percent < keyframes[0]->position.x){
@@ -102,7 +103,7 @@ float ofxTLKeyframer::sampleAt(float percent){
 	}
 	
 	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(percent, 4));
-	return 0;
+	return defaultValue;
 }
 
 

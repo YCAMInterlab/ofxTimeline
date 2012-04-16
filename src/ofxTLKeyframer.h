@@ -78,7 +78,7 @@ class ofxTLKeyframer : public ofxTLElement
 	virtual void draw();
 	virtual void drawModalContent(); //for pop up window-ish stuff
 
-	virtual void setValueRange(ofRange range);
+	virtual void setValueRange(ofRange range, float defaultValue = 0);
 	//main function to get values out of the timeline, operates on the given value range
 	virtual float getValueAtPercent(float percent);
 	
@@ -116,7 +116,8 @@ class ofxTLKeyframer : public ofxTLElement
 	vector<ofxTLKeyframe*> keyframes;
 	
 	ofRange valueRange;
-	
+	float defaultValue;
+    
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
 

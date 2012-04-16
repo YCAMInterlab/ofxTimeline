@@ -103,10 +103,10 @@ void ofxTLPageTabs::selectPage(string name){
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i].name == name){
 			selectPage(i);
+            return;
 		}
 	}
 	ofLogError("ofxTLPageTabs -- Selecting page " + name + " not found");
-
 }
 
 void ofxTLPageTabs::keyPressed(ofKeyEventArgs& args){

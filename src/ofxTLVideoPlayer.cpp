@@ -16,6 +16,9 @@ ofxTLVideoPlayer::ofxTLVideoPlayer() {
 	currentLoop = 0;
 	inFrame = -1;
 	outFrame = -1;
+    thumbnailUpdatedWidth = -1;
+    thumbnailUpdatedHeight = -1;
+
 }
 
 ofxTLVideoPlayer::~ofxTLVideoPlayer(){
@@ -82,6 +85,11 @@ void ofxTLVideoPlayer::draw(){
 	ofPushStyle();
 	
 	if(thumbsEnabled && getDrawRect().height > 10){
+        
+        if(!ofGetMousePressed() && (thumbnailUpdatedWidth != getDrawRect().width || thumbnailUpdatedHeight != getDrawRect().height) ) {
+        	generateVideoThumbnails();	
+        }
+        
 		ofSetColor(255);
 		for(int i = 0; i < videoThumbs.size(); i++){
 			if(videoThumbs[i].visible){
@@ -97,6 +105,7 @@ void ofxTLVideoPlayer::draw(){
 					ofSetColor(0);
 					ofRect(videoThumbs[i].displayRect);
 				}
+                
 				ofNoFill();
 				ofSetColor(255, 150, 0);
 				ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
@@ -108,7 +117,8 @@ void ofxTLVideoPlayer::draw(){
 	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofSetColor(0, 125, 255);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
+	ofDrawBitmapString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+30);
+	ofDrawBitmapString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+48);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);
@@ -263,6 +273,8 @@ int ofxTLVideoPlayer::selectFrame(int frame){
 }
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){
+    thumbnailUpdatedWidth  = getDrawRect().width;
+    thumbnailUpdatedHeight = getDrawRect().height;
 	for(int i = 0; i < videoThumbs.size(); i++){
 		generateThumbnailForFrame(i);
 	}
@@ -294,7 +306,7 @@ int ofxTLVideoPlayer::getCurrentFrame(){
 }
 
 float ofxTLVideoPlayer::getCurrentTime(){
-	return player->getPosition()*player->getDuration();
+	return player->getPosition() * player->getDuration();
 }
 
 int ofxTLVideoPlayer::getSelectedFrame(){
