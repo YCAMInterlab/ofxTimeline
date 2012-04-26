@@ -73,7 +73,7 @@ void ofxTLPage::setup(){
 	ofAddListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
 	headerHeight = 20;
-	defaultElementHeight = 200;
+	defaultElementHeight = 75;
 	loadElementPositions(); //name must be set
 }
 
