@@ -83,7 +83,7 @@ float ofxTLKeyframer::sampleAt(float percent){
 	
 	//edge cases
 	if(keyframes.size() == 0){
-		return defaultValue;
+		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
 	}
 	
 	if(percent < keyframes[0]->position.x){
@@ -302,7 +302,7 @@ void ofxTLKeyframer::reset(){
 
 void ofxTLKeyframer::save(){
 	
-	cout << "Saving keyframe file " << xmlFileName << endl;
+//	cout << "Saving keyframe file " << xmlFileName << endl;
 
 	string xmlRep = getXMLStringForKeyframes(keyframes);
 	ofxXmlSettings savedkeyframes;

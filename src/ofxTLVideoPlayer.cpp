@@ -206,6 +206,10 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 		return;
 	}
 	
+    if(bounds.height < 10){
+        return;
+    }
+    
 	int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
 	int totalPixels = int( bounds.width / zoomBounds.span() );
 	int framesToShow = MAX(totalPixels / frameWidth, 1);
@@ -267,7 +271,7 @@ int ofxTLVideoPlayer::selectFrame(int frame){
 	lastFrame = selectedFrame;
 	currentLoop = frame / (outFrame-inFrame);
 	player->setFrame(selectedFrame);
-	
+	timeline->flagUserChangedValue();
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;
 }

@@ -365,11 +365,19 @@ void ofxTimeline::disable(){
 }
 
 void ofxTimeline::setDurationInFrames(int frames){
+    if(frames < 1){
+    	ofLogError("ofxTimeline -- Must set a positive number of frames");
+        return;
+    }
 	durationInFrames = frames;
 	isFrameBased = true;
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
+    if(seconds <= 0.){
+    	ofLogError("ofxTimeline -- Must set a positive time of frames");
+        return;
+    }
 	durationInSeconds = seconds;
 	isFrameBased = false;
 }
@@ -630,7 +638,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 				currentFrame = durationInFrames*inoutRange.max;
 				stop();
 			}
-			else if(loopType == OF_LOOP_NORMAL) {
+			else if(loopType == OF_LOOP_NORMAL && durationInFrames > 0) {
 				playbackStartFrame += getDurationInFrames() * inoutRange.span();
 				currentFrame %= int(durationInFrames * inoutRange.span());
 				currentFrame += durationInFrames*inoutRange.min;
