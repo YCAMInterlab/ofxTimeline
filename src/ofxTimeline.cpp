@@ -60,7 +60,7 @@ ofxTimeline::ofxTimeline()
 	isPlaying(false),
 	snappingEnabled(false),
 	movePlayheadOnPaste(true),
-	movePlayheadOnDrag(true),
+	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL)
 {
@@ -362,6 +362,13 @@ void ofxTimeline::enable(){
 void ofxTimeline::disable(){
 	isEnabled = false;
 	disableEvents();
+}
+
+//clears every element
+void ofxTimeline::reset(){
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->reset();
+    }
 }
 
 void ofxTimeline::setDurationInFrames(int frames){

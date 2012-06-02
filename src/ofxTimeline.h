@@ -65,6 +65,8 @@ class ofxTimeline {
 	virtual void disable();
 	virtual bool toggleEnabled();
 
+    virtual void reset(); //clears every element
+    
     virtual void loadElementsFromFolder(string folderPath);
     
 	virtual void show();

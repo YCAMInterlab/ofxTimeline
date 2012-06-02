@@ -62,7 +62,8 @@ class ofxTLPage {
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual void unselectAll();
-		
+    virtual void reset();
+    
 	virtual float getComputedHeight();	
 	
 	virtual void addElement(string name, ofxTLElement* element);
