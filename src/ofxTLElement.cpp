@@ -131,6 +131,14 @@ void ofxTLElement::setXMLFileName(string filename){
 	xmlFileName = filename;
 }
 
+string ofxTLElement::getXMLFilePath(){
+	return xmlFileName;	
+}
+
+string ofxTLElement::getXMLFileName(){
+	return ofFilePath::getFileName(xmlFileName);
+}
+
 void ofxTLElement::setAutosave(bool _autosave){
 	autosave = _autosave;
 }

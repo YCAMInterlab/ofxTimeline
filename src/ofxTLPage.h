@@ -62,13 +62,17 @@ class ofxTLPage {
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual void unselectAll();
-		
+    virtual void reset();
+    
 	virtual float getComputedHeight();	
 	
 	virtual void addElement(string name, ofxTLElement* element);
 	virtual ofxTLElement* getElement(string name);
 	virtual void removeElement(string name);
-	
+    
+    //given a folder the page will look for xml files to load within that
+	virtual void loadElementsFromFolder(string folderPath);
+    
 	virtual void setSnapping(bool snapping);
 	virtual void enableSnapToOtherElements(bool snapToOthes);
 	virtual void mousePressed(ofMouseEventArgs& args);

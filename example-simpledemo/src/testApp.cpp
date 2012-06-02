@@ -26,6 +26,7 @@ void testApp::setup(){
 	timeline.getColors().loadColors("defaultColors.xml");
 
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
+
 }
 
 //--------------------------------------------------------------

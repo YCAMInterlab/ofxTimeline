@@ -60,7 +60,7 @@ ofxTimeline::ofxTimeline()
 	isPlaying(false),
 	snappingEnabled(false),
 	movePlayheadOnPaste(true),
-	movePlayheadOnDrag(true),
+	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL)
 {
@@ -117,6 +117,12 @@ void ofxTimeline::setup(){
 	
 }
 
+void ofxTimeline::loadElementsFromFolder(string folderPath){
+    for(int i = 0; i < pages.size(); i++){
+        pages[i]->loadElementsFromFolder(folderPath);
+    }
+}
+
 #pragma mark CONFIGURATION
 void ofxTimeline::show(){
 	isShowing = true;
@@ -165,10 +171,21 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	args.currentPercent = getPercentComplete();
 	return args;
 }
+//internal elements call this when the value has changed
+void ofxTimeline::flagUserChangedValue(){
+	userChangedValue = true;
+}
+
+//this returns and clears the flag, generally call once per frame
+bool ofxTimeline::getUserChangedValue(){
+	bool hasChanged = userChangedValue;
+    userChangedValue = false;
+    return hasChanged;
+}
 
 void ofxTimeline::play(){
 	if(!isPlaying){
-		ofAddListener(ofEvents.update, this, &ofxTimeline::update);
+		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		isPlaying = true;
 		if (isFrameBased) {
 			playbackStartFrame = ofGetFrameNum() - currentFrame;
@@ -184,7 +201,7 @@ void ofxTimeline::play(){
 void ofxTimeline::stop(){
 	if(isPlaying){
 		isPlaying = false;
-		ofRemoveListener(ofEvents.update, this, &ofxTimeline::update);
+		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
 	}
@@ -257,6 +274,7 @@ float ofxTimeline::getPercentComplete(){
 		return currentTime / durationInSeconds;
 	}
 }
+
 
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = percent;
@@ -346,12 +364,27 @@ void ofxTimeline::disable(){
 	disableEvents();
 }
 
+//clears every element
+void ofxTimeline::reset(){
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->reset();
+    }
+}
+
 void ofxTimeline::setDurationInFrames(int frames){
+    if(frames < 1){
+    	ofLogError("ofxTimeline -- Must set a positive number of frames");
+        return;
+    }
 	durationInFrames = frames;
 	isFrameBased = true;
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
+    if(seconds <= 0.){
+    	ofLogError("ofxTimeline -- Must set a positive time of frames");
+        return;
+    }
 	durationInSeconds = seconds;
 	isFrameBased = false;
 }
@@ -446,13 +479,13 @@ void ofxTimeline::enableDrawBPMGrid(bool enableGrid){
 #pragma mark EVENTS
 void ofxTimeline::enableEvents() {
 	if (!usingEvents) {
-		ofAddListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-		ofAddListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-		ofAddListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-		ofAddListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		ofAddListener(ofEvents().mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofAddListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
+		ofAddListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofAddListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
-		ofAddListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-		ofAddListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		ofAddListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofAddListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = true;
 	}
@@ -460,13 +493,13 @@ void ofxTimeline::enableEvents() {
 
 void ofxTimeline::disableEvents() {
 	if (usingEvents) {
-		ofRemoveListener(ofEvents.mouseMoved, this, &ofxTimeline::mouseMoved);
-		ofRemoveListener(ofEvents.mousePressed, this, &ofxTimeline::mousePressed);
-		ofRemoveListener(ofEvents.mouseReleased, this, &ofxTimeline::mouseReleased);
-		ofRemoveListener(ofEvents.mouseDragged, this, &ofxTimeline::mouseDragged);
+		ofRemoveListener(ofEvents().mouseMoved, this, &ofxTimeline::mouseMoved);
+		ofRemoveListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
+		ofRemoveListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
+		ofRemoveListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
-		ofRemoveListener(ofEvents.keyPressed, this, &ofxTimeline::keyPressed);
-		ofRemoveListener(ofEvents.windowResized, this, &ofxTimeline::windowResized);
+		ofRemoveListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = false;
 	}
@@ -612,7 +645,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 				currentFrame = durationInFrames*inoutRange.max;
 				stop();
 			}
-			else if(loopType == OF_LOOP_NORMAL) {
+			else if(loopType == OF_LOOP_NORMAL && durationInFrames > 0) {
 				playbackStartFrame += getDurationInFrames() * inoutRange.span();
 				currentFrame %= int(durationInFrames * inoutRange.span());
 				currentFrame += durationInFrames*inoutRange.min;
@@ -729,11 +762,11 @@ void ofxTimeline::addElement(string name, ofxTLElement* element){
 
 }
 
-ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange){
+ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
 
 	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
 	newKeyframer->setCreatedByTimeline(true);
-	newKeyframer->setValueRange(valueRange);
+	newKeyframer->setValueRange(valueRange, defaultValue);
 	newKeyframer->setXMLFileName(xmlFileName);
 	addElement(name, newKeyframer);
 	

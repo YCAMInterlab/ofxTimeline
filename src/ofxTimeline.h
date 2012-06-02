@@ -65,6 +65,10 @@ class ofxTimeline {
 	virtual void disable();
 	virtual bool toggleEnabled();
 
+    virtual void reset(); //clears every element
+    
+    virtual void loadElementsFromFolder(string folderPath);
+    
 	virtual void show();
 	virtual void hide();
 	virtual bool toggleShow();
@@ -77,6 +81,9 @@ class ofxTimeline {
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
 	
+    virtual void flagUserChangedValue(); //internal elements call this when the value has changed
+    virtual bool getUserChangedValue(); //this returns and clears the flag, generally call once per frame
+    
 	virtual void play();
 	virtual void stop();
 	virtual bool togglePlay();
@@ -148,7 +155,7 @@ class ofxTimeline {
 	virtual ofxTLElement* getElement(string name);
 	
 	//adding elements always adds to the current page
-	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange);
+	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);
@@ -250,7 +257,8 @@ class ofxTimeline {
 	bool isEnabled; //allows for editing
 	bool isShowing; //allows for viewing
 	bool isPlaying; //moves playhead along
-	
+	bool userChangedValue; //did value change this frame;
+    
 	int currentFrame;
 	float currentTime;
 	

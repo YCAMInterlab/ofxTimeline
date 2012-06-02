@@ -16,6 +16,9 @@ ofxTLVideoPlayer::ofxTLVideoPlayer() {
 	currentLoop = 0;
 	inFrame = -1;
 	outFrame = -1;
+    thumbnailUpdatedWidth = -1;
+    thumbnailUpdatedHeight = -1;
+
 }
 
 ofxTLVideoPlayer::~ofxTLVideoPlayer(){
@@ -24,28 +27,28 @@ ofxTLVideoPlayer::~ofxTLVideoPlayer(){
 
 void ofxTLVideoPlayer::setup(){
 	enable();
+    ofAddListener(ofEvents().update, this, &ofxTLVideoPlayer::update);
 }
 
-void ofxTLVideoPlayer::draw(){
-	
+void ofxTLVideoPlayer::update(ofEventArgs& args){
 	if(player == NULL){
 		return;
 	}
 	
-	if(player->isPlaying() && player->getSpeed() > 0.0){
+   	if(player->isPlaying() && player->getSpeed() > 0.0){
 		
-//		cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
+        //		cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
 		if(timeline->getIsFrameBased()){
-
+            
 			if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
-//				cout << "reset in frame from " << player->getCurrentFrame() << endl;
+                //				cout << "reset in frame from " << player->getCurrentFrame() << endl;
 				player->setFrame(inFrame);
-//				cout << "	to: " << player->getCurrentFrame() << endl;
+                //				cout << "	to: " << player->getCurrentFrame() << endl;
 			}
 			
 			if(lastFrame > player->getCurrentFrame()){
 				currentLoop++;
-//				cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
+                //				cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
 			}
 			
 			if(timeline->getOutFrame() < getCurrentFrame() || timeline->getInFrame() > getCurrentFrame() ){				
@@ -57,7 +60,7 @@ void ofxTLVideoPlayer::draw(){
 					selectFrame(timeline->getInFrame());
 				}
 			}
-						
+            
 			timeline->setCurrentFrame(getCurrentFrame());
 			lastFrame = player->getCurrentFrame();
 		}
@@ -68,12 +71,25 @@ void ofxTLVideoPlayer::draw(){
 			timeline->setCurrentTime( player->getPosition() * player->getDuration());
 		}
 	}
+    
+}
+
+void ofxTLVideoPlayer::draw(){
+	
+	if(player == NULL){
+		return;
+	}
 	
 //	cout << "in out is " << inFrame << " " << outFrame << endl;
 	
 	ofPushStyle();
 	
 	if(thumbsEnabled && getDrawRect().height > 10){
+        
+        if(!ofGetMousePressed() && (thumbnailUpdatedWidth != getDrawRect().width || thumbnailUpdatedHeight != getDrawRect().height) ) {
+        	generateVideoThumbnails();	
+        }
+        
 		ofSetColor(255);
 		for(int i = 0; i < videoThumbs.size(); i++){
 			if(videoThumbs[i].visible){
@@ -89,6 +105,7 @@ void ofxTLVideoPlayer::draw(){
 					ofSetColor(0);
 					ofRect(videoThumbs[i].displayRect);
 				}
+                
 				ofNoFill();
 				ofSetColor(255, 150, 0);
 				ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
@@ -100,7 +117,8 @@ void ofxTLVideoPlayer::draw(){
 	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofSetColor(0, 125, 255);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	ofDrawBitmapString(ofToString(selectedFrame), selectedFrameX, bounds.y+35);
+	ofDrawBitmapString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+30);
+	ofDrawBitmapString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+48);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);
@@ -188,6 +206,10 @@ void ofxTLVideoPlayer::calculateFramePositions(){
 		return;
 	}
 	
+    if(bounds.height < 10){
+        return;
+    }
+    
 	int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
 	int totalPixels = int( bounds.width / zoomBounds.span() );
 	int framesToShow = MAX(totalPixels / frameWidth, 1);
@@ -250,12 +272,14 @@ int ofxTLVideoPlayer::selectFrame(int frame){
 	currentLoop = frame / (outFrame-inFrame);
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
-
+	timeline->flagUserChangedValue();
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;
 }
 
 void ofxTLVideoPlayer::generateVideoThumbnails(){
+    thumbnailUpdatedWidth  = getDrawRect().width;
+    thumbnailUpdatedHeight = getDrawRect().height;
 	for(int i = 0; i < videoThumbs.size(); i++){
 		generateThumbnailForFrame(i);
 	}
@@ -287,7 +311,7 @@ int ofxTLVideoPlayer::getCurrentFrame(){
 }
 
 float ofxTLVideoPlayer::getCurrentTime(){
-	return player->getPosition()*player->getDuration();
+	return player->getPosition() * player->getDuration();
 }
 
 int ofxTLVideoPlayer::getSelectedFrame(){

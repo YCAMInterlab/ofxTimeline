@@ -77,6 +77,15 @@ void ofxTLPage::setup(){
 	loadElementPositions(); //name must be set
 }
 
+//given a folder the page will look for xml files to load within that
+void ofxTLPage::loadElementsFromFolder(string folderPath){
+    for(int i = 0; i < headers.size(); i++){
+		string filename = folderPath + elements[headers[i]->name]->getXMLFileName();
+        elements[headers[i]->name]->setXMLFileName(filename);
+        elements[headers[i]->name]->load();
+    }
+}
+
 void ofxTLPage::setTicker(ofxTLTicker* t){
 	ticker = t;
 }
@@ -395,6 +404,13 @@ void ofxTLPage::unselectAll(){
 	}	
 }
 
+void ofxTLPage::reset(){
+	for(int i = 0; i < headers.size(); i++){
+		//only paste into where we are hovering
+		elements[headers[i]->name]->reset();
+    }
+}
+
 string ofxTLPage::getName(){
 	return name;
 }
@@ -406,8 +422,6 @@ void ofxTLPage::setAutosave(bool doAutosave){
 void ofxTLPage::setContainer(ofVec2f offset, float width){
 	elementContainerRect.x = offset.x;
 	elementContainerRect.y = offset.y;
-	//containerOffset = offset;
-	//containerWidth = width;
 	elementContainerRect.width = width;
 	recalculateHeight();
 }
