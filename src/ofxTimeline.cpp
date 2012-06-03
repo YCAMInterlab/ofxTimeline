@@ -371,6 +371,12 @@ void ofxTimeline::reset(){
     }
 }
 
+void ofxTimeline::save(){
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->save();
+    }	
+}
+
 void ofxTimeline::setDurationInFrames(int frames){
     if(frames < 1){
     	ofLogError("ofxTimeline -- Must set a positive number of frames");

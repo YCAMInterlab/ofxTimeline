@@ -72,7 +72,8 @@ class ofxTimeline {
 	virtual void show();
 	virtual void hide();
 	virtual bool toggleShow();
-
+	virtual void save();
+    
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTime(float time);
 	virtual void setPercentComplete(float percent);

@@ -411,6 +411,13 @@ void ofxTLPage::reset(){
     }
 }
 
+void ofxTLPage::save(){
+	for(int i = 0; i < headers.size(); i++){
+		//only paste into where we are hovering
+		elements[headers[i]->name]->save();
+    }
+}
+
 string ofxTLPage::getName(){
 	return name;
 }

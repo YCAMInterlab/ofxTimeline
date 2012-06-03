@@ -63,6 +63,7 @@ class ofxTLPage {
 	
 	virtual void unselectAll();
     virtual void reset();
+    virtual void save();
     
 	virtual float getComputedHeight();	
 	
