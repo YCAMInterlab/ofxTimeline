@@ -407,6 +407,13 @@ void ofxTLPage::unselectAll(){
 	}	
 }
 
+void ofxTLPage::reset(){
+	for(int i = 0; i < headers.size(); i++){
+		//only paste into where we are hovering
+		elements[headers[i]->name]->reset();
+    }
+}
+
 string ofxTLPage::getName(){
 	return name;
 }
@@ -418,8 +425,6 @@ void ofxTLPage::setAutosave(bool doAutosave){
 void ofxTLPage::setContainer(ofVec2f offset, float width){
 	elementContainerRect.x = offset.x;
 	elementContainerRect.y = offset.y;
-	//containerOffset = offset;
-	//containerWidth = width;
 	elementContainerRect.width = width;
 	recalculateHeight();
 }

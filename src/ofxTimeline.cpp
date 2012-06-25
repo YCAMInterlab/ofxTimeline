@@ -364,6 +364,13 @@ void ofxTimeline::disable(){
 	disableEvents();
 }
 
+//clears every element
+void ofxTimeline::reset(){
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->reset();
+    }
+}
+
 void ofxTimeline::setDurationInFrames(int frames){
     if(frames < 1){
     	ofLogError("ofxTimeline -- Must set a positive number of frames");
