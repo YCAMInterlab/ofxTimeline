@@ -341,7 +341,7 @@ void ofOpenALSoundPlayer::readFile(string fileName, vector<short> & buffer){
 void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 
 	fileName = ofToDataPath(fileName);
-
+	bLoadedOk = false;
 	bMultiPlay = false;
 	isStreaming = is_stream;
 
@@ -450,7 +450,7 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 			alSourcei (sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
 		}
 	}
-
+	bLoadedOk = true;
 }
 
 //------------------------------------------------------------
@@ -590,6 +590,16 @@ void ofOpenALSoundPlayer::setVolume(float vol){
 }
 
 //------------------------------------------------------------
+float ofOpenALSoundPlayer::getVolume(){
+	return volume;    
+}
+
+//------------------------------------------------------------
+bool ofOpenALSoundPlayer::isLoaded(){
+    return bLoadedOk;
+}
+
+//------------------------------------------------------------
 void ofOpenALSoundPlayer::setPosition(float pct){
 	if(sources.empty()) return;
 #ifdef OF_USING_MPG123
@@ -605,6 +615,13 @@ void ofOpenALSoundPlayer::setPosition(float pct){
 			alSourcef(sources[sources.size()-channels+i],AL_SEC_OFFSET,pct*duration);
 		}
 	}
+}
+
+//------------------------------------------------------------
+void ofOpenALSoundPlayer::setPositionMS(int ms){
+    if(duration == 0) return;
+
+	setPosition( ms / 1000. / duration);
 }
 
 //------------------------------------------------------------
@@ -624,6 +641,27 @@ float ofOpenALSoundPlayer::getPosition(){
 		alGetSourcef(sources[sources.size()-1],AL_SAMPLE_OFFSET,&pos);
 		return channels*(pos/buffer.size());
 	}
+}
+
+//------------------------------------------------------------
+int ofOpenALSoundPlayer::getPositionMS(){
+	if(duration==0) return 0;
+	if(sources.empty()) return 0;
+	int pos;
+#ifdef OF_USING_MPG123
+	if(mp3streamf){
+		pos = 1000 * float(mpg123_tell(mp3streamf)) / float(channels) / float(samplerate);
+	}else
+#endif
+    if(streamf){
+        pos = float(stream_samples_read) / float(channels) / float(samplerate);
+        return pos * 1000;
+    }else{
+        float sampleOffset;
+        alGetSourcef(sources[sources.size()-1],AL_SAMPLE_OFFSET,&sampleOffset);
+        return 1000 * duration * channels * (sampleOffset/buffer.size());
+    }
+    return pos;
 }
 
 //------------------------------------------------------------
@@ -687,9 +725,9 @@ void ofOpenALSoundPlayer::setMultiPlay(bool bMp){
 	bMultiPlay = bMp;		// be careful with this...
 	if(sources.empty()) return;
 	if(bMultiPlay){
-		ofAddListener(ofEvents.update,this,&ofOpenALSoundPlayer::update);
+		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
 	}else{
-		ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer::update);
+		ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
 	}
 }
 
@@ -727,7 +765,7 @@ void ofOpenALSoundPlayer::play(){
 	alSourcePlayv(channels,&sources[sources.size()-channels]);
 
 	if(bMultiPlay){
-		ofAddListener(ofEvents.update,this,&ofOpenALSoundPlayer::update);
+		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
 	}
 	if(isStreaming){
 		setPosition(0);

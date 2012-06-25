@@ -180,7 +180,7 @@ void ofxTLAudioWaveform::play(){
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
 
 		player.play();
-		ofAddListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		ofAddListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackStarted, args);		
@@ -190,7 +190,7 @@ void ofxTLAudioWaveform::play(){
 void ofxTLAudioWaveform::stop(){
 	if(player.getIsPlaying()){
 		player.setPaused(true);
-		ofRemoveListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		ofRemoveListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackEnded, args);

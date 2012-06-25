@@ -26,6 +26,5 @@ class testApp : public ofBaseApp{
 	
 	ofxTimeline timeline;
 	ofxTLAudioWaveform waveform;
-	
-	void receivedTrigger(ofxTLTriggerEventArgs& trigger);
+
 };
