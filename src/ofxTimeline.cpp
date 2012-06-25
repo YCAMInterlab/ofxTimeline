@@ -60,7 +60,7 @@ ofxTimeline::ofxTimeline()
 	isPlaying(false),
 	snappingEnabled(false),
 	movePlayheadOnPaste(true),
-	movePlayheadOnDrag(true),
+	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL)
 {

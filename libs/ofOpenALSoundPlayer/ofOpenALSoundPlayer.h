@@ -2,7 +2,7 @@
 
 #include "ofConstants.h"
 
-//#ifdef OF_SOUND_PLAYER_OPENAL
+
 #include "ofBaseSoundPlayer.h"
 #include "ofEvents.h"
 #include "ofThread.h"
@@ -41,6 +41,27 @@
 //void ofOpenALSoundUpdate();						// calls FMOD update.
 //float * ofFmodSoundGetSpectrum(int nBands);		// max 512...
 
+//virtual void loadSound(string fileName, bool stream = false) = 0;
+//virtual void unloadSound() = 0;
+//virtual void play() = 0;
+//virtual void stop() = 0;
+//
+//virtual void setVolume(float vol) = 0;
+//virtual void setPan(float vol) = 0;
+//virtual void setSpeed(float spd) = 0;
+//virtual void setPaused(bool bP) = 0;
+//virtual void setLoop(bool bLp) = 0;
+//virtual void setMultiPlay(bool bMp) = 0;
+//virtual void setPosition(float pct) = 0; // 0 = start, 1 = end;
+//virtual void setPositionMS(int ms) = 0;
+//
+//virtual float getPosition() = 0;
+//virtual int getPositionMS() = 0;
+//virtual bool getIsPlaying() = 0;
+//virtual float getSpeed() = 0;
+//virtual float getPan() = 0;
+//virtual bool isLoaded() = 0;
+//virtual float getVolume() = 0;
 
 // --------------------- player functions:
 class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
@@ -62,15 +83,19 @@ class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
 		void setLoop(bool bLp);
 		void setMultiPlay(bool bMp);
 		void setPosition(float pct); // 0 = start, 1 = end;
-
+	    void setPositionMS(int ms);
+    
 		float getPosition();
+	    int getPositionMS();
 		bool getIsPlaying();
 		float getSpeed();
 		float getPan();
+	    float getVolume();
+	    bool isLoaded();
 		bool getIsPaused();
 		float getDuration();
 		int getNumChannels();
-	
+    
 		static void initialize();
 		static void close();
 
@@ -152,4 +177,3 @@ class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
 		bool stream_end;
 };
 
-//#endif
