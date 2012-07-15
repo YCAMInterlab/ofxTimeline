@@ -89,12 +89,16 @@ class ofxTimeline {
 	virtual void stop();
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
-	
+    
+	virtual void setInPointAtPlayhead();
+    virtual void setOutPointAtPlayhead();
 	virtual void setInPointAtPercent(float percent);
 	virtual void setOutPointAtPercent(float percent);
 	virtual void setInPointAtFrame(int frame);
 	virtual void setOutPointAtFrame(float frame);
-	
+	virtual void setInPointAtTime(float time);
+	virtual void setOutPointAtTime(float time);
+
 	virtual void setInOutRange(ofRange inoutPercentRange);
 	virtual ofRange getInOutRange();
 	virtual int getInFrame();

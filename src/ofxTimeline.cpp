@@ -275,6 +275,13 @@ float ofxTimeline::getPercentComplete(){
 	}
 }
 
+void ofxTimeline::setInPointAtPlayhead(){
+    setInPointAtPercent(getPercentComplete());
+}
+
+void ofxTimeline::setOutPointAtPlayhead(){
+    setOutPointAtPercent(getPercentComplete());
+}
 
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = percent;
@@ -296,6 +303,20 @@ void ofxTimeline::setOutPointAtFrame(float frame){
 		ofLogWarning("ofxTimeline -- setting out point by frame on timebased timeline will not work correctly.");
 	}
 	inoutRange.max = float(frame)/durationInFrames;	
+}
+
+void ofxTimeline::setInPointAtTime(float time){
+    if(isFrameBased){
+        ofLogWarning("ofxTimeline -- setting in point by time on a framebased timeline will not work correctly.");
+    }
+	inoutRange.min = time/durationInSeconds;
+}
+
+void ofxTimeline::setOutPointAtTime(float time){
+    if(isFrameBased){
+        ofLogWarning("ofxTimeline -- setting out point by time on a framebased timeline will not work correctly.");
+    }
+	inoutRange.max = time/durationInSeconds;    
 }
 
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
@@ -679,6 +700,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 
 void ofxTimeline::draw(){	
 	if(isShowing){
+
 		ofPushStyle();
 		
 		glPushAttrib(GL_ENABLE_BIT);
@@ -733,26 +755,9 @@ void ofxTimeline::setPageName(string newName){
 
 void ofxTimeline::setCurrentPage(string name){
 	tabs->selectPage(name);
-/*
-	for(int i = 0; i < pages.size(); i++){
-		if(name == pages[i]->getName()){
-			
-			currentPage = pages[i];
-			return;
-		}
-	}
-	ofLogError("ofxTimeline -- Page " + name + " not found");
- */
-	
 }
 
-void ofxTimeline::setCurrentPage(int index){
-//	if(index >= pages.size()){
-//		ofLogError("ofxTimeline -- Page at index " + ofToString(index) + " does not exist");
-//		return;
-//	}
-//	currentPage = pages[index];
-	
+void ofxTimeline::setCurrentPage(int index){	
 	tabs->selectPage(index);
 }
 
@@ -889,6 +894,7 @@ ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
 	return newTrigger;
 }
 
+//TODO:
 string ofxTimeline::getNextTrigger(string name){
 	return "";
 }
@@ -929,6 +935,7 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory)
 	return newImageSequence;	
 }
 
+//TODO:
 ofImage* ofxTimeline::getImage(string name){
 	return NULL;
 }
