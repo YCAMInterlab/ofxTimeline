@@ -32,15 +32,19 @@
  * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
-//controls to add:
-// ofxTLColorTween
-
 //TODO: Add global undo
 //TODO: Account for image sequences and movies with different durations than the timeline
 
 #pragma once
 
 #include "ofMain.h"
+
+//external addons
+#include "ofRange.h"
+#include "ofxMSATimer.h"
+#include "ofxTimecode.h"
+
+//internal types
 #include "ofxTLElement.h"
 #include "ofxTLElementHeader.h"
 #include "ofxTLPage.h"
@@ -105,46 +109,49 @@ class ofxTimeline {
 	virtual void setCurrentTimeToInPoint();
 	virtual void setCurrentTimeToOutPoint();
 	
-	//Setting the duration in seconds or frames determines 
-	//wether the timeline is frame-based or time-based
-	//FRAME-BASED timelines will progress one frame each call to update
-	//at whatever framerate openFrameworks is running at, and will never skip frames
-	//TIME-BASED timelines will progress in real time regardless of openFrameworks
-	//framerate.
-	virtual void setDurationInFrames(int frames);
-	virtual void setDurationInSeconds(float seconds);
-	virtual bool getIsFrameBased();
+    void setFrameRate(int fps);    
+    void setDurationInFrames(int frames);
+	void setDurationInSeconds(float seconds);
+
+    //frame based mode timelines will never skip frames, and will advance at the speed of openFrameworks
+    //regardless of the FPS that you set the timeline to
+    void setFrameBased(bool frameBased);
+	bool getIsFrameBased();
+        
+//  void setFrameBased();
+//	bool getIsFrameBased();
 	
-	virtual void setLoopType(ofLoopType newType);
+	int getDurationInFrames();
+	float getDurationInSeconds();
+	string getDurationInTimecode();
+
+    virtual void setLoopType(ofLoopType newType);
 	virtual ofLoopType getLoopType();
-	
-	virtual int getDurationInFrames();
-	virtual float getDurationInSeconds();
 
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
 	virtual void collapseAllElements(); //collapses all element heights to 0;
 	
-	virtual ofRectangle getDrawRect();
+	ofRectangle getDrawRect();
 	
-	virtual void setSnapping(bool snapping);
-	virtual void toggleSnapping();
+	void setSnapping(bool snapping);
+	void toggleSnapping();
 	
 	//setting a BPM allows for a global measure across the timeline
 	//this is useful for snapping to intervals 
-	virtual void enableSnapToBPM(float bpm); //beats per minute
-	virtual void toggleDrawBPMGrid();
-	virtual void enableDrawBPMGrid(bool enableGrid);
-	virtual void enableSnapToOtherElements(bool enableSnapToOther);
+	void enableSnapToBPM(float bpm); //beats per minute
+	void toggleDrawBPMGrid();
+	void enableDrawBPMGrid(bool enableGrid);
+	void enableSnapToOtherElements(bool enableSnapToOther);
 	
-	virtual void setMovePlayheadOnPaste(bool move);
-	virtual bool getMovePlayheadOnPaste();	
+	void setMovePlayheadOnPaste(bool move);
+	bool getMovePlayheadOnPaste();	
 	string getPasteboard();
 	
-	virtual void setMovePlayheadOnDrag(bool updatePlayhead);
-	virtual bool getMovePlayheadOnDrag();
+	void setMovePlayheadOnDrag(bool updatePlayhead);
+	bool getMovePlayheadOnDrag();
 	
-	virtual void unselectAll();
+	void unselectAll();
 
 	virtual void draw();
 
@@ -214,6 +221,9 @@ class ofxTimeline {
 	
   protected:
 	
+    ofxMSATimer timer;
+    ofxTimecode timecode;
+    
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
@@ -260,12 +270,12 @@ class ofxTimeline {
 	bool isPlaying; //moves playhead along
 	bool userChangedValue; //did value change this frame;
     
-	int currentFrame;
+//    int currentFrame;
 	float currentTime;
 	
 	ofLoopType loopType;
 	int playbackStartFrame;
-	float playbackStartTime;	
+	double playbackStartTime;	
 	float mouseoverPlayheadPosition;
 	float playbackPlayheadPosition;
 	
@@ -273,6 +283,6 @@ class ofxTimeline {
 	bool autosave;
 	
 	bool isFrameBased;
-	int durationInFrames;
+//	int durationInFrames;
 	float durationInSeconds;
 };

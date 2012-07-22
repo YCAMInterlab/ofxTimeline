@@ -51,7 +51,7 @@ ofxTimeline::ofxTimeline()
 	modalIsShown(false),
 	autosave(true),
 	isFrameBased(false),
-	durationInFrames(100),
+//	durationInFrames(100),
 	durationInSeconds(100.0f/30.0f),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
@@ -163,11 +163,11 @@ bool ofxTimeline::getMovePlayheadOnDrag(){
 
 ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	ofxTLPlaybackEventArgs args;
-	args.frameBased = isFrameBased;
-	args.durationInFrames = durationInFrames;
+//	args.frameBased = isFrameBased;
+	args.durationInFrames = timecode.frameForSeconds(durationInSeconds);
 	args.durationInSeconds = durationInSeconds;
 	args.currentTime = currentTime;
-	args.currentFrame = currentFrame;
+	args.currentFrame = getCurrentFrame();
 	args.currentPercent = getPercentComplete();
 	return args;
 }
@@ -184,15 +184,21 @@ bool ofxTimeline::getUserChangedValue(){
 }
 
 void ofxTimeline::play(){
+
 	if(!isPlaying){
 		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		isPlaying = true;
-		if (isFrameBased) {
-			playbackStartFrame = ofGetFrameNum() - currentFrame;
-		}
-		else{
-			playbackStartTime = ofGetElapsedTimef() - currentTime;
-		}		
+        currentTime = ofClamp(currentTime, getInTime(), getOutTime());
+        
+        playbackStartTime = timer.getAppTime() - currentTime;
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
+//		if (isFrameBased) {
+//			playbackStartFrame = ofGetFrameNum() - currentFrame;
+//		}
+//		else{
+//			playbackStartTime = ofGetElapsedTimef() - currentTime;
+//		}		
+        
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackStarted, args);
 	}
@@ -225,27 +231,23 @@ bool ofxTimeline::getIsPlaying(){
 }
 
 void ofxTimeline::setCurrentFrame(int newFrame){
-	if(!isFrameBased){
-		ofLogWarning("ofxTimeline -- setting current frame on a timebased timline has no effect.");
-	}
-//	cout << "setting frame to " << newFrame << endl;
-	currentFrame = newFrame;
+    currentTime = timecode.secondsForFrame(newFrame);
 }
 
 void ofxTimeline::setPercentComplete(float percent){
-	if(isFrameBased){
-		currentFrame = durationInFrames*percent;
-	}
-	else{
-		currentTime = percent*durationInSeconds;
-	}
+    currentTime = percent*durationInSeconds;
 }
 
 void ofxTimeline::setCurrentTime(float time){
-	if(isFrameBased){
-		ofLogWarning("ofxTimeline -- setting current time on a framebased timeline has no effect.");
-	}
 	currentTime = time;
+}
+
+void ofxTimeline::setFrameRate(int fps){
+    //TODO: Retime elements
+	timecode.setFPS(fps);    
+}
+void ofxTimeline::setFrameBased(bool frameBased){
+    isFrameBased = frameBased;
 }
 
 bool ofxTimeline::getIsFrameBased(){
@@ -253,29 +255,18 @@ bool ofxTimeline::getIsFrameBased(){
 }
 
 int ofxTimeline::getCurrentFrame(){
-	if(!isFrameBased){
-		ofLogWarning("ofxTimeline -- getting current frame on a timebased timline will return inaccurate results.");
-	}
-	return currentFrame;
+    return timecode.frameForSeconds(currentTime);
 }
 
 float ofxTimeline::getCurrentTime(){
-	if(isFrameBased){
-		ofLogWarning("ofxTimeline -- getting current time on a framebased will return inaccurate results.");
-	}
 	return currentTime;
 }
 
 float ofxTimeline::getPercentComplete(){
-	if(isFrameBased){
-		return float(currentFrame)/durationInFrames;
-	}
-	else{
-		return currentTime / durationInSeconds;
-	}
+    return currentTime / durationInSeconds;
 }
 
-
+//TODO: santize in/out 
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = percent;
 }
@@ -285,17 +276,11 @@ void ofxTimeline::setOutPointAtPercent(float percent){
 }
 
 void ofxTimeline::setInPointAtFrame(int frame){
-	if(!isFrameBased){
-		ofLogWarning("ofxTimeline -- setting in point by frame on timebased timeline will not work correctly.");
-	}
-	inoutRange.min = float(frame)/durationInFrames;
+    inoutRange.min = timecode.secondsForFrame(frame) / durationInSeconds;
 }
 
 void ofxTimeline::setOutPointAtFrame(float frame){
-	if(!isFrameBased){
-		ofLogWarning("ofxTimeline -- setting out point by frame on timebased timeline will not work correctly.");
-	}
-	inoutRange.max = float(frame)/durationInFrames;	
+    inoutRange.max = timecode.secondsForFrame(frame) / durationInSeconds;
 }
 
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
@@ -321,33 +306,20 @@ ofRange ofxTimeline::getInOutRange(){
 }
 
 int ofxTimeline::getInFrame(){
-	if (!isFrameBased) {
-		ofLogWarning("ofxTimeline -- Getting in frame with timebased timeline");
-	}
-	return durationInFrames*inoutRange.min;
+	return timecode.frameForSeconds(getInTime());
 }
 
 int ofxTimeline::getOutFrame(){
-	if (!isFrameBased) {
-		ofLogWarning("ofxTimeline -- Getting out frame with timebased timeline");
-	}
-	return durationInFrames*inoutRange.max;
+    return timecode.frameForSeconds(getOutTime());
 }
 
 float ofxTimeline::getInTime(){
-	if (isFrameBased) {
-		ofLogWarning("ofxTimeline -- Getting in time with framebased timeline");
-	}
 	return durationInSeconds*inoutRange.min;
 }
 
 float ofxTimeline::getOutTime(){
-	if (isFrameBased) {
-		ofLogWarning("ofxTimeline -- Getting out time with framebased timeline");
-	}
 	return durationInSeconds*inoutRange.max;
 }
-
 
 bool ofxTimeline::toggleEnabled(){
 	isEnabled = !isEnabled;
@@ -382,8 +354,7 @@ void ofxTimeline::setDurationInFrames(int frames){
     	ofLogError("ofxTimeline -- Must set a positive number of frames");
         return;
     }
-	durationInFrames = frames;
-	isFrameBased = true;
+    durationInSeconds = timecode.secondsForFrame(frames);
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
@@ -392,21 +363,18 @@ void ofxTimeline::setDurationInSeconds(float seconds){
         return;
     }
 	durationInSeconds = seconds;
-	isFrameBased = false;
 }
 
 int ofxTimeline::getDurationInFrames(){
-	if(!isFrameBased){
-		ofLogWarning("ofxTimeline -- getting duration in frames on a timebased timline will return inaccurate results.");
-	}
-	return durationInFrames;
+    return timecode.frameForSeconds(durationInSeconds);
 }
 
 float ofxTimeline::getDurationInSeconds(){
-	if(isFrameBased){
-		ofLogWarning("ofxTimeline -- getting duration in time on a framebased will return inaccurate results.");
-	}
 	return durationInSeconds;
+}
+
+string ofxTimeline::getDurationInTimecode(){
+    return timecode.timecodeForSeconds(durationInSeconds);
 }
 
 void ofxTimeline::setAutosave(bool doAutosave){
@@ -645,36 +613,42 @@ ofLoopType ofxTimeline::getLoopType(){
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
 	if(isFrameBased){
-		currentFrame = ofGetFrameNum() - playbackStartFrame;
-		if(currentFrame >= durationInFrames*inoutRange.max){
-			if(loopType == OF_LOOP_NONE){
-				currentFrame = durationInFrames*inoutRange.max;
-				stop();
-			}
-			else if(loopType == OF_LOOP_NORMAL && durationInFrames > 0) {
-				playbackStartFrame += getDurationInFrames() * inoutRange.span();
-				currentFrame %= int(durationInFrames * inoutRange.span());
-				currentFrame += durationInFrames*inoutRange.min;
-				ofxTLPlaybackEventArgs args = createPlaybackEvent();
-				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
-			}
-		}
-	}
-	else{
-		currentTime = ofGetElapsedTimef() - playbackStartTime;
-		if(currentTime >= durationInSeconds*inoutRange.max){
-			if(loopType == OF_LOOP_NONE){
-				currentTime = durationInSeconds*inoutRange.max;
-				stop();
-			}
-			else if(loopType == OF_LOOP_NORMAL) {
-				currentTime = durationInSeconds*inoutRange.min + fmod(currentTime, durationInSeconds*inoutRange.span());
-				playbackStartTime += getDurationInSeconds()*inoutRange.span();
-				ofxTLPlaybackEventArgs args = createPlaybackEvent();
-				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
-			}
-		}
-	}
+		currentTime = playbackStartTime + timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
+    }
+    else {
+        currentTime = timer.getAppTime() - playbackStartTime;
+    }
+//		currentFrame = ofGetFrameNum() - playbackStartFrame;
+//		if(currentFrame >= durationInFrames*inoutRange.max){
+//			if(loopType == OF_LOOP_NONE){
+//				currentFrame = durationInFrames*inoutRange.max;
+//				stop();
+//			}
+//			else if(loopType == OF_LOOP_NORMAL && durationInFrames > 0) {
+//				playbackStartFrame += getDurationInFrames() * inoutRange.span();
+//				currentFrame %= int(durationInFrames * inoutRange.span());
+//				currentFrame += durationInFrames*inoutRange.min;
+//				ofxTLPlaybackEventArgs args = createPlaybackEvent();
+//				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
+//			}
+//		}
+//	}
+//	else{
+//		currentTime = ofGetElapsedTimef() - playbackStartTime;
+    
+    if(currentTime >= durationInSeconds*inoutRange.max){
+        if(loopType == OF_LOOP_NONE){
+            currentTime = durationInSeconds*inoutRange.max;
+            stop();
+        }
+        else if(loopType == OF_LOOP_NORMAL) {
+            currentTime = durationInSeconds*inoutRange.min + fmod(currentTime, durationInSeconds*inoutRange.span());
+            playbackStartFrame += getDurationInFrames()  * inoutRange.span();
+            playbackStartTime  += getDurationInSeconds() * inoutRange.span();
+            ofxTLPlaybackEventArgs args = createPlaybackEvent();
+            ofNotifyEvent(ofxTLEvents.playbackLooped, args);
+        }
+    }
 }
 
 void ofxTimeline::draw(){	
@@ -733,26 +707,9 @@ void ofxTimeline::setPageName(string newName){
 
 void ofxTimeline::setCurrentPage(string name){
 	tabs->selectPage(name);
-/*
-	for(int i = 0; i < pages.size(); i++){
-		if(name == pages[i]->getName()){
-			
-			currentPage = pages[i];
-			return;
-		}
-	}
-	ofLogError("ofxTimeline -- Page " + name + " not found");
- */
-	
 }
 
 void ofxTimeline::setCurrentPage(int index){
-//	if(index >= pages.size()){
-//		ofLogError("ofxTimeline -- Page at index " + ofToString(index) + " does not exist");
-//		return;
-//	}
-//	currentPage = pages[index];
-	
 	tabs->selectPage(index);
 }
 
@@ -779,15 +736,6 @@ ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRan
 	return newKeyframer;
 }
 
-float ofxTimeline::getKeyframeValue(string name){
-	if(isFrameBased){
-		return getKeyframeValue(name, currentFrame);
-	}
-	else {
-		return getKeyframeValue(name, currentTime);
-	}
-}
-
 float ofxTimeline::getKeyframeValue(string name, float atTime){
 	if(elementNameToPage.find(name) == elementNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
@@ -801,18 +749,12 @@ float ofxTimeline::getKeyframeValue(string name, float atTime){
 	return keyframer->getValueAtPercent(atTime/durationInSeconds);
 }
 
+float ofxTimeline::getKeyframeValue(string name){
+	return getKeyframeValue(name, currentTime);    
+}
+
 float ofxTimeline::getKeyframeValue(string name, int atFrame){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
-		return 0.0;
-	}
-	
-	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
-	if(keyframer == NULL){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
-		return 0.0;
-	}
-	return keyframer->getValueAtPercent(1.0*currentFrame/durationInFrames);
+    return getKeyframeValue(name, timecode.secondsForFrame(atFrame));
 }
 
 ofxTLElement* ofxTimeline::getElement(string name){
@@ -832,52 +774,27 @@ ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 	return newSwitcher;
 }
 
-bool ofxTimeline::getSwitcherOn(string name){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
-		return false;
-	}
-	
-	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
-	if(switcher == NULL){
-		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
-		return false;
-	}
-	return switcher->isOn(getPercentComplete());
-}
-
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
 	if(elementNameToPage.find(name) == elementNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return false;
-	}	
+	}
+	
 	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
 	if(switcher == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
 		return false;
 	}
-	if(isFrameBased){
-		ofLogError("ofxTimeline -- Getting time based switcher status on a framebased timeline will return in accurate results.");
-	}
-	
-	return switcher->isOn(atTime/durationInSeconds);	
+    
+	return switcher->isOn(atTime/durationInSeconds);   
+}
+
+bool ofxTimeline::getSwitcherOn(string name){
+    return getSwitcherOn(name, currentTime);    
 }
 
 bool ofxTimeline::getSwitcherOn(string name, int atFrame){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
-		return false;
-	}
-	
-	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
-	if(switcher == NULL){
-		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
-		return false;
-	}
-	if(!isFrameBased){
-		ofLogError("ofxTimeline -- Getting frame based switcher status on a timebased timeline will return in accurate results.");
-	}
-	return switcher->isOn(float(atFrame)/durationInFrames);	
+	return getSwitcherOn(name, timecode.secondsForFrame(atFrame));	
 }
 
 ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
@@ -941,26 +858,29 @@ ofImage* ofxTimeline::getImage(string name, int atFrame){
 	return NULL;
 }
 
+//TODO: replace with ofxTimecode formatting
 string ofxTimeline::formatTime(float time){
-	if(isFrameBased){
-		ofLogError("ofxTimeline -- formatting time for framebased timeline doesn't make sense");
-	}
-	
-	char out[1024];
-	int millis,seconds,minutes,hours;
-	millis = int(time * 10000) % 10000;
-	seconds = int(time) % 60;
-	minutes = int(time/60) % 60;
-	hours = int(time/60/60);
-	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,(millis+1));
-	//truncate for shorter timelines
-	if(minutes == 0){
-		return string(out).substr(6, 7);
-	}
-	if(hours == 0){
-		return string(out).substr(3, 10);
-	}
-	return string(out);
+//	if(isFrameBased){
+//		ofLogError("ofxTimeline -- formatting time for framebased timeline doesn't make sense");
+//	}
+//	
+//	char out[1024];
+//	int millis,seconds,minutes,hours;
+//	millis = int(time * 10000) % 10000;
+//	seconds = int(time) % 60;
+//	minutes = int(time/60) % 60;
+//	hours = int(time/60/60);
+//	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,(millis+1));
+//	//truncate for shorter timelines
+//	if(minutes == 0){
+//		return string(out).substr(6, 7);
+//	}
+//	if(hours == 0){
+//		return string(out).substr(3, 10);
+//	}
+//	return string(out);
+    
+    return timecode.timecodeForSeconds(time);
 }
 
 void ofxTimeline::setDragAnchor(float dragAnchor){

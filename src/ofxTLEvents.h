@@ -40,7 +40,6 @@
 class ofxTLPlaybackEventArgs : public ofEventArgs {
   public: 	
 	float currentPercent; //always valid
-	bool frameBased; //use this to decide whether to look at frames or seconds
 	float currentTime;
 	int currentFrame;
 	float durationInSeconds;

@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	ofSetFrameRate(30);
+	ofSetFrameRate(5);
 	ofSetVerticalSync(true);
 	
 	glEnable(GL_DEPTH_TEST);
@@ -24,6 +24,8 @@ void testApp::setup(){
 	timeline.addTriggers("Colors", "colors.xml");
 	
 	timeline.getColors().loadColors("defaultColors.xml");
+	
+    timeline.setFrameBased(true);
 
 	ofAddListener(ofxTLEvents.trigger, this, &testApp::receivedTrigger);
 
