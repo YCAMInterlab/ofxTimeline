@@ -36,8 +36,8 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 
 	virtual void drawRectChanged();
-
-	void setVideoPlayer(ofVideoPlayer& player, string thumbDirectory);
+	void setVideoPlayer(ofVideoPlayer& player, string thumbDir);
+	void setVideoPlayer(ofVideoPlayer* player, string thumbDirectory);
 	ofVideoPlayer& getPlayer();
 	
 	int getSelectedFrame();

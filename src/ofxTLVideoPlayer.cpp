@@ -148,6 +148,16 @@ void ofxTLVideoPlayer::setOutFrame(int out){
 }
 
 void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir){
+	setVideoPlayer(&newPlayer, thumbDir);
+}
+
+void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer* newPlayer, string thumbDir){
+    if(newPlayer == NULL ||!newPlayer->isLoaded()){
+        ofLogError("ofxTLVideoPlayer::setVideoPlayer -- Null or unloaded player set sent");
+        return;
+    }
+    
+    player = newPlayer;	
 	ofDirectory checkCreateDirectory(thumbDir);
 	if (!checkCreateDirectory.exists()) {
 		ofLogError("ofxTLVideoPlayer -- Directory " + thumbDir + " doesn't exist! Creating");
@@ -157,14 +167,13 @@ void ofxTLVideoPlayer::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir)
 	if(inFrame == -1){
 		cout << "reseting in out" << endl;
 		inFrame = 0;
-		outFrame = newPlayer.getTotalNumFrames();
+		outFrame = player->getTotalNumFrames();
 	}
 	
 	//TODO: check out
 	videoThumbs.clear();
-	player = &newPlayer;
 	thumbDirectory = thumbDir;
-	for(int i = 0; i < newPlayer.getTotalNumFrames(); i++){
+	for(int i = 0; i < player->getTotalNumFrames(); i++){
 		ofxTLVideoThumb t;
 		t.setup(i, thumbDir);
 		videoThumbs.push_back(t);
