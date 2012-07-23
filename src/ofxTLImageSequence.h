@@ -35,7 +35,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLImageTrack.h"
+#include "ofxTLTrack.h"
 #include "ofxTLImageSequenceFrame.h"
 
 static GLint glTypeForImageType(int imageType){
@@ -51,7 +51,7 @@ typedef struct
 	int frameIndex;
 } PreviewTexture;
 
-class ofxTLImageSequence : public ofxTLImageTrack {
+class ofxTLImageSequence : public ofxTLTrack {
   public:
 	ofxTLImageSequence();
 	~ofxTLImageSequence();
@@ -90,9 +90,11 @@ class ofxTLImageSequence : public ofxTLImageTrack {
 	virtual void setZoomBounds(ofRange zoomBoundsPercent);
 		
 	void purgeFrames();
-	void purgeThumbs();
 	
   protected:
+    
+    int historySize; //how many images to keep in the history queue
+    
 	void recomputePreview();
 	void clearPreviewTextures();
 	void clearFrames();

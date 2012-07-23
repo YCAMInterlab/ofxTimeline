@@ -20,14 +20,14 @@ ofxTLVideoThumb::~ofxTLVideoThumb(){
 	unload();
 }
 
-void ofxTLVideoThumb::setup(int frame, string thumbpath){
-	framenum = frame;
-	char fp[1024];
-	sprintf(fp, "%s/thumb_%05d.png", thumbpath.c_str(), framenum);
-	filepath = string(fp);
-//	exists = ofFile(filepath).exists();
-	loaded = false;
-}
+//void ofxTLVideoThumb::setup(int frame, string thumbpath){
+//	framenum = frame;
+//	char fp[1024];
+//	sprintf(fp, "%s/thumb_%05d.png", thumbpath.c_str(), framenum);
+//	filepath = string(fp);
+////	exists = ofFile(filepath).exists();
+//	loaded = false;
+//}
 
 void ofxTLVideoThumb::create(ofPixels& thumbPixels){
 
@@ -49,6 +49,7 @@ void ofxTLVideoThumb::create(ofPixels& thumbPixels){
     }
 //	thumb->saveImage(filepath);	
 //	exists = true;
+    
 	loaded = true;
 }
 

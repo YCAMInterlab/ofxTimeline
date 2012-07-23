@@ -13,11 +13,9 @@
 #include "ofxTLVideoThumb.h"
 #include "ofxTLImageTrack.h"
 
-//TODO: Playback control system for overall timeline
 //TODO: Integrate into ofxTLImageTrack
+//TODO: Playback control system for overall timeline
 //TODO: Start and stop points (w handles!) (saving!)
-//TODO: Better frame position calculating
-//TODO: Don't generate all thumbs up front
 
 class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
   public:
@@ -27,7 +25,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	void setup();
 	void draw();
     void loadMovie(string moviePath);
-    
+
+    void setPlayer(ofVideoPlayer& newPlayer);
     void setPlayer(ofPtr<ofVideoPlayer> newPlayer);
     ofPtr<ofVideoPlayer> getPlayer();
     
@@ -58,8 +57,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 
   protected:
     
-    vector<ofxTLVideoThumb> videoThumbs;
-
+    //    vector<ofxTLVideoThumb> videoThumbs;
+	//void calculateFramePositions();
 	int selectedFrame;
 	int currentLoop;
 	bool thumbsEnabled;
@@ -68,16 +67,23 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	int inFrame;
 	int outFrame;
 	
-    float thumbnailUpdatedWidth;
-    float thumbnailUpdatedHeight;
+    bool canCalculateThumbs();
     
-	void calculateFramePositions();
+    //width and height of image elements
+    float getContentWidth();
+    float getContentHeight();
+
+    void framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs);
+    
+//    float thumbnailUpdatedWidth;
+//    float thumbnailUpdatedHeight;
+
 //	void generateVideoThumbnails();
 //	void generateThumbnailForFrame(int index);
 //	void purgeOldThumbnails();
     
 	ofPtr<ofVideoPlayer> player;
-	ofPtr<ofVideoPlayer> backthreadedPlayer;
+	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a loss of memory but speeds things up big time
     
 //	string thumbDirectory;	
     bool pauseThumbGeneration;

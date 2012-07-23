@@ -16,7 +16,7 @@ class ofxTLVideoThumb {
 	ofxTLVideoThumb();
 	~ofxTLVideoThumb();
 	
-	void setup(int framenum, string thumbpath);
+//	void setup(int framenum, string thumbpath);
 	void create(ofPixels& thumbPixels);
 
 //	void load();
