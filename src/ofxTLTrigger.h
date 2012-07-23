@@ -37,7 +37,7 @@
 
 #pragma once
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofxTextInputField.h"
 
 typedef struct {
@@ -45,7 +45,7 @@ typedef struct {
 	string name;
 } Trigger;
 
-class ofxTLTrigger : public ofxTLElement
+class ofxTLTrigger : public ofxTLTrack
 {
   public:
 	ofxTLTrigger();

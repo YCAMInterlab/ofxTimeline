@@ -36,9 +36,9 @@
 
 #include "ofMain.h"
 #include "ofRange.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 
-class ofxTLZoomer : public ofxTLElement
+class ofxTLZoomer : public ofxTLTrack
 {
   public:
 	ofxTLZoomer();

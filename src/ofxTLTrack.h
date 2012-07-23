@@ -41,11 +41,11 @@
 #include "ofxTLEvents.h"
 
 class ofxTimeline; 
-class ofxTLElement 
+class ofxTLTrack 
 {
   public:
-	ofxTLElement();
-	~ofxTLElement();
+	ofxTLTrack();
+	~ofxTLTrack();
 	
 	virtual void setup() = 0;
 	virtual void draw() = 0;

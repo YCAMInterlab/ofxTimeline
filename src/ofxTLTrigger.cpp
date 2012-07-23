@@ -5,8 +5,6 @@
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
- * implementaiton by James George (@obviousjim) and Tim Gfrerer (@tgfrerer) for the 
- * Voyagers gallery National Maritime Museum 
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -145,13 +143,13 @@ void ofxTLTrigger::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTLTrigger::mouseMoved(ofMouseEventArgs& args){
-	ofxTLElement::mouseMoved(args);	
+	ofxTLTrack::mouseMoved(args);	
 	int unused;
 	hoverTrigger = getTriggerForScreenPosition(args.x, unused);
 }
 
 void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args, bool snapped){
-//	ofxTLElement::mouseDragged(args);
+//	ofxTLTrack::mouseDragged(args);
 	if(selectedTrigger != NULL){
 		selectedTrigger->pt = screenXtoNormalizedX(args.x - dragOffset, zoomBounds);
 	}
@@ -160,7 +158,7 @@ void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args, bool snapped){
 }
 
 void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){
-	ofxTLElement::mouseReleased(args);	
+	ofxTLTrack::mouseReleased(args);	
 	if(selectedTrigger != NULL){
 		sortTriggers();
 		hoverTrigger = NULL;

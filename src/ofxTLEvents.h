@@ -39,7 +39,7 @@
 
 class ofxTLPlaybackEventArgs : public ofEventArgs {
   public: 	
-	float currentPercent; //always valid
+	float currentPercent;
 	float currentTime;
 	int currentFrame;
 	float durationInSeconds;

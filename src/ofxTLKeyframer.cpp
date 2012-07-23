@@ -456,7 +456,7 @@ void ofxTLKeyframer::updateDragOffsets(ofVec2f screenpoint){
 }
 
 void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
-	ofxTLElement::mouseMoved(args);
+	ofxTLTrack::mouseMoved(args);
 	int unused;
 	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y), unused );
 }

@@ -35,7 +35,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofxTLEvents.h"
 
 typedef struct{
@@ -43,7 +43,7 @@ typedef struct{
 	ofRectangle bounds;
 } Tab;
 
-class ofxTLPageTabs : public ofxTLElement {
+class ofxTLPageTabs : public ofxTLTrack {
 
   public:
 	

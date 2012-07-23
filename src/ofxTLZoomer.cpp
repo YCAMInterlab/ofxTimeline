@@ -193,18 +193,23 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 }
 
 void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
+    
 	if(!enabled) return;
 
+    bool notify = false;
 	ofRange oldRange = currentViewRange;
 	if(minSelected || midSelected){
 		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset), 0, currentViewRange.max-.0001);
-		notifyZoomDragged(oldRange);
+		notify = true;
 	}
 
 	if(maxSelected || midSelected){
 		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset), currentViewRange.min+.0001, 1.0);
-		notifyZoomDragged(oldRange);
-	}	
+        notify = true;
+    }
+    if(notify){
+        notifyZoomDragged(oldRange);
+    }
 }
 
 bool ofxTLZoomer::isActive(){

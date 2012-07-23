@@ -45,8 +45,8 @@
 #include "ofxTimecode.h"
 
 //internal types
-#include "ofxTLElement.h"
-#include "ofxTLElementHeader.h"
+#include "ofxTLTrack.h"
+#include "ofxTLTrackHeader.h"
 #include "ofxTLPage.h"
 #include "ofxTLPageTabs.h"
 #include "ofxTLZoomer.h"
@@ -55,7 +55,7 @@
 #include "ofxTLTrigger.h"
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
-#include "ofxTLVideoPlayer.h"
+#include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
 
 class ofxTimeline {
@@ -122,9 +122,6 @@ class ofxTimeline {
     void setFrameBased(bool frameBased);
 	bool getIsFrameBased();
         
-//  void setFrameBased();
-//	bool getIsFrameBased();
-	
 	int getDurationInFrames();
 	float getDurationInSeconds();
 	string getDurationInTimecode();
@@ -164,7 +161,9 @@ class ofxTimeline {
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
-	virtual ofxTLElement* getElement(string name);
+    ofxTimecode& getTimecode();
+    
+	virtual ofxTLTrack* getElement(string name);
 	
 	//adding elements always adds to the current page
 	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue = 0);
@@ -186,7 +185,7 @@ class ofxTimeline {
 	virtual string getLastTrigger(string name, float atTime);
 	virtual string getLastTrigger(string name, int atFrame);
 
-
+    //TODO: remove image sequence from the core?
 	virtual ofxTLImageSequence* addImageSequence(string name);
 	virtual ofxTLImageSequence* addImageSequence(string name, string directory);
 	virtual ofImage* getImage(string name);
@@ -195,7 +194,7 @@ class ofxTimeline {
 	
 	
 	//for custom elements
-	virtual void addElement(string name, ofxTLElement* element);
+	virtual void addElement(string name, ofxTLTrack* element);
 	virtual void setAutosave(bool autosave);
 		
 	virtual void mousePressed(ofMouseEventArgs& args);

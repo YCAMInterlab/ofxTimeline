@@ -5,9 +5,6 @@
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
- * implementaiton by James George (@obviousjim) and Tim Gfrerer (@tgfrerer) for the 
- * Voyagers gallery National Maritime Museum 
- * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -36,7 +33,7 @@
  */
 
 #pragma once 
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 
 typedef struct {
 	ofRange time;
@@ -47,7 +44,7 @@ typedef struct {
 	bool endSelected;
 } ofxTLSwitchOn;
 
-class ofxTLSwitcher : public ofxTLElement
+class ofxTLSwitcher : public ofxTLTrack
 {
   public:
 	ofxTLSwitcher();
@@ -94,7 +91,7 @@ class ofxTLSwitcher : public ofxTLElement
 	bool hoveringOn(float hoverY);
 	
 	void updateDragOffsets(float clickX);
-//	void deselectAllSwitches();
+
 	bool areAnySwitchesSelected();
 	bool pointsAreDraggable;
 	bool draggingSelectionRange;

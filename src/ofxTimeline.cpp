@@ -35,13 +35,12 @@
 #include "ofxTimeline.h"
 #include "ofxTLUtils.h"
 
-bool headersort(ofxTLElementHeader* a, ofxTLElementHeader* b){
+bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 	return a->getDrawRect().y < b->getDrawRect().y;
 }
 
 #define TICKER_HEIGHT 30
 #define ZOOMER_HEIGHT 20
-
 
 ofxTimeline::ofxTimeline()
 :	mouseoverPlayheadPosition(0),
@@ -51,7 +50,6 @@ ofxTimeline::ofxTimeline()
 	modalIsShown(false),
 	autosave(true),
 	isFrameBased(false),
-//	durationInFrames(100),
 	durationInSeconds(100.0f/30.0f),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
@@ -163,7 +161,6 @@ bool ofxTimeline::getMovePlayheadOnDrag(){
 
 ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	ofxTLPlaybackEventArgs args;
-//	args.frameBased = isFrameBased;
 	args.durationInFrames = timecode.frameForSeconds(durationInSeconds);
 	args.durationInSeconds = durationInSeconds;
 	args.currentTime = currentTime;
@@ -191,14 +188,7 @@ void ofxTimeline::play(){
         currentTime = ofClamp(currentTime, getInTime(), getOutTime());
         
         playbackStartTime = timer.getAppTime() - currentTime;
-        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
-//		if (isFrameBased) {
-//			playbackStartFrame = ofGetFrameNum() - currentFrame;
-//		}
-//		else{
-//			playbackStartTime = ofGetElapsedTimef() - currentTime;
-//		}		
-        
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(ofxTLEvents.playbackStarted, args);
 	}
@@ -267,6 +257,14 @@ float ofxTimeline::getPercentComplete(){
 }
 
 //TODO: santize in/out 
+void ofxTimeline::setInPointAtPlayhead(){
+    setInPointAtTime(currentTime);
+}
+
+void ofxTimeline::setOutPointAtPlayhead(){
+    setOutPointAtTime(currentTime);
+}
+
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = percent;
 }
@@ -281,6 +279,14 @@ void ofxTimeline::setInPointAtFrame(int frame){
 
 void ofxTimeline::setOutPointAtFrame(float frame){
     inoutRange.max = timecode.secondsForFrame(frame) / durationInSeconds;
+}
+
+void ofxTimeline::setInPointAtTime(float time){
+	inoutRange.min = time/durationInSeconds;	    
+}
+
+void ofxTimeline::setOutPointAtTime(float time){
+    inoutRange.max = time/durationInSeconds;
 }
 
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
@@ -613,12 +619,12 @@ ofLoopType ofxTimeline::getLoopType(){
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
 	if(isFrameBased){
-		currentTime = playbackStartTime + timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
+		currentTime = timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
     }
     else {
         currentTime = timer.getAppTime() - playbackStartTime;
     }
-//		currentFrame = ofGetFrameNum() - playbackStartFrame;
+//		currentFrame = ofGetFrameNum() - playbackStartFr	ame;
 //		if(currentFrame >= durationInFrames*inoutRange.max){
 //			if(loopType == OF_LOOP_NONE){
 //				currentFrame = durationInFrames*inoutRange.max;
@@ -714,7 +720,7 @@ void ofxTimeline::setCurrentPage(int index){
 }
 
 //can be used to add custom elements
-void ofxTimeline::addElement(string name, ofxTLElement* element){
+void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	element->setTimeline( this );
 	element->setName( name );
 	currentPage->addElement(name, element);		
@@ -757,7 +763,7 @@ float ofxTimeline::getKeyframeValue(string name, int atFrame){
     return getKeyframeValue(name, timecode.secondsForFrame(atFrame));
 }
 
-ofxTLElement* ofxTimeline::getElement(string name){
+ofxTLTrack* ofxTimeline::getElement(string name){
 	if(elementNameToPage.find(name) == elementNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return NULL;
@@ -828,6 +834,10 @@ string ofxTimeline::getLastTrigger(string name, float atTime){
 
 string ofxTimeline::getLastTrigger(string name, int atFrame){
 	return "";
+}
+
+ofxTimecode& ofxTimeline::getTimecode(){
+    return timecode;
 }
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string name){

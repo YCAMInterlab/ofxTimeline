@@ -1,5 +1,5 @@
 /*
- *  ofxTLVideoPlayer.h
+ *  ofxTLVideoTrack.h
  *  timelineExampleVideoPlayer
  *
  *  Created by James George on 11/12/11.
@@ -11,17 +11,25 @@
 
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
-#include "ofxTLElement.h"
+#include "ofxTLImageTrack.h"
 
-class ofxTLVideoPlayer : public ofxTLElement {
+//TODO: Playback control system for overall timeline
+//TODO: Integrate into ofxTLImageTrack
+//TODO: Start and stop points (w handles!) (saving!)
+//TODO: Better frame position calculating
+//TODO: Don't generate all thumbs up front
+
+class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
   public:
-	ofxTLVideoPlayer();
-	~ofxTLVideoPlayer();
+	ofxTLVideoTrack();
+	~ofxTLVideoTrack();
 	
 	void setup();
 	void draw();
+    void loadMovie(string moviePath);
     
-	vector<ofxTLVideoThumb> videoThumbs;
+    void setPlayer(ofPtr<ofVideoPlayer> newPlayer);
+    ofPtr<ofVideoPlayer> getPlayer();
     
 	virtual void update(ofEventArgs& args);
 	virtual void mousePressed(ofMouseEventArgs& args);
@@ -36,9 +44,6 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 
 	virtual void drawRectChanged();
-	void setVideoPlayer(ofVideoPlayer& player, string thumbDir);
-	void setVideoPlayer(ofVideoPlayer* player, string thumbDirectory);
-	ofVideoPlayer& getPlayer();
 	
 	int getSelectedFrame();
 	int getCurrentFrame();
@@ -47,10 +52,14 @@ class ofxTLVideoPlayer : public ofxTLElement {
 	int selectFrame(int frame); //returns the true selected frame in video
 	void toggleThumbs();
 	
+    //Let's the video track have
 	void setInFrame(int inFrame);
 	void setOutFrame(int outFrame);
-		
+
   protected:
+    
+    vector<ofxTLVideoThumb> videoThumbs;
+
 	int selectedFrame;
 	int currentLoop;
 	bool thumbsEnabled;
@@ -63,12 +72,16 @@ class ofxTLVideoPlayer : public ofxTLElement {
     float thumbnailUpdatedHeight;
     
 	void calculateFramePositions();
-	void generateVideoThumbnails();
-	void generateThumbnailForFrame(int index);
-	//TODO: make this work
-	void purgeOldThumbnails();
-	
-	ofVideoPlayer* player;
-	
-	string thumbDirectory;	
+//	void generateVideoThumbnails();
+//	void generateThumbnailForFrame(int index);
+//	void purgeOldThumbnails();
+    
+	ofPtr<ofVideoPlayer> player;
+	ofPtr<ofVideoPlayer> backthreadedPlayer;
+    
+//	string thumbDirectory;	
+    bool pauseThumbGeneration;
+    void threadedFunction();
+    void exit(ofEventArgs& args);
+    
 };

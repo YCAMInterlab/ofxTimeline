@@ -32,29 +32,29 @@
  * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
-#include "ofxTLElementHeader.h"
+#include "ofxTLTrackHeader.h"
 #include "ofxTimeline.h"
 
-ofxTLElementHeader::ofxTLElementHeader(){
+ofxTLTrackHeader::ofxTLTrackHeader(){
 	element = NULL;
 	draggingSize = false;
 	hoveringFooter = false;
 }
 
-ofxTLElementHeader::~ofxTLElementHeader(){
+ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 }
 
-void ofxTLElementHeader::setup(){
+void ofxTLTrackHeader::setup(){
 	
 }
 
-void ofxTLElementHeader::setElement(ofxTLElement* newElement){
+void ofxTLTrackHeader::setElement(ofxTLTrack* newElement){
 	element = newElement;
 
 }
 
-void ofxTLElementHeader::draw(){
+void ofxTLTrackHeader::draw(){
 	ofRectangle elementRect = element->getDrawRect();
 	float footerStartY = elementRect.y + elementRect.height;
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);	
@@ -85,18 +85,18 @@ void ofxTLElementHeader::draw(){
 	ofPopStyle();
 }
 
-void ofxTLElementHeader::mousePressed(ofMouseEventArgs& args){
+void ofxTLTrackHeader::mousePressed(ofMouseEventArgs& args){
 	if(footerRect.inside(ofPoint(args.x,args.y))){
 		dragOffset = args.y - footerRect.y;
 		draggingSize = true;
 	}
 }
 
-void ofxTLElementHeader::mouseMoved(ofMouseEventArgs& args){
+void ofxTLTrackHeader::mouseMoved(ofMouseEventArgs& args){
 	hoveringFooter = footerRect.inside(args.x, args.y);
 }
 
-void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
+void ofxTLTrackHeader::mouseDragged(ofMouseEventArgs& args){
 	if(draggingSize){
 		ofRectangle elementRect = element->getDrawRect();
 		elementRect.height = MAX(0, args.y - elementRect.y - dragOffset);
@@ -106,14 +106,14 @@ void ofxTLElementHeader::mouseDragged(ofMouseEventArgs& args){
 	}
 }
 
-void ofxTLElementHeader::collapseElement(){
+void ofxTLTrackHeader::collapseElement(){
 	ofRectangle elementRect = element->getDrawRect();
 	elementRect.height = 0;
 	element->setDrawRect(elementRect);	
 	recalculateFooter();
 }
 
-void ofxTLElementHeader::recalculateFooter(){
+void ofxTLTrackHeader::recalculateFooter(){
 	ofRectangle elementRect = element->getDrawRect();
 	float footerStartY = elementRect.y + elementRect.height;
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
@@ -122,10 +122,10 @@ void ofxTLElementHeader::recalculateFooter(){
 	ofNotifyEvent(ofxTLEvents.viewWasResized, a);
 }
 
-void ofxTLElementHeader::mouseReleased(ofMouseEventArgs& args){
+void ofxTLTrackHeader::mouseReleased(ofMouseEventArgs& args){
 	draggingSize = false;
 }
 
-ofRectangle ofxTLElementHeader::getFooterRect(){
+ofRectangle ofxTLTrackHeader::getFooterRect(){
 	return footerRect;
 }

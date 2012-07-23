@@ -35,8 +35,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
-#include "ofxTLElementHeader.h"
+#include "ofxTLTrack.h"
+#include "ofxTLTrackHeader.h"
 #include "ofxTLEvents.h"
 
 class ofxTLTicker;
@@ -67,8 +67,8 @@ class ofxTLPage {
     
 	virtual float getComputedHeight();	
 	
-	virtual void addElement(string name, ofxTLElement* element);
-	virtual ofxTLElement* getElement(string name);
+	virtual void addElement(string name, ofxTLTrack* element);
+	virtual ofxTLTrack* getElement(string name);
 	virtual void removeElement(string name);
     
     //given a folder the page will look for xml files to load within that
@@ -105,8 +105,8 @@ class ofxTLPage {
 	ofxTLTicker* ticker;
 	
 	bool draggingInside;
-	vector<ofxTLElementHeader*> headers;
-	map<string, ofxTLElement*> elements;
+	vector<ofxTLTrackHeader*> headers;
+	map<string, ofxTLTrack*> elements;
 
 	bool snappingEnabled;
 	bool snapToOtherElementsEnabled;

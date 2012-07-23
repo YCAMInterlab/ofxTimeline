@@ -167,7 +167,7 @@ void ofxTLImageSequence::drawRectChanged(){
 }
 
 void ofxTLImageSequence::setZoomBounds(ofRange zoomBoundsPercent){
-	ofxTLElement::setZoomBounds(zoomBoundsPercent);
+	ofxTLTrack::setZoomBounds(zoomBoundsPercent);
 	recomputePreview();
 }
 

@@ -35,13 +35,13 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 typedef struct{
 	float screenX;
 	int weight;
 } ofxTLBPMPoint;
 
-class ofxTLTicker : public ofxTLElement
+class ofxTLTicker : public ofxTLTrack
 {
   public:
 	ofxTLTicker();

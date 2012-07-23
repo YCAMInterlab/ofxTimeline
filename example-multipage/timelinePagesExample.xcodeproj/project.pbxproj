@@ -29,6 +29,8 @@
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E7B29A0D143873C40014A410 /* ofxTLPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29A0C143873C40014A410 /* ofxTLPage.cpp */; };
 		E7B29B4C14389B870014A410 /* ofxTLPageTabs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */; };
+		E7CEC6B115BC2DB00056912C /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CEC6AD15BC2DB00056912C /* ofxMSATimer.cpp */; };
+		E7CEC6C815BC2E900056912C /* ofxTimecode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7CEC6C415BC2E900056912C /* ofxTimecode.cpp */; };
 		E7F4B5C81458DF4B0031CC9A /* ofxTLImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */; };
 		E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */; };
 		E7FBD08B13D61DAC00938471 /* ofxTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7FBD07A13D61DAC00938471 /* ofxTimeline.cpp */; };
@@ -120,6 +122,10 @@
 		E7B29A0C143873C40014A410 /* ofxTLPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPage.cpp; sourceTree = "<group>"; };
 		E7B29B4A14389B870014A410 /* ofxTLPageTabs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLPageTabs.h; sourceTree = "<group>"; };
 		E7B29B4B14389B870014A410 /* ofxTLPageTabs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLPageTabs.cpp; sourceTree = "<group>"; };
+		E7CEC6AD15BC2DB00056912C /* ofxMSATimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSATimer.cpp; sourceTree = "<group>"; };
+		E7CEC6AE15BC2DB00056912C /* ofxMSATimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMSATimer.h; sourceTree = "<group>"; };
+		E7CEC6C415BC2E900056912C /* ofxTimecode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimecode.cpp; sourceTree = "<group>"; };
+		E7CEC6C515BC2E900056912C /* ofxTimecode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimecode.h; sourceTree = "<group>"; };
 		E7F4B5C41458DF4B0031CC9A /* ofxTLImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequence.cpp; sourceTree = "<group>"; };
 		E7F4B5C51458DF4B0031CC9A /* ofxTLImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLImageSequence.h; sourceTree = "<group>"; };
 		E7F4B5C61458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLImageSequenceFrame.cpp; sourceTree = "<group>"; };
@@ -267,6 +273,8 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				E7CEC6B315BC2E900056912C /* ofxTimecode */,
+				E7CEC6A415BC2DB00056912C /* ofxMSATimer */,
 				A6063E8C148B0A3B00D154C3 /* ofxTextInputField */,
 				E7FBD0C213D61DC900938471 /* ofxXmlSettings */,
 				E7FBD09513D61DBE00938471 /* ofxTween */,
@@ -350,6 +358,42 @@
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 			);
 			name = openFrameworks;
+			sourceTree = "<group>";
+		};
+		E7CEC6A415BC2DB00056912C /* ofxMSATimer */ = {
+			isa = PBXGroup;
+			children = (
+				E7CEC6AC15BC2DB00056912C /* src */,
+			);
+			name = ofxMSATimer;
+			path = ../../ofxMSATimer;
+			sourceTree = "<group>";
+		};
+		E7CEC6AC15BC2DB00056912C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7CEC6AD15BC2DB00056912C /* ofxMSATimer.cpp */,
+				E7CEC6AE15BC2DB00056912C /* ofxMSATimer.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		E7CEC6B315BC2E900056912C /* ofxTimecode */ = {
+			isa = PBXGroup;
+			children = (
+				E7CEC6C315BC2E900056912C /* src */,
+			);
+			name = ofxTimecode;
+			path = ../../ofxTimecode;
+			sourceTree = "<group>";
+		};
+		E7CEC6C315BC2E900056912C /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E7CEC6C415BC2E900056912C /* ofxTimecode.cpp */,
+				E7CEC6C515BC2E900056912C /* ofxTimecode.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		E7FBD07813D61DA100938471 /* ofxTimeline */ = {
@@ -581,6 +625,8 @@
 				E7F4B5C91458DF4B0031CC9A /* ofxTLImageSequenceFrame.cpp in Sources */,
 				A60B6A0E148704E1008196FE /* ofxTLColors.cpp in Sources */,
 				A6063E91148B0A4500D154C3 /* ofxTextInputField.cpp in Sources */,
+				E7CEC6B115BC2DB00056912C /* ofxMSATimer.cpp in Sources */,
+				E7CEC6C815BC2E900056912C /* ofxTimecode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

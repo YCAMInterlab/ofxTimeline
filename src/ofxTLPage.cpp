@@ -241,9 +241,9 @@ void ofxTLPage::nudgeBy(ofVec2f nudgePercent){
 	}
 }
 
-void ofxTLPage::addElement(string elementName, ofxTLElement* element){
+void ofxTLPage::addElement(string elementName, ofxTLTrack* element){
 
-	ofxTLElementHeader* newHeader = new ofxTLElementHeader();
+	ofxTLTrackHeader* newHeader = new ofxTLTrackHeader();
 	newHeader->setElement(element);
 	newHeader->setup();
 
@@ -272,7 +272,7 @@ void ofxTLPage::addElement(string elementName, ofxTLElement* element){
 	elements[elementName] = element;
 }
 
-ofxTLElement* ofxTLPage::getElement(string elementName){
+ofxTLTrack* ofxTLPage::getElement(string elementName){
 	if(elements.find(elementName) == elements.end()){
 		ofLogError("ofxTLPage -- Couldn't find element named " + elementName + " on page " + name);
 		return NULL;

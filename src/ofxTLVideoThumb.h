@@ -17,9 +17,9 @@ class ofxTLVideoThumb {
 	~ofxTLVideoThumb();
 	
 	void setup(int framenum, string thumbpath);
-	void create(ofImage& videoFrame);
+	void create(ofPixels& thumbPixels);
 
-	void load();
+//	void load();
 	void unload();
 	long timestamp; //generally millis from the beginning of the sequence
 	
@@ -28,14 +28,15 @@ class ofxTLVideoThumb {
 	
 	int framenum;
 	bool loaded;
-	bool exists;
+//  bool pixelsReady;
+//	bool exists;
 
-	ofImage thumb;
+	ofPtr<ofImage> thumb;
 	
-	bool visible;
+//	bool visible;
 	ofRectangle displayRect;
 	
-	float targetWidth;
-	float targetHeight;
-	float timeloaded;
+//	float targetWidth;
+//	float targetHeight;
+//	float timeloaded;
 };

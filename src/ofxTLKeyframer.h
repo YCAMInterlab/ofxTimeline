@@ -5,8 +5,6 @@
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
- * implementaiton by James George (@obviousjim) and Tim Gfrerer (@tgfrerer) for the 
- * Voyagers gallery National Maritime Museum 
  * 
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -40,7 +38,7 @@
 #include "ofMain.h"
 #include "ofRange.h"
 #include "ofxTween.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 
 typedef struct
 {
@@ -68,7 +66,7 @@ typedef struct
 	ofVec2f grabOffset; 
 } ofxTLKeyframe;
 
-class ofxTLKeyframer : public ofxTLElement
+class ofxTLKeyframer : public ofxTLTrack
 {
   public:	
 	ofxTLKeyframer();

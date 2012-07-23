@@ -35,15 +35,15 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 
 #define FOOTER_HEIGHT 10
 
-class ofxTLElementHeader : public ofxTLElement
+class ofxTLTrackHeader : public ofxTLTrack
 {
   public:	
-	ofxTLElementHeader();
-	~ofxTLElementHeader();
+	ofxTLTrackHeader();
+	~ofxTLTrackHeader();
 	
 	string name;	
 	
@@ -55,13 +55,13 @@ class ofxTLElementHeader : public ofxTLElement
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
-	virtual void setElement(ofxTLElement* element);
+	virtual void setElement(ofxTLTrack* element);
 	
 	virtual void collapseElement();
 	virtual ofRectangle getFooterRect();
 	
   protected:
-	ofxTLElement* element;
+	ofxTLTrack* element;
 	
 	void recalculateFooter();
 	

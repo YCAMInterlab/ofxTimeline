@@ -32,10 +32,10 @@
  * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofxTimeline.h"
 
-ofxTLElement::ofxTLElement()
+ofxTLTrack::ofxTLTrack()
 :	xmlFileName(""),
 	bounds(ofRectangle(0,0,0,0)),
 	zoomBounds(ofRange(0,1.0)),
@@ -49,165 +49,165 @@ ofxTLElement::ofxTLElement()
 	//
 }
 
-ofxTLElement::~ofxTLElement(){
+ofxTLTrack::~ofxTLTrack(){
 	disable();
 }
 
-void ofxTLElement::enable(){
+void ofxTLTrack::enable(){
 	enabled = true;
 	ofxTLRegisterZoomEvents(this);
 }
 
-void ofxTLElement::disable(){
+void ofxTLTrack::disable(){
 	enabled = false;
 	focused = false;
 	ofxTLRemoveZoomEvents(this);	
 }
 
-void ofxTLElement::setDrawRect(ofRectangle drawRect){
+void ofxTLTrack::setDrawRect(ofRectangle drawRect){
 	bounds = drawRect;
 	drawRectChanged();
 }
 
-void ofxTLElement::offsetDrawRect(ofVec2f offset){
+void ofxTLTrack::offsetDrawRect(ofVec2f offset){
 	bounds.x += offset.x;
 	bounds.y += offset.y;
 	drawRectChanged();
 }
 
-ofxTimeline* ofxTLElement::getTimeline(){
+ofxTimeline* ofxTLTrack::getTimeline(){
 	return timeline;
 }
 	
-void ofxTLElement::setTimeline(ofxTimeline* _timeline){
+void ofxTLTrack::setTimeline(ofxTimeline* _timeline){
 	timeline = _timeline;
 }
 
-void ofxTLElement::setName(string _name){
+void ofxTLTrack::setName(string _name){
 	name = _name;
 }
 
-string ofxTLElement::getName(){
+string ofxTLTrack::getName(){
 	return name;
 }
 
-void ofxTLElement::mouseMoved(ofMouseEventArgs& args){
+void ofxTLTrack::mouseMoved(ofMouseEventArgs& args){
 	hover = bounds.inside(args.x, args.y);
 }
 
-void ofxTLElement::mousePressed(ofMouseEventArgs& args){
+void ofxTLTrack::mousePressed(ofMouseEventArgs& args){
 	focused = bounds.inside(args.x, args.y);
 }
 
-ofRectangle ofxTLElement::getDrawRect(){
+ofRectangle ofxTLTrack::getDrawRect(){
 	return bounds;
 }
 
-bool ofxTLElement::getCreatedByTimeline(){
+bool ofxTLTrack::getCreatedByTimeline(){
 	return createdByTimeline;
 }
 
-void ofxTLElement::setCreatedByTimeline(bool created){
+void ofxTLTrack::setCreatedByTimeline(bool created){
 	createdByTimeline = created;
 }
 
-void ofxTLElement::zoomStarted(ofxTLZoomEventArgs& args){
+void ofxTLTrack::zoomStarted(ofxTLZoomEventArgs& args){
 	setZoomBounds(args.currentZoom);
 }
 
-void ofxTLElement::zoomDragged(ofxTLZoomEventArgs& args){
+void ofxTLTrack::zoomDragged(ofxTLZoomEventArgs& args){
 	setZoomBounds(args.currentZoom);
 }
 
-void ofxTLElement::zoomEnded(ofxTLZoomEventArgs& args){
+void ofxTLTrack::zoomEnded(ofxTLZoomEventArgs& args){
 	setZoomBounds(args.currentZoom);
 }
 
-void ofxTLElement::setZoomBounds(ofRange zoomBoundsPercent){
+void ofxTLTrack::setZoomBounds(ofRange zoomBoundsPercent){
 	zoomBounds = zoomBoundsPercent;
 }
 
-void ofxTLElement::setXMLFileName(string filename){
+void ofxTLTrack::setXMLFileName(string filename){
 	xmlFileName = filename;
 }
 
-string ofxTLElement::getXMLFilePath(){
+string ofxTLTrack::getXMLFilePath(){
 	return xmlFileName;	
 }
 
-string ofxTLElement::getXMLFileName(){
+string ofxTLTrack::getXMLFileName(){
 	return ofFilePath::getFileName(xmlFileName);
 }
 
-void ofxTLElement::setAutosave(bool _autosave){
+void ofxTLTrack::setAutosave(bool _autosave){
 	autosave = _autosave;
 }
 			   
-bool ofxTLElement::hasFocus(){
+bool ofxTLTrack::hasFocus(){
 	return focused;
 }
 
-bool ofxTLElement::pointInScreenBounds(ofVec2f screenpoint){
+bool ofxTLTrack::pointInScreenBounds(ofVec2f screenpoint){
 	return bounds.inside(screenpoint);
 }
 
-float ofxTLElement::screenXtoNormalizedX(float x){
+float ofxTLTrack::screenXtoNormalizedX(float x){
 	return ofMap(x, bounds.x, bounds.x+bounds.width, 0.0, 1.0, true);
 }
 
-float ofxTLElement::normalizedXtoScreenX(float x){
+float ofxTLTrack::normalizedXtoScreenX(float x){
 	return ofMap(x, 0.0, 1.0, bounds.x, bounds.x+bounds.width, true);
 }
 
-float ofxTLElement::screenXtoNormalizedX(float x, ofRange outputRange){
+float ofxTLTrack::screenXtoNormalizedX(float x, ofRange outputRange){
 	return ofMap(x, bounds.x, bounds.x+bounds.width, outputRange.min, outputRange.max, false);
 }
 
-float ofxTLElement::normalizedXtoScreenX(float x, ofRange inputRange){
+float ofxTLTrack::normalizedXtoScreenX(float x, ofRange inputRange){
 	return ofMap(x, inputRange.min, inputRange.max, bounds.x, bounds.x+bounds.width, false);
 }
 
 
-int ofxTLElement::indexForScreenX(int screenX){
+int ofxTLTrack::indexForScreenX(int screenX){
 	return indexForScreenX(screenX, timeline->getDurationInFrames());
 }
 
-int ofxTLElement::screenXForIndex(int index){
+int ofxTLTrack::screenXForIndex(int index){
 	return screenXForIndex(index, timeline->getDurationInFrames());	
 }
 
-int ofxTLElement::indexForScreenX(int screenX, int durationInFrames){
+int ofxTLTrack::indexForScreenX(int screenX, int durationInFrames){
 	int startFrame = zoomBounds.min * durationInFrames;
 	int endFrame = zoomBounds.max * durationInFrames;
 	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
 }
 
-int ofxTLElement::screenXForIndex(int index, int durationInFrames){
+int ofxTLTrack::screenXForIndex(int index, int durationInFrames){
 	int startFrame = zoomBounds.min * durationInFrames;
 	int endFrame = zoomBounds.max * durationInFrames;
 	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
 }
 
-float ofxTLElement::screenXForTime(float time){
+float ofxTLTrack::screenXForTime(float time){
 	return screenXForTime(time, timeline->getDurationInSeconds());
 }
 
-float ofxTLElement::timeForScreenX(float screenX){
+float ofxTLTrack::timeForScreenX(float screenX){
 	return timeForScreenX(screenX, timeline->getDurationInSeconds());
 }
 
-float ofxTLElement::screenXForTime(float time, float durationInSeconds){
+float ofxTLTrack::screenXForTime(float time, float durationInSeconds){
 	float startTime = zoomBounds.min * durationInSeconds;
 	float endTime = zoomBounds.max *durationInSeconds;
 	return ofMap(time, startTime, endTime, bounds.x, bounds.x+bounds.width, false);
 }
 
-float ofxTLElement::timeForScreenX(float screenX, float durationInSeconds){
+float ofxTLTrack::timeForScreenX(float screenX, float durationInSeconds){
 	float startTime = zoomBounds.min * durationInSeconds;
 	float endTime = zoomBounds.max *durationInSeconds;
 	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startTime, endTime, true);	
 }
 
-bool ofxTLElement::isOnScreen(float screenX){
+bool ofxTLTrack::isOnScreen(float screenX){
 	return screenX > bounds.x && screenX < bounds.x+bounds.width;
 }
