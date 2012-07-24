@@ -38,15 +38,17 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
-	virtual void zoomStarted(ofxTLZoomEventArgs& args);
-	virtual void zoomDragged(ofxTLZoomEventArgs& args);
-	virtual void zoomEnded(ofxTLZoomEventArgs& args);
+//	virtual void zoomStarted(ofxTLZoomEventArgs& args);
+//	virtual void zoomDragged(ofxTLZoomEventArgs& args);
+//	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 
-	virtual void drawRectChanged();
+//	virtual void drawRectChanged();
 	
 	int getSelectedFrame();
 	int getCurrentFrame();
 
+    bool isLoaded();
+    
 	float getCurrentTime();
 	int selectFrame(int frame); //returns the true selected frame in video
 	void toggleThumbs();
@@ -58,7 +60,6 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
   protected:
     
     //    vector<ofxTLVideoThumb> videoThumbs;
-	//void calculateFramePositions();
 	int selectedFrame;
 	int currentLoop;
 	bool thumbsEnabled;
@@ -74,18 +75,10 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     float getContentHeight();
 
     void framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs);
-    
-//    float thumbnailUpdatedWidth;
-//    float thumbnailUpdatedHeight;
-
-//	void generateVideoThumbnails();
-//	void generateThumbnailForFrame(int index);
-//	void purgeOldThumbnails();
-    
+        
 	ofPtr<ofVideoPlayer> player;
 	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a loss of memory but speeds things up big time
     
-//	string thumbDirectory;	
     bool pauseThumbGeneration;
     void threadedFunction();
     void exit(ofEventArgs& args);

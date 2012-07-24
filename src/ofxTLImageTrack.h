@@ -11,14 +11,19 @@ class ofxTLImageTrack : public ofxTLTrack {
 	ofxTLImageTrack();
     ~ofxTLImageTrack();
     
-    void setup();
+    virtual bool isLoaded() = 0;
+    
+    virtual void zoomStarted(ofxTLZoomEventArgs& args);
+    virtual void zoomDragged(ofxTLZoomEventArgs& args);
+    virtual void zoomEnded(ofxTLZoomEventArgs& args);
 
+    virtual void drawRectChanged();
+    
   protected:
     
+    bool currentlyZooming;
     vector<ofxTLVideoThumb> videoThumbs;
-	void calculateFramePositions();
-    
-    virtual bool canCalculateThumbs() = 0;
+	virtual void calculateFramePositions();
     
     //width and height of image elements
     virtual float getContentWidth() = 0;

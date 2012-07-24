@@ -2,26 +2,39 @@
 #include "ofxTLImageTrack.h"
 
 ofxTLImageTrack::ofxTLImageTrack(){
-    
+    currentlyZooming = false;
 }
 
 ofxTLImageTrack::~ofxTLImageTrack(){
 
 }
 
-void ofxTLImageTrack::setup(){
+void ofxTLImageTrack::drawRectChanged(){
+	calculateFramePositions();
+}
 
+void ofxTLImageTrack::zoomStarted(ofxTLZoomEventArgs& args){
+    currentlyZooming = true;
+	ofxTLTrack::zoomStarted(args);
+	calculateFramePositions();
+}
+
+void ofxTLImageTrack::zoomDragged(ofxTLZoomEventArgs& args){
+	ofxTLTrack::zoomDragged(args);
+	calculateFramePositions();
+}
+
+void ofxTLImageTrack::zoomEnded(ofxTLZoomEventArgs& args){
+    currentlyZooming = false;
+	ofxTLTrack::zoomEnded(args);
+	calculateFramePositions();
 }
 
 void ofxTLImageTrack::calculateFramePositions(){
 	
-    cout << "Attempting CALCULATING THUMBS" << endl;
-	
-    if(bounds.height < 10 || !canCalculateThumbs()){
+    if(bounds.height < 10 || !isLoaded()){
         return;
     }
-    
-    cout << "CALCULATING THUMBS" << endl;
     
     //TODO: what if the # of frames in the scene is less than the entire width?
     
@@ -45,7 +58,9 @@ void ofxTLImageTrack::calculateFramePositions(){
 	for(int i = 0; i < numberOfFramesInView; i++){
         ofxTLVideoThumb thumb;
         thumb.displayRect = ofRectangle(pixelOffset + thumbWidth * i, bounds.y, thumbWidth, bounds.height);
+        //TODO: account for offsets at some point
         thumb.framenum = screenXtoNormalizedX(thumb.displayRect.x, zoomBounds) * timeline->getDurationInFrames();
+        thumb.timestamp = timeline->getTimecode().millisForFrame(thumb.framenum);
         thumb.loaded = false;
         newThumbs.push_back(thumb);
     }

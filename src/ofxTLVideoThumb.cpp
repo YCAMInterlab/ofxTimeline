@@ -12,6 +12,7 @@
 ofxTLVideoThumb::ofxTLVideoThumb(){
 	framenum= -1;
 	loaded = false;
+    useTexture = true;
 //	exists = false;
 //s	targetWidth = 360;	
 }
@@ -40,8 +41,7 @@ void ofxTLVideoThumb::create(ofPixels& thumbPixels){
         thumb = ofPtr<ofImage>(new ofImage());
     }
     
-    
-    thumb->setUseTexture(false);
+    thumb->setUseTexture(useTexture);
 	thumb->setFromPixels(thumbPixels);
 //	targetHeight = float(thumbPixels.getHeight()) / thumbPixels.getWidth() * targetWidth;
 	if(int(displayRect.height) != int(thumbPixels.getHeight()) ){

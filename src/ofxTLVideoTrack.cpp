@@ -16,7 +16,7 @@ ofxTLVideoTrack::ofxTLVideoTrack() {
 	currentLoop = 0;
 	inFrame = -1;
 	outFrame = -1;
-    pauseThumbGeneration = false;
+    currentlyZooming = false;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
@@ -75,6 +75,11 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 
 
 void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) {
+
+    for(int i = 0; i < newThumbs.size(); i++){
+		newThumbs[i].useTexture = false;        
+    }
+
     lock();
     //6) copy old textures thumbs over if they are still used, delete them if they are not
     for(int i = 0; i < videoThumbs.size(); i++){
@@ -254,26 +259,6 @@ void ofxTLVideoTrack::setOutFrame(int out){
 //}
 
 
-void ofxTLVideoTrack::drawRectChanged(){
-	calculateFramePositions();
-}
-
-void ofxTLVideoTrack::zoomStarted(ofxTLZoomEventArgs& args){
-	ofxTLTrack::zoomStarted(args);
-    pauseThumbGeneration = true;
-	calculateFramePositions();
-}
-
-void ofxTLVideoTrack::zoomDragged(ofxTLZoomEventArgs& args){
-	ofxTLTrack::zoomDragged(args);
-	calculateFramePositions();
-}
-
-void ofxTLVideoTrack::zoomEnded(ofxTLZoomEventArgs& args){
-	ofxTLTrack::zoomEnded(args);
-	calculateFramePositions();
-    pauseThumbGeneration = false;
-}
 
 
 void ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args){
@@ -297,17 +282,17 @@ void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	}
 }
 
-bool ofxTLVideoTrack::canCalculateThumbs(){
+bool ofxTLVideoTrack::isLoaded(){
 	return player != NULL && player->isLoaded();
 }
 
 //width and height of image elements
 float ofxTLVideoTrack::getContentWidth(){
-    return canCalculateThumbs() ? player->getWidth() : 0;  
+    return isLoaded() ? player->getWidth() : 0;  
 }
 
 float ofxTLVideoTrack::getContentHeight(){
-    return canCalculateThumbs() ? player->getHeight() : 0;    
+    return isLoaded() ? player->getHeight() : 0;    
 }
 
 void ofxTLVideoTrack::mouseReleased(ofMouseEventArgs& args){
@@ -340,7 +325,7 @@ int ofxTLVideoTrack::selectFrame(int frame){
 void ofxTLVideoTrack::threadedFunction(){
 
 	while(isThreadRunning()){
-        if(!pauseThumbGeneration && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
+        if(!currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
             lock();
             
             for(int i = 0; i < videoThumbs.size(); i++){
