@@ -44,19 +44,11 @@ bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 }
 
 ofxTLKeyframer::ofxTLKeyframer(){
-
-	initializeEasings();
-	reset();
-	
-	valueRange = ofRange(0.0, 1.0);
-	hoverKeyframe = NULL;
-	drawingEasingWindow = false;
-	
-	xmlFileName = "_keyframes.xml";
-	
+    
+    hoverKeyframe = NULL;
+	xmlFileName = "_keyframes.xml";	
 	drawingSelectRect = false;
-	
-	pointsAreDraggable = false;
+	keysAreDraggable = false;
 }
 
 ofxTLKeyframer::~ofxTLKeyframer(){
@@ -68,183 +60,138 @@ void ofxTLKeyframer::setup(){
 	load();
 }
 
-void ofxTLKeyframer::setValueRange(ofRange range, float newDefaultValue){
-	valueRange = range;
-    defaultValue = newDefaultValue;
-}
+//void ofxTLKeyframer::setValueRange(ofRange range, float newDefaultValue){
+//	valueRange = range;
+//    defaultValue = newDefaultValue;
+//}
+//
+////main function to get values out of the timeline, operates on the given value range
+//float ofxTLKeyframer::getValueAtPercent(float percent){
+//	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
+//}
 
-//main function to get values out of the timeline, operates on the given value range
-float ofxTLKeyframer::getValueAtPercent(float percent){
-	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
-}
-
-float ofxTLKeyframer::sampleAt(float percent){
-	percent = ofClamp(percent, 0, 1.0);
-	
-	//edge cases
-	if(keyframes.size() == 0){
-		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
-	}
-	
-	if(percent < keyframes[0]->position.x){
-		return keyframes[0]->position.y;
-	}
-	
-	if(percent > keyframes[keyframes.size()-1]->position.x){
-		return keyframes[keyframes.size()-1]->position.y;
-	}
-	
-	for(int i = 1; i < keyframes.size(); i++){
-		if(keyframes[i]->position.x >= percent){
-			float percentBetween = ofxTween::map(percent, keyframes[i-1]->position.x, keyframes[i]->position.x, 0.0, 1.0, false, 
-												 *keyframes[i-1]->easeFunc->easing, keyframes[i-1]->easeType->type);
-			return keyframes[i-1]->position.y * (1.-percentBetween) + keyframes[i]->position.y*percentBetween;
-		}
-	}
-	
-	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(percent, 4));
-	return defaultValue;
-}
+//float ofxTLKeyframer::sampleAt(float percent){
+//	percent = ofClamp(percent, 0, 1.0);
+//	
+//	//edge cases
+//	if(keyframes.size() == 0){
+//		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
+//	}
+//	
+//	if(percent < keyframes[0]->position.x){
+//		return keyframes[0]->position.y;
+//	}
+//	
+//	if(percent > keyframes[keyframes.size()-1]->position.x){
+//		return keyframes[keyframes.size()-1]->position.y;
+//	}
+//	
+//	for(int i = 1; i < keyframes.size(); i++){
+//		if(keyframes[i]->position.x >= percent){
+//			float percentBetween = ofxTween::map(percent, keyframes[i-1]->position.x, keyframes[i]->position.x, 0.0, 1.0, false, 
+//												 *keyframes[i-1]->easeFunc->easing, keyframes[i-1]->easeType->type);
+//			return keyframes[i-1]->position.y * (1.-percentBetween) + keyframes[i]->position.y*percentBetween;
+//		}
+//	}
+//	
+//	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(percent, 4));
+//	return defaultValue;
+//}
 
 
 void ofxTLKeyframer::draw(){
-	
-	if(bounds.width == 0 || bounds.height == 0){
-//		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
-		return;
-	}
-	
-	ofPushStyle();
-	ofPushMatrix();
-	ofEnableSmoothing();
-	
-	//**** DRAW BORDER. TODO: move to super class
-	ofNoFill();
-	if(hover){
-		ofSetColor(timeline->getColors().highlightColor);
-	}
-	else if(focused){
-		ofSetColor(timeline->getColors().highlightColor);
-	}
-	else{
-		ofSetColor(timeline->getColors().outlineColor);
-	}	
-	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	
-	
-	//**** DRAW KEYFRAME LINES
-	ofSetColor(timeline->getColors().highlightColor);
-	ofNoFill();
-	ofBeginShape();
-	if(keyframes.size() == 0 || keyframes.size() == 1){
-		ofVertex(bounds.x, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
-		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
-	}
-	else{
-		for(int p = 0; p <= bounds.width; p++){
-			ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
-		}
-	}
-	ofEndShape(false);
-	
-	//**** DRAW KEYFRAME DOTS
-	ofSetColor(timeline->getColors().textColor);
-	for(int i = 0; i < keyframes.size(); i++){
-		if(!isKeyframeIsInBounds(keyframes[i])){
-			continue;
-		}
-		
-		ofSetColor(timeline->getColors().textColor);
-		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
-
-		if(isKeyframeSelected( keyframes[i] )){
-			float keysValue = ofMap(keyframes[i]->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
-			string frameString = timeline->getIsFrameBased() ? 
-				ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
-				timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
-			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
-			ofFill();
-		}
-		else{
-			ofNoFill();
-		}
-		
-		if(keyframes[i] == hoverKeyframe){
-			ofPushStyle();
-			ofFill();			
-			ofSetColor(timeline->getColors().highlightColor);
-			ofCircle(screenpoint.x, screenpoint.y, 8);
-			ofPopStyle();
-		}
-		
-		ofCircle(screenpoint.x, screenpoint.y, 4);
-	}
-	
-	//**** DRAW SELECT RECT
-	if(drawingSelectRect){
-		ofFill();
-		ofSetColor(timeline->getColors().keyColor, 30);
-		ofRect(selectRect);
-		
-		ofNoFill();
-		ofSetColor(timeline->getColors().keyColor, 255);
-		ofRect(selectRect);
-		
-	}
-	ofPopMatrix();
-	ofPopStyle();
+	//TODO: simple keyframe draw
 }
 
-void ofxTLKeyframer::drawModalContent(){
-	
-	//****** DRAW EASING CONTROLS
-	if(drawingEasingWindow){
-		for(int i = 0; i < easingFunctions.size(); i++){
-			//TODO turn into something like selectionContainsEaseFunc();
-			if(easingFunctions[i] == selectedKeyframes[0]->easeFunc){
-				ofSetColor(150, 100, 10);
-			}
-			else{
-				ofSetColor(80, 80, 80);
-			}
-			ofFill();
-			ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
-			ofSetColor(200, 200, 200);
-			ofDrawBitmapString(easingFunctions[i]->name, 
-							   easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
-							   easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
-			
-			ofNoFill();
-			ofSetColor(40, 40, 40);
-			ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
-		}
-		
-		for(int i = 0; i < easingTypes.size(); i++){
-			//TODO turn into something like selectionContainsEaseType();
-			if(easingTypes[i] == selectedKeyframes[0]->easeType){
-				ofSetColor(150, 100, 10);
-			}
-			else{
-				ofSetColor(80, 80, 80);
-			}
-			ofFill();
-			ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y, 
-				   easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-			ofSetColor(200, 200, 200);
-			ofDrawBitmapString(easingTypes[i]->name, 
-							   easingWindowPosition.x + easingTypes[i]->bounds.x+10, 
-							   easingWindowPosition.y + easingTypes[i]->bounds.y+15);			
-			ofNoFill();
-			ofSetColor(40, 40, 40);
-			ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, 
-				   easingWindowPosition.y + easingTypes[i]->bounds.y, 
-				   easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-		}
-	}
-	
-}
+//void ofxTLKeyframer::draw(){
+//	
+//	if(bounds.width == 0 || bounds.height == 0){
+////		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
+//		return;
+//	}
+//	
+//	ofPushStyle();
+//	ofPushMatrix();
+//	ofEnableSmoothing();
+//	
+//	//**** DRAW BORDER. TODO: move to super class
+//	ofNoFill();
+//	if(hover){
+//		ofSetColor(timeline->getColors().highlightColor);
+//	}
+//	else if(focused){
+//		ofSetColor(timeline->getColors().highlightColor);
+//	}
+//	else{
+//		ofSetColor(timeline->getColors().outlineColor);
+//	}	
+//	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+//	
+//	
+//	//**** DRAW KEYFRAME LINES
+//	ofSetColor(timeline->getColors().highlightColor);
+//	ofNoFill();
+//	ofBeginShape();
+//	if(keyframes.size() == 0 || keyframes.size() == 1){
+//		ofVertex(bounds.x, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
+//		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
+//	}
+//	else{
+//		for(int p = 0; p <= bounds.width; p++){
+//            //TODO: cache this into a poly line to avoid insane sampling.
+//			ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
+//		}
+//	}
+//	ofEndShape(false);
+//	
+//	//**** DRAW KEYFRAME DOTS
+//	ofSetColor(timeline->getColors().textColor);
+//	for(int i = 0; i < keyframes.size(); i++){
+//		if(!isKeyframeIsInBounds(keyframes[i])){
+//			continue;
+//		}
+//		
+//		ofSetColor(timeline->getColors().textColor);
+//		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
+//
+//		if(isKeyframeSelected( keyframes[i] )){
+//			float keysValue = ofMap(keyframes[i]->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
+//			string frameString = timeline->getIsFrameBased() ? 
+//				ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
+//				timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
+//			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
+//			ofFill();
+//		}
+//		else{
+//			ofNoFill();
+//		}
+//		
+//		if(keyframes[i] == hoverKeyframe){
+//			ofPushStyle();
+//			ofFill();			
+//			ofSetColor(timeline->getColors().highlightColor);
+//			ofCircle(screenpoint.x, screenpoint.y, 8);
+//			ofPopStyle();
+//		}
+//		
+//		ofCircle(screenpoint.x, screenpoint.y, 4);
+//	}
+//	
+//	//**** DRAW SELECT RECT
+//	if(drawingSelectRect){
+//		ofFill();
+//		ofSetColor(timeline->getColors().keyColor, 30);
+//		ofRect(selectRect);
+//		
+//		ofNoFill();
+//		ofSetColor(timeline->getColors().keyColor, 255);
+//		ofRect(selectRect);
+//		
+//	}
+//	ofPopMatrix();
+//	ofPopStyle();
+//}
+
 
 
 void ofxTLKeyframer::load(){
@@ -262,6 +209,8 @@ void ofxTLKeyframer::load(){
 }
 
 void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxTLKeyframe*>& keyContainer){
+
+
 	int numKeyframeStores = xmlStore.getNumTags("keyframes");
 	for(int store = 0; store < numKeyframeStores; store++){
 		xmlStore.pushTag("keyframes",store);
@@ -272,9 +221,8 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),
 													 xmlStore.getValue("y", 0.0)));
 			
-			key->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
-			key->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
-			
+			restoreKeyframe(key, xmlStore);			
+            
 			xmlStore.popTag(); //key
 			
 			keyContainer.push_back( key );
@@ -284,6 +232,7 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 	}
 	
 	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
+
 }
 
 
@@ -315,8 +264,6 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 		savedkeyframes.pushTag("key", i);
 		savedkeyframes.addValue("x", keys[i]->position.x);
 		savedkeyframes.addValue("y", keys[i]->position.y);
-		savedkeyframes.addValue("easefunc", keys[i]->easeFunc->id);
-		savedkeyframes.addValue("easetype", keys[i]->easeType->id);
 		savedkeyframes.popTag(); //key
 	}
 	
@@ -329,7 +276,8 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
 
-	//TODO: move to Modal world
+	//TODO: move to modal click world
+    /*
 	if(drawingEasingWindow){
 		//see if we clicked on an
 		drawingEasingWindow = false;
@@ -354,11 +302,12 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 			}
 		}
 	}
+    */
     
-    pointsAreDraggable = !ofGetModifierKeyShift();
+    keysAreDraggable = !ofGetModifierKeyShift();
 
     bool didJustDeselect = false;
-    ofxTLKeyframe* selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
+	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
     if(hasFocus() && !ofGetModifierKeyShift()){
@@ -405,16 +354,22 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
 			//move the playhead
 			if(timeline->getMovePlayheadOnDrag()){
-				timeline->setPercentComplete(keyframes[selectedKeyframeIndex]->position.x);
+				timeline->setPercentComplete(selectedKeyframe->position.x);
 			}
 		}
 		else if(args.button == 2){
-			easingWindowPosition = ofVec2f(MIN(screenpoint.x, bounds.width - easingBoxWidth),
-										   MIN(screenpoint.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
-			drawingEasingWindow = true;
+            selectedKeySecondaryClick(args);
+//			easingWindowPosition = ofVec2f(MIN(screenpoint.x, bounds.width - easingBoxWidth),
+//										   MIN(screenpoint.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+//			drawingEasingWindow = true;
 		}
 	}
 }
+
+// MODAL CLICK TEST
+// GET SELECTED ITEM
+// CREATE NEW ITEM
+// RIGHT CLICK ITEM
 
 void ofxTLKeyframer::updateDragOffsets(ofVec2f screenpoint){
 	for(int k = 0; k < selectedKeyframes.size(); k++){
@@ -455,7 +410,7 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
         }
     }
     else {
-        if(selectedKeyframes.size() != 0 && pointsAreDraggable){
+        if(selectedKeyframes.size() != 0 && keysAreDraggable){
             ofVec2f screenpoint(args.x,args.y);
             for(int k = 0; k < selectedKeyframes.size(); k++){
                 ofVec2f newScreenPosition;
@@ -464,9 +419,8 @@ void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
                 ofVec2f newposition = keyframePointForCoord(newScreenPosition);
                 selectedKeyframes[k]->position = newposition;
             }
-            ofxTLKeyframe* dragkey = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
-            if(dragkey != NULL && timeline->getMovePlayheadOnDrag()){
-                timeline->setPercentComplete(dragkey->position.x);
+            if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
+                timeline->setPercentComplete(selectedKeyframe->position.x);
             }
             timeline->flagUserChangedValue();
             updateKeyframeSort();
@@ -604,6 +558,7 @@ ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 			return keyframes[i];
 		}
 	}
+    selectedIndex = -1;
 	return NULL;
 }
 
@@ -650,102 +605,7 @@ ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord){
 ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point){
 	ofxTLKeyframe* k = new ofxTLKeyframe();
 	k->position = point;
-	k->easeFunc = easingFunctions[0];
-	k->easeType = easingTypes[0];
-	//keyframes.push_back( k );
+//	k->easeFunc = easingFunctions[0];
+//	k->easeType = easingTypes[0];
 	return k;
 }
-
-void ofxTLKeyframer::initializeEasings(){
-
-	//FUNCTIONS ----
-	EasingFunction* ef;
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingLinear();
-	ef->name = "linear";
-	easingFunctions.push_back(ef);
-	
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingSine();
-	ef->name = "sine";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingCirc();
-	ef->name = "circular";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingQuad();
-	ef->name = "quadratic";
-	easingFunctions.push_back(ef);
-	
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingCubic();
-	ef->name = "cubic";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingQuart();
-	ef->name = "quartic";
-	easingFunctions.push_back(ef);
-	
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingQuint();
-	ef->name = "quintic";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingExpo();
-	ef->name = "exponential";
-	easingFunctions.push_back(ef);
-	
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingBack();
-	ef->name = "back";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingBounce();
-	ef->name = "bounce";
-	easingFunctions.push_back(ef);
-
-	ef = new EasingFunction();
-	ef->easing = new ofxEasingElastic();
-	ef->name = "elastic";
-	easingFunctions.push_back(ef);
-
-	///TYPES -------
-	EasingType* et;
-	et = new EasingType();
-	et->type = ofxTween::easeIn;
-	et->name = "ease in";
-	easingTypes.push_back(et);
-
-	et = new EasingType();
-	et->type = ofxTween::easeOut;
-	et->name = "ease out";
-	easingTypes.push_back(et);
-
-	et = new EasingType();
-	et->type = ofxTween::easeInOut;
-	et->name = "ease in-out";
-	easingTypes.push_back(et);
-	
-	//TODO: make configurable
-	easingBoxWidth  = 120;
-	easingBoxHeight = 20;
-	easingWindowSeperatorHeight = 4;
-	
-	for(int i = 0; i < easingFunctions.size(); i++){
-		easingFunctions[i]->bounds = ofRectangle(0, i*easingBoxHeight, easingBoxWidth, easingBoxHeight);
-		easingFunctions[i]->id = i;
-	}
-	
-	for(int i = 0; i < easingTypes.size(); i++){
-		easingTypes[i]->bounds = ofRectangle(0, (i+easingFunctions.size())*easingBoxHeight + easingWindowSeperatorHeight, easingBoxWidth, easingBoxHeight);
-		easingTypes[i]->id = i;
-	}
-	
-}
-

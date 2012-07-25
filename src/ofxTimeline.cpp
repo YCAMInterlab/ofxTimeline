@@ -739,25 +739,19 @@ void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	element->setTimeline( this );
 	element->setName( name );
 	currentPage->addElement(name, element);		
-	elementNameToPage[name] = currentPage;
+	trackNameToPage[name] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
 
 }
 
-ofxTLKeyframer* ofxTimeline::addKeyframes(string name, ofRange valueRange, float defaultValue){
-    string xmlName = name;
-    ofStringReplace(xmlName, " ", "_");
-    ofStringReplace(xmlName, ":", "_");
-    ofStringReplace(xmlName, "/", "_");
-    ofStringReplace(xmlName, "\\", "_");
-	xmlName += ".xml";
-    return addKeyframes(name, xmlName, valueRange, defaultValue);
+ofxTLTweener* ofxTimeline::addKeyframes(string name, ofRange valueRange, float defaultValue){
+    return addKeyframes(name, nameToXMLName(name), valueRange, defaultValue);
 }
 
-ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
+ofxTLTweener* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
 
-	ofxTLKeyframer*	newKeyframer = new ofxTLKeyframer();
+	ofxTLTweener*	newKeyframer = new ofxTLTweener();
 	newKeyframer->setCreatedByTimeline(true);
 	newKeyframer->setValueRange(valueRange, defaultValue);
 	newKeyframer->setXMLFileName(xmlFileName);
@@ -767,11 +761,11 @@ ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRan
 }
 
 float ofxTimeline::getKeyframeValue(string name, float atTime){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
+	if(trackNameToPage.find(name) == trackNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return 0.0;
 	}
-	ofxTLKeyframer* keyframer = (ofxTLKeyframer*)elementNameToPage[name]->getElement(name);
+	ofxTLTweener* keyframer = (ofxTLTweener*)trackNameToPage[name]->getElement(name);
 	if(keyframer == NULL){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return 0.0;
@@ -788,11 +782,11 @@ float ofxTimeline::getKeyframeValue(string name, int atFrame){
 }
 
 ofxTLTrack* ofxTimeline::getElement(string name){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
+	if(trackNameToPage.find(name) == trackNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return NULL;
 	}
-	return elementNameToPage[name]->getElement(name);
+	return trackNameToPage[name]->getElement(name);
 }
 
 ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
@@ -805,12 +799,12 @@ ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 }
 
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
-	if(elementNameToPage.find(name) == elementNameToPage.end()){
+	if(trackNameToPage.find(name) == trackNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find element " + name);
 		return false;
 	}
 	
-	ofxTLSwitcher* switcher = (ofxTLSwitcher*)elementNameToPage[name]->getElement(name);
+	ofxTLSwitcher* switcher = (ofxTLSwitcher*)trackNameToPage[name]->getElement(name);
 	if(switcher == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
 		return false;
@@ -827,12 +821,15 @@ bool ofxTimeline::getSwitcherOn(string name, int atFrame){
 	return getSwitcherOn(name, timecode.secondsForFrame(atFrame));	
 }
 
-ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
-	ofxTLTrigger* newTrigger = new ofxTLTrigger();
+ofxTLBangTrack* ofxTimeline::addTriggers(string name){
+ 	return addTriggers(name, nameToXMLName(name));   
+}
+
+ofxTLBangTrack* ofxTimeline::addTriggers(string name, string xmlFileName){
+	ofxTLBangTrack* newTrigger = new ofxTLBangTrack();
 	newTrigger->setCreatedByTimeline(true);
 	newTrigger->setXMLFileName(xmlFileName);
 	addElement(name, newTrigger);
-
 	return newTrigger;
 }
 
@@ -894,27 +891,17 @@ ofImage* ofxTimeline::getImage(string name, int atFrame){
 
 //TODO: replace with ofxTimecode formatting
 string ofxTimeline::formatTime(float time){
-//	if(isFrameBased){
-//		ofLogError("ofxTimeline -- formatting time for framebased timeline doesn't make sense");
-//	}
-//	
-//	char out[1024];
-//	int millis,seconds,minutes,hours;
-//	millis = int(time * 10000) % 10000;
-//	seconds = int(time) % 60;
-//	minutes = int(time/60) % 60;
-//	hours = int(time/60/60);
-//	sprintf(out, "%02d:%02d:%02d:%04d", hours, minutes,seconds,(millis+1));
-//	//truncate for shorter timelines
-//	if(minutes == 0){
-//		return string(out).substr(6, 7);
-//	}
-//	if(hours == 0){
-//		return string(out).substr(3, 10);
-//	}
-//	return string(out);
-    
     return timecode.timecodeForSeconds(time);
+}
+
+string ofxTimeline::nameToXMLName(string name){
+    string xmlName = name;
+    ofStringReplace(xmlName, " ", "_");
+    ofStringReplace(xmlName, ":", "_");
+    ofStringReplace(xmlName, "/", "_");
+    ofStringReplace(xmlName, "\\", "_");
+	xmlName += ".xml";
+	return xmlName;	    
 }
 
 void ofxTimeline::setDragAnchor(float dragAnchor){

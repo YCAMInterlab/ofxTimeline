@@ -37,34 +37,33 @@
 
 #include "ofMain.h"
 #include "ofRange.h"
-#include "ofxTween.h"
 #include "ofxTLTrack.h"
+#include "ofxXmlSettings.h"
 
-typedef struct
-{
-	int id;
-	ofRectangle bounds;
-	string name;
-	ofxEasing* easing;
-} EasingFunction;
+//
+//typedef struct
+//{
+//	int id;
+//	ofRectangle bounds;
+//	string name;
+//	ofxEasing* easing;
+//} EasingFunction;
+//
+//typedef struct
+//{
+//	int id;
+//	ofRectangle bounds;
+//	string name;
+//	ofxTween::ofxEasingType type;
+//} EasingType;
+//
 
-typedef struct
-{
-	int id;
-	ofRectangle bounds;
-	string name;
-	ofxTween::ofxEasingType type;
-} EasingType;
-
-typedef struct
-{
-	EasingFunction* easeFunc;
-	EasingType* easeType;
-	ofVec2f position; // x is value, y is time, all 0 - 1.0
-	
+class ofxTLKeyframe {
+  public:
+	ofVec2f position; // x is value, y is time, all 0 - 1.0	
 	//ui interaction vars -- only set when dragging
 	ofVec2f grabOffset; 
-} ofxTLKeyframe;
+};
 
 class ofxTLKeyframer : public ofxTLTrack
 {
@@ -74,11 +73,11 @@ class ofxTLKeyframer : public ofxTLTrack
 
 	virtual void setup();
 	virtual void draw();
-	virtual void drawModalContent(); //for pop up window-ish stuff
+//	virtual void drawModalContent(); //for pop up window-ish stuff
 
-	virtual void setValueRange(ofRange range, float defaultValue = 0);
-	//main function to get values out of the timeline, operates on the given value range
-	virtual float getValueAtPercent(float percent);
+//	virtual void setValueRange(ofRange range, float defaultValue = 0);
+//	//main function to get values out of the timeline, operates on the given value range
+//	virtual float getValueAtPercent(float percent);
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
@@ -97,6 +96,7 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void reset();
 	virtual void clear();
 	
+    
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
@@ -104,18 +104,18 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void selectAll();
 	virtual void unselectAll();
 	
-  private:
+  protected:
 	
-	virtual float sampleAt(float percent);
+//	virtual float sampleAt(float percent);
+	virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
 
-	bool keyframeSelected(ofxTLKeyframe* k);
-	
 	//vector<ofVec2f> grabOffsets; //keyframe grab offsets for dragging.
 	vector<ofxTLKeyframe*> keyframes;
-	
-	ofRange valueRange;
-	float defaultValue;
+
+//	ofRange valueRange;
+//	float defaultValue;
     
+    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
     void deselectKeyframe(ofxTLKeyframe* k);
@@ -124,36 +124,40 @@ class ofxTLKeyframer : public ofxTLTrack
 	void deleteSelectedKeyframes();
 	
 	vector<ofxTLKeyframe*> selectedKeyframes;
+    ofxTLKeyframe* selectedKeyframe;
 	ofxTLKeyframe* hoverKeyframe;
 	
 	int selectedKeyframeIndex;
-	bool pointsAreDraggable;
+	bool keysAreDraggable;
 	
 	void updateKeyframeSort();
 	void updateDragOffsets(ofVec2f screenpoint);
 
-	string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
-	void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);
-	
-	ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
+	virtual void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);
+	virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){};
+    virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings* xmlStore){};
+
+    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args){};
+
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);
 	ofVec2f keyframePointForCoord(ofVec2f coord);
 		
-	//easing dialog stuff
-	ofVec2f easingWindowPosition;
-	bool drawingEasingWindow;
-	vector<EasingFunction*> easingFunctions;
-	vector<EasingType*> easingTypes;
-	float easingBoxWidth;
-	float easingBoxHeight;
-	float easingWindowSeperatorHeight;
+//	//easing dialog stuff
+//	ofVec2f easingWindowPosition;
+//	bool drawingEasingWindow;
+//	vector<EasingFunction*> easingFunctions;
+//	vector<EasingType*> easingTypes;
+//	float easingBoxWidth;
+//	float easingBoxHeight;
+//	float easingWindowSeperatorHeight;
 	
+//    void initializeEasings();
+
 	bool drawingSelectRect;
 	ofVec2f selectRectStartPoint;
 	ofRectangle selectRect;
 	vector<ofxTLKeyframe*> selectRectSelection;
 	
-	void initializeEasings();
-	ofxTLKeyframe* newKeyframe(ofVec2f point);
 };

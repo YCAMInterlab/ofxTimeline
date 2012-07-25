@@ -51,8 +51,8 @@
 #include "ofxTLPageTabs.h"
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
-#include "ofxTLKeyframer.h"
-#include "ofxTLTrigger.h"
+#include "ofxTLTweener.h"
+#include "ofxTLBangTrack.h"
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
@@ -164,8 +164,8 @@ class ofxTimeline {
 	virtual ofxTLTrack* getElement(string name);
 	
 	//adding elements always adds to the current page
-    virtual ofxTLKeyframer* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
-	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+    virtual ofxTLTweener* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	virtual ofxTLTweener* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);
@@ -175,7 +175,8 @@ class ofxTimeline {
 	virtual bool getSwitcherOn(string name, float atTime);
 	virtual bool getSwitcherOn(string name, int atFrame);
 	
-	virtual ofxTLTrigger* addTriggers(string name, string xmlFileName);
+    virtual ofxTLBangTrack* addTriggers(string name);
+	virtual ofxTLBangTrack* addTriggers(string name, string xmlFileName);
 	virtual string getNextTrigger(string name);
 	virtual string getNextTrigger(string name, float atTime);
 	virtual string getNextTrigger(string name, int atFrame);
@@ -228,6 +229,8 @@ class ofxTimeline {
     ofxMSATimer timer;
     ofxTimecode timecode;
     
+    string nameToXMLName(string name);
+    
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
@@ -242,7 +245,7 @@ class ofxTimeline {
 	virtual void update(ofEventArgs& updateArgs);
 
 	ofxTLColors colors;
-	map<string, ofxTLPage*> elementNameToPage;
+	map<string, ofxTLPage*> trackNameToPage;
 	
 	ofxTLPage* currentPage;
 	vector<ofxTLPage*> pages;

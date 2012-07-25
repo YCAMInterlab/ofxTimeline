@@ -37,7 +37,7 @@
 
 #pragma once
 #include "ofMain.h"
-#include "ofxTLTrack.h"
+#include "ofxTLBangTrack.h"
 #include "ofxTextInputField.h"
 
 typedef struct {
@@ -45,8 +45,7 @@ typedef struct {
 	string name;
 } Trigger;
 
-class ofxTLTrigger : public ofxTLTrack
-{
+class ofxTLTrigger : public ofxTLBangTrack {
   public:
 	ofxTLTrigger();
 	~ofxTLTrigger();
@@ -82,14 +81,16 @@ protected:
 	ofxTextInputField textfield;
 	
 	void update(ofEventArgs& args);
+    float lastTimelinePoint;
+
 	void sortTriggers();
 						   
 	int dragOffset;
 	Trigger* getTriggerForScreenPosition(float screenx, int& offset);
-	Trigger* selectedTrigger;
+//	Trigger* selectedTrigger;
+    vector<Trigger*> selectedTriggers;
 	Trigger* hoverTrigger;
 	vector<Trigger> triggers;
 	bool enterText;
 	
-	float lastTimelinePoint;
 };

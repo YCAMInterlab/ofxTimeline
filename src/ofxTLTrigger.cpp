@@ -42,7 +42,7 @@ bool triggersort(Trigger a, Trigger b){
 
 ofxTLTrigger::ofxTLTrigger(){
 	enterText = false;
-	selectedTrigger = hoverTrigger = NULL;
+//	selectedTrigger = hoverTrigger = NULL;
 }
 
 ofxTLTrigger::~ofxTLTrigger(){
@@ -111,24 +111,13 @@ void ofxTLTrigger::draw(){
 }
 
 //main function to get values out of the timeline, operates on the given value range
+/*
 void ofxTLTrigger::mousePressed(ofMouseEventArgs& args){
 
 	enterText = false;
 	selectedTrigger = NULL;
 
-	bool clickIsInRect = bounds.inside(args.x, args.y);
-	if(clickIsInRect){
-		if(!focused){
-			focused = true;
-			return;
-		}
-	}
-	else{
-		focused = false;
-		return;
-	}
-	
-	if(focused){
+	if(hasFocus()){
 		selectedTrigger = getTriggerForScreenPosition(args.x, dragOffset);
 		if(selectedTrigger == NULL){
 			Trigger t;
@@ -141,6 +130,7 @@ void ofxTLTrigger::mousePressed(ofMouseEventArgs& args){
 		timeline->setDragAnchor(dragOffset);
 	}
 }
+*/
 
 void ofxTLTrigger::mouseMoved(ofMouseEventArgs& args){
 	ofxTLTrack::mouseMoved(args);	
@@ -154,7 +144,7 @@ void ofxTLTrigger::mouseDragged(ofMouseEventArgs& args, bool snapped){
 		selectedTrigger->pt = screenXtoNormalizedX(args.x - dragOffset, zoomBounds);
 	}
 	
-	//TODO respect timeline->getMovePlayheadOnPaste()
+	//TODO: respect timeline->getMovePlayheadOnPaste()
 }
 
 void ofxTLTrigger::mouseReleased(ofMouseEventArgs& args){
@@ -231,7 +221,6 @@ void ofxTLTrigger::playbackEnded(ofxTLPlaybackEventArgs& args){
 }
 
 void ofxTLTrigger::playbackLooped(ofxTLPlaybackEventArgs& args){
-	cout << "playback looped" << endl;
 	lastTimelinePoint = 0;
 }
 
