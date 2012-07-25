@@ -53,7 +53,8 @@ class ofxTLTrack
 	
 	virtual void enable();
 	virtual void disable();
-	
+	virtual bool isEnabled();
+    
 	virtual bool hasFocus();
 	
 	virtual void setDrawRect(ofRectangle bounds);
@@ -69,17 +70,25 @@ class ofxTLTrack
 	virtual void setXMLFileName(string filename);
 	virtual void setAutosave(bool autosave);
 	
-	//standard events
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
+    //parent wrappers that call virtual versions implemented by subclasses
+    bool _mousePressed(ofMouseEventArgs& args);
+    void _mouseMoved(ofMouseEventArgs& args);
+    void _mouseReleased(ofMouseEventArgs& args);
+    
+	//standard events to be implement in subclasses
+	virtual void mousePressed(ofMouseEventArgs& args){}
+	virtual void mouseMoved(ofMouseEventArgs& args){}
 	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped){};
 	virtual void mouseReleased(ofMouseEventArgs& args){};
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
-	
 	virtual void nudgeBy(ofVec2f nudgePercent){};
 	
-	//copy+poast
+    virtual void gainedFocus(){};
+    virtual void lostFocus(){};
+    
+    
+	//copy+paste
 	virtual string copyRequest(){return "";};
 	virtual string cutRequest(){return "";};
 	virtual void pasteSent(string pasteboard){};
@@ -137,9 +146,10 @@ class ofxTLTrack
 	virtual bool isOnScreen(float screenX);
 	
 	bool hover;
+    bool active;
 	bool focused;
-	bool enabled; //it's up to the implementation to respect this
-	bool autosave; //it's up to the implementation to save when it's modified based on this var
+	bool enabled; 
+	bool autosave;
 	
 	bool createdByTimeline;
 	

@@ -161,12 +161,11 @@ class ofxTimeline {
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
-    ofxTimecode& getTimecode();
-    
 	virtual ofxTLTrack* getElement(string name);
 	
 	//adding elements always adds to the current page
-	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue = 0);
+    virtual ofxTLKeyframer* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	virtual ofxTLKeyframer* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);
@@ -205,8 +204,8 @@ class ofxTimeline {
 	virtual void windowResized(ofResizeEventArgs& args);
 
 	ofxTLColors& getColors();
-	
-	string formatTime(float time);
+	ofxTimecode& getTimecode();
+
 	ofVec2f getNudgePercent();
 	ofVec2f getBigNudgePercent();
 
@@ -220,6 +219,8 @@ class ofxTimeline {
 	void setDragAnchor(float dragAnchor);
 	float getDragAnchor();
 	
+    string formatTime(float time);
+    
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
   protected:
@@ -264,6 +265,8 @@ class ofxTimeline {
 	
 	ofRange inoutRange;
 	
+    bool timelineHasFocus;
+    
     ofxXmlSettings settings;
 	string filenamePrefix;
 	
@@ -273,7 +276,6 @@ class ofxTimeline {
 	bool isPlaying; //moves playhead along
 	bool userChangedValue; //did value change this frame;
     
-//    int currentFrame;
 	float currentTime;
 	
 	ofLoopType loopType;
@@ -286,6 +288,5 @@ class ofxTimeline {
 	bool autosave;
 	
 	bool isFrameBased;
-//	int durationInFrames;
 	float durationInSeconds;
 };

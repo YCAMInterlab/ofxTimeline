@@ -57,7 +57,7 @@ class ofxTLPage {
 	virtual void setHeaderHeight(float newHeaderHeight);
 	virtual void setDefaultElementHeight(float newDefaultElementHeight);
 	
-	virtual void collapseAllElements(); //collapses all element heights to 0;
+	virtual void collapseAllTracks(); //collapses all element heights to 0;
 	
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
@@ -72,10 +72,10 @@ class ofxTLPage {
 	virtual void removeElement(string name);
     
     //given a folder the page will look for xml files to load within that
-	virtual void loadElementsFromFolder(string folderPath);
+	virtual void loadTracksFromFolder(string folderPath);
     
 	virtual void setSnapping(bool snapping);
-	virtual void enableSnapToOtherElements(bool snapToOthes);
+	virtual void enableSnapToOtherTracks(bool snapToOthes);
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -92,6 +92,9 @@ class ofxTLPage {
 	
 	virtual void setTicker(ofxTLTicker* ticker);
 	
+    virtual void timelineGainedFocus();
+    virtual void timelineLostFocus();
+    
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
@@ -101,15 +104,18 @@ class ofxTLPage {
 	virtual void setDragAnchor(float anchor);
 	
   protected:
+    
 	//used for getting BPM snaps
-	ofxTLTicker* ticker;
-	
-	bool draggingInside;
 	vector<ofxTLTrackHeader*> headers;
-	map<string, ofxTLTrack*> elements;
+	map<string, ofxTLTrack*> tracks;
+
+    bool draggingInside;
+
+	ofxTLTicker* ticker;	
+    ofxTLTrack* focusedTrack;
 
 	bool snappingEnabled;
-	bool snapToOtherElementsEnabled;
+	bool snapToOtherTracksEnabled;
 	
 	bool headerHasFocus;
 	

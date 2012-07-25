@@ -118,11 +118,11 @@ class ofxTLKeyframer : public ofxTLTrack
     
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
-
+    void deselectKeyframe(ofxTLKeyframe* k);
+    
 	void nudgeSelectedKeyframes(ofVec2f nudge);
 	void deleteSelectedKeyframes();
 	
-	//ofxTLKeyframe* selectedKeyframe;
 	vector<ofxTLKeyframe*> selectedKeyframes;
 	ofxTLKeyframe* hoverKeyframe;
 	

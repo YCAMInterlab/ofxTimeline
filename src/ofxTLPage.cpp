@@ -46,8 +46,9 @@ ofxTLPage::ofxTLPage()
 	isSetup(false),
 	snappingTolerance(12),
 	ticker(NULL),
-	snapToOtherElementsEnabled(true),
-	headerHasFocus(false)
+	snapToOtherTracksEnabled(true),
+	headerHasFocus(false),
+	focusedTrack(NULL)
 {
 	//
 }
@@ -55,13 +56,13 @@ ofxTLPage::ofxTLPage()
 ofxTLPage::~ofxTLPage(){
 	if(isSetup){
 		for(int i = 0; i < headers.size(); i++){
-			if(elements[headers[i]->name]->getCreatedByTimeline()){
-				delete elements[headers[i]->name];
+			if(tracks[headers[i]->name]->getCreatedByTimeline()){
+				delete tracks[headers[i]->name];
 			}
 			delete headers[i];
 		}
 		headers.clear();
-		elements.clear();
+		tracks.clear();
 		
 		ofRemoveListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	}
@@ -78,11 +79,11 @@ void ofxTLPage::setup(){
 }
 
 //given a folder the page will look for xml files to load within that
-void ofxTLPage::loadElementsFromFolder(string folderPath){
+void ofxTLPage::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < headers.size(); i++){
-		string filename = folderPath + elements[headers[i]->name]->getXMLFileName();
-        elements[headers[i]->name]->setXMLFileName(filename);
-        elements[headers[i]->name]->load();
+		string filename = folderPath + tracks[headers[i]->name]->getXMLFileName();
+        tracks[headers[i]->name]->setXMLFileName(filename);
+        tracks[headers[i]->name]->load();
     }
 }
 
@@ -93,7 +94,7 @@ void ofxTLPage::setTicker(ofxTLTicker* t){
 void ofxTLPage::draw(){	
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->draw();
-		elements[headers[i]->name]->draw();
+		tracks[headers[i]->name]->draw();
 	}	
 	if(draggingInside && snappingEnabled){
 		ofPushStyle();
@@ -105,14 +106,24 @@ void ofxTLPage::draw(){
 	}
 	
 	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->drawModalContent();
+		tracks[headers[i]->name]->drawModalContent();
 	}	
-	
+}
+
+void ofxTLPage::timelineGainedFocus(){
+
+}
+
+void ofxTLPage::timelineLostFocus(){
+    focusedTrack = NULL;
 }
 
 #pragma mark events
 void ofxTLPage::mousePressed(ofMouseEventArgs& args){
+    
+    //TODO: check modal stuff
 	draggingInside = elementContainerRect.inside(args.x, args.y);
+	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
 		if(snappingEnabled){
 			refreshSnapPoints();
@@ -120,16 +131,27 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
-			elements[headers[i]->name]->mousePressed(args);
-			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !elements[headers[i]->name]->getDrawRect().inside(args.x,args.y) );
+            if(tracks[headers[i]->name]->isEnabled()){
+				if( tracks[headers[i]->name]->_mousePressed(args) ){
+                    newFocus = tracks[headers[i]->name];
+                }
+            }
+			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y) );
 		}
 	}
+    if(newFocus != NULL && newFocus != focusedTrack){
+        if(focusedTrack != NULL){
+            focusedTrack->lostFocus();
+        }
+        newFocus->gainedFocus();
+    }
+    focusedTrack = newFocus; //can set to null if outside of timeline area
 }
 
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
-		elements[headers[i]->name]->mouseMoved(args);
+		tracks[headers[i]->name]->_mouseMoved(args);
 	}	
 }
 
@@ -162,31 +184,32 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mouseDragged(args);
 			if(!headerHasFocus){
-				elements[headers[i]->name]->mouseDragged(args, snapped);
+				tracks[headers[i]->name]->mouseDragged(args, snapped);
 			}
 		}
+	}
+}
+
+void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
+	if(draggingInside){
+		for(int i = 0; i < headers.size(); i++){
+			headers[i]->mouseReleased(args);
+			tracks[headers[i]->name]->mouseReleased(args);
+		}		
+		draggingInside = false;
 	}
 }
 
 void ofxTLPage::setDragAnchor(float anchor){
 	dragAnchor = anchor;
 }
-void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
-	if(draggingInside){
-		for(int i = 0; i < headers.size(); i++){
-			headers[i]->mouseReleased(args);
-			elements[headers[i]->name]->mouseReleased(args);
-		}		
-		draggingInside = false;
-	}
-}
 
 void ofxTLPage::refreshSnapPoints(){
 	//get the snapping points
 	snapPoints.clear();
-	if(snapToOtherElementsEnabled){
+	if(snapToOtherTracksEnabled){
 		for(int i = 0; i < headers.size(); i++){
-			elements[headers[i]->name]->getSnappingPoints(snapPoints);	
+			tracks[headers[i]->name]->getSnappingPoints(snapPoints);	
 		}
 	}
 	if(ticker != NULL){
@@ -198,7 +221,7 @@ void ofxTLPage::refreshSnapPoints(){
 string ofxTLPage::copyRequest(){
 	string buf;
 	for(int i = 0; i < headers.size(); i++){
-		buf += elements[headers[i]->name]->copyRequest();
+		buf += tracks[headers[i]->name]->copyRequest();
 	}	
 	return buf;	
 }
@@ -206,7 +229,7 @@ string ofxTLPage::copyRequest(){
 string ofxTLPage::cutRequest(){
 	string buf;
 	for(int i = 0; i < headers.size(); i++){
-		buf += elements[headers[i]->name]->cutRequest();
+		buf += tracks[headers[i]->name]->cutRequest();
 	}	
 	return buf;
 }
@@ -214,8 +237,8 @@ string ofxTLPage::cutRequest(){
 void ofxTLPage::pasteSent(string pasteboard){
 	for(int i = 0; i < headers.size(); i++){
 		//only paste into where we are hovering
-		if(elements[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
-			elements[headers[i]->name]->pasteSent(pasteboard);
+		if(tracks[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
+			tracks[headers[i]->name]->pasteSent(pasteboard);
 		}
 	}	
 }
@@ -223,21 +246,21 @@ void ofxTLPage::pasteSent(string pasteboard){
 void ofxTLPage::selectAll(){
 	for(int i = 0; i < headers.size(); i++){
 		//only paste into where we are hovering
-		if(elements[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
-			elements[headers[i]->name]->selectAll();
+		if(tracks[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
+			tracks[headers[i]->name]->selectAll();
 		}
 	}
 }
 
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){
 	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->keyPressed(args);
+		tracks[headers[i]->name]->keyPressed(args);
 	}
 }
 
 void ofxTLPage::nudgeBy(ofVec2f nudgePercent){
 	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->nudgeBy(nudgePercent);
+		tracks[headers[i]->name]->nudgeBy(nudgePercent);
 	}
 }
 
@@ -269,18 +292,18 @@ void ofxTLPage::addElement(string elementName, ofxTLTrack* element){
 	element->setDrawRect(drawRect);
 	element->setZoomBounds(currentZoomBounds);
 
-	elements[elementName] = element;
+	tracks[elementName] = element;
 }
 
 ofxTLTrack* ofxTLPage::getElement(string elementName){
-	if(elements.find(elementName) == elements.end()){
+	if(tracks.find(elementName) == tracks.end()){
 		ofLogError("ofxTLPage -- Couldn't find element named " + elementName + " on page " + name);
 		return NULL;
 	}
-	return elements[elementName];
+	return tracks[elementName];
 }
 
-void ofxTLPage::collapseAllElements(){
+void ofxTLPage::collapseAllTracks(){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->collapseElement();
 	}
@@ -297,7 +320,7 @@ void ofxTLPage::recalculateHeight(){
 	float totalHeight = 0;
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
-		ofRectangle elementRectangle = elements[ headers[i]->name ]->getDrawRect();
+		ofRectangle elementRectangle = tracks[ headers[i]->name ]->getDrawRect();
 		
 		float startY = thisHeader.y+thisHeader.height;
 		float endY = startY + elementRectangle.height;
@@ -308,7 +331,7 @@ void ofxTLPage::recalculateHeight(){
 		elementRectangle.y = startY;
 		elementRectangle.width = elementContainerRect.width;
 		
-		elements[ headers[i]->name ]->setDrawRect( elementRectangle );
+		tracks[ headers[i]->name ]->setDrawRect( elementRectangle );
 		currentY += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
 		totalHeight += thisHeader.height + elementRectangle.height + FOOTER_HEIGHT;
 		
@@ -332,8 +355,8 @@ void ofxTLPage::setSnapping(bool snapping){
 	snappingEnabled = snapping;
 }
 
-void ofxTLPage::enableSnapToOtherElements(bool snapToOthes){
-	snapToOtherElementsEnabled = snapToOthes;
+void ofxTLPage::enableSnapToOtherTracks(bool snapToOthes){
+	snapToOtherTracksEnabled = snapToOthes;
 }
 
 #pragma mark saving/restoring state
@@ -344,8 +367,8 @@ void ofxTLPage::loadElementPositions(){
 		//cout << "loading element position " << name << "_elementPositions.xml" << endl;
 		
 		elementPositions.pushTag("positions");
-		int numElements = elementPositions.getNumTags("element");
-		for(int i = 0; i < numElements; i++){
+		int numtracks = elementPositions.getNumTags("element");
+		for(int i = 0; i < numtracks; i++){
 			string name = elementPositions.getAttribute("element", "name", "", i);
 			elementPositions.pushTag("element", i);
 			ofRectangle elementPosition = ofRectangle(ofToFloat(elementPositions.getValue("x", "0")),
@@ -400,21 +423,21 @@ void ofxTLPage::setName(string newName){
 
 void ofxTLPage::unselectAll(){
 	for(int i = 0; i < headers.size(); i++){
-		elements[headers[i]->name]->unselectAll();
+		tracks[headers[i]->name]->unselectAll();
 	}	
 }
 
 void ofxTLPage::reset(){
 	for(int i = 0; i < headers.size(); i++){
 		//only paste into where we are hovering
-		elements[headers[i]->name]->reset();
+		tracks[headers[i]->name]->reset();
     }
 }
 
 void ofxTLPage::save(){
 	for(int i = 0; i < headers.size(); i++){
 		//only paste into where we are hovering
-		elements[headers[i]->name]->save();
+		tracks[headers[i]->name]->save();
     }
 }
 

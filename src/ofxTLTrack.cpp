@@ -41,6 +41,7 @@ ofxTLTrack::ofxTLTrack()
 	zoomBounds(ofRange(0,1.0)),
 	enabled(true),
 	focused(false),
+	active(false),
 	hover(false),
 	createdByTimeline(false),
 	autosave(true),
@@ -91,12 +92,21 @@ string ofxTLTrack::getName(){
 	return name;
 }
 
-void ofxTLTrack::mouseMoved(ofMouseEventArgs& args){
-	hover = bounds.inside(args.x, args.y);
+bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args){
+    focused = bounds.inside(args.x, args.y);
+    mousePressed(args);
+    active = focused;
+    return focused;
 }
 
-void ofxTLTrack::mousePressed(ofMouseEventArgs& args){
-	focused = bounds.inside(args.x, args.y);
+void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args){
+	hover = bounds.inside(args.x, args.y);
+	mouseMoved(args);    
+}
+
+void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args){
+    mouseReleased(args);
+    active = false;
 }
 
 ofRectangle ofxTLTrack::getDrawRect(){
@@ -145,6 +155,10 @@ void ofxTLTrack::setAutosave(bool _autosave){
 			   
 bool ofxTLTrack::hasFocus(){
 	return focused;
+}
+
+bool ofxTLTrack::isEnabled(){
+	return enabled;
 }
 
 bool ofxTLTrack::pointInScreenBounds(ofVec2f screenpoint){

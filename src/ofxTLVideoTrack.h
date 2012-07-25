@@ -59,7 +59,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 
   protected:
     
-    //    vector<ofxTLVideoThumb> videoThumbs;
+    
 	int selectedFrame;
 	int currentLoop;
 	bool thumbsEnabled;

@@ -50,6 +50,7 @@ ofxTimeline::ofxTimeline()
 	modalIsShown(false),
 	autosave(true),
 	isFrameBased(false),
+	timelineHasFocus(false),
 	durationInSeconds(100.0f/30.0f),
 	isShowing(true),
 	filenamePrefix("defaultTimeline_"),
@@ -106,7 +107,7 @@ void ofxTimeline::setup(){
 	colors.loadColors();
 	
 	enable();
-	
+    
 	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
@@ -117,7 +118,7 @@ void ofxTimeline::setup(){
 
 void ofxTimeline::loadElementsFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
-        pages[i]->loadElementsFromFolder(folderPath);
+        pages[i]->loadTracksFromFolder(folderPath);
     }
 }
 
@@ -333,13 +334,17 @@ bool ofxTimeline::toggleEnabled(){
 }
 
 void ofxTimeline::enable(){
-	isEnabled = true;
-	enableEvents();
+    if(!isEnabled){
+		isEnabled = true;
+		enableEvents();
+    }
 }
 
 void ofxTimeline::disable(){
-	isEnabled = false;
-	disableEvents();
+    if(isEnabled){
+		isEnabled = false;
+		disableEvents();
+    }
 }
 
 //clears every element
@@ -406,7 +411,7 @@ void ofxTimeline::setWidth(float newWidth){
 }
 
 void ofxTimeline::collapseAllElements(){
-	currentPage->collapseAllElements();
+	currentPage->collapseAllTracks();
 }
 
 ofRectangle ofxTimeline::getDrawRect(){
@@ -444,7 +449,7 @@ void ofxTimeline::enableSnapToBPM(float bpm){
 
 void ofxTimeline::enableSnapToOtherElements(bool enableSnapToOther){
 	for(int i = 0; i < pages.size(); i++){
-		currentPage->enableSnapToOtherElements(enableSnapToOther);
+		currentPage->enableSnapToOtherTracks(enableSnapToOther);
 	}
 }
 
@@ -486,7 +491,17 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+    
 	dragAnchorSet = false;
+    bool focus = getDrawRect().inside(args.x, args.y);
+	if(focus && !timelineHasFocus){
+    	currentPage->timelineGainedFocus();    
+    }
+    else if(!focus && timelineHasFocus){
+        currentPage->timelineLostFocus();
+    }
+    focus = timelineHasFocus;
+
 	ticker->mousePressed(args);
 	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
@@ -725,10 +740,19 @@ void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	element->setName( name );
 	currentPage->addElement(name, element);		
 	elementNameToPage[name] = currentPage;
-//	recalculateBoundingRects();
 	ofEventArgs args;
 	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
 
+}
+
+ofxTLKeyframer* ofxTimeline::addKeyframes(string name, ofRange valueRange, float defaultValue){
+    string xmlName = name;
+    ofStringReplace(xmlName, " ", "_");
+    ofStringReplace(xmlName, ":", "_");
+    ofStringReplace(xmlName, "/", "_");
+    ofStringReplace(xmlName, "\\", "_");
+	xmlName += ".xml";
+    return addKeyframes(name, xmlName, valueRange, defaultValue);
 }
 
 ofxTLKeyframer* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
