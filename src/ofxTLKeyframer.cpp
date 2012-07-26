@@ -55,11 +55,6 @@ ofxTLKeyframer::~ofxTLKeyframer(){
 	clear();
 }
 
-void ofxTLKeyframer::setup(){
-	enable();
-	load();
-}
-
 //void ofxTLKeyframer::setValueRange(ofRange range, float newDefaultValue){
 //	valueRange = range;
 //    defaultValue = newDefaultValue;
@@ -210,7 +205,6 @@ void ofxTLKeyframer::load(){
 
 void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxTLKeyframe*>& keyContainer){
 
-
 	int numKeyframeStores = xmlStore.getNumTags("keyframes");
 	for(int store = 0; store < numKeyframeStores; store++){
 		xmlStore.pushTag("keyframes",store);
@@ -220,7 +214,6 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 			xmlStore.pushTag("key", i);
 			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),
 													 xmlStore.getValue("y", 0.0)));
-			
 			restoreKeyframe(key, xmlStore);			
             
 			xmlStore.popTag(); //key
@@ -228,7 +221,7 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 			keyContainer.push_back( key );
 		}
 		
-		xmlStore.popTag();//keyframes
+		xmlStore.popTag(); //keyframes
 	}
 	
 	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
@@ -264,6 +257,7 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 		savedkeyframes.pushTag("key", i);
 		savedkeyframes.addValue("x", keys[i]->position.x);
 		savedkeyframes.addValue("y", keys[i]->position.y);
+        storeKeyframe(keys[i], savedkeyframes);
 		savedkeyframes.popTag(); //key
 	}
 	

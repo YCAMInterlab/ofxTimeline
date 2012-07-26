@@ -71,7 +71,6 @@ class ofxTLKeyframer : public ofxTLTrack
 	ofxTLKeyframer();
 	~ofxTLKeyframer();
 
-	virtual void setup();
 	virtual void draw();
 //	virtual void drawModalContent(); //for pop up window-ish stuff
 
@@ -136,7 +135,7 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
 	virtual void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);
 	virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){};
-    virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings* xmlStore){};
+    virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){};
 
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args){};
 

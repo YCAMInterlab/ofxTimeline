@@ -11,10 +11,12 @@ ofxTLBangTrack::~ofxTLBangTrack(){
 }
 
 void ofxTLBangTrack::enable(){
+    ofxTLKeyframer::enable();
 	ofxTLRegisterPlaybackEvents(this);    
 }
 
 void ofxTLBangTrack::disable(){
+    ofxTLKeyframer::disable();
     ofxTLRemovePlaybackEvents(this);
 }
 
@@ -62,14 +64,15 @@ void ofxTLBangTrack::update(ofEventArgs& args){
 	float thisTimelinePoint = timeline->getPercentComplete();
 	for(int i = 0; i < keyframes.size(); i++){
 		if(lastTimelinePoint < keyframes[i]->position.x && thisTimelinePoint > keyframes[i]->position.x){
-			ofxTLTriggerEventArgs args;
-//			args.triggerName = triggers[i].name;
-			args.triggerGroupName = name;
-			ofNotifyEvent(ofxTLEvents.trigger, args);
 		}
 	}
 	lastTimelinePoint = thisTimelinePoint;
-    
+}
+
+void ofxTLBangTrack::bangFired(ofxTLKeyframe* key){
+    ofxTLBangEventArgs args;
+    args.trackName = name;
+    ofNotifyEvent(ofxTLEvents.bangFired, args);    
 }
 
 void ofxTLBangTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
@@ -84,4 +87,3 @@ void ofxTLBangTrack::playbackEnded(ofxTLPlaybackEventArgs& args){
 void ofxTLBangTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = 0;
 }
-

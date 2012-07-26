@@ -58,9 +58,9 @@ class ofxTLPageEventArgs : public ofEventArgs {
 	string oldPageName;
 };
 
-class ofxTLTriggerEventArgs : public ofEventArgs {
+class ofxTLBangEventArgs : public ofEventArgs {
   public:
-	string triggerGroupName;
+	string trackName;
 	string triggerName;
 };
 
@@ -80,7 +80,7 @@ class ofxTLCoreEvents {
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
 
-	ofEvent<ofxTLTriggerEventArgs> trigger;
+	ofEvent<ofxTLBangEventArgs> bangFired;
 
 	ofEvent<ofxTLSwitchEventArgs> switched;
 	

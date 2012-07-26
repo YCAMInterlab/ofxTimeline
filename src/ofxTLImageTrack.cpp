@@ -66,26 +66,4 @@ void ofxTLImageTrack::calculateFramePositions(){
     }
     
 	framePositionsUpdated(newThumbs);
-    
-
-    /*
-     int frameWidth = int( bounds.height * videoThumbs[0].targetWidth / videoThumbs[0].targetHeight );
-     int totalPixels = int( bounds.width / zoomBounds.span() );
-     int framesToShow = MAX(totalPixels / frameWidth, 1);
-     int frameStep = MAX(videoThumbs.size() / framesToShow, 1); 
-     int minPixelIndex = -(zoomBounds.min * totalPixels);
-     
-     //cout << "bounds are " << bounds.width << " "f  << bounds.height << " frameWidth " << frameWidth << " total pixels " << totalPixels << " frame step " << frameStep << " minpix " << minPixelIndex << endl;
-     
-     for(int i = 0; i < videoThumbs.size(); i++){
-     if(i % frameStep == 0){
-     int screenX = screenXForIndex(i);
-     videoThumbs[i].displayRect = ofRectangle(screenX, bounds.y, frameWidth, bounds.height);
-     videoThumbs[i].visible = videoThumbs[i].displayRect.x+videoThumbs[i].displayRect.width > 0 && videoThumbs[i].displayRect.x < bounds.width;
-     }
-     else {
-     videoThumbs[i].visible = false;
-     }
-     }
-     */
 }

@@ -52,7 +52,7 @@
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
 #include "ofxTLTweener.h"
-#include "ofxTLBangTrack.h"
+#include "ofxTLTrigger.h"
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
@@ -161,11 +161,14 @@ class ofxTimeline {
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
+    bool isModal();
+    ofxTLTrack* getModalTrack();
+    
 	virtual ofxTLTrack* getElement(string name);
 	
 	//adding elements always adds to the current page
-    virtual ofxTLTweener* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
-	virtual ofxTLTweener* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+    ofxTLTweener* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	ofxTLTweener* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);
@@ -175,15 +178,11 @@ class ofxTimeline {
 	virtual bool getSwitcherOn(string name, float atTime);
 	virtual bool getSwitcherOn(string name, int atFrame);
 	
-    virtual ofxTLBangTrack* addTriggers(string name);
-	virtual ofxTLBangTrack* addTriggers(string name, string xmlFileName);
-	virtual string getNextTrigger(string name);
-	virtual string getNextTrigger(string name, float atTime);
-	virtual string getNextTrigger(string name, int atFrame);
-	
-	virtual string getLastTrigger(string name);
-	virtual string getLastTrigger(string name, float atTime);
-	virtual string getLastTrigger(string name, int atFrame);
+    ofxTLBangTrack* addBangs(string name);
+	ofxTLBangTrack* addBangs(string name, string xmlFileName);
+    
+    ofxTLTrigger* addTriggers(string name);
+    ofxTLTrigger* addTriggers(string name, string xmlFileName);
 
     //TODO: remove image sequence from the core?
 	virtual ofxTLImageSequence* addImageSequence(string name);
@@ -191,7 +190,6 @@ class ofxTimeline {
 	virtual ofImage* getImage(string name);
 	virtual ofImage* getImage(string name, float atTime);
 	virtual ofImage* getImage(string name, int atFrame);
-	
 	
 	//for custom elements
 	virtual void addElement(string name, ofxTLTrack* element);
@@ -227,7 +225,6 @@ class ofxTimeline {
     //when an track calls presentedModalContent all key and mouse action will be sent directly to that element
     //until dismissedModalContent() is called. This will is for displaying custom controls that may overlap with other
     //elements or require keyboard input (see how it's used in ofxTLTweener and ofxTLTrigger)
-	
     void presentedModalContent(ofxTLTrack* modalTrack);
     void dismissedModalContent();
     

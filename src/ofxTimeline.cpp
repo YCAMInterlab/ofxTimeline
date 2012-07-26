@@ -775,6 +775,14 @@ void ofxTimeline::setCurrentPage(int index){
 	tabs->selectPage(index);
 }
 
+bool ofxTimeline::isModal(){
+    return modalTrack != NULL;
+}
+
+ofxTLTrack* ofxTimeline::getModalTrack(){
+    return modalTrack;
+}
+
 //can be used to add custom elements
 void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	element->setTimeline( this );
@@ -783,7 +791,6 @@ void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	trackNameToPage[name] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
-
 }
 
 ofxTLTweener* ofxTimeline::addKeyframes(string name, ofRange valueRange, float defaultValue){
@@ -862,40 +869,28 @@ bool ofxTimeline::getSwitcherOn(string name, int atFrame){
 	return getSwitcherOn(name, timecode.secondsForFrame(atFrame));	
 }
 
-ofxTLBangTrack* ofxTimeline::addTriggers(string name){
- 	return addTriggers(name, nameToXMLName(name));   
+ofxTLBangTrack* ofxTimeline::addBangs(string name){
+ 	return addBangs(name, nameToXMLName(name));   
 }
 
-ofxTLBangTrack* ofxTimeline::addTriggers(string name, string xmlFileName){
-	ofxTLBangTrack* newTrigger = new ofxTLBangTrack();
+ofxTLBangTrack* ofxTimeline::addBangs(string name, string xmlFileName){
+	ofxTLBangTrack* newBangs = new ofxTLBangTrack();
+	newBangs->setCreatedByTimeline(true);
+	newBangs->setXMLFileName(xmlFileName);
+	addElement(name, newBangs);
+	return newBangs;
+}
+
+ofxTLTrigger* ofxTimeline::addTriggers(string name){
+    return addTriggers(name, nameToXMLName(name));
+}
+
+ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
+    ofxTLTrigger* newTrigger = new ofxTLTrigger();
 	newTrigger->setCreatedByTimeline(true);
 	newTrigger->setXMLFileName(xmlFileName);
 	addElement(name, newTrigger);
 	return newTrigger;
-}
-
-string ofxTimeline::getNextTrigger(string name){
-	return "";
-}
-
-string ofxTimeline::getNextTrigger(string name, float atTime){
-	return "";
-}
-
-string ofxTimeline::getNextTrigger(string name, int atFrame){
-	return "";
-}
-
-string ofxTimeline::getLastTrigger(string name){
-	return "";
-}
-
-string ofxTimeline::getLastTrigger(string name, float atTime){
-	return "";
-}
-
-string ofxTimeline::getLastTrigger(string name, int atFrame){
-	return "";
 }
 
 ofxTimecode& ofxTimeline::getTimecode(){

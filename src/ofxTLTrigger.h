@@ -40,57 +40,49 @@
 #include "ofxTLBangTrack.h"
 #include "ofxTextInputField.h"
 
-typedef struct {
-	float pt;
-	string name;
-} Trigger;
+class ofxTLTriggerKey : public ofxTLKeyframe {
+  public:
+    ofxTextInputField textField;
+    ofRectangle display;
+};
 
 class ofxTLTrigger : public ofxTLBangTrack {
   public:
 	ofxTLTrigger();
 	~ofxTLTrigger();
 	
-	virtual void setup();
 	virtual void draw();
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
-	virtual void mouseReleased(ofMouseEventArgs& args);
-	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void nudgeBy(ofVec2f nudgePercent);
-	
-	virtual void save();
-	virtual void load();
-	
-	virtual void clear();
-
-	void playbackStarted(ofxTLPlaybackEventArgs& args);
-	void playbackLooped(ofxTLPlaybackEventArgs& args);
-	void playbackEnded(ofxTLPlaybackEventArgs& args);
-
-	virtual string copyRequest();
-	virtual string cutRequest();
-	virtual void pasteSent(string pasteboard);
-	virtual void selectAll();
-	virtual void unselectAll();
+//	virtual string copyRequest();
+//	virtual string cutRequest();
+//	virtual void pasteSent(string pasteboard);
+//	virtual void selectAll();
+//	virtual void unselectAll();
 	
 protected:
-	ofxTextInputField textfield;
-	
-	void update(ofEventArgs& args);
-    float lastTimelinePoint;
+    
+    virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
+    virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
+	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 
-	void sortTriggers();
+//	ofxTextInputField textfield;
+	bool enteringText;
+
+//	void update(ofEventArgs& args);
+//    float lastTimelinePoint;
+
+//	void sortTriggers();
 						   
-	int dragOffset;
-	Trigger* getTriggerForScreenPosition(float screenx, int& offset);
+//	int dragOffset;
+//	Trigger* getTriggerForScreenPosition(float screenx, int& offset);
 //	Trigger* selectedTrigger;
-    vector<Trigger*> selectedTriggers;
-	Trigger* hoverTrigger;
-	vector<Trigger> triggers;
-	bool enterText;
+//    vector<Trigger*> selectedTriggers;
+//	Trigger* hoverTrigger;
+//	vector<Trigger> triggers;
+    
+	
 	
 };

@@ -47,11 +47,16 @@ ofxTLTrack::ofxTLTrack()
 	autosave(true),
 	timeline(NULL)
 {
-	//
+	// <(^_^)>
 }
 
 ofxTLTrack::~ofxTLTrack(){
 	disable();
+}
+
+void ofxTLTrack::setup(){
+    enable();
+    load();
 }
 
 void ofxTLTrack::enable(){

@@ -67,8 +67,6 @@ void ofxTLTweener::draw(){
 	ofPushStyle();
 	ofPushMatrix();
 	ofEnableSmoothing();
-	
-	
 
 	// DRAW KEYFRAME LINES
 	ofSetColor(timeline->getColors().highlightColor);
@@ -228,9 +226,6 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
     }
 }
 
-void ofxTLTweener::mouseReleased(ofMouseEventArgs& args){
-    
-}
 
 void ofxTLTweener::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
