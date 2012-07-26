@@ -24,26 +24,10 @@ void ofxTLBangTrack::draw(){
         return;
     }
     
-    //TODO: Super class general drawing!!
-    ofPushStyle();
-    ofNoFill();
-    if(hover){
-        ofSetColor(timeline->getColors().highlightColor);
-    }
-    else if(focused){
-        ofSetColor(timeline->getColors().highlightColor);
-    }
-    else{
-        ofSetColor(timeline->getColors().outlineColor);
-    }
-    
-    ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-    
     ofFill();
     ofSetLineWidth(5);
     for(int i = keyframes.size()-1; i >= 0; i--){
         int screenX = normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
-//        if(&triggers[i] == selectedTrigger){
         if(isKeyframeSelected(keyframes[i])){
             ofSetColor(timeline->getColors().textColor);
         }
@@ -80,7 +64,7 @@ void ofxTLBangTrack::update(ofEventArgs& args){
 		if(lastTimelinePoint < keyframes[i]->position.x && thisTimelinePoint > keyframes[i]->position.x){
 			ofxTLTriggerEventArgs args;
 //			args.triggerName = triggers[i].name;
-//			args.triggerGroupName = name;
+			args.triggerGroupName = name;
 			ofNotifyEvent(ofxTLEvents.trigger, args);
 		}
 	}

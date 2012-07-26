@@ -71,6 +71,7 @@ class ofxTLTrack
 	virtual void setAutosave(bool autosave);
 	
     //parent wrappers that call virtual versions implemented by subclasses
+    void _draw();
     bool _mousePressed(ofMouseEventArgs& args);
     void _mouseMoved(ofMouseEventArgs& args);
     void _mouseReleased(ofMouseEventArgs& args);

@@ -94,7 +94,7 @@ void ofxTLPage::setTicker(ofxTLTicker* t){
 void ofxTLPage::draw(){	
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->draw();
-		tracks[headers[i]->name]->draw();
+		tracks[headers[i]->name]->_draw();
 	}	
 	if(draggingInside && snappingEnabled){
 		ofPushStyle();

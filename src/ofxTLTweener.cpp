@@ -68,18 +68,6 @@ void ofxTLTweener::draw(){
 	ofPushMatrix();
 	ofEnableSmoothing();
 	
-	//**** DRAW BORDER. TODO: move to super class
-	ofNoFill();
-	if(hover){
-		ofSetColor(timeline->getColors().highlightColor);
-	}
-	else if(focused){
-		ofSetColor(timeline->getColors().highlightColor);
-	}
-	else{
-		ofSetColor(timeline->getColors().outlineColor);
-	}	
-	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	
 
 	// DRAW KEYFRAME LINES
@@ -158,57 +146,98 @@ ofxTLKeyframe* ofxTLTweener::newKeyframe(ofVec2f point){
 void ofxTLTweener::drawModalContent(){
 	
 	//****** DRAW EASING CONTROLS
-	if(drawingEasingWindow){
-		for(int i = 0; i < easingFunctions.size(); i++){
-			//TODO turn into something like selectionContainsEaseFunc();
-			if(easingFunctions[i] == ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeFunc){
-				ofSetColor(150, 100, 10);
-			}
-			else{
-				ofSetColor(80, 80, 80);
-			}
-			ofFill();
-			ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
-			ofSetColor(200, 200, 200);
-			ofDrawBitmapString(easingFunctions[i]->name, 
-							   easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
-							   easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
-			
-			ofNoFill();
-			ofSetColor(40, 40, 40);
-			ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-				   easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
-		}
-		
-		for(int i = 0; i < easingTypes.size(); i++){
-			//TODO turn into something like selectionContainsEaseType();
-			if(easingTypes[i] ==  ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeType){
-				ofSetColor(150, 100, 10);
-			}
-			else{
-				ofSetColor(80, 80, 80);
-			}
-			ofFill();
-			ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y, 
-				   easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-			ofSetColor(200, 200, 200);
-			ofDrawBitmapString(easingTypes[i]->name, 
-							   easingWindowPosition.x + easingTypes[i]->bounds.x+10, 
-							   easingWindowPosition.y + easingTypes[i]->bounds.y+15);			
-			ofNoFill();
-			ofSetColor(40, 40, 40);
-			ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, 
-				   easingWindowPosition.y + easingTypes[i]->bounds.y, 
-				   easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
-		}
-	}	
+	if(!drawingEasingWindow){
+    	return;
+    }
+    
+    for(int i = 0; i < easingFunctions.size(); i++){
+        //TODO turn into something like selectionContainsEaseFunc();
+        if(easingFunctions[i] == ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeFunc){
+            ofSetColor(150, 100, 10);
+        }
+        else{
+            ofSetColor(80, 80, 80);
+        }
+        ofFill();
+        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
+        ofSetColor(200, 200, 200);
+        ofDrawBitmapString(easingFunctions[i]->name, 
+                           easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
+                           easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
+        
+        ofNoFill();
+        ofSetColor(40, 40, 40);
+        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
+    }
+    
+    for(int i = 0; i < easingTypes.size(); i++){
+        //TODO turn into something like selectionContainsEaseType();
+        if(easingTypes[i] ==  ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeType){
+            ofSetColor(150, 100, 10);
+        }
+        else{
+            ofSetColor(80, 80, 80);
+        }
+        ofFill();
+        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y, 
+               easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
+        ofSetColor(200, 200, 200);
+        ofDrawBitmapString(easingTypes[i]->name, 
+                           easingWindowPosition.x + easingTypes[i]->bounds.x+10, 
+                           easingWindowPosition.y + easingTypes[i]->bounds.y+15);			
+        ofNoFill();
+        ofSetColor(40, 40, 40);
+        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, 
+               easingWindowPosition.y + easingTypes[i]->bounds.y, 
+               easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
+    }
+
+}
+
+void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
+
+    if(drawingEasingWindow){
+        //see if we clicked on an
+        drawingEasingWindow = false;
+        timeline->dismissedModalContent();
+        ofVec2f screenpoint(args.x,args.y);
+        for(int i = 0; i < easingFunctions.size(); i++){
+            if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
+                for(int k = 0; k < selectedKeyframes.size(); k++){                    
+                    ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
+                }
+                if(autosave) save();
+                return;
+            }
+        }
+        
+        for(int i = 0; i < easingTypes.size(); i++){
+            if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
+                for(int k = 0; k < selectedKeyframes.size(); k++){
+                	((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+                }
+                if(autosave) save();
+                return;
+            }
+        }
+    }
+    else{
+        ofxTLKeyframer::mousePressed(args);
+    }
+}
+
+void ofxTLTweener::mouseReleased(ofMouseEventArgs& args){
+    
 }
 
 void ofxTLTweener::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
                                    MIN(args.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+    
     drawingEasingWindow = true;
+    timeline->presentedModalContent(this);
 }
 
 void ofxTLTweener::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){

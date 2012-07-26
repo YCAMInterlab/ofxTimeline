@@ -453,7 +453,6 @@ void ofxTLKeyframer::getSnappingPoints(vector<float>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
 			points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
-			//points.push_back( keyframes[i]->position.x );
 		}
 	}
 }

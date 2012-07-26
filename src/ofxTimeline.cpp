@@ -61,7 +61,8 @@ ofxTimeline::ofxTimeline()
 	movePlayheadOnPaste(true),
 	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
-	currentPage(NULL)
+	currentPage(NULL),
+	modalTrack	(NULL)
 {
 }
 
@@ -169,6 +170,7 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	args.currentPercent = getPercentComplete();
 	return args;
 }
+
 //internal elements call this when the value has changed
 void ofxTimeline::flagUserChangedValue(){
 	userChangedValue = true;
@@ -234,7 +236,7 @@ void ofxTimeline::setCurrentTime(float time){
 }
 
 void ofxTimeline::setFrameRate(int fps){
-    //TODO: Retime elements
+    //TODO: Retime track contents?
 	timecode.setFPS(fps);    
 }
 void ofxTimeline::setFrameBased(bool frameBased){
@@ -435,6 +437,18 @@ void ofxTimeline::setSnapping(bool snapping){
 	}
 }
 
+void ofxTimeline::presentedModalContent(ofxTLTrack* newModalTrack){
+	if(modalTrack != NULL){
+        ofLogError("ofxTimline -- track " + modalTrack->getName() + " asked for modality while " + newModalTrack->getName() + " is still holding the lock");
+    }
+
+    modalTrack = newModalTrack;
+}
+
+void ofxTimeline::dismissedModalContent(){
+	modalTrack = NULL;    
+}
+
 void ofxTimeline::unselectAll(){
 	currentPage->unselectAll();
 }
@@ -492,6 +506,11 @@ void ofxTimeline::disableEvents() {
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     
+    if(modalTrack != NULL){
+    	modalTrack->mousePressed(args);
+        return;
+    }
+    
 	dragAnchorSet = false;
     bool focus = getDrawRect().inside(args.x, args.y);
 	if(focus && !timelineHasFocus){
@@ -510,18 +529,33 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
+    if(modalTrack != NULL){
+    	modalTrack->mouseMoved(args);
+        return;
+    }
+    
 	ticker->mouseMoved(args);
 	currentPage->mouseMoved(args);
 	zoomer->mouseMoved(args);
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
+    if(modalTrack != NULL){
+    	modalTrack->mouseDragged(args, false);
+        return;
+    }
+
 	ticker->mouseDragged(args);
 	currentPage->mouseDragged(args);
 	zoomer->mouseDragged(args);
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
+    if(modalTrack != NULL){
+    	modalTrack->mouseReleased(args);
+        return;
+    }
+    
 	ticker->mouseReleased(args);
 	tabs->mouseReleased(args);
 	currentPage->mouseReleased(args);
@@ -529,7 +563,14 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-//	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+
+    if(modalTrack != NULL){
+        modalTrack->keyPressed(args);
+        return;
+    }
+    
+    //	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+    
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){

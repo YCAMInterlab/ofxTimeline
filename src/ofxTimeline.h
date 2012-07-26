@@ -224,6 +224,13 @@ class ofxTimeline {
     
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
+    //when an track calls presentedModalContent all key and mouse action will be sent directly to that element
+    //until dismissedModalContent() is called. This will is for displaying custom controls that may overlap with other
+    //elements or require keyboard input (see how it's used in ofxTLTweener and ofxTLTrigger)
+	
+    void presentedModalContent(ofxTLTrack* modalTrack);
+    void dismissedModalContent();
+    
   protected:
 	
     ofxMSATimer timer;
@@ -254,6 +261,8 @@ class ofxTimeline {
 	ofxTLPageTabs* tabs;
 	ofxTLZoomer* zoomer;
 
+    ofxTLTrack* modalTrack;
+    
 	float width;
 	ofVec2f offset;
 

@@ -36,6 +36,11 @@ class ofxTLTweener : public ofxTLKeyframer {
     virtual void draw();
     virtual void drawModalContent();
     
+	//For selecting keyframe type only,
+    //the superclass controls keyframe placement
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+    
     virtual void setValueRange(ofRange range, float defaultValue = 0);
 	//main function to get values out of the timeline, operates on the given value range
 	virtual float getValueAtPercent(float percent);

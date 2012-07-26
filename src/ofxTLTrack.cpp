@@ -92,6 +92,23 @@ string ofxTLTrack::getName(){
 	return name;
 }
 
+void ofxTLTrack::_draw(){
+    //**** DRAW BORDER. TODO: move to super class
+	ofNoFill();
+	if(hover){
+		ofSetColor(timeline->getColors().highlightColor);
+	}
+	else if(focused){
+		ofSetColor(timeline->getColors().highlightColor);
+	}
+	else{
+		ofSetColor(timeline->getColors().outlineColor);
+	}	
+	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+    draw();
+}
+
 bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args){
     focused = bounds.inside(args.x, args.y);
     mousePressed(args);
