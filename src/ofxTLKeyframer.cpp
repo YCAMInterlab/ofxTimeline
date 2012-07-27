@@ -143,7 +143,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
-    if(hasFocus() && !ofGetModifierKeyShift()){
+    if(isActive() && !ofGetModifierKeyShift()){
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
     	    timeline->unselectAll();
@@ -200,7 +200,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 
 void ofxTLKeyframer::regionSelected(ofRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-        if(timeRange.contains(keyframes[i]->position.x) && valueRange.contains(keyframes[i]->position.y)){
+        if(timeRange.contains(keyframes[i]->position.x) && valueRange.contains(1.-keyframes[i]->position.y)){
             selectKeyframe(keyframes[i]);
         }
 	}

@@ -62,6 +62,7 @@ class ofxTLTrack
 	virtual void disable();
 	virtual bool isEnabled();
     
+    virtual bool isActive();
 	virtual bool hasFocus();
 	
     //managed by the page object, do not set yourself
@@ -92,8 +93,8 @@ class ofxTLTrack
 	virtual void nudgeBy(ofVec2f nudgePercent){};
 	
     //Triggered by the page object based on user interaction, Only calls when the focus actually changes
-    virtual void gainedFocus(){};
-    virtual void lostFocus(){};
+    virtual void gainedFocus();
+    virtual void lostFocus();
     
     //This is triggered when a shift+click+drag rectangle finish on the timeline
     //it passes normalized 0-1 ranges for time (x) and value (y)

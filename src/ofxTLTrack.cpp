@@ -114,9 +114,8 @@ void ofxTLTrack::_draw(){
 }
 
 void ofxTLTrack::_mousePressed(ofMouseEventArgs& args){
-    focused = bounds.inside(args.x, args.y);
+    active = bounds.inside(args.x, args.y);
     mousePressed(args);
-    active = focused;
 }
 
 void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args){
@@ -127,6 +126,14 @@ void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args){
 void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args){
     mouseReleased(args);
     active = false;
+}
+
+void ofxTLTrack::gainedFocus(){
+	focused = true;    
+}
+
+void ofxTLTrack::lostFocus(){
+    focused = false;
 }
 
 ofRectangle ofxTLTrack::getDrawRect(){
@@ -167,6 +174,10 @@ string ofxTLTrack::getXMLFilePath(){
 
 string ofxTLTrack::getXMLFileName(){
 	return ofFilePath::getFileName(xmlFileName);
+}
+
+bool ofxTLTrack::isActive(){
+	return active;    
 }
 
 bool ofxTLTrack::hasFocus(){

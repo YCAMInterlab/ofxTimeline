@@ -149,14 +149,16 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
+            bool clickIsInHeader = headers[i]->getDrawRect().inside(args.x,args.y);
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
-            if(tracks[headers[i]->name]->isEnabled()){
+            bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
+            headerHasFocus |= ( clickIsInFooter && !clickIsInTrack );
+            if(tracks[headers[i]->name]->isEnabled()){ 
                 tracks[headers[i]->name]->_mousePressed(args);
-				if(clickIsInTrack){
+				if(clickIsInTrack || clickIsInHeader){
                     newFocus = tracks[headers[i]->name];
                 }
             }
-			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !clickIsInTrack );
 		}
 	}
     
@@ -307,12 +309,17 @@ string ofxTLPage::cutRequest(){
 }
 
 void ofxTLPage::pasteSent(string pasteboard){
-	for(int i = 0; i < headers.size(); i++){
-		//only paste into where we are hovering
-		if(tracks[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
-			tracks[headers[i]->name]->pasteSent(pasteboard);
-		}
-	}	
+    if(focusedTrack != NULL){
+        focusedTrack->pasteSent(pasteboard);
+    }
+    
+//	for(int i = 0; i < headers.size(); i++){
+//		//only paste into where we are hovering
+//        if(tracks[headers[i]->name]->hasFocus()){
+//		//if(tracks[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
+//			tracks[headers[i]->name]->pasteSent(pasteboard);
+//		}
+//	}	
 }
 		
 void ofxTLPage::selectAll(){
@@ -383,12 +390,11 @@ void ofxTLPage::collapseAllTracks(){
 }
 
 void ofxTLPage::removeElement(string name){
-	//TODO:
+	//TODO: bfd
 }
 
 void ofxTLPage::recalculateHeight(){
 	float currentY = elementContainerRect.y;
-	//float currentY = containerOffset.y;
 	float totalHeight = 0;
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
@@ -411,11 +417,8 @@ void ofxTLPage::recalculateHeight(){
 
 	}
 	
-	//computedHeight = totalHeight;
 	elementContainerRect.height = totalHeight;
-	if(autosave){
-		saveElementPositions();
-	}
+	saveElementPositions();
 }
 
 float ofxTLPage::getComputedHeight(){
@@ -501,14 +504,12 @@ void ofxTLPage::unselectAll(){
 
 void ofxTLPage::reset(){
 	for(int i = 0; i < headers.size(); i++){
-		//only paste into where we are hovering
 		tracks[headers[i]->name]->reset();
     }
 }
 
 void ofxTLPage::save(){
 	for(int i = 0; i < headers.size(); i++){
-		//only paste into where we are hovering
 		tracks[headers[i]->name]->save();
     }
 }

@@ -58,6 +58,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void setElement(ofxTLTrack* element);
 	
 	virtual void collapseElement();
+    
 	virtual ofRectangle getFooterRect();
 	
   protected:
