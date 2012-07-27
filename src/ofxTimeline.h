@@ -131,9 +131,11 @@ class ofxTimeline {
 	float getDurationInSeconds();
 	string getDurationInTimecode();
 
+
     virtual void setLoopType(ofLoopType newType);
 	virtual ofLoopType getLoopType();
-
+    bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
+    
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
 	virtual void collapseAllElements(); //collapses all element heights to 0;

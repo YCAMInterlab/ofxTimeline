@@ -193,8 +193,6 @@ bool ofxTLTrack::pointInScreenBounds(ofVec2f screenpoint){
 }
 
 float ofxTLTrack::screenXtoNormalizedX(float x){
-	//return ofMap(x, bounds.x, bounds.x+bounds.width, zoomBounds.min, zoomBounds.max, true);
-    //return screenXtoNormalizedX(x, zoomBounds);
     return timeline->screenXtoNormalizedX(x);
 }
 
@@ -203,13 +201,11 @@ float ofxTLTrack::normalizedXtoScreenX(float x){
 }
 
 float ofxTLTrack::screenXtoNormalizedX(float x, ofRange outputRange){
-//	return ofMap(x, bounds.x, bounds.x+bounds.width, outputRange.min, outputRange.max, false);
     return timeline->screenXtoNormalizedX(x, outputRange);
 }
 
 float ofxTLTrack::normalizedXtoScreenX(float x, ofRange inputRange){
     return timeline->normalizedXtoScreenX(x, inputRange);
-//	return ofMap(x, inputRange.min, inputRange.max, bounds.x, bounds.x+bounds.width, false);
 }
 
 int ofxTLTrack::indexForScreenX(int screenX){

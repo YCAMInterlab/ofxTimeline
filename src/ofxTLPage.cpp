@@ -152,7 +152,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
             bool clickIsInHeader = headers[i]->getDrawRect().inside(args.x,args.y);
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
             bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
-            headerHasFocus |= ( clickIsInFooter && !clickIsInTrack );
+            headerHasFocus |= (clickIsInFooter || clickIsInHeader);
             if(tracks[headers[i]->name]->isEnabled()){ 
                 tracks[headers[i]->name]->_mousePressed(args);
 				if(clickIsInTrack || clickIsInHeader){
@@ -169,8 +169,8 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
             focusedTrack->lostFocus();
         }
         newFocus->gainedFocus();
-    }
-    focusedTrack = newFocus; //can set to null if outside of timeline area
+        focusedTrack = newFocus; //is set to NULL when the whole timeline loses focus
+    }    
 }
 
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args){

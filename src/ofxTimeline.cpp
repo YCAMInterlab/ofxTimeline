@@ -62,7 +62,8 @@ ofxTimeline::ofxTimeline()
 	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL),
-	modalTrack	(NULL)
+	modalTrack(NULL),
+	loopType(OF_LOOP_NONE)
 {
 }
 
@@ -193,6 +194,9 @@ void ofxTimeline::flagTrackModified(ofxTLTrack* track){
 void ofxTimeline::play(){
 
 	if(!isPlaying){
+        if(isDone()){
+            setPercentComplete(0.0);
+        }
 		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		isPlaying = true;
         currentTime = ofClamp(currentTime, getInTime(), getOutTime());
@@ -678,6 +682,10 @@ void ofxTimeline::setLoopType(ofLoopType newType){
 
 ofLoopType ofxTimeline::getLoopType(){
 	return loopType;
+}
+
+bool ofxTimeline::isDone(){
+	return getPercentComplete() == 1.0 && getLoopType() == OF_LOOP_NONE;   
 }
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
