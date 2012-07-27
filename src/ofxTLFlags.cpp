@@ -115,6 +115,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
     else if(enteringText){
         enteringText = false;
         timeline->dismissedModalContent();
+        timeline->flagTrackModified(this);
         return;
     }
     
@@ -136,6 +137,7 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
         if(args.key == OF_KEY_RETURN){
             enteringText = false;
             timeline->dismissedModalContent();
+            timeline->flagTrackModified(this);
         }
         //otherwise pipe the keypress into all the selected textfields
         else {

@@ -351,7 +351,7 @@ void ofxTLPage::addElement(string elementName, ofxTLTrack* element){
 	headers.push_back(newHeader);
 
 	element->setup();
-	element->setAutosave(autosave);
+	//element->setAutosave(autosave);
 	
 	ofRectangle drawRect;
 	if(savedElementPositions.find(elementName) != savedElementPositions.end()){

@@ -326,7 +326,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 			
 			switches.push_back( clickedSwitchA );
 			sort(switches.begin(), switches.end(), switchsort);
-			if(autosave) save();
+            timeline->flagTrackModified(this);
 		}
 		updateDragOffsets(args.x);
 	}
@@ -394,7 +394,8 @@ void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
 		}
 	}	
 	draggingSelectionRange = false;
-	if(autosave) save();
+	//if(autosave) save();
+    timeline->flagTrackModified(this);
 }
 
 void ofxTLSwitcher::keyPressed(ofKeyEventArgs& args){
@@ -417,7 +418,7 @@ void ofxTLSwitcher::keyPressed(ofKeyEventArgs& args){
 				switches.erase(switches.begin()+i);
 			}
 		}
-		if(autosave) save();
+		timeline->flagTrackModified(this);
 	}
 }
 
@@ -431,7 +432,7 @@ void ofxTLSwitcher::nudgeBy(ofVec2f nudgePercent){
 		}		
 	}
 	
-	if(autosave) save();
+	timeline->flagTrackModified(this);
 }
 
 bool ofxTLSwitcher::isOn(float percent){
@@ -563,7 +564,8 @@ string ofxTLSwitcher::cutRequest(){
 		}
 	}	
 	
-	if(autosave) save();
+	//if(autosave) save();
+    timeline->flagTrackModified(this);
 	
 	return switchString;
 }
@@ -610,7 +612,8 @@ void ofxTLSwitcher::pasteSent(string pasteboard){
 	}
 	
 	sort(switches.begin(), switches.end(), switchsort);
-	if(autosave) save();
+	//if(autosave) save();
+    timeline->flagTrackModified(this);
 }
 
 void ofxTLSwitcher::selectAll(){

@@ -60,7 +60,6 @@ float ofxTLTweener::sampleAt(float percent){
 void ofxTLTweener::draw(){
 	
 	if(bounds.width == 0 || bounds.height == 0){
-        //		ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, invalid bounds " + ofToString(bounds.width) + " " + ofToString(bounds.height) );
 		return;
 	}
 	
@@ -100,7 +99,9 @@ void ofxTLTweener::draw(){
 			string frameString = timeline->getIsFrameBased() ? 
             ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
             timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
-			ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
+            if(keysAreDraggable){
+				ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
+            }
 			ofFill();
 		}
 		else{
@@ -118,17 +119,6 @@ void ofxTLTweener::draw(){
 		ofCircle(screenpoint.x, screenpoint.y, 4);
 	}
 	
-	//**** DRAW SELECT RECT
-	if(drawingSelectRect){
-		ofFill();
-		ofSetColor(timeline->getColors().keyColor, 30);
-		ofRect(selectRect);
-		
-		ofNoFill();
-		ofSetColor(timeline->getColors().keyColor, 255);
-		ofRect(selectRect);
-		
-	}
 	ofPopMatrix();
 	ofPopStyle();
 }
@@ -172,6 +162,7 @@ void ofxTLTweener::drawModalContent(){
     
     for(int i = 0; i < easingTypes.size(); i++){
         //TODO turn into something like selectionContainsEaseType();
+        //so that we can show the multi-selected easies
         if(easingTypes[i] ==  ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeType){
             ofSetColor(150, 100, 10);
         }
@@ -191,7 +182,6 @@ void ofxTLTweener::drawModalContent(){
                easingWindowPosition.y + easingTypes[i]->bounds.y, 
                easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
     }
-
 }
 
 void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
@@ -206,7 +196,8 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
                 for(int k = 0; k < selectedKeyframes.size(); k++){                    
                     ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
                 }
-                if(autosave) save();
+                //if(autosave) save();
+                timeline->flagTrackModified(this);
                 return;
             }
         }
@@ -216,7 +207,7 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
                 for(int k = 0; k < selectedKeyframes.size(); k++){
                 	((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
                 }
-                if(autosave) save();
+                timeline->flagTrackModified(this);
                 return;
             }
         }

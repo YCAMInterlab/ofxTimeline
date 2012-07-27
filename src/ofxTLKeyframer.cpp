@@ -43,12 +43,13 @@ bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 	return a->position.x < b->position.x;
 }
 
-ofxTLKeyframer::ofxTLKeyframer(){
-    
-    hoverKeyframe = NULL;
+ofxTLKeyframer::ofxTLKeyframer() 
+:	hoverKeyframe(NULL),
+	keysAreDraggable(false),
+	keysDidDrag(false),
+	keysDidNudge(false)
+{
 	xmlFileName = "_keyframes.xml";	
-	drawingSelectRect = false;
-	keysAreDraggable = false;
 }
 
 ofxTLKeyframer::~ofxTLKeyframer(){
@@ -82,20 +83,16 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 		
 		for(int i = 0; i < numKeyTags; i++){
 			xmlStore.pushTag("key", i);
-			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),
-													 xmlStore.getValue("y", 0.0)));
+			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),xmlStore.getValue("y", 0.0)));
 			restoreKeyframe(key, xmlStore);			
-            
 			xmlStore.popTag(); //key
-			
 			keyContainer.push_back( key );
 		}
 		
 		xmlStore.popTag(); //keyframes
 	}
-	
+	timeline->flagTrackModified(this);
 	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
-
 }
 
 
@@ -186,7 +183,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
-        
+        keysDidDrag = false;
         updateDragOffsets(screenpoint);				
 		if(selectedKeyframe != NULL && args.button == 0){
 			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
@@ -223,45 +220,21 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
 
-    if(drawingSelectRect){
-        selectRect = ofRectangle(selectRectStartPoint.x, selectRectStartPoint.y, 
-                                 args.x-selectRectStartPoint.x, args.y-selectRectStartPoint.y);
-        if(selectRect.width < 0){
-            selectRect.x = selectRect.x+selectRect.width;
-            selectRect.width = -selectRect.width;
+    if(keysAreDraggable && selectedKeyframes.size() != 0){
+        ofVec2f screenpoint(args.x,args.y);
+        for(int k = 0; k < selectedKeyframes.size(); k++){
+            ofVec2f newScreenPosition;
+            newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
+            newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
+            ofVec2f newposition = keyframePointForCoord(newScreenPosition);
+            selectedKeyframes[k]->position = newposition;
         }
-        if(selectRect.height < 0){
-            selectRect.y = selectRect.y+selectRect.height;
-            selectRect.height = -selectRect.height;
+        if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
+            timeline->setPercentComplete(selectedKeyframe->position.x);
         }
-        
-        //somehow get it to stop going above
-        selectRect.width = MIN(selectRect.width, bounds.x+bounds.width-selectRect.x);
-        selectRect.height = MIN(selectRect.height, bounds.y+bounds.height-selectRect.y);
-        
-        selectRectSelection.clear();
-        for(int i = 0; i < keyframes.size(); i++){
-            if( selectRect.inside(coordForKeyframePoint(keyframes[i]->position)) ){
-                selectRectSelection.push_back( keyframes[i] );
-            }
-        }
-    }
-    else {
-        if(selectedKeyframes.size() != 0 && keysAreDraggable){
-            ofVec2f screenpoint(args.x,args.y);
-            for(int k = 0; k < selectedKeyframes.size(); k++){
-                ofVec2f newScreenPosition;
-                newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
-                newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
-                ofVec2f newposition = keyframePointForCoord(newScreenPosition);
-                selectedKeyframes[k]->position = newposition;
-            }
-            if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
-                timeline->setPercentComplete(selectedKeyframe->position.x);
-            }
-            timeline->flagUserChangedValue();
-            updateKeyframeSort();
-        }
+        timeline->flagUserChangedValue();
+        keysDidDrag = true;
+        updateKeyframeSort();
     }
 }
 
@@ -270,20 +243,11 @@ void ofxTLKeyframer::updateKeyframeSort(){
 }
 
 void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
-	if(drawingSelectRect){
 
-		for(int i = 0; i < selectRectSelection.size(); i++){
-			if(!isKeyframeSelected(selectRectSelection[i])){
-				selectedKeyframes.push_back(selectRectSelection[i]);
-			}
-		}
-		sort(selectedKeyframes.begin(), selectedKeyframes.end(), keyframesort);
-		drawingSelectRect = false;
-	}
-		   
-	if(autosave){
-		save();
-	}
+	keysAreDraggable = false;
+    if(keysDidDrag){
+        timeline->flagTrackModified(this);
+    }
 }
 
 void ofxTLKeyframer::getSnappingPoints(vector<float>& points){
@@ -332,9 +296,7 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 				timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );
 			}
 			updateKeyframeSort();
-			if(autosave){
-				save();
-			}
+            timeline->flagTrackModified(this);
 		}
 	}
 }
@@ -359,12 +321,8 @@ void ofxTLKeyframer::nudgeBy(ofVec2f nudgePercent){
 		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudgePercent.y, 0, 1.0);
 	}
 	
-    timeline->flagUserChangedValue();
-	updateKeyframeSort();
-	
-	if(autosave){
-		save();
-	}	
+    timeline->flagTrackModified(this);
+	updateKeyframeSort();	
 }
 
 void ofxTLKeyframer::deleteSelectedKeyframes(){
@@ -376,12 +334,9 @@ void ofxTLKeyframer::deleteSelectedKeyframes(){
 	}
 	
 	selectedKeyframes.clear();
-    
-    timeline->flagUserChangedValue();
 	updateKeyframeSort();
-	if(autosave){
-		save();
-	}
+    
+    timeline->flagTrackModified(this);
 }
 
 ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){

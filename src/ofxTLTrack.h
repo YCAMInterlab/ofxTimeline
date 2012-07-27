@@ -76,7 +76,6 @@ class ofxTLTrack
     virtual string getXMLFileName();
     
 	virtual void setXMLFileName(string filename);
-	virtual void setAutosave(bool autosave);
 	
     //parent wrappers that call virtual versions implemented by subclasses
     void _mousePressed(ofMouseEventArgs& args);
@@ -138,7 +137,6 @@ class ofxTLTrack
 	
 	ofxTimeline* timeline;
 	bool enabled; 
-	bool autosave;
 
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);

@@ -171,7 +171,7 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	return args;
 }
 
-//internal elements call this when the value has changed
+//internal elements call this when the value has changed, can call repeated
 void ofxTimeline::flagUserChangedValue(){
 	userChangedValue = true;
 }
@@ -181,6 +181,13 @@ bool ofxTimeline::getUserChangedValue(){
 	bool hasChanged = userChangedValue;
     userChangedValue = false;
     return hasChanged;
+}
+
+void ofxTimeline::flagTrackModified(ofxTLTrack* track){
+	flagUserChangedValue();
+    if(autosave){
+        track->save();
+    }
 }
 
 void ofxTimeline::play(){

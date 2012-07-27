@@ -90,6 +90,10 @@ class ofxTimeline {
     virtual void flagUserChangedValue(); //internal elements call this when the value has changed
     virtual bool getUserChangedValue(); //this returns and clears the flag, generally call once per frame
     
+    //internal elements call this when a big change has been made
+    //it'll trigger a save if autosave is on, and it'll add to the undo queue for that page
+    virtual void flagTrackModified(ofxTLTrack* track); 
+    
 	virtual void play();
 	virtual void stop();
 	virtual bool togglePlay();

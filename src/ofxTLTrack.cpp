@@ -44,7 +44,6 @@ ofxTLTrack::ofxTLTrack()
 	active(false),
 	hover(false),
 	createdByTimeline(false),
-	autosave(true),
 	timeline(NULL)
 {
 	// <(^_^)>
@@ -170,10 +169,6 @@ string ofxTLTrack::getXMLFileName(){
 	return ofFilePath::getFileName(xmlFileName);
 }
 
-void ofxTLTrack::setAutosave(bool _autosave){
-	autosave = _autosave;
-}
-			   
 bool ofxTLTrack::hasFocus(){
 	return focused;
 }

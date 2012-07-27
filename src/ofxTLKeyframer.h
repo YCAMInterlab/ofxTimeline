@@ -116,10 +116,6 @@ class ofxTLKeyframer : public ofxTLTrack
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);
 	ofVec2f keyframePointForCoord(ofVec2f coord);
 	
-	bool draggedNewKeyframe;
-    bool drawingSelectRect;
-	ofVec2f selectRectStartPoint;
-	ofRectangle selectRect;
-	vector<ofxTLKeyframe*> selectRectSelection;
-	
+	bool keysDidDrag;
+	bool keysDidNudge;
 };

@@ -223,9 +223,7 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 	if(mouseIsDown){
 		mouseIsDown = false;
 		notifyZoomEnded();
-		if(autosave){
-			save();
-		}		
+		save(); //intentionally ignores auto save since this is just a view parameter
 	}
 }
 
