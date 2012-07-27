@@ -438,9 +438,9 @@ void ofxTimeline::setSnapping(bool snapping){
 }
 
 void ofxTimeline::presentedModalContent(ofxTLTrack* newModalTrack){
-	if(modalTrack != NULL){
-        ofLogError("ofxTimline -- track " + modalTrack->getName() + " asked for modality while " + newModalTrack->getName() + " is still holding the lock");
-    }
+//	if(modalTrack != NULL){
+//        ofLogError("ofxTimline -- track " + modalTrack->getName() + " asked for modality while " + newModalTrack->getName() + " is still holding the lock");
+//    }
 
     modalTrack = newModalTrack;
 }
@@ -869,28 +869,28 @@ bool ofxTimeline::getSwitcherOn(string name, int atFrame){
 	return getSwitcherOn(name, timecode.secondsForFrame(atFrame));	
 }
 
-ofxTLBangTrack* ofxTimeline::addBangs(string name){
+ofxTLBangs* ofxTimeline::addBangs(string name){
  	return addBangs(name, nameToXMLName(name));   
 }
 
-ofxTLBangTrack* ofxTimeline::addBangs(string name, string xmlFileName){
-	ofxTLBangTrack* newBangs = new ofxTLBangTrack();
+ofxTLBangs* ofxTimeline::addBangs(string name, string xmlFileName){
+	ofxTLBangs* newBangs = new ofxTLBangs();
 	newBangs->setCreatedByTimeline(true);
 	newBangs->setXMLFileName(xmlFileName);
 	addElement(name, newBangs);
 	return newBangs;
 }
 
-ofxTLTrigger* ofxTimeline::addTriggers(string name){
-    return addTriggers(name, nameToXMLName(name));
+ofxTLFlags* ofxTimeline::addFlags(string name){
+    return addFlags(name, nameToXMLName(name));
 }
 
-ofxTLTrigger* ofxTimeline::addTriggers(string name, string xmlFileName){
-    ofxTLTrigger* newTrigger = new ofxTLTrigger();
-	newTrigger->setCreatedByTimeline(true);
-	newTrigger->setXMLFileName(xmlFileName);
-	addElement(name, newTrigger);
-	return newTrigger;
+ofxTLFlags* ofxTimeline::addFlags(string name, string xmlFileName){
+    ofxTLFlags* newFlags = new ofxTLFlags();
+	newFlags->setCreatedByTimeline(true);
+	newFlags->setXMLFileName(xmlFileName);
+	addElement(name, newFlags);
+	return newFlags;
 }
 
 ofxTimecode& ofxTimeline::getTimecode(){

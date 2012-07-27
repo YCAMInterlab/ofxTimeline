@@ -5,10 +5,10 @@
 #include "ofMain.h"
 #include "ofxTLKeyframer.h"
 
-class ofxTLBangTrack : public ofxTLKeyframer {
+class ofxTLBangs : public ofxTLKeyframer {
   public:
-    ofxTLBangTrack();
-	~ofxTLBangTrack();
+    ofxTLBangs();
+	~ofxTLBangs();
 	
     virtual void enable();
     virtual void disable();
@@ -20,7 +20,6 @@ class ofxTLBangTrack : public ofxTLKeyframer {
     void playbackStarted(ofxTLPlaybackEventArgs& args);
 	void playbackLooped(ofxTLPlaybackEventArgs& args);
 	void playbackEnded(ofxTLPlaybackEventArgs& args);
-
     
  protected:
 

@@ -52,7 +52,8 @@
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
 #include "ofxTLTweener.h"
-#include "ofxTLTrigger.h"
+#include "ofxTLBangs.h"
+#include "ofxTLFlags.h"
 #include "ofxTLSwitcher.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
@@ -178,11 +179,11 @@ class ofxTimeline {
 	virtual bool getSwitcherOn(string name, float atTime);
 	virtual bool getSwitcherOn(string name, int atFrame);
 	
-    ofxTLBangTrack* addBangs(string name);
-	ofxTLBangTrack* addBangs(string name, string xmlFileName);
+    ofxTLBangs* addBangs(string name);
+	ofxTLBangs* addBangs(string name, string xmlFileName);
     
-    ofxTLTrigger* addTriggers(string name);
-    ofxTLTrigger* addTriggers(string name, string xmlFileName);
+    ofxTLFlags* addFlags(string name);
+    ofxTLFlags* addFlags(string name, string xmlFileName);
 
     //TODO: remove image sequence from the core?
 	virtual ofxTLImageSequence* addImageSequence(string name);

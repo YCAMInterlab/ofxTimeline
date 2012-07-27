@@ -61,7 +61,7 @@ class ofxTLPageEventArgs : public ofEventArgs {
 class ofxTLBangEventArgs : public ofEventArgs {
   public:
 	string trackName;
-	string triggerName;
+	string flag;
 };
 
 class ofxTLSwitchEventArgs : public ofEventArgs {

@@ -37,23 +37,25 @@
 
 #pragma once
 #include "ofMain.h"
-#include "ofxTLBangTrack.h"
+#include "ofxTLBangs.h"
 #include "ofxTextInputField.h"
 
-class ofxTLTriggerKey : public ofxTLKeyframe {
+class ofxTLFlag : public ofxTLKeyframe {
   public:
     ofxTextInputField textField;
     ofRectangle display;
 };
 
-class ofxTLTrigger : public ofxTLBangTrack {
+class ofxTLFlags : public ofxTLBangs {
   public:
-	ofxTLTrigger();
-	~ofxTLTrigger();
+	ofxTLFlags();
+	~ofxTLFlags();
 	
 	virtual void draw();
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
+    virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
+
 	virtual void keyPressed(ofKeyEventArgs& args);
 
 //	virtual string copyRequest();
@@ -67,22 +69,8 @@ protected:
     virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-
-//	ofxTextInputField textfield;
+    virtual void bangFired(ofxTLKeyframe* key);
+    
 	bool enteringText;
 
-//	void update(ofEventArgs& args);
-//    float lastTimelinePoint;
-
-//	void sortTriggers();
-						   
-//	int dragOffset;
-//	Trigger* getTriggerForScreenPosition(float screenx, int& offset);
-//	Trigger* selectedTrigger;
-//    vector<Trigger*> selectedTriggers;
-//	Trigger* hoverTrigger;
-//	vector<Trigger> triggers;
-    
-	
-	
 };

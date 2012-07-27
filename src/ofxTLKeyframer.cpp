@@ -313,6 +313,8 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
         if(selectedKeyframe == NULL && !didJustDeselect){
+            timeline->unselectAll();
+
             //add a new one
             selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
             keyframes.push_back(selectedKeyframe);

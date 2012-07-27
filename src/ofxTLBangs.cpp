@@ -1,31 +1,32 @@
 
 #include "ofxTimeline.h"
-#include "ofxTLBangTrack.h"
+#include "ofxTLBangs.h"
 
-ofxTLBangTrack::ofxTLBangTrack(){
+ofxTLBangs::ofxTLBangs(){
     lastTimelinePoint = 0;
 }
 
-ofxTLBangTrack::~ofxTLBangTrack(){
+ofxTLBangs::~ofxTLBangs(){
     
 }
 
-void ofxTLBangTrack::enable(){
+void ofxTLBangs::enable(){
     ofxTLKeyframer::enable();
 	ofxTLRegisterPlaybackEvents(this);    
 }
 
-void ofxTLBangTrack::disable(){
+void ofxTLBangs::disable(){
     ofxTLKeyframer::disable();
     ofxTLRemovePlaybackEvents(this);
 }
 
-void ofxTLBangTrack::draw(){
+void ofxTLBangs::draw(){
         
     if(bounds.height < 2){
         return;
     }
     
+    ofPushStyle();
     ofFill();
     ofSetLineWidth(5);
     for(int i = keyframes.size()-1; i >= 0; i--){
@@ -48,7 +49,7 @@ void ofxTLBangTrack::draw(){
 
 }
 
-ofxTLKeyframe* ofxTLBangTrack::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
+ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
 	for(int i = 0; i < keyframes.size(); i++){
 		float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
 		if (abs(offset) < 5) {
@@ -60,30 +61,31 @@ ofxTLKeyframe* ofxTLBangTrack::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 	return NULL;    
 }
 
-void ofxTLBangTrack::update(ofEventArgs& args){
+void ofxTLBangs::update(ofEventArgs& args){
 	float thisTimelinePoint = timeline->getPercentComplete();
 	for(int i = 0; i < keyframes.size(); i++){
 		if(lastTimelinePoint < keyframes[i]->position.x && thisTimelinePoint > keyframes[i]->position.x){
-		}
+			bangFired(keyframes[i]);
+        }
 	}
 	lastTimelinePoint = thisTimelinePoint;
 }
 
-void ofxTLBangTrack::bangFired(ofxTLKeyframe* key){
+void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.trackName = name;
     ofNotifyEvent(ofxTLEvents.bangFired, args);    
 }
 
-void ofxTLBangTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
+void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = timeline->getPercentComplete();
-	ofAddListener(ofEvents().update, this, &ofxTLBangTrack::update);
+	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
 }
 
-void ofxTLBangTrack::playbackEnded(ofxTLPlaybackEventArgs& args){
-	ofRemoveListener(ofEvents().update, this, &ofxTLBangTrack::update);
+void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
+	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
 }
 
-void ofxTLBangTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
+void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = 0;
 }
