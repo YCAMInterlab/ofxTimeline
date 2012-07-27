@@ -40,24 +40,6 @@
 #include "ofxTLTrack.h"
 #include "ofxXmlSettings.h"
 
-//
-//typedef struct
-//{
-//	int id;
-//	ofRectangle bounds;
-//	string name;
-//	ofxEasing* easing;
-//} EasingFunction;
-//
-//typedef struct
-//{
-//	int id;
-//	ofRectangle bounds;
-//	string name;
-//	ofxTween::ofxEasingType type;
-//} EasingType;
-//
-
 class ofxTLKeyframe {
   public:
 	ofVec2f position; // x is value, y is time, all 0 - 1.0	
@@ -72,11 +54,6 @@ class ofxTLKeyframer : public ofxTLTrack
 	~ofxTLKeyframer();
 
 	virtual void draw();
-//	virtual void drawModalContent(); //for pop up window-ish stuff
-
-//	virtual void setValueRange(ofRange range, float defaultValue = 0);
-//	//main function to get values out of the timeline, operates on the given value range
-//	virtual float getValueAtPercent(float percent);
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
@@ -104,16 +81,10 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void unselectAll();
 	
   protected:
-	
-//	virtual float sampleAt(float percent);
 	virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
 
-	//vector<ofVec2f> grabOffsets; //keyframe grab offsets for dragging.
 	vector<ofxTLKeyframe*> keyframes;
 
-//	ofRange valueRange;
-//	float defaultValue;
-    
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
@@ -143,17 +114,6 @@ class ofxTLKeyframer : public ofxTLTrack
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);
 	ofVec2f keyframePointForCoord(ofVec2f coord);
 		
-//	//easing dialog stuff
-//	ofVec2f easingWindowPosition;
-//	bool drawingEasingWindow;
-//	vector<EasingFunction*> easingFunctions;
-//	vector<EasingType*> easingTypes;
-//	float easingBoxWidth;
-//	float easingBoxHeight;
-//	float easingWindowSeperatorHeight;
-	
-//    void initializeEasings();
-
 	bool drawingSelectRect;
 	ofVec2f selectRectStartPoint;
 	ofRectangle selectRect;

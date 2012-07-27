@@ -80,44 +80,48 @@ void ofxTLFlags::draw(){
 //main function to get values out of the timeline, operates on the given value range
 void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
 	
+    //if we aren't entering text and someone has the shift key held down don't let us go into modal
     if(!enteringText && ofGetModifierKeyShift()){
         ofxTLBangs::mousePressed(args);
         return;
     }
         
-    ofxTLFlag* clickedTextField = NULL;
-    
-    //bool clickedOnTextField = false;
-    //look at each element to see if 
+    ofxTLFlag* clickedTextField = NULL;    
+    //look at each element to see if a text field was clicked
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLFlag* key = (ofxTLFlag*)keyframes[i];
 		if(key->display.inside(args.x, args.y)){
-            //clickedOnTextField = true;
             clickedTextField = key;
             break;
         }
     }
 
+    //if so, select that text field and key and present modally
+    //so that keyboard input all goes to the text field.
+    //selection model is designed so that you can type into
+    //mulitple fields at once
     if(clickedTextField != NULL){
         enteringText = true;
         timeline->presentedModalContent(this);
         if(!ofGetModifierKeyShift()){
             timeline->unselectAll();
         }
+        //make sure this 
         if(!isKeyframeSelected(clickedTextField)){
             selectedKeyframes.push_back(clickedTextField);
         }
         return;
     }    
-    else{        
-        if(enteringText){
-            enteringText = false;
-            timeline->dismissedModalContent();
-            timeline->unselectAll();
-            return;
-        }
+    //if we didn't click on a text field and we are entering txt
+    //take off the typing mode. Hitting enter will also do this
+    else if(enteringText){
+        enteringText = false;
+        timeline->dismissedModalContent();
+        return;
     }
     
+    //if we get all the way here we didn't click on a text field and we aren't
+    //currently entering text so proceed as normal
     ofxTLBangs::mousePressed(args);
 }
 
@@ -130,10 +134,12 @@ void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, bool snapped){
 void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
 	
 	if(enteringText){
+        //enter key submits the values
         if(args.key == OF_KEY_RETURN){
             enteringText = false;
             timeline->dismissedModalContent();
         }
+        //otherwise pipe the keypress into all the selected textfields
         else {
 	        for(int i = 0; i < selectedKeyframes.size(); i++){
                 ofxTLFlag* key = (ofxTLFlag*)selectedKeyframes[i];
@@ -141,6 +147,7 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
             }
         }
     }
+    //normal behavior for nudging and deleting and stuff
 	else{
         ofxTLBangs::keyPressed(args);
     }    
