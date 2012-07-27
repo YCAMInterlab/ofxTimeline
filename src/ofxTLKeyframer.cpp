@@ -122,9 +122,12 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 	for(int i = 0; i < keys.size(); i++){
 		savedkeyframes.addTag("key");
 		savedkeyframes.pushTag("key", i);
+        
+        //calling store before saving the default values gives the subclass a chance to modify them
+        storeKeyframe(keys[i], savedkeyframes); 
 		savedkeyframes.addValue("x", keys[i]->position.x);
 		savedkeyframes.addValue("y", keys[i]->position.y);
-        storeKeyframe(keys[i], savedkeyframes);
+        
 		savedkeyframes.popTag(); //key
 	}
 	
@@ -158,7 +161,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
             selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
             keyframes.push_back(selectedKeyframe);
             selectedKeyframe->grabOffset = ofVec2f(0,0);
-            timeline->flagUserChangedValue();
+            timeline->flagTrackModified(this);
             updateKeyframeSort();
             
             for(int i = 0; i < keyframes.size(); i++){

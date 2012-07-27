@@ -57,12 +57,6 @@ class ofxTLFlags : public ofxTLBangs {
     virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
 
 	virtual void keyPressed(ofKeyEventArgs& args);
-
-//	virtual string copyRequest();
-//	virtual string cutRequest();
-//	virtual void pasteSent(string pasteboard);
-//	virtual void selectAll();
-//	virtual void unselectAll();
 	
 protected:
     

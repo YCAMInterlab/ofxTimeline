@@ -33,82 +33,37 @@
  */
 
 #pragma once 
-#include "ofxTLTrack.h"
+#include "ofxTLKeyframer.h"
 
-typedef struct {
+class ofxTLSwitch : public ofxTLKeyframe {
+  public:
+    //NOTE this does not use position, but copies everything into the range
 	ofRange time;
 	
 	//ui stuff
-	ofRange dragOffsets;
+    //	ofRange dragOffsets;
 	bool startSelected;
 	bool endSelected;
-} ofxTLSwitchOn;
+    ofRectangle display;
+};
 
-class ofxTLSwitcher : public ofxTLTrack
-{
+class ofxTLSwitcher : public ofxTLKeyframer {
   public:
 	ofxTLSwitcher();
 	~ofxTLSwitcher();
-	
-	virtual void setup();
-	virtual void draw();
-	
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args,bool snapped);
-	virtual void mouseReleased(ofMouseEventArgs& args);
-	
-	virtual void keyPressed(ofKeyEventArgs& args);
-	
-	virtual void nudgeBy(ofVec2f nudgePercent);
-	
-	virtual void save();
-	virtual void load();
-	
-	virtual void clear();
-	
-	void playbackStarted(ofxTLPlaybackEventArgs& args);
-	void playbackLooped(ofxTLPlaybackEventArgs& args);
-	void playbackEnded(ofxTLPlaybackEventArgs& args);
-	
-	virtual bool isOn(float percent);
-	
-	virtual string copyRequest();
-	virtual string cutRequest();
-	virtual void pasteSent(string pasteboard);
-	virtual void selectAll();
-	virtual void unselectAll();
-	
-	//Finds the closest switch behind a given point
-	//if the point is inside a switch, it will return NULL.
-	ofxTLSwitchOn* nearestSwitchBeforePoint(float percent);
-	//Finds the closest switch after a given point
-	ofxTLSwitchOn* nearestSwitchAfterPoint(float percent);
-	
+
+    virtual void draw();
+    
+    virtual bool isOn(float percent);
+    
+    void mouseDragged(ofMouseEventArgs& args, bool snapped);
+    
   protected:
-	virtual void update(ofEventArgs& args);
-	bool isSwitchInBounds(ofxTLSwitchOn* s);
-	bool hoveringOn(float hoverY);
-	
-	void updateDragOffsets(float clickX);
-
-	bool areAnySwitchesSelected();
-	bool pointsAreDraggable;
-	bool draggingSelectionRange;
-	float selectionRangeAnchor;
-	ofRange dragSelection;
-	
-	string getXMLStringForSwitches(bool selectedOnly);
-	vector<ofxTLSwitchOn*> switchesFromXML(ofxXmlSettings xml);
-	
-	ofxTLSwitchOn* switchHandleForScreenX(float screenPos, bool& startTimeSelected);
-	ofxTLSwitchOn* switchForScreenX(float screenPos);
-	ofxTLSwitchOn* switchForPoint(float percent);
-	
-	vector<ofxTLSwitchOn*> switches;
-	ofxTLSwitchOn* hoverSwitch;
-	bool hoveringStartTime;
-	bool hoveringHandle;
-	
-
+    virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
+    virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
+	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
+	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+    
+    //a small distance that changes on the viewport
+    float getSmallRange();
 };

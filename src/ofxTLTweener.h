@@ -45,7 +45,6 @@ class ofxTLTweener : public ofxTLKeyframer {
 	//main function to get values out of the timeline, operates on the given value range
 	virtual float getValueAtPercent(float percent);
 
-
   protected:
     virtual float sampleAt(float percent);
     ofRange valueRange;

@@ -196,7 +196,6 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
                 for(int k = 0; k < selectedKeyframes.size(); k++){                    
                     ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
                 }
-                //if(autosave) save();
                 timeline->flagTrackModified(this);
                 return;
             }

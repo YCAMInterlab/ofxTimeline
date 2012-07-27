@@ -271,6 +271,7 @@ float ofxTimeline::getPercentComplete(){
 }
 
 //TODO: santize in/out 
+//TODO: all should call overloaded function so it's easier to subclass
 void ofxTimeline::setInPointAtPlayhead(){
     setInPointAtTime(currentTime);
 }
@@ -853,18 +854,21 @@ ofxTLTrack* ofxTimeline::getElement(string name){
 	return trackNameToPage[name]->getElement(name);
 }
 
+ofxTLSwitcher* ofxTimeline::addSwitcher(string name){
+	return addSwitcher(name, nameToXMLName(name));
+}
+
 ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 	ofxTLSwitcher* newSwitcher = new ofxTLSwitcher();
 	newSwitcher->setCreatedByTimeline(true);
 	newSwitcher->setXMLFileName(xmlFileName);
 	addElement(name, newSwitcher);
-	
 	return newSwitcher;
 }
 
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
 	if(trackNameToPage.find(name) == trackNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
 		return false;
 	}
 	
@@ -873,8 +877,8 @@ bool ofxTimeline::getSwitcherOn(string name, float atTime){
 		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
 		return false;
 	}
-    
-	return switcher->isOn(atTime/durationInSeconds);   
+    return switcher->isOn(atTime/durationInSeconds);   
+
 }
 
 bool ofxTimeline::getSwitcherOn(string name){

@@ -74,6 +74,24 @@ class ofxTimeline {
     
     virtual void loadElementsFromFolder(string folderPath);
     
+    //timing setup functions
+    void setFrameRate(int fps);    
+    void setDurationInFrames(int frames);
+	void setDurationInSeconds(float seconds);
+    
+    //frame based mode timelines will never skip frames, and will advance at the speed of openFrameworks
+    //regardless of the FPS that you set the timeline to
+    void setFrameBased(bool frameBased);
+	bool getIsFrameBased();
+    
+	int getDurationInFrames();
+	float getDurationInSeconds();
+	string getDurationInTimecode();
+    
+    virtual void setLoopType(ofLoopType newType);
+	virtual ofLoopType getLoopType();
+    bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
+    
 	virtual void show();
 	virtual void hide();
 	virtual bool toggleShow();
@@ -87,18 +105,23 @@ class ofxTimeline {
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
 	
-    virtual void flagUserChangedValue(); //internal elements call this when the value has changed
-    virtual bool getUserChangedValue(); //this returns and clears the flag, generally call once per frame
+    //internal elements call this when the value has changed slightly
+    //so that views can know if they need to update
+    virtual void flagUserChangedValue();
+    //this returns and clears the flag, generally call once per frame
+    virtual bool getUserChangedValue(); 
     
     //internal elements call this when a big change has been made
     //it'll trigger a save if autosave is on, and it'll add to the undo queue for that page
     virtual void flagTrackModified(ofxTLTrack* track); 
     
+    //playback
 	virtual void play();
 	virtual void stop();
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
     
+    //in and out point setting, respected by internal time
 	virtual void setInPointAtPlayhead();
     virtual void setOutPointAtPlayhead();
 	virtual void setInPointAtPercent(float percent);
@@ -109,33 +132,17 @@ class ofxTimeline {
 	virtual void setOutPointAtTime(float time);
 
 	virtual void setInOutRange(ofRange inoutPercentRange);
-	virtual ofRange getInOutRange();
-	virtual int getInFrame();
-	virtual int getOutFrame();
-	virtual float getInTime();
-	virtual float getOutTime();
+	
+    ofRange getInOutRange();
+	int getInFrame();
+	int getOutFrame();
+	float getInTime();
+	float getOutTime();
 
 	virtual void setCurrentTimeToInPoint();
 	virtual void setCurrentTimeToOutPoint();
-	
-    void setFrameRate(int fps);    
-    void setDurationInFrames(int frames);
-	void setDurationInSeconds(float seconds);
-
-    //frame based mode timelines will never skip frames, and will advance at the speed of openFrameworks
-    //regardless of the FPS that you set the timeline to
-    void setFrameBased(bool frameBased);
-	bool getIsFrameBased();
-        
-	int getDurationInFrames();
-	float getDurationInSeconds();
-	string getDurationInTimecode();
 
 
-    virtual void setLoopType(ofLoopType newType);
-	virtual ofLoopType getLoopType();
-    bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
-    
 	virtual void setOffset(ofVec2f offset);
 	virtual void setWidth(float width);
 	virtual void collapseAllElements(); //collapses all element heights to 0;
@@ -179,7 +186,8 @@ class ofxTimeline {
 	virtual float getKeyframeValue(string name); 
 	virtual float getKeyframeValue(string name, float atTime);
 	virtual float getKeyframeValue(string name, int atFrame);
-		
+
+    virtual ofxTLSwitcher* addSwitcher(string name);
 	virtual ofxTLSwitcher* addSwitcher(string name, string xmlFileName);
 	virtual bool getSwitcherOn(string name);
 	virtual bool getSwitcherOn(string name, float atTime);
@@ -200,7 +208,7 @@ class ofxTimeline {
 	
 	//for custom elements
 	virtual void addElement(string name, ofxTLTrack* element);
-	virtual void setAutosave(bool autosave);
+	void setAutosave(bool autosave);
 		
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
