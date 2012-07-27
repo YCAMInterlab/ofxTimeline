@@ -201,6 +201,14 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	}
 }
 
+void ofxTLKeyframer::regionSelected(ofRange timeRange, ofRange valueRange){
+    for(int i = 0; i < keyframes.size(); i++){
+        if(timeRange.contains(keyframes[i]->position.x) && valueRange.contains(keyframes[i]->position.y)){
+            selectKeyframe(keyframes[i]);
+        }
+	}
+}
+
 void ofxTLKeyframer::updateDragOffsets(ofVec2f screenpoint){
 	for(int k = 0; k < selectedKeyframes.size(); k++){
 		selectedKeyframes[k]->grabOffset = screenpoint - coordForKeyframePoint(selectedKeyframes[k]->position);
@@ -214,7 +222,6 @@ void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
-	
 
     if(drawingSelectRect){
         selectRect = ofRectangle(selectRectStartPoint.x, selectRectStartPoint.y, 
@@ -362,7 +369,6 @@ void ofxTLKeyframer::nudgeBy(ofVec2f nudgePercent){
 
 void ofxTLKeyframer::deleteSelectedKeyframes(){
 	for(int i = keyframes.size() - 1; i >= 0; i--){
-		//if (keyframes[i] == selectedKeyframe) {
 		if(isKeyframeSelected(keyframes[i])){
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
@@ -389,6 +395,12 @@ ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 	}
     selectedIndex = -1;
 	return NULL;
+}
+
+void ofxTLKeyframer::selectKeyframe(ofxTLKeyframe* k){
+	if(!isKeyframeSelected(k)){
+        selectedKeyframes.push_back(k);
+    }
 }
 
 void ofxTLKeyframer::deselectKeyframe(ofxTLKeyframe* k){

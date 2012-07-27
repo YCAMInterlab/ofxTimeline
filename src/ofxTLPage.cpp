@@ -37,6 +37,8 @@
 
 #include "ofxTLPage.h"
 #include "ofxTLTicker.h"
+#include "ofxTLUtils.h"
+#include "ofxTimeline.h"
 
 ofxTLPage::ofxTLPage()
 :	autosave(false),
@@ -48,7 +50,8 @@ ofxTLPage::ofxTLPage()
 	ticker(NULL),
 	snapToOtherTracksEnabled(true),
 	headerHasFocus(false),
-	focusedTrack(NULL)
+	focusedTrack(NULL),
+	draggingSelectionRectangle(false)
 {
 	//
 }
@@ -107,7 +110,18 @@ void ofxTLPage::draw(){
 	
 	for(int i = 0; i < headers.size(); i++){
 		tracks[headers[i]->name]->drawModalContent();
-	}	
+	}
+    
+    if(draggingSelectionRectangle){
+		ofFill();
+		ofSetColor(timeline->getColors().keyColor, 30);
+		ofRect(selectionRectangle);
+		
+		ofNoFill();
+		ofSetColor(timeline->getColors().keyColor, 255);
+		ofRect(selectionRectangle);
+		
+	}
 }
 
 void ofxTLPage::timelineGainedFocus(){
@@ -121,24 +135,33 @@ void ofxTLPage::timelineLostFocus(){
 #pragma mark events
 void ofxTLPage::mousePressed(ofMouseEventArgs& args){
     
-    //TODO: check modal stuff
 	draggingInside = elementContainerRect.inside(args.x, args.y);
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
+        if(ofGetModifierKeyShift()){
+            draggingSelectionRectangle = true;
+            selectionRectangleAnchor = ofVec2f(args.x,args.y);
+            selectionRectangle = ofRectangle(args.x,args.y,0,0);
+        }
 		if(snappingEnabled){
 			refreshSnapPoints();
 		}
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
+            bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
             if(tracks[headers[i]->name]->isEnabled()){
-				if( tracks[headers[i]->name]->_mousePressed(args) ){
+                tracks[headers[i]->name]->_mousePressed(args);
+				if(clickIsInTrack){
                     newFocus = tracks[headers[i]->name];
                 }
             }
-			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y) );
+			headerHasFocus |= ( headers[i]->getFooterRect().inside(args.x,args.y) && !clickIsInTrack );
 		}
 	}
+    
+    //TODO: explore multi-focus tracks for pasting into many tracks at once
+    //paste events get sent to the focus track
     if(newFocus != NULL && newFocus != focusedTrack){
         if(focusedTrack != NULL){
             focusedTrack->lostFocus();
@@ -159,34 +182,69 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
 	if(draggingInside){
 		bool snapped = false;
 		float snapPercent = 0;
-		if(snappingEnabled){
-			
-			refreshSnapPoints();
-			
-			float closestSnapDistance = snappingTolerance;
-			float closestSnapPoint;
-			//modify drag X if it should be snapped
-			for(int i = 0; i < snapPoints.size(); i++){
-				float distanceToPoint = abs(args.x - snapPoints[i]);
-				if(distanceToPoint < closestSnapDistance){
-					closestSnapPoint = i;
-					closestSnapDistance = distanceToPoint; 
-				}
+        if(draggingSelectionRectangle){
+            selectionRectangle = ofRectangle(selectionRectangleAnchor.x, selectionRectangleAnchor.y, 
+									 args.x-selectionRectangleAnchor.x, args.y-selectionRectangleAnchor.y);
+			if(selectionRectangle.width < 0){
+				selectionRectangle.x = selectionRectangle.x+selectionRectangle.width;
+				selectionRectangle.width = -selectionRectangle.width;
 			}
+            
+			if(selectionRectangle.height < 0){
+				selectionRectangle.y = selectionRectangle.y+selectionRectangle.height;
+				selectionRectangle.height = -selectionRectangle.height;
+			}
+            
+            //clamp to the bounds
+            if(selectionRectangle.x < elementContainerRect.x){
+                float widthBehind =  elementContainerRect.x - selectionRectangle.x;
+                selectionRectangle.x = elementContainerRect.x;
+                selectionRectangle.width -= widthBehind;
+            }
 			
-			if(closestSnapDistance < snappingTolerance){
-				args.x = snapPoints[closestSnapPoint] + dragAnchor;
-				snapPercent = snapPoints[closestSnapPoint];
-				snapped = true;
-			}
-		}
-		
-		for(int i = 0; i < headers.size(); i++){
-			headers[i]->mouseDragged(args);
-			if(!headerHasFocus){
-				tracks[headers[i]->name]->mouseDragged(args, snapped);
-			}
-		}
+            if(selectionRectangle.y < elementContainerRect.y){
+                float heightAbove =  elementContainerRect.y - selectionRectangle.y;
+                selectionRectangle.y = elementContainerRect.y;
+                selectionRectangle.height -= heightAbove;
+            }
+            
+            if(selectionRectangle.x+selectionRectangle.width > elementContainerRect.x+elementContainerRect.width){
+                selectionRectangle.width = (elementContainerRect.x+elementContainerRect.width - selectionRectangle.x);                
+            }
+            if(selectionRectangle.y+selectionRectangle.height > elementContainerRect.y+elementContainerRect.height){
+                selectionRectangle.height = (elementContainerRect.y+elementContainerRect.height - selectionRectangle.y);
+            }
+        }
+        else {
+            if(snappingEnabled){
+                
+                refreshSnapPoints();
+                
+                float closestSnapDistance = snappingTolerance;
+                float closestSnapPoint;
+                //modify drag X if it should be snapped
+                for(int i = 0; i < snapPoints.size(); i++){
+                    float distanceToPoint = abs(args.x - snapPoints[i]);
+                    if(distanceToPoint < closestSnapDistance){
+                        closestSnapPoint = i;
+                        closestSnapDistance = distanceToPoint; 
+                    }
+                }
+                
+                if(closestSnapDistance < snappingTolerance){
+                    args.x = snapPoints[closestSnapPoint] + dragAnchor;
+                    snapPercent = snapPoints[closestSnapPoint];
+                    snapped = true;
+                }
+            }
+            
+            for(int i = 0; i < headers.size(); i++){
+                headers[i]->mouseDragged(args);
+                if(!headerHasFocus){
+                    tracks[headers[i]->name]->mouseDragged(args, snapped);
+                }
+            }
+        }        
 	}
 }
 
@@ -194,10 +252,24 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
 	if(draggingInside){
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mouseReleased(args);
-			tracks[headers[i]->name]->mouseReleased(args);
+			tracks[headers[i]->name]->_mouseReleased(args);
 		}		
 		draggingInside = false;
 	}
+    
+	if(draggingSelectionRectangle){
+		draggingSelectionRectangle = false;
+        ofRange timeRange = ofRange(timeline->screenXtoNormalizedX(selectionRectangle.x),
+                                    timeline->screenXtoNormalizedX(selectionRectangle.x+selectionRectangle.width));
+		for(int i = 0; i < headers.size(); i++){
+            ofRectangle trackBounds = tracks[headers[i]->name]->getDrawRect();
+			ofRange valueRange = ofRange(ofMap(selectionRectangle.y, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
+                                         ofMap(selectionRectangle.y+selectionRectangle.height, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true));
+            if(valueRange.min != valueRange.max){
+				tracks[headers[i]->name]->regionSelected(timeRange, valueRange);
+			}
+		}		        
+    }
 }
 
 void ofxTLPage::setDragAnchor(float anchor){

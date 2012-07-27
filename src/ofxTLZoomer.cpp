@@ -71,8 +71,8 @@ void ofxTLZoomer::draw(){
 
 	//draw min
 	float screenY = bounds.y + bounds.height/2.0;
-	float minScreenX = normalizedXtoScreenX(currentViewRange.min);
-	float maxScreenX = normalizedXtoScreenX(currentViewRange.max);
+	float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
+	float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
 
 	if(midSelected){
 		ofSetLineWidth(2);
@@ -148,7 +148,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 		focused = true;
 		
 		//did we click on the min-left handle?
-		float minScreenX = normalizedXtoScreenX(currentViewRange.min);
+		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
 		minGrabOffset = args.x - minScreenX;
 		if(fabs(minScreenX - args.x) < 5){
 			minSelected = true;
@@ -157,7 +157,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 		}
 		
 		//did we click on the max-right handle?
-		float maxScreenX = normalizedXtoScreenX(currentViewRange.max);
+		float maxScreenX = normalizedXtoScreenX(currentViewRange.max, ofRange(0,1.0));
 		maxGrabOffset = args.x - maxScreenX;
 		if(fabs(maxScreenX - args.x) < 5){
 			maxSelected = true;
@@ -176,7 +176,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 		if(args.x > maxScreenX){
 			maxSelected = true;
 			maxGrabOffset = 0;
-			currentViewRange.max = screenXtoNormalizedX(args.x);
+			currentViewRange.max = screenXtoNormalizedX(args.x, ofRange(0,1.0));
 			notifyZoomStarted();
 			return;
 		}
@@ -185,7 +185,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 		if(args.x < minScreenX){
 			minSelected = true;
 			minGrabOffset = 0;
-			currentViewRange.min = screenXtoNormalizedX(args.x);
+			currentViewRange.min = screenXtoNormalizedX(args.x, ofRange(0,1.0));
 			notifyZoomStarted();
 			return;
 		}
@@ -199,14 +199,15 @@ void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
     bool notify = false;
 	ofRange oldRange = currentViewRange;
 	if(minSelected || midSelected){
-		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset), 0, currentViewRange.max-.0001);
+		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset, ofRange(0, 1.0)), 0, currentViewRange.max-.0001);
 		notify = true;
 	}
 
 	if(maxSelected || midSelected){
-		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset), currentViewRange.min+.0001, 1.0);
+		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset, ofRange(0, 1.0)), currentViewRange.min+.0001, 1.0);
         notify = true;
     }
+    
     if(notify){
         notifyZoomDragged(oldRange);
     }

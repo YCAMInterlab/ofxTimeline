@@ -103,13 +103,11 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
     if(clickedTextField != NULL){
         enteringText = true;
         timeline->presentedModalContent(this);
-        if(!ofGetModifierKeyShift()){
+        if(!ofGetModifierKeyShift() && !isKeyframeSelected(clickedTextField)){
             timeline->unselectAll();
         }
         //make sure this 
-        if(!isKeyframeSelected(clickedTextField)){
-            selectedKeyframes.push_back(clickedTextField);
-        }
+        selectKeyframe(clickedTextField);
         return;
     }    
     //if we didn't click on a text field and we are entering txt

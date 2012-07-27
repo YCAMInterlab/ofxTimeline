@@ -48,8 +48,15 @@ class ofxTLTrack
 	~ofxTLTrack();
 	
 	virtual void setup();
-	virtual void draw() = 0;
-	virtual void drawModalContent(){}; //for pop up window-ish stuff
+    void _draw(); //calls draw() internally plus some universal stuff
+    //override this in your sublcass
+	virtual void draw(){};
+    
+    //draw modal content is called after the main draw() call
+    //override this if you want to draw content that can show up on top of other timelines
+	//useful in conjunction with timeline->presentedModalContent(this)
+    //for showing big controls, ie the tweener window
+	virtual void drawModalContent(){}; 
 	
 	virtual void enable();
 	virtual void disable();
@@ -57,13 +64,14 @@ class ofxTLTrack
     
 	virtual bool hasFocus();
 	
+    //managed by the page object, do not set yourself
 	virtual void setDrawRect(ofRectangle bounds);
 	virtual void offsetDrawRect(ofVec2f offset);
 	
+    //returns the screenspace position of the elements bounds, not including header and footer
 	virtual ofRectangle getDrawRect();
 	
-	virtual void setZoomBounds(ofRange zoomBoundsPercent); //allows you to zoom in!
-	
+    //saving and loading
     virtual string getXMLFilePath();
     virtual string getXMLFileName();
     
@@ -71,8 +79,7 @@ class ofxTLTrack
 	virtual void setAutosave(bool autosave);
 	
     //parent wrappers that call virtual versions implemented by subclasses
-    void _draw();
-    bool _mousePressed(ofMouseEventArgs& args);
+    void _mousePressed(ofMouseEventArgs& args);
     void _mouseMoved(ofMouseEventArgs& args);
     void _mouseReleased(ofMouseEventArgs& args);
     
@@ -85,9 +92,15 @@ class ofxTLTrack
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	virtual void nudgeBy(ofVec2f nudgePercent){};
 	
+    //Triggered by the page object based on user interaction, Only calls when the focus actually changes
     virtual void gainedFocus(){};
     virtual void lostFocus(){};
     
+    //This is triggered when a shift+click+drag rectangle finish on the timeline
+    //it passes normalized 0-1 ranges for time (x) and value (y)
+    //It's the responsability of the ofxTLTrack to respond appropriately
+    //and select the relevant elements under the track
+    virtual void regionSelected(ofRange timeRange, ofRange valueRange){};
     
 	//copy+paste
 	virtual string copyRequest(){return "";};
@@ -100,7 +113,9 @@ class ofxTLTrack
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
-	
+    //managed by the zoom call backs and initialized by the Page upon creation
+	void setZoomBounds(ofRange zoomBoundsPercent);
+
 	virtual void save(){};
 	virtual void load(){};
 	
@@ -109,7 +124,6 @@ class ofxTLTrack
 	
 	//add any points (in screenspace x) that should be snapped to
 	virtual void getSnappingPoints(vector<float>& points){};
-	
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
@@ -120,10 +134,11 @@ class ofxTLTrack
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
 	
-	
   protected:
 	
 	ofxTimeline* timeline;
+	bool enabled; 
+	bool autosave;
 
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
@@ -132,6 +147,7 @@ class ofxTLTrack
 	virtual float screenXtoNormalizedX(float x, ofRange outputRange);
 	virtual float normalizedXtoScreenX(float x, ofRange inputRange);
 
+    //TODO: move this to the main timline
 	virtual int indexForScreenX(int mouseX);
 	virtual int screenXForIndex(int index);
 	virtual int indexForScreenX(int screenX, int durationInFrames);
@@ -146,18 +162,14 @@ class ofxTLTrack
 	
 	virtual bool isOnScreen(float screenX);
 	
-	bool hover;
-    bool active;
-	bool focused;
-	bool enabled; 
-	bool autosave;
-	
+	bool hover; //mouse is over the element
+    bool active; //mouse is clicking on the element
+	bool focused; //this element was the last one interacted with
+    
 	bool createdByTimeline;
-	
-//	ofxXmlSettings settings;
+
 	string name;
 	string xmlFileName;
 	ofRectangle bounds;
-	ofRange zoomBounds;
-	
+	ofRange zoomBounds;	
 };

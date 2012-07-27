@@ -229,6 +229,12 @@ class ofxTimeline {
     void presentedModalContent(ofxTLTrack* modalTrack);
     void dismissedModalContent();
     
+    //time <-> pixel translation helpers
+    float screenXtoNormalizedX(float x);
+    float normalizedXtoScreenX(float x);
+    float screenXtoNormalizedX(float x, ofRange outputRange);
+    float normalizedXtoScreenX(float x, ofRange inputRange);    
+    
   protected:
 	
     ofxMSATimer timer;

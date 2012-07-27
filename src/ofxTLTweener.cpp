@@ -226,6 +226,11 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
     }
 }
 
+void ofxTLTweener::mouseDragged(ofMouseEventArgs& args, bool snapped){
+	if(!drawingEasingWindow){
+        ofxTLKeyframer::mouseDragged(args, snapped);
+    }
+}
 
 void ofxTLTweener::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),

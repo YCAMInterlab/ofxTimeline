@@ -748,6 +748,7 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 	}
 	
 	ofxTLPage* newPage = new ofxTLPage();
+    newPage->timeline = this;
 	newPage->setName(name);
 	newPage->setup();
 	newPage->setAutosave(autosave);
@@ -959,3 +960,22 @@ ofVec2f ofxTimeline::getNudgePercent(){
 ofVec2f ofxTimeline::getBigNudgePercent(){
 	return ofVec2f(zoomer->getViewRange().span()*.02, 0.02);	
 }
+
+float ofxTimeline::screenXtoNormalizedX(float x){
+	//return ofMap(x, bounds.x, bounds.x+bounds.width, zoomBounds.min, zoomBounds.max, true);
+    return screenXtoNormalizedX(x, zoomer->getViewRange());
+}
+
+float ofxTimeline::normalizedXtoScreenX(float x){
+    //	return ofMap(x, zoomBounds.min, zoomBounds, bounds.x, bounds.x+bounds.width, true);
+    return normalizedXtoScreenX(x, zoomer->getViewRange());
+}
+
+float ofxTimeline::screenXtoNormalizedX(float x, ofRange outputRange){
+	return ofMap(x, getDrawRect().x, getDrawRect().x+getDrawRect().width, outputRange.min, outputRange.max, false);
+}
+
+float ofxTimeline::normalizedXtoScreenX(float x, ofRange inputRange){
+	return ofMap(x, inputRange.min, inputRange.max, getDrawRect().x, getDrawRect().x+getDrawRect().width, false);
+}
+

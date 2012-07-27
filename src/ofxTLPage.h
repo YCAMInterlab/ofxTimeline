@@ -39,6 +39,7 @@
 #include "ofxTLTrackHeader.h"
 #include "ofxTLEvents.h"
 
+class ofxTimeline;
 class ofxTLTicker;
 class ofxTLPage {
   public:
@@ -103,6 +104,8 @@ class ofxTLPage {
 	
 	virtual void setDragAnchor(float anchor);
 	
+    ofxTimeline* timeline;
+    
   protected:
     
 	//used for getting BPM snaps
@@ -120,7 +123,6 @@ class ofxTLPage {
 	bool headerHasFocus;
 	
 	vector<float> snapPoints;
-	//in pixels. TODO: make variable through API
 	float snappingTolerance;
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
@@ -128,6 +130,10 @@ class ofxTLPage {
 	
 	float dragAnchor;
 	
+    bool draggingSelectionRectangle;
+    ofVec2f selectionRectangleAnchor;
+    ofRectangle selectionRectangle;
+    
 	bool isSetup;
 	bool autosave;
 	string name;

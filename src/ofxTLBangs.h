@@ -15,11 +15,12 @@ class ofxTLBangs : public ofxTLKeyframer {
     
     virtual void draw();
 
+    virtual void regionSelected(ofRange timeRange, ofRange valueRange);
     //All keyframers could send events...so
     //Potentially this event stuff could be put up in Keyframer, but it's a good distinguisher right now
-    void playbackStarted(ofxTLPlaybackEventArgs& args);
-	void playbackLooped(ofxTLPlaybackEventArgs& args);
-	void playbackEnded(ofxTLPlaybackEventArgs& args);
+    virtual void playbackStarted(ofxTLPlaybackEventArgs& args);
+	virtual void playbackLooped(ofxTLPlaybackEventArgs& args);
+	virtual void playbackEnded(ofxTLPlaybackEventArgs& args);
     
  protected:
 

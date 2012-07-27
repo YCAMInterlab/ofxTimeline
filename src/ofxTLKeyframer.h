@@ -72,13 +72,14 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void reset();
 	virtual void clear();
 	
-    
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
 	virtual void unselectAll();
+    
+    virtual void regionSelected(ofRange timeRange, ofRange valueRange);
 	
   protected:
 	virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
@@ -88,6 +89,7 @@ class ofxTLKeyframer : public ofxTLTrack
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
+    void selectKeyframe(ofxTLKeyframe* k);
     void deselectKeyframe(ofxTLKeyframe* k);
     
 	void nudgeSelectedKeyframes(ofVec2f nudge);
@@ -113,8 +115,9 @@ class ofxTLKeyframer : public ofxTLTrack
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);
 	ofVec2f keyframePointForCoord(ofVec2f coord);
-		
-	bool drawingSelectRect;
+	
+	bool draggedNewKeyframe;
+    bool drawingSelectRect;
 	ofVec2f selectRectStartPoint;
 	ofRectangle selectRect;
 	vector<ofxTLKeyframe*> selectRectSelection;

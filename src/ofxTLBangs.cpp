@@ -49,14 +49,24 @@ void ofxTLBangs::draw(){
 
 }
 
-ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
-	for(int i = 0; i < keyframes.size(); i++){
-		float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
-		if (abs(offset) < 5) {
-            selectedIndex = i;
-			return keyframes[i];
-		}
+void ofxTLBangs::regionSelected(ofRange timeRange, ofRange valueRange){
+    for(int i = 0; i < keyframes.size(); i++){
+        if(timeRange.contains(keyframes[i]->position.x)){
+            selectKeyframe(keyframes[i]);
+        }
 	}
+}
+
+ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
+    if(bounds.inside(p.x,p.y)){
+        for(int i = 0; i < keyframes.size(); i++){
+            float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
+            if (abs(offset) < 5) {
+                selectedIndex = i;
+                return keyframes[i];
+            }
+        }
+    }
     selectedIndex = -1;
 	return NULL;    
 }
