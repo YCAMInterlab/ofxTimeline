@@ -150,7 +150,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
     	    timeline->unselectAll();
-            didJustDeselect = true;
+            //didJustDeselect = true;
         }
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
@@ -172,9 +172,9 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
         }
     }
 
-    //add the keyframe to the selection, whether it was just generated or not
+   
 	if(selectedKeyframe != NULL){
-        
+         //add the keyframe to the selection, whether it was just generated or not
     	if(!isKeyframeSelected(selectedKeyframe)){
 			selectedKeyframes.push_back(selectedKeyframe);
         }
