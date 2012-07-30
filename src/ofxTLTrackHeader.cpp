@@ -119,7 +119,7 @@ void ofxTLTrackHeader::recalculateFooter(){
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
 	
 	ofEventArgs a;
-	ofNotifyEvent(ofxTLEvents.viewWasResized, a);
+	ofNotifyEvent(element->events().viewWasResized, a);
 }
 
 void ofxTLTrackHeader::mouseReleased(ofMouseEventArgs& args){

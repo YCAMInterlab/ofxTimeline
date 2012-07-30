@@ -60,13 +60,13 @@ void ofxTLTrack::setup(){
 
 void ofxTLTrack::enable(){
 	enabled = true;
-	ofxTLRegisterZoomEvents(this);
+	events().registerZoomEvents(this);
 }
 
 void ofxTLTrack::disable(){
 	enabled = false;
 	focused = false;
-	ofxTLRemoveZoomEvents(this);	
+	events().removeZoomEvents(this);	
 }
 
 void ofxTLTrack::setDrawRect(ofRectangle drawRect){
@@ -174,6 +174,10 @@ string ofxTLTrack::getXMLFilePath(){
 
 string ofxTLTrack::getXMLFileName(){
 	return ofFilePath::getFileName(xmlFileName);
+}
+
+ofxTLEvents& ofxTLTrack::events(){
+	return timeline->events();    
 }
 
 bool ofxTLTrack::isActive(){

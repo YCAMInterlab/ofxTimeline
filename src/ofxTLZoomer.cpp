@@ -230,20 +230,20 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 void ofxTLZoomer::notifyZoomStarted(){
 	ofxTLZoomEventArgs zoomEvent;
 	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
-	ofNotifyEvent(ofxTLEvents.zoomStarted, zoomEvent);		
+	ofNotifyEvent(events().zoomStarted, zoomEvent);		
 }
 
 void ofxTLZoomer::notifyZoomDragged(ofRange oldRange){
 	ofxTLZoomEventArgs zoomEvent;
 	zoomEvent.oldZoom = oldRange;
 	zoomEvent.currentZoom = currentViewRange;
-	ofNotifyEvent(ofxTLEvents.zoomDragged, zoomEvent);
+	ofNotifyEvent(events().zoomDragged, zoomEvent);
 }
 
 void ofxTLZoomer::notifyZoomEnded(){
 	ofxTLZoomEventArgs zoomEvent;
 	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
-	ofNotifyEvent(ofxTLEvents.zoomEnded, zoomEvent);	
+	ofNotifyEvent(events().zoomEnded, zoomEvent);	
 }
 
 void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){

@@ -69,6 +69,9 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
+		ofRemoveListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
+
 		for(int i = 0; i < pages.size(); i++){ 
 			delete pages[i];
 		}
@@ -78,9 +81,8 @@ ofxTimeline::~ofxTimeline(){
 		delete tabs;
 		delete zoomer;
 		
-		ofRemoveListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
-		ofRemoveListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
-		
+        
+        cout << "*** DESTRUCTORING**" << endl;
 	}
 }
 
@@ -110,8 +112,8 @@ void ofxTimeline::setup(){
 	
 	enable();
     
-	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
-	ofAddListener(ofxTLEvents.pageChanged, this, &ofxTimeline::pageChanged);
+	ofAddListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+	ofAddListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
 	//You can change this name by calling setPageName()
 	addPage("_defaultPage", true);
@@ -204,7 +206,7 @@ void ofxTimeline::play(){
         playbackStartTime = timer.getAppTime() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
-		ofNotifyEvent(ofxTLEvents.playbackStarted, args);
+		ofNotifyEvent(timelineEvents.playbackStarted, args);
 	}
 }
 
@@ -213,7 +215,7 @@ void ofxTimeline::stop(){
 		isPlaying = false;
 		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
-		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
+		ofNotifyEvent(timelineEvents.playbackEnded, args);
 	}
 }
 
@@ -411,7 +413,7 @@ void ofxTimeline::setOffset(ofVec2f newOffset){
 	updatePagePositions();
 	//recalculateBoundingRects();
 	ofEventArgs args;
-	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+	ofNotifyEvent(timelineEvents.viewWasResized, args);
 
 }
 
@@ -420,7 +422,7 @@ void ofxTimeline::setWidth(float newWidth){
 	updatePagePositions();
 //	recalculateBoundingRects();
 	ofEventArgs args;
-	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+	ofNotifyEvent(events().viewWasResized, args);
 
 }
 
@@ -669,7 +671,7 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 			}
 			currentPage = pages[i];
 			ofEventArgs args;
-			ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+			ofNotifyEvent(events().viewWasResized, args);
 			return;
 		}
 	}
@@ -724,7 +726,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
             playbackStartFrame += getDurationInFrames()  * inoutRange.span();
             playbackStartTime  += getDurationInSeconds() * inoutRange.span();
             ofxTLPlaybackEventArgs args = createPlaybackEvent();
-            ofNotifyEvent(ofxTLEvents.playbackLooped, args);
+            ofNotifyEvent(events().playbackLooped, args);
         }
     }
 }
@@ -807,7 +809,7 @@ void ofxTimeline::addElement(string name, ofxTLTrack* element){
 	currentPage->addElement(name, element);		
 	trackNameToPage[name] = currentPage;
 	ofEventArgs args;
-	ofNotifyEvent(ofxTLEvents.viewWasResized, args);
+	ofNotifyEvent(events().viewWasResized, args);
 }
 
 ofxTLTweener* ofxTimeline::addKeyframes(string name, ofRange valueRange, float defaultValue){
@@ -911,6 +913,10 @@ ofxTLFlags* ofxTimeline::addFlags(string name, string xmlFileName){
 	newFlags->setXMLFileName(xmlFileName);
 	addElement(name, newFlags);
 	return newFlags;
+}
+
+ofxTLEvents& ofxTimeline::events(){
+    return timelineEvents;
 }
 
 ofxTimecode& ofxTimeline::getTimecode(){

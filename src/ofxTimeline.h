@@ -249,10 +249,14 @@ class ofxTimeline {
     float screenXtoNormalizedX(float x, ofRange outputRange);
     float normalizedXtoScreenX(float x, ofRange inputRange);    
     
+    virtual ofxTLEvents& events();
+    
   protected:
 	
-    ofxMSATimer timer;
+    
     ofxTimecode timecode;
+	ofxMSATimer timer;
+    ofxTLEvents timelineEvents;
     
     string nameToXMLName(string name);
     

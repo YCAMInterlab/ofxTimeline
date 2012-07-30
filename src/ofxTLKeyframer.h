@@ -102,8 +102,8 @@ class ofxTLKeyframer : public ofxTLTrack
 	int selectedKeyframeIndex;
 	bool keysAreDraggable;
 	
-	void updateKeyframeSort();
-	void updateDragOffsets(ofVec2f screenpoint);
+	virtual void updateKeyframeSort();
+	virtual void updateDragOffsets(ofVec2f screenpoint);
 
 	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
 	virtual void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);

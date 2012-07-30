@@ -150,7 +150,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
     	    timeline->unselectAll();
-            //didJustDeselect = true;
+            //didJustDeselect = true; //debatable. settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
         }
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there

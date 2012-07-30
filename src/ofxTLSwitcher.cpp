@@ -110,34 +110,44 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
     //check to see if we are close to any edges, if so select them
     bool startSelected = false;
     bool endSelected = false;
-    for(int i = 0; i < keyframes.size(); i++){
-        
-        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        startSelected = abs(switchKey->display.x - args.x) < 10.0;
-        if (startSelected && !switchKey->startSelected && !ofGetModifierKeyShift()) {
-            timeline->unselectAll();
+    if(bounds.inside(args.x, args.y)){
+        for(int i = 0; i < keyframes.size(); i++){
+            
+            ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+            //unselect everything else if we just clicked this edge without shift held down
+            startSelected = abs(switchKey->display.x - args.x) < 10.0;
+            if (startSelected && !switchKey->startSelected && !ofGetModifierKeyShift()) {
+                timeline->unselectAll();
+            }
+            //Deselect the key if we clicked it already selected with shift held down
+            if(ofGetModifierKeyShift() && ((startSelected && switchKey->startSelected) || isKeyframeSelected(switchKey))){
+                switchKey->startSelected = false;    
+            }
+            else {
+                switchKey->startSelected |= startSelected;
+            }
+            float endEdge = switchKey->display.x+switchKey->display.width;
+            endSelected = abs(endEdge - args.x) < 10.0;
+            //don't let them both be selected in one click!
+            if(!startSelected && endSelected && !switchKey->endSelected && !ofGetModifierKeyShift()){
+                timeline->unselectAll();
+            }
+            //Deselect the key if we clicked it already selected with shift held down
+            if(ofGetModifierKeyShift() && ((endSelected && switchKey->endSelected) || isKeyframeSelected(switchKey))){
+                switchKey->endSelected = false;    
+            }
+            else{
+                switchKey->endSelected |= endSelected && !startSelected;
+            }
+            
+            if(startSelected || endSelected){
+                break;
+            }        
         }
-        switchKey->startSelected = startSelected;
-        if(switchKey->startSelected){
-            switchKey->edgeDragOffset = args.x - switchKey->display.x;
-        }
-        float endEdge = switchKey->display.x+switchKey->display.width;
-        endSelected = abs(endEdge - args.x) < 10.0;
-        //don't let them both be selected in one click!
-        if(!startSelected && endSelected && !switchKey->endSelected && !ofGetModifierKeyShift()){
-            timeline->unselectAll();
-        }
-        switchKey->endSelected = endSelected && !startSelected;
-        if(switchKey->endSelected){
-            switchKey->edgeDragOffset = args.x - endEdge;
-        }
-        
-        if(startSelected || endSelected){
-            break;
-        }
-        
     }
     
+    updateEdgeDragOffsets(args.x);
+
     if(!endSelected && !startSelected){
     	//normal selection from above
 	    ofxTLKeyframer::mousePressed(args);
@@ -164,6 +174,18 @@ void ofxTLSwitcher::unselectAll(){
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
         switchKey->startSelected = switchKey->endSelected = false;
+    }
+}
+
+void ofxTLSwitcher::updateEdgeDragOffsets(float screenX){
+    for(int i = 0; i < keyframes.size(); i++){
+        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+    	if(switchKey->startSelected){
+            switchKey->edgeDragOffset = screenX - switchKey->display.x;
+        }
+        if( switchKey->endSelected){
+            switchKey->edgeDragOffset = screenX - (switchKey->display.x+switchKey->display.width);
+        }
     }
 }
 
@@ -222,16 +244,16 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
 //        if(switchKey->display.x > args.x){
 //            break;
 //        }
-        if(abs(switchKey->display.x - args.x) < 10.0){
+        if(abs(switchKey->display.x - args.x) < 10.0 && bounds.inside(args.x,args.y)){
             hoverKeyframe = switchKey;
             startHover = true;
-            return;
+            return; //return cancels call to parent
         }
         float endEdge = switchKey->display.x+switchKey->display.width;
         if(abs(endEdge - args.x) < 10.0){
             hoverKeyframe = switchKey;
             endHover = true;
-            return;
+            return; //cancels call to parent
         }
     }
     ofxTLKeyframer::mouseMoved(args);

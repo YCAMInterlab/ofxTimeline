@@ -133,7 +133,8 @@ class ofxTLTrack
 		
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
-	
+	ofxTLEvents& events(); //convenience wrapper for timeline events;
+    
   protected:
 	
 	ofxTimeline* timeline;

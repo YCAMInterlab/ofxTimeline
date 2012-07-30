@@ -71,7 +71,8 @@ class ofxTLSwitcher : public ofxTLKeyframer {
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
-    
+    virtual void updateEdgeDragOffsets(float screenX);
+
 
     bool startHover;
     bool endHover;

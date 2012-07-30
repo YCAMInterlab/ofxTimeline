@@ -58,6 +58,8 @@ ofxTLPage::ofxTLPage()
 
 ofxTLPage::~ofxTLPage(){
 	if(isSetup){
+		ofRemoveListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
+        
 		for(int i = 0; i < headers.size(); i++){
 			if(tracks[headers[i]->name]->getCreatedByTimeline()){
 				delete tracks[headers[i]->name];
@@ -66,15 +68,13 @@ ofxTLPage::~ofxTLPage(){
 		}
 		headers.clear();
 		tracks.clear();
-		
-		ofRemoveListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
 	}
 }
 
 #pragma mark utility
 void ofxTLPage::setup(){
 	
-	ofAddListener(ofxTLEvents.zoomEnded, this, &ofxTLPage::zoomEnded);
+	ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
 	headerHeight = 20;
 	defaultElementHeight = 50;
@@ -346,6 +346,7 @@ void ofxTLPage::nudgeBy(ofVec2f nudgePercent){
 void ofxTLPage::addElement(string elementName, ofxTLTrack* element){
 
 	ofxTLTrackHeader* newHeader = new ofxTLTrackHeader();
+    newHeader->setTimeline(timeline);
 	newHeader->setElement(element);
 	newHeader->setup();
 

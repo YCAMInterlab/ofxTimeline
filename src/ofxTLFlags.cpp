@@ -173,6 +173,6 @@ void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.trackName = name;
     args.flag = ((ofxTLFlag*)key)->textField.text;
-    ofNotifyEvent(ofxTLEvents.bangFired, args);    
+    ofNotifyEvent(events().bangFired, args);    
 }
 

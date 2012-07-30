@@ -34,4 +34,4 @@
 
 #include "ofxTLEvents.h"
 
-ofxTLCoreEvents ofxTLEvents;
+//ofxTLCoreEvents ofxTLEvents;

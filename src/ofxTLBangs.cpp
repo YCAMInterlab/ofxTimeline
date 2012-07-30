@@ -12,12 +12,12 @@ ofxTLBangs::~ofxTLBangs(){
 
 void ofxTLBangs::enable(){
     ofxTLKeyframer::enable();
-	ofxTLRegisterPlaybackEvents(this);    
+	events().registerPlaybackEvents(this);    
 }
 
 void ofxTLBangs::disable(){
     ofxTLKeyframer::disable();
-    ofxTLRemovePlaybackEvents(this);
+    events().removePlaybackEvents(this);
 }
 
 void ofxTLBangs::draw(){
@@ -84,7 +84,7 @@ void ofxTLBangs::update(ofEventArgs& args){
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.trackName = name;
-    ofNotifyEvent(ofxTLEvents.bangFired, args);    
+    ofNotifyEvent(events().bangFired, args);    
 }
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){

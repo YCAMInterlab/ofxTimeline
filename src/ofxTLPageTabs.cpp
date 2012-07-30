@@ -96,7 +96,7 @@ void ofxTLPageTabs::selectPage(int index){
 	pageEvent.currentPageName = pages[index].name;
 	selectedPageIndex = index;
 	
-	ofNotifyEvent(ofxTLEvents.pageChanged, pageEvent);
+	ofNotifyEvent(events().pageChanged, pageEvent);
 }
 
 void ofxTLPageTabs::selectPage(string name){
