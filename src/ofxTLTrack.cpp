@@ -39,7 +39,7 @@ ofxTLTrack::ofxTLTrack()
 :	xmlFileName(""),
 	bounds(ofRectangle(0,0,0,0)),
 	zoomBounds(ofRange(0,1.0)),
-	enabled(true),
+	enabled(false),
 	focused(false),
 	active(false),
 	hover(false),
@@ -59,14 +59,18 @@ void ofxTLTrack::setup(){
 }
 
 void ofxTLTrack::enable(){
-	enabled = true;
-	events().registerZoomEvents(this);
+    if(!enabled){
+		enabled = true;
+		events().registerZoomEvents(this);
+    }
 }
 
 void ofxTLTrack::disable(){
-	enabled = false;
-	focused = false;
-	events().removeZoomEvents(this);	
+    if(enabled){
+		enabled = false;
+		focused = false;
+		events().removeZoomEvents(this);	
+    }
 }
 
 void ofxTLTrack::setDrawRect(ofRectangle drawRect){

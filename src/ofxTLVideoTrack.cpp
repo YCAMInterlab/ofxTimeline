@@ -10,7 +10,9 @@
 #include "ofxTLVideoTrack.h"
 #include "ofxTimeline.h"
 
-ofxTLVideoTrack::ofxTLVideoTrack() {
+ofxTLVideoTrack::ofxTLVideoTrack() 
+	: ofxTLImageTrack()
+{
 
 	thumbsEnabled = true;
 	currentLoop = 0;
@@ -29,6 +31,7 @@ void ofxTLVideoTrack::setup(){
     ofAddListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
     startThread();
 }
+
 
 void ofxTLVideoTrack::update(ofEventArgs& args){
 	if(player == NULL){

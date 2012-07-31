@@ -9,16 +9,17 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofOpenALSoundPlayer.h"
 
-class ofxTLAudioWaveform : public ofxTLElement
+class ofxTLAudioWaveform : public ofxTLTrack
 {
   public:	
 	ofxTLAudioWaveform();
 	~ofxTLAudioWaveform();
 	
-	virtual void setup();
+	virtual void enable();
+    virtual void disable();
 	virtual void draw();
 	
 	virtual void loadSoundfile(string filepath);
@@ -43,7 +44,7 @@ class ofxTLAudioWaveform : public ofxTLElement
 	virtual void boundsChanged(ofEventArgs& args);
 	
   protected:	
-	bool zoomChanging;
+    
 	bool shouldRecomputePreview;
 	vector<ofPolyline> previews;
 	void recomputePreview();

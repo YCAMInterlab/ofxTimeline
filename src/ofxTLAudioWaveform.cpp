@@ -11,7 +11,6 @@
 #include "ofxTimeline.h"
 
 ofxTLAudioWaveform::ofxTLAudioWaveform(){
-	zoomChanging = false;
 	shouldRecomputePreview = false;
 //	preview.setClosed(false);
 }
@@ -20,10 +19,18 @@ ofxTLAudioWaveform::~ofxTLAudioWaveform(){
 
 }
 
-void ofxTLAudioWaveform::setup(){
-	enable();
-	ofxTLRegisterZoomEvents(this);
-	ofAddListener(ofxTLEvents.viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);
+void ofxTLAudioWaveform::enable(){
+	if(!enabled){
+        ofxTLTrack::enable();
+        ofAddListener(events().viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);        
+    }    
+}
+
+void ofxTLAudioWaveform::disable(){
+	if(enabled){
+        ofxTLTrack::disable();
+        ofRemoveListener(events().viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);        
+    }
 }
 
 void ofxTLAudioWaveform::loadSoundfile(string filepath){
@@ -40,16 +47,12 @@ float ofxTLAudioWaveform::getDuration(){
 void ofxTLAudioWaveform::update(ofEventArgs& args){
 	if(player.getPosition() < lastPercent){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(ofxTLEvents.playbackLooped, args);
+		ofNotifyEvent(events().playbackLooped, args);
 	}
 	lastPercent = player.getPosition();
- 
-	if(timeline->getIsFrameBased()){
-		//TODO: figure out how to do this with a frame based timeline
-	}
-	else{
-		timeline->setCurrentTime(player.getPosition() * player.getDuration());
-	}
+
+    //currently only supports timelines with duration == duration of player
+    timeline->setCurrentTime(player.getPosition() * player.getDuration());
 }
 
 void ofxTLAudioWaveform::draw(){
@@ -154,17 +157,17 @@ void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
 }
 
 void ofxTLAudioWaveform::zoomStarted(ofxTLZoomEventArgs& args){
-	ofxTLElement::zoomStarted(args);
+	ofxTLTrack::zoomStarted(args);
 //	shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomDragged(ofxTLZoomEventArgs& args){
-	ofxTLElement::zoomDragged(args);
+	ofxTLTrack::zoomDragged(args);
 	//shouldRecomputePreview = true;
 }
 
 void ofxTLAudioWaveform::zoomEnded(ofxTLZoomEventArgs& args){
-	ofxTLElement::zoomEnded(args);
+	ofxTLTrack::zoomEnded(args);
 	shouldRecomputePreview = true;
 }
 
@@ -180,20 +183,20 @@ void ofxTLAudioWaveform::play(){
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
 
 		player.play();
-		ofAddListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		ofAddListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(ofxTLEvents.playbackStarted, args);		
+		ofNotifyEvent(events().playbackStarted, args);		
 	}	   
 }
 
 void ofxTLAudioWaveform::stop(){
 	if(player.getIsPlaying()){
 		player.setPaused(true);
-		ofRemoveListener(ofEvents.update, this, &ofxTLAudioWaveform::update);
+		ofRemoveListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(ofxTLEvents.playbackEnded, args);
+		ofNotifyEvent(events().playbackEnded, args);
 	}
 }
 
