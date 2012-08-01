@@ -171,7 +171,8 @@ void ofxTLFlags::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 
 void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
-    args.trackName = name;
+    args.sender = timeline;
+    args.track = this;
     args.flag = ((ofxTLFlag*)key)->textField.text;
     ofNotifyEvent(events().bangFired, args);    
 }

@@ -37,8 +37,11 @@
 #include "ofMain.h"
 #include "ofRange.h"
 
+class ofxTimeline; //forward declare for sender pointer
+class ofxTLTrack;
 class ofxTLPlaybackEventArgs : public ofEventArgs {
   public: 	
+    ofxTimeline* sender;
 	float currentPercent;
 	float currentTime;
 	int currentFrame;
@@ -48,24 +51,28 @@ class ofxTLPlaybackEventArgs : public ofEventArgs {
 
 class ofxTLZoomEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;
 	ofRange currentZoom;
 	ofRange oldZoom;
 };
 
 class ofxTLPageEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;
 	string currentPageName;
 	string oldPageName;
 };
 
 class ofxTLBangEventArgs : public ofEventArgs {
   public:
-	string trackName;
+    ofxTimeline* sender;
+	ofxTLTrack* track;
 	string flag;
 };
 
 class ofxTLSwitchEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;    
 	string switchName;
 	bool on;
 };

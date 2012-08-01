@@ -36,7 +36,7 @@
 #include "ofxTimeline.h"
 
 ofxTLTrackHeader::ofxTLTrackHeader(){
-	element = NULL;
+	track = NULL;
 	draggingSize = false;
 	hoveringFooter = false;
 }
@@ -45,38 +45,34 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 }
 
-void ofxTLTrackHeader::setup(){
-	
-}
-
-void ofxTLTrackHeader::setElement(ofxTLTrack* newElement){
-	element = newElement;
+void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
+	track = newTrack;
 
 }
 
 void ofxTLTrackHeader::draw(){
-	ofRectangle elementRect = element->getDrawRect();
-	float footerStartY = elementRect.y + elementRect.height;
+	ofRectangle trackRect = track->getDrawRect();
+	float footerStartY = trackRect.y + trackRect.height;
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);	
 	
 	ofPushStyle();
 	
 	ofNoFill();
-	ofSetColor(element->getTimeline()->getColors().textColor);
+	ofSetColor(track->getTimeline()->getColors().textColor);
 	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 15) );
 	
-	ofSetColor(element->getTimeline()->getColors().outlineColor);
+	ofSetColor(track->getTimeline()->getColors().outlineColor);
 	ofRect(bounds);
 	
 	//draw grippy lines on the footer draggable element
 	if(draggingSize){
-		ofSetColor(element->getTimeline()->getColors().highlightColor);
+		ofSetColor(track->getTimeline()->getColors().highlightColor);
 	}
 	else if(hoveringFooter){
-		ofSetColor(element->getTimeline()->getColors().outlineColor);
+		ofSetColor(track->getTimeline()->getColors().outlineColor);
 	}
 	else{
-		ofSetColor(element->getTimeline()->getColors().disabledColor);
+		ofSetColor(track->getTimeline()->getColors().disabledColor);
 	}
 	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
 		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
@@ -98,28 +94,28 @@ void ofxTLTrackHeader::mouseMoved(ofMouseEventArgs& args){
 
 void ofxTLTrackHeader::mouseDragged(ofMouseEventArgs& args){
 	if(draggingSize){
-		ofRectangle elementRect = element->getDrawRect();
-		elementRect.height = MAX(0, args.y - elementRect.y - dragOffset);
-		element->setDrawRect(elementRect);
+		ofRectangle trackRect = track->getDrawRect();
+		trackRect.height = MAX(0, args.y - trackRect.y - dragOffset);
+		track->setDrawRect(trackRect);
 		
 		recalculateFooter();		
 	}
 }
 
-void ofxTLTrackHeader::collapseElement(){
-	ofRectangle elementRect = element->getDrawRect();
-	elementRect.height = 0;
-	element->setDrawRect(elementRect);	
+void ofxTLTrackHeader::collapseTrack(){
+	ofRectangle trackRect = track->getDrawRect();
+	trackRect.height = 0;
+	track->setDrawRect(trackRect);	
 	recalculateFooter();
 }
 
 void ofxTLTrackHeader::recalculateFooter(){
-	ofRectangle elementRect = element->getDrawRect();
-	float footerStartY = elementRect.y + elementRect.height;
+	ofRectangle trackRect = track->getDrawRect();
+	float footerStartY = trackRect.y + trackRect.height;
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
 	
 	ofEventArgs a;
-	ofNotifyEvent(element->events().viewWasResized, a);
+	ofNotifyEvent(track->events().viewWasResized, a);
 }
 
 void ofxTLTrackHeader::mouseReleased(ofMouseEventArgs& args){

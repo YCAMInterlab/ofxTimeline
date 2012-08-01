@@ -145,11 +145,11 @@ void ofxTLTicker::draw(){
 		
 		textH = 10;
 		textW = (text.size()+1)*7;
-		ofRect(ofGetMouseX(), bounds.y+textH, textW, textH);
-		
+        int previewTimecodeX = ofClamp(ofGetMouseX()+5, bounds.x, bounds.x+bounds.width-textW-5);
+		ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
 		//draw playhead line
 		ofSetColor(timeline->getColors().textColor);
-		ofDrawBitmapString(text, ofGetMouseX()+5, bounds.y+textH*2);
+		ofDrawBitmapString(text, previewTimecodeX, bounds.y+textH*2);
 		
 		ofSetColor(timeline->getColors().highlightColor);
 		ofSetLineWidth(1);
@@ -163,7 +163,6 @@ void ofxTLTicker::draw(){
 		currentFrameX = screenXForIndex(timeline->getCurrentFrame());
 	}
 	else{
-		//text = ofToString();
 		text = timeline->formatTime(timeline->getCurrentTime());
 		currentFrameX = screenXForTime(timeline->getCurrentTime());
 	}
@@ -171,10 +170,12 @@ void ofxTLTicker::draw(){
 	textH = 10;
 	textW = (text.size()+1)*7;
 	
+
+    int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
 	ofSetColor(timeline->getColors().backgroundColor);
-	ofRect(currentFrameX, bounds.y, textW, textH);
+	ofRect(timeCodeX-5, bounds.y, textW, textH);
 	ofSetColor(timeline->getColors().textColor);
-	ofDrawBitmapString(text, currentFrameX+5, bounds.y+textH);
+	ofDrawBitmapString(text, timeCodeX, bounds.y+textH);
 	
 	
 	if(timeline->getIsPlaying()){
@@ -189,8 +190,8 @@ void ofxTLTicker::draw(){
 	ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
 	
 	//draw in/out point
-	float inPointX = normalizedXtoScreenX(timeline->getInOutRange().min, zoomBounds);
-	float outPointX = normalizedXtoScreenX(timeline->getInOutRange().max, zoomBounds);
+	float inPointX = normalizedXtoScreenX(timeline->getInOutRange().min);
+	float outPointX = normalizedXtoScreenX(timeline->getInOutRange().max);
 	
 	if(bounds.x < inPointX){
 		ofSetColor(timeline->getColors().disabledColor,120);

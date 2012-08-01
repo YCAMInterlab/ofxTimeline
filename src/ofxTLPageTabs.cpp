@@ -90,6 +90,7 @@ void ofxTLPageTabs::selectPage(int index){
 	}
 	
 	ofxTLPageEventArgs pageEvent;
+    pageEvent.sender = timeline;
 	if(selectedPageIndex != -1){
 		pageEvent.oldPageName = pages[selectedPageIndex].name;
 	}

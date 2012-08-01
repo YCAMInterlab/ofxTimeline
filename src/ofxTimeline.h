@@ -70,9 +70,9 @@ class ofxTimeline {
 	virtual void disable();
 	virtual bool toggleEnabled();
 
-    virtual void reset(); //clears every element
+    virtual void reset(); //clears every track
     
-    virtual void loadElementsFromFolder(string folderPath);
+    virtual void loadTracksFromFolder(string folderPath);
     
     //timing setup functions
     void setFrameRate(int fps);    
@@ -105,13 +105,13 @@ class ofxTimeline {
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
 	
-    //internal elements call this when the value has changed slightly
+    //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
     virtual void flagUserChangedValue();
     //this returns and clears the flag, generally call once per frame
     virtual bool getUserChangedValue(); 
     
-    //internal elements call this when a big change has been made
+    //internal tracks call this when a big change has been made
     //it'll trigger a save if autosave is on, and it'll add to the undo queue for that page
     virtual void flagTrackModified(ofxTLTrack* track); 
     
@@ -142,13 +142,18 @@ class ofxTimeline {
 	virtual void setCurrentTimeToInPoint();
 	virtual void setCurrentTimeToOutPoint();
 
-
 	virtual void setOffset(ofVec2f offset);
+    virtual void setLockWidthToWindow(bool lockWidth);
+    virtual bool getLockWidthToWindow();
 	virtual void setWidth(float width);
-	virtual void collapseAllElements(); //collapses all element heights to 0;
+	virtual void collapseAllTracks(); //collapses all tracks heights to 0;
 	
 	ofRectangle getDrawRect();
-	
+    ofVec2f getTopRight();
+    ofVec2f getTopLeft();
+	ofVec2f getBottomLeft();
+    ofVec2f getBottomRight();
+    
 	void setSnapping(bool snapping);
 	void toggleSnapping();
 	
@@ -157,7 +162,7 @@ class ofxTimeline {
 	void enableSnapToBPM(float bpm); //beats per minute
 	void toggleDrawBPMGrid();
 	void enableDrawBPMGrid(bool enableGrid);
-	void enableSnapToOtherElements(bool enableSnapToOther);
+	void enableSnapToOtherKeyframes(bool enableSnapToOther);
 	
 	void setMovePlayheadOnPaste(bool move);
 	bool getMovePlayheadOnPaste();	
@@ -178,9 +183,9 @@ class ofxTimeline {
     bool isModal();
     ofxTLTrack* getModalTrack();
     
-	virtual ofxTLTrack* getElement(string name);
+	virtual ofxTLTrack* getTrack(string name);
 	
-	//adding elements always adds to the current page
+	//adding tracks always adds to the current page
     ofxTLTweener* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	ofxTLTweener* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	virtual float getKeyframeValue(string name); 
@@ -206,8 +211,11 @@ class ofxTimeline {
 	virtual ofImage* getImage(string name, float atTime);
 	virtual ofImage* getImage(string name, int atFrame);
 	
-	//for custom elements
-	virtual void addElement(string name, ofxTLTrack* element);
+    virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
+    virtual ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
+	    
+	//for custom trackss
+	virtual void addTrack(string name, ofxTLTrack* track);
 	void setAutosave(bool autosave);
 		
 	virtual void mousePressed(ofMouseEventArgs& args);
@@ -223,12 +231,12 @@ class ofxTimeline {
 	ofVec2f getNudgePercent();
 	ofVec2f getBigNudgePercent();
 
-	//do not call this yourself, called from within TLElement
+	//do not call this yourself, called from within TLTrack
 	//This is a bit subtle why it's here
 	//when multi keys are being dragged and snapping is enabled
 	//we need to compensate by the drag offset between the grabbed key
 	//and the mouse.  
-	//TL elements should call this on mousedown if one of their elements is
+	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
 	void setDragAnchor(float dragAnchor);
 	float getDragAnchor();
@@ -237,9 +245,9 @@ class ofxTimeline {
     
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
-    //when an track calls presentedModalContent all key and mouse action will be sent directly to that element
+    //when an track calls presentedModalContent all key and mouse action will be sent directly to that tracks
     //until dismissedModalContent() is called. This will is for displaying custom controls that may overlap with other
-    //elements or require keyboard input (see how it's used in ofxTLTweener and ofxTLTrigger)
+    //tracks or require keyboard input (see how it's used in ofxTLTweener and ofxTLFlags)
     void presentedModalContent(ofxTLTrack* modalTrack);
     void dismissedModalContent();
     
@@ -252,8 +260,6 @@ class ofxTimeline {
     virtual ofxTLEvents& events();
     
   protected:
-	
-    
     ofxTimecode timecode;
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
@@ -266,7 +272,8 @@ class ofxTimeline {
 	bool movePlayheadOnPaste;
 	float globalDragAnchor;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
-	
+	bool lockWidthToWindow;
+    
 	string pasteboard;
 
 	bool movePlayheadOnDrag;

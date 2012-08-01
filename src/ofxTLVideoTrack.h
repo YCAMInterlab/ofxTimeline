@@ -24,7 +24,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	
 	void setup();
 	void draw();
-    void loadMovie(string moviePath);
+    bool loadMovie(string moviePath);
 
     void setPlayer(ofVideoPlayer& newPlayer);
     void setPlayer(ofPtr<ofVideoPlayer> newPlayer);
@@ -37,13 +37,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
-	
-//	virtual void zoomStarted(ofxTLZoomEventArgs& args);
-//	virtual void zoomDragged(ofxTLZoomEventArgs& args);
-//	virtual void zoomEnded(ofxTLZoomEventArgs& args);
-
-//	virtual void drawRectChanged();
-	
+		
 	int getSelectedFrame();
 	int getCurrentFrame();
 
@@ -58,7 +52,6 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	void setOutFrame(int outFrame);
 
   protected:
-    
     
 	int selectedFrame;
 	int currentLoop;
@@ -77,7 +70,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     void framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs);
         
 	ofPtr<ofVideoPlayer> player;
-	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a loss of memory but speeds things up big time
+	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a memory compromise to have 2 videos but but speeds things up big time
     
     bool pauseThumbGeneration;
     void threadedFunction();

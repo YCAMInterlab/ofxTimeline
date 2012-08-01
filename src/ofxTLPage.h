@@ -52,13 +52,12 @@ class ofxTLPage {
 
 	virtual void setName(string name);
 	virtual string getName();
-	virtual void setAutosave(bool doAutosave);
 	
 	virtual void setContainer(ofVec2f offset, float width);
 	virtual void setHeaderHeight(float newHeaderHeight);
-	virtual void setDefaultElementHeight(float newDefaultElementHeight);
+	virtual void setDefaultTrackHeight(float newDefaultTrackHeight);
 	
-	virtual void collapseAllTracks(); //collapses all element heights to 0;
+	virtual void collapseAllTracks(); //collapses all track heights to 0;
 	
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
@@ -68,9 +67,9 @@ class ofxTLPage {
     
 	virtual float getComputedHeight();	
 	
-	virtual void addElement(string name, ofxTLTrack* element);
-	virtual ofxTLTrack* getElement(string name);
-	virtual void removeElement(string name);
+	virtual void addTrack(string name, ofxTLTrack* track);
+	virtual ofxTLTrack* getTrack(string name);
+	virtual void removeTrack(string name);
     
     //given a folder the page will look for xml files to load within that
 	virtual void loadTracksFromFolder(string folderPath);
@@ -86,8 +85,8 @@ class ofxTLPage {
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
-	virtual void saveElementPositions();
-	virtual void loadElementPositions();
+	virtual void saveTrackPositions();
+	virtual void loadTrackPositions();
 	
 	virtual void recalculateHeight();
 	
@@ -135,14 +134,13 @@ class ofxTLPage {
     ofRectangle selectionRectangle;
     
 	bool isSetup;
-	bool autosave;
 	string name;
 	
-	ofRectangle elementContainerRect;
+	ofRectangle trackContainerRect;
 	float headerHeight;
-	float defaultElementHeight;
+	float defaultTrackHeight;
 	ofRange currentZoomBounds;
 
-	map<string, ofRectangle> savedElementPositions;	
+	map<string, ofRectangle> savedTrackPositions;	
 	
 };

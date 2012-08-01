@@ -47,7 +47,6 @@ class ofxTLTrackHeader : public ofxTLTrack
 	
 	string name;	
 	
-	virtual void setup();
 	virtual void draw();
 	
 	virtual void mousePressed(ofMouseEventArgs& args);
@@ -55,14 +54,14 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
-	virtual void setElement(ofxTLTrack* element);
+	virtual void setTrack(ofxTLTrack* track);
 	
-	virtual void collapseElement();
+	virtual void collapseTrack();
     
 	virtual ofRectangle getFooterRect();
 	
   protected:
-	ofxTLTrack* element;
+	ofxTLTrack* track;
 	
 	void recalculateFooter();
 	

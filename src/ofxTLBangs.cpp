@@ -83,7 +83,8 @@ void ofxTLBangs::update(ofEventArgs& args){
 
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
-    args.trackName = name;
+    args.sender = timeline;
+    args.track = this;
     ofNotifyEvent(events().bangFired, args);    
 }
 

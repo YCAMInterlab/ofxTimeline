@@ -39,8 +39,8 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 	return a->getDrawRect().y < b->getDrawRect().y;
 }
 
-#define TICKER_HEIGHT 30
-#define ZOOMER_HEIGHT 20
+#define TICKER_HEIGHT 20
+#define ZOOMER_HEIGHT 14
 
 ofxTimeline::ofxTimeline()
 :	mouseoverPlayheadPosition(0),
@@ -63,7 +63,9 @@ ofxTimeline::ofxTimeline()
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL),
 	modalTrack(NULL),
-	loopType(OF_LOOP_NONE)
+	loopType(OF_LOOP_NONE),
+	lockWidthToWindow(true),
+	currentTime(0.0)
 {
 }
 
@@ -109,18 +111,20 @@ void ofxTimeline::setup(){
 	zoomer->setDrawRect(ofRectangle(offset.y, offset.y+TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
 	
 	colors.loadColors();
-	
-	enable();
+
+	enable();    
     
 	ofAddListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
-	//You can change this name by calling setPageName()
-	addPage("_defaultPage", true);
-	
+    //You can change this name by calling setPageName()
+	addPage("Page One", true);
+    
+
 }
 
-void ofxTimeline::loadElementsFromFolder(string folderPath){
+
+void ofxTimeline::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
         pages[i]->loadTracksFromFolder(folderPath);
     }
@@ -166,6 +170,7 @@ bool ofxTimeline::getMovePlayheadOnDrag(){
 
 ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	ofxTLPlaybackEventArgs args;
+    args.sender = this;
 	args.durationInFrames = timecode.frameForSeconds(durationInSeconds);
 	args.durationInSeconds = durationInSeconds;
 	args.currentTime = currentTime;
@@ -417,6 +422,17 @@ void ofxTimeline::setOffset(ofVec2f newOffset){
 
 }
 
+void ofxTimeline::setLockWidthToWindow(bool lockWidth){
+    lockWidthToWindow = lockWidth;
+    if(width != ofGetWidth()){
+        recalculateBoundingRects();
+    }
+}
+
+bool ofxTimeline::getLockWidthToWindow(){
+    return lockWidthToWindow;
+}
+
 void ofxTimeline::setWidth(float newWidth){
 	width = newWidth;
 	updatePagePositions();
@@ -426,12 +442,28 @@ void ofxTimeline::setWidth(float newWidth){
 
 }
 
-void ofxTimeline::collapseAllElements(){
+void ofxTimeline::collapseAllTracks(){
 	currentPage->collapseAllTracks();
 }
 
 ofRectangle ofxTimeline::getDrawRect(){
 	return totalDrawRect;
+}
+
+ofVec2f ofxTimeline::getTopLeft(){
+    return ofVec2f(totalDrawRect.x, totalDrawRect.y);
+}
+
+ofVec2f ofxTimeline::getTopRight(){
+    return ofVec2f(totalDrawRect.x+totalDrawRect.width, totalDrawRect.y);
+}
+
+ofVec2f ofxTimeline::getBottomLeft(){
+	return ofVec2f(totalDrawRect.x, totalDrawRect.y+totalDrawRect.height);    
+}
+
+ofVec2f ofxTimeline::getBottomRight(){
+	return ofVec2f(totalDrawRect.x+totalDrawRect.width, totalDrawRect.y+totalDrawRect.height);    
 }
 
 void ofxTimeline::updatePagePositions(){
@@ -475,7 +507,7 @@ void ofxTimeline::enableSnapToBPM(float bpm){
 	ticker->setBPM(bpm);
 }
 
-void ofxTimeline::enableSnapToOtherElements(bool enableSnapToOther){
+void ofxTimeline::enableSnapToOtherKeyframes(bool enableSnapToOther){
 	for(int i = 0; i < pages.size(); i++){
 		currentPage->enableSnapToOtherTracks(enableSnapToOther);
 	}
@@ -644,6 +676,10 @@ void ofxTimeline::viewWasResized(ofEventArgs& args){
 
 void ofxTimeline::recalculateBoundingRects(){
 	
+    if(lockWidthToWindow){
+        width = ofGetWidth();
+    }
+    
 	if(pages.size() > 1){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
 	}
@@ -737,11 +773,14 @@ void ofxTimeline::draw(){
 		
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
+        ofDisableLighting();
+        
 		ofEnableAlphaBlending();
 		
 		if (pages.size() > 1) {
 			tabs->draw();			
 		}
+        
 		currentPage->draw();
 		zoomer->draw();
 		ticker->draw();
@@ -764,17 +803,19 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 			return;
 		}
 	}
-	
+    
 	ofxTLPage* newPage = new ofxTLPage();
+	
     newPage->timeline = this;
 	newPage->setName(name);
 	newPage->setup();
-	newPage->setAutosave(autosave);
+//	newPage->setAutosave(autosave);
 	newPage->setZoomBounds(zoomer->getViewRange());
 	newPage->setTicker(ticker);
+    
+	pages.push_back(newPage);
 	tabs->addPage(name);
 
-	pages.push_back(newPage);
 	if(makeCurrent){
 		tabs->selectPage(name);
 	}
@@ -783,7 +824,7 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 void ofxTimeline::setPageName(string newName){
 	tabs->changeName(currentPage->getName(), newName);
 	currentPage->setName( newName );
-	currentPage->loadElementPositions();
+	currentPage->loadTrackPositions();
 }
 
 void ofxTimeline::setCurrentPage(string name){
@@ -803,10 +844,10 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
 }
 
 //can be used to add custom elements
-void ofxTimeline::addElement(string name, ofxTLTrack* element){
-	element->setTimeline( this );
-	element->setName( name );
-	currentPage->addElement(name, element);		
+void ofxTimeline::addTrack(string name, ofxTLTrack* track){
+	track->setTimeline( this );
+	track->setName( name );
+	currentPage->addTrack(name, track);		
 	trackNameToPage[name] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(events().viewWasResized, args);
@@ -818,23 +859,23 @@ ofxTLTweener* ofxTimeline::addKeyframes(string name, ofRange valueRange, float d
 
 ofxTLTweener* ofxTimeline::addKeyframes(string name, string xmlFileName, ofRange valueRange, float defaultValue){
 
-	ofxTLTweener*	newKeyframer = new ofxTLTweener();
+	ofxTLTweener* newKeyframer = new ofxTLTweener();
 	newKeyframer->setCreatedByTimeline(true);
 	newKeyframer->setValueRange(valueRange, defaultValue);
 	newKeyframer->setXMLFileName(xmlFileName);
-	addElement(name, newKeyframer);
+	addTrack(name, newKeyframer);
 	
 	return newKeyframer;
 }
 
 float ofxTimeline::getKeyframeValue(string name, float atTime){
 	if(trackNameToPage.find(name) == trackNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		ofLogError("ofxTimeline -- Couldn't find track " + name);
 		return 0.0;
 	}
-	ofxTLTweener* keyframer = (ofxTLTweener*)trackNameToPage[name]->getElement(name);
+	ofxTLTweener* keyframer = (ofxTLTweener*)trackNameToPage[name]->getTrack(name);
 	if(keyframer == NULL){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		ofLogError("ofxTimeline -- Couldn't find track " + name);
 		return 0.0;
 	}
 	return keyframer->getValueAtPercent(atTime/durationInSeconds);
@@ -848,12 +889,12 @@ float ofxTimeline::getKeyframeValue(string name, int atFrame){
     return getKeyframeValue(name, timecode.secondsForFrame(atFrame));
 }
 
-ofxTLTrack* ofxTimeline::getElement(string name){
+ofxTLTrack* ofxTimeline::getTrack(string name){
 	if(trackNameToPage.find(name) == trackNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find element " + name);
+		ofLogError("ofxTimeline -- Couldn't find track " + name);
 		return NULL;
 	}
-	return trackNameToPage[name]->getElement(name);
+	return trackNameToPage[name]->getTrack(name);
 }
 
 ofxTLSwitcher* ofxTimeline::addSwitcher(string name){
@@ -864,19 +905,19 @@ ofxTLSwitcher* ofxTimeline::addSwitcher(string name, string xmlFileName){
 	ofxTLSwitcher* newSwitcher = new ofxTLSwitcher();
 	newSwitcher->setCreatedByTimeline(true);
 	newSwitcher->setXMLFileName(xmlFileName);
-	addElement(name, newSwitcher);
+	addTrack(name, newSwitcher);
 	return newSwitcher;
 }
 
 bool ofxTimeline::getSwitcherOn(string name, float atTime){
 	if(trackNameToPage.find(name) == trackNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
+		ofLogError("ofxTimeline -- Couldn't find switcher track " + name);
 		return false;
 	}
 	
-	ofxTLSwitcher* switcher = (ofxTLSwitcher*)trackNameToPage[name]->getElement(name);
+	ofxTLSwitcher* switcher = (ofxTLSwitcher*)trackNameToPage[name]->getTrack(name);
 	if(switcher == NULL){
-		ofLogError("ofxTimeline -- Couldn't find switcher element " + name);
+		ofLogError("ofxTimeline -- Couldn't find switcher track " + name);
 		return false;
 	}
     return switcher->isOn(atTime/durationInSeconds);   
@@ -899,7 +940,7 @@ ofxTLBangs* ofxTimeline::addBangs(string name, string xmlFileName){
 	ofxTLBangs* newBangs = new ofxTLBangs();
 	newBangs->setCreatedByTimeline(true);
 	newBangs->setXMLFileName(xmlFileName);
-	addElement(name, newBangs);
+	addTrack(name, newBangs);
 	return newBangs;
 }
 
@@ -911,7 +952,7 @@ ofxTLFlags* ofxTimeline::addFlags(string name, string xmlFileName){
     ofxTLFlags* newFlags = new ofxTLFlags();
 	newFlags->setCreatedByTimeline(true);
 	newFlags->setXMLFileName(xmlFileName);
-	addElement(name, newFlags);
+	addTrack(name, newFlags);
 	return newFlags;
 }
 
@@ -935,10 +976,11 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string name, string directory)
 	ofxTLImageSequence*	newImageSequence = new ofxTLImageSequence();
 	newImageSequence->setCreatedByTimeline(true);
 	newImageSequence->loadSequence(directory);
-	addElement(name, newImageSequence);
+	addTrack(name, newImageSequence);
 	return newImageSequence;	
 }
 
+//TODO:
 ofImage* ofxTimeline::getImage(string name){
 	return NULL;
 }
@@ -950,6 +992,29 @@ ofImage* ofxTimeline::getImage(string name, float atTime){
 ofImage* ofxTimeline::getImage(string name, int atFrame){
 	return NULL;
 }
+
+ofxTLVideoTrack* ofxTimeline::addVideoTrack(string name, string videoPath){
+	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();
+    if(videoTrack->loadMovie(videoPath)){
+        videoTrack->setCreatedByTimeline(true);
+        addTrack(name, videoTrack);
+        return videoTrack;
+    }
+    else {
+        ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
+    }
+    return NULL;
+}
+
+ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
+    ofxTLVideoTrack* track = (ofxTLVideoTrack*)getTrack(videoTrackName);
+    if(track == NULL){
+        ofLogError("ofxTimeline::getPlayer -- video player is null");
+        return ofPtr<ofVideoPlayer>(); //null ptr
+    }
+    return track->getPlayer();
+}
+
 
 //TODO: replace with ofxTimecode formatting
 string ofxTimeline::formatTime(float time){

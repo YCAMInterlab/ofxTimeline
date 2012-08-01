@@ -101,7 +101,7 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
 }
 
 
-void ofxTLVideoTrack::loadMovie(string moviePath){
+bool ofxTLVideoTrack::loadMovie(string moviePath){
 
     
     ofPtr<ofVideoPlayer> newPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());    
@@ -113,10 +113,13 @@ void ofxTLVideoTrack::loadMovie(string moviePath){
 //            checkCreateDirectory.create(true);
 //        }
         setPlayer( newPlayer );
+        return true;
     }
     else {
         ofLogError("ofxTLVideoTrack::loadMovie -- movie load failed: " + moviePath);
+
     }
+	return false;
 }
 
 void ofxTLVideoTrack::setPlayer(ofVideoPlayer& newPlayer){

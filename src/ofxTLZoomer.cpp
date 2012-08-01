@@ -229,12 +229,14 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 
 void ofxTLZoomer::notifyZoomStarted(){
 	ofxTLZoomEventArgs zoomEvent;
+    zoomEvent.sender = timeline;
 	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
 	ofNotifyEvent(events().zoomStarted, zoomEvent);		
 }
 
 void ofxTLZoomer::notifyZoomDragged(ofRange oldRange){
 	ofxTLZoomEventArgs zoomEvent;
+    zoomEvent.sender = timeline;
 	zoomEvent.oldZoom = oldRange;
 	zoomEvent.currentZoom = currentViewRange;
 	ofNotifyEvent(events().zoomDragged, zoomEvent);
@@ -242,6 +244,7 @@ void ofxTLZoomer::notifyZoomDragged(ofRange oldRange){
 
 void ofxTLZoomer::notifyZoomEnded(){
 	ofxTLZoomEventArgs zoomEvent;
+    zoomEvent.sender = timeline;    
 	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
 	ofNotifyEvent(events().zoomEnded, zoomEvent);	
 }
