@@ -55,7 +55,8 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void setTrack(ofxTLTrack* track);
-	
+	virtual ofxTLTrack* getTrack();
+    
 	virtual void collapseTrack();
     
 	virtual ofRectangle getFooterRect();

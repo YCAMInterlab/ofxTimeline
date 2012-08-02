@@ -47,7 +47,10 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
 	track = newTrack;
+}
 
+ofxTLTrack* ofxTLTrackHeader::getTrack(){
+	return track;    
 }
 
 void ofxTLTrackHeader::draw(){

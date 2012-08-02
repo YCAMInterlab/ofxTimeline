@@ -46,11 +46,11 @@
 
 //internal types
 #include "ofxTLTrack.h"
-#include "ofxTLTrackHeader.h"
 #include "ofxTLPage.h"
 #include "ofxTLPageTabs.h"
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
+#include "ofxTLInOut.h"
 #include "ofxTLTweener.h"
 #include "ofxTLBangs.h"
 #include "ofxTLFlags.h"
@@ -66,12 +66,14 @@ class ofxTimeline {
 
 	virtual void setup();
 	
-	virtual void enable();
+    bool toggleEnabled();
+    virtual void enable();
 	virtual void disable();
-	virtual bool toggleEnabled();
-
-    virtual void reset(); //clears every track
+	
+    virtual void clear(); //clears every track
     
+    //loads calls load on all tracks from the given folder
+    //really useful for setting up 'project' directories
     virtual void loadTracksFromFolder(string folderPath);
     
     //timing setup functions
@@ -97,6 +99,10 @@ class ofxTimeline {
 	virtual bool toggleShow();
 	virtual void save();
     
+    //autosave will always write to XML file on each major change 
+    //otherwise call save manually to write the files
+    void setAutosave(bool autosave);
+
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTime(float time);
 	virtual void setPercentComplete(float percent);
@@ -104,7 +110,8 @@ class ofxTimeline {
 	virtual int getCurrentFrame();
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
-	
+
+
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
     virtual void flagUserChangedValue();
@@ -212,12 +219,21 @@ class ofxTimeline {
 	virtual ofImage* getImage(string name, int atFrame);
 	
     virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
+    virtual ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     virtual ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
 	    
-	//for custom trackss
+	//for custom tracks
 	virtual void addTrack(string name, ofxTLTrack* track);
-	void setAutosave(bool autosave);
-		
+
+	//TODO: bfd
+//   virtual void removeTrack(string name);
+    
+    //ordering the track
+    virtual void bringTrackToTop(string name);
+    virtual void bringTrackToTop(ofxTLTrack* track);
+    virtual void bringTrackToBottom(string name);
+    virtual void bringTrackToBottom(ofxTLTrack* track);
+    
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -264,6 +280,7 @@ class ofxTimeline {
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
     
+    
     string nameToXMLName(string name);
     
 	bool isSetup;
@@ -286,6 +303,7 @@ class ofxTimeline {
 	ofxTLPage* currentPage;
 	vector<ofxTLPage*> pages;
 
+    ofxTLInOut* inoutTrack;
 	ofxTLTicker* ticker;
 	ofxTLPageTabs* tabs;
 	ofxTLZoomer* zoomer;

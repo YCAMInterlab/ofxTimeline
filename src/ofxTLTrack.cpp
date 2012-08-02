@@ -144,6 +144,10 @@ ofRectangle ofxTLTrack::getDrawRect(){
 	return bounds;
 }
 
+float ofxTLTrack::getBottomEdge(){
+	return bounds.y+bounds.height;    
+}
+
 bool ofxTLTrack::getCreatedByTimeline(){
 	return createdByTimeline;
 }

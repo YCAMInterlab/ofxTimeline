@@ -188,25 +188,6 @@ void ofxTLTicker::draw(){
 	//draw playhead line
 	ofSetLineWidth(1);
 	ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
-	
-	//draw in/out point
-	float inPointX = normalizedXtoScreenX(timeline->getInOutRange().min);
-	float outPointX = normalizedXtoScreenX(timeline->getInOutRange().max);
-	
-	if(bounds.x < inPointX){
-		ofSetColor(timeline->getColors().disabledColor,120);
-		ofRect(bounds.x, bounds.y, inPointX - bounds.x, totalDrawRect.height);
-		ofSetColor(timeline->getColors().highlightColor);
-		ofLine(inPointX, bounds.y, inPointX, bounds.y+totalDrawRect.height);
-	}
-	
-	if(bounds.x+bounds.width > outPointX){
-		ofSetColor(timeline->getColors().disabledColor,120);
-		ofRect(outPointX, bounds.y, (bounds.x+bounds.width) - outPointX, totalDrawRect.height);	
-		ofSetColor(timeline->getColors().highlightColor);
-		ofLine(outPointX, bounds.y, outPointX, bounds.y+totalDrawRect.height);
-	}
-	
 	//draw bounds 
 	ofNoFill();
 	ofSetColor(200, 180, 40);

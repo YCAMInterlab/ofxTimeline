@@ -68,7 +68,8 @@ class ofxTLTrack
     //managed by the page object, do not set yourself
 	virtual void setDrawRect(ofRectangle bounds);
 	virtual void offsetDrawRect(ofVec2f offset);
-	
+	float getBottomEdge();
+    
     //returns the screenspace position of the elements bounds, not including header and footer
 	virtual ofRectangle getDrawRect();
 	
@@ -118,8 +119,6 @@ class ofxTLTrack
 
 	virtual void save(){};
 	virtual void load(){};
-	
-	virtual void reset(){};
 	virtual void clear(){};
 	
 	//add any points (in screenspace x) that should be snapped to

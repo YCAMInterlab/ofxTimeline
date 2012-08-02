@@ -62,11 +62,13 @@ class ofxTLPage {
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual void unselectAll();
-    virtual void reset();
+    virtual void clear();
     virtual void save();
     
 	virtual float getComputedHeight();	
-	
+	virtual float getBottomEdge();
+    virtual ofRectangle getDrawRect();
+    
 	virtual void addTrack(string name, ofxTLTrack* track);
 	virtual ofxTLTrack* getTrack(string name);
 	virtual void removeTrack(string name);
@@ -95,6 +97,9 @@ class ofxTLPage {
     virtual void timelineGainedFocus();
     virtual void timelineLostFocus();
     
+    void bringTrackToTop(ofxTLTrack* track);
+    void bringTrackToBottom(ofxTLTrack* track);
+
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
@@ -104,6 +109,8 @@ class ofxTLPage {
 	virtual void setDragAnchor(float anchor);
 	
     ofxTimeline* timeline;
+    
+    
     
   protected:
     

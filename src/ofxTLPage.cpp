@@ -388,6 +388,36 @@ void ofxTLPage::collapseAllTracks(){
 	recalculateHeight();
 }
 
+void ofxTLPage::bringTrackToTop(ofxTLTrack* track){
+    for(int i = 0; i < headers.size(); i++){
+        if(track == headers[i]->getTrack()){
+            ofxTLTrackHeader* header = headers[i];
+			for(int j = i; j > 0; j--){
+                headers[j] = headers[j-1];
+            }
+            headers[0] = header;
+            recalculateHeight();
+            return;
+        }
+    }
+    ofLogError("ofxTLPage::bringTrackToTop -- track " + track->getName() + " not found");
+}
+
+void ofxTLPage::bringTrackToBottom(ofxTLTrack* track){
+    for(int i = 0; i < headers.size(); i++){
+        if(track == headers[i]->getTrack()){
+        	ofxTLTrackHeader* header = headers[i];
+            for(int j = i; j < headers.size()-1; j++){
+                headers[j] = headers[j+1];
+            }
+            headers[headers.size()-1] = header;
+            recalculateHeight();
+            return;
+        }
+    }
+    ofLogError("ofxTLPage::bringTrackToBottom -- track " + track->getName() + " not found");
+}
+
 void ofxTLPage::removeTrack(string name){
 	//TODO: bfd
 }
@@ -395,11 +425,13 @@ void ofxTLPage::removeTrack(string name){
 void ofxTLPage::recalculateHeight(){
 	float currentY = trackContainerRect.y;
 	float totalHeight = 0;
+
 	for(int i = 0; i < headers.size(); i++){
 		ofRectangle thisHeader = headers[i]->getDrawRect();
 		ofRectangle trackRectangle = tracks[ headers[i]->name ]->getDrawRect();
 		
-		float startY = thisHeader.y+thisHeader.height;
+		//float startY = thisHeader.y+thisHeader.height;
+        float startY = currentY+thisHeader.height;
 		float endY = startY + trackRectangle.height;
 		
 		thisHeader.width = trackContainerRect.width;
@@ -409,6 +441,9 @@ void ofxTLPage::recalculateHeight(){
 		trackRectangle.width = trackContainerRect.width;
 		
 		tracks[ headers[i]->name ]->setDrawRect( trackRectangle );
+        
+//        cout << "	setting track " << tracks[ headers[i]->name ]->getName() << " to " << trackRectangle.y << endl;
+        
 		currentY += thisHeader.height + trackRectangle.height + FOOTER_HEIGHT;
 		totalHeight += thisHeader.height + trackRectangle.height + FOOTER_HEIGHT;
 		
@@ -420,9 +455,16 @@ void ofxTLPage::recalculateHeight(){
 	saveTrackPositions();
 }
 
+ofRectangle ofxTLPage::getDrawRect(){
+	return trackContainerRect;
+}
+
 float ofxTLPage::getComputedHeight(){
-	//return computedHeight;
 	return trackContainerRect.height;
+}
+
+float ofxTLPage::getBottomEdge(){
+    return trackContainerRect.y + trackContainerRect.height;
 }
 
 void ofxTLPage::setSnapping(bool snapping){
@@ -501,9 +543,9 @@ void ofxTLPage::unselectAll(){
 	}	
 }
 
-void ofxTLPage::reset(){
+void ofxTLPage::clear(){
 	for(int i = 0; i < headers.size(); i++){
-		tracks[headers[i]->name]->reset();
+		tracks[headers[i]->name]->clear();
     }
 }
 

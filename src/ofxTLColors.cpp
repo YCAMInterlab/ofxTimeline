@@ -34,12 +34,12 @@
 
 #include "ofxTLColors.h"
 
-void ofxTLColors::loadColors() {
-	loadColors("../../../../../addons/ofxTimeline/assets/defaultColors.xml");
+void ofxTLColors::load() {
+	load("../../../../../addons/ofxTimeline/assets/defaultColors.xml");
 }
 
 //TODO add reasonable default colors
-void ofxTLColors::loadColors(string colorFile) {
+void ofxTLColors::load(string colorFile) {
 	ofxXmlSettings settings;
 	if(settings.loadFile(colorFile)){
 		

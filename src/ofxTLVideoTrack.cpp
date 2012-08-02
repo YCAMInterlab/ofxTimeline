@@ -13,7 +13,6 @@
 ofxTLVideoTrack::ofxTLVideoTrack() 
 	: ofxTLImageTrack()
 {
-
 	thumbsEnabled = true;
 	currentLoop = 0;
 	inFrame = -1;
@@ -26,12 +25,20 @@ ofxTLVideoTrack::~ofxTLVideoTrack(){
 }
 
 void ofxTLVideoTrack::setup(){
-	enable();
-    ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+    ofxTLImageTrack::setup();
     ofAddListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
     startThread();
 }
 
+void ofxTLVideoTrack::enable(){
+    ofxTLImageTrack::enable();
+    ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+}
+
+void ofxTLVideoTrack::disable(){
+    ofxTLImageTrack::enable();
+    ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+}
 
 void ofxTLVideoTrack::update(ofEventArgs& args){
 	if(player == NULL){
@@ -83,7 +90,6 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
 		newThumbs[i].useTexture = false;        
     }
 
-    lock();
     //6) copy old textures thumbs over if they are still used, delete them if they are not
     for(int i = 0; i < videoThumbs.size(); i++){
         for(int j = 0; j < newThumbs.size(); j++){
@@ -95,29 +101,55 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
             }
         }
     }
-
+    
+	backLock.lock();
+    backThumbs = newThumbs;
+	backLock.unlock();
+    
+	lock();
     videoThumbs = newThumbs;
     unlock();
 }
 
-
-bool ofxTLVideoTrack::loadMovie(string moviePath){
-
+void ofxTLVideoTrack::threadedFunction(){
     
+	while(isThreadRunning()){
+        backLock.lock();
+        if(!currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
+            for(int i = 0; i < backThumbs.size(); i++){
+                if(!backThumbs[i].loaded){
+                    if(currentlyZooming){
+                        break;
+                    }
+                    backthreadedPlayer->setFrame(backThumbs[i].framenum);			
+                    backthreadedPlayer->update();                
+                    if(currentlyZooming){
+                        break;
+                    }                    
+                    backThumbs[i].create(backthreadedPlayer->getPixelsRef());
+                    
+                    lock();
+                    videoThumbs[i] = backThumbs[i];
+                    unlock();
+
+                }
+            }
+        }
+        backLock.unlock();
+        
+        ofSleepMillis(50);     
+    }
+}
+
+bool ofxTLVideoTrack::load(string moviePath){
+
     ofPtr<ofVideoPlayer> newPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());    
     if(newPlayer->loadMovie(moviePath)){
-//        thumbDirectory = ofFilePath::removeExt(moviePath) + "_thumbs/";
-//        ofDirectory checkCreateDirectory(thumbDirectory);
-//        if (!checkCreateDirectory.exists()) {
-//            ofLogError("ofxTLVideoTrack -- Directory " + thumbDirectory + " doesn't exist! Creating");
-//            checkCreateDirectory.create(true);
-//        }
         setPlayer( newPlayer );
         return true;
     }
     else {
         ofLogError("ofxTLVideoTrack::loadMovie -- movie load failed: " + moviePath);
-
     }
 	return false;
 }
@@ -155,12 +187,7 @@ void ofxTLVideoTrack::draw(){
 	
 	if(thumbsEnabled && getDrawRect().height > 10){
         
-        //if(!ofGetMousePressed() && (thumbnailUpdatedWidth != getDrawRect().width || thumbnailUpdatedHeight != getDrawRect().height) ) {
-        	//generateVideoThumbnails();	
-        //}
-        
-		ofSetColor(255);
-        
+		ofSetColor(255);        
         lock();
 		for(int i = 0; i < videoThumbs.size(); i++){
 
@@ -226,47 +253,6 @@ void ofxTLVideoTrack::setOutFrame(int out){
 	outFrame = out;
 }
 
-//void ofxTLVideoTrack::setVideoPlayer(ofVideoPlayer& newPlayer, string thumbDir){
-//	setVideoPlayer(&newPlayer, thumbDir);
-//}
-
-//void ofxTLVideoTrack::setVideoPlayer(ofVideoPlayer* newPlayer, string thumbDir){
-//    if(newPlayer == NULL ||!newPlayer->isLoaded()){
-//        ofLogError("ofxTLVideoTrack::setVideoPlayer -- Null or unloaded player set sent");
-//        return;
-//    }
-//    
-//    player = newPlayer;	
-//	ofDirectory checkCreateDirectory(thumbDir);
-//	if (!checkCreateDirectory.exists()) {
-//		ofLogError("ofxTLVideoTrack -- Directory " + thumbDir + " doesn't exist! Creating");
-//		checkCreateDirectory.create(true);
-//	}
-//	
-//	if(inFrame == -1){
-//		cout << "reseting in out" << endl;
-//		inFrame = 0;
-//		outFrame = player->getTotalNumFrames();
-//	}
-//	
-//	//TODO: check out
-//	videoThumbs.clear();
-//	thumbDirectory = thumbDir;
-//	for(int i = 0; i < player->getTotalNumFrames(); i++){
-//		ofxTLVideoThumb t;
-//		t.setup(i, thumbDir);
-//		videoThumbs.push_back(t);
-//	}
-//	
-//	videoThumbs[0].visible = true;
-//	generateThumbnailForFrame(0);
-//	calculateFramePositions();
-//	generateVideoThumbnails();
-//}
-
-
-
-
 void ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args){
 	ofxTLTrack::mousePressed(args);
 	if(getDrawRect().inside(args.x, args.y)){
@@ -282,7 +268,6 @@ void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
 		if(timeline->getMovePlayheadOnDrag()){
-//			cout << "setting percent complete " << 
 			timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
 		}
 	}
@@ -328,49 +313,7 @@ int ofxTLVideoTrack::selectFrame(int frame){
 	return selectedFrame;
 }
 
-void ofxTLVideoTrack::threadedFunction(){
 
-	while(isThreadRunning()){
-        if(!currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
-            lock();
-            
-            for(int i = 0; i < videoThumbs.size(); i++){
-                if(!videoThumbs[i].loaded){
-
-                    backthreadedPlayer->setFrame(videoThumbs[i].framenum);			
-                    backthreadedPlayer->update();                
-                    videoThumbs[i].create(backthreadedPlayer->getPixelsRef());
-                    
-                    break;
-                }
-            }
-            unlock();
-        }
-		
-        ofSleepMillis(50);     
-    }
-}
-
-//void ofxTLVideoTrack::generateThumbnailForFrame(int i){
-//	if(!videoThumbs[i].loaded){
-//		if(videoThumbs[i].exists){
-//			videoThumbs[i].load();
-//		}
-//		else {
-			//TODO: incorporate offset here
-//            if(!player->isPlaying()){
-//                player->play();
-//                player->setSpeed(0);
-//            }
-//			player->setFrame(videoThumbs[i].framenum);			
-//			player->update();
-//
-//			ofImage frameImage;
-//			frameImage.setFromPixels(player->getPixelsRef());			
-//			videoThumbs[i].create(frameImage);
-//		}
-//	}
-//}
 
 void ofxTLVideoTrack::toggleThumbs(){
 	thumbsEnabled = !thumbsEnabled;
@@ -387,12 +330,6 @@ float ofxTLVideoTrack::getCurrentTime(){
 int ofxTLVideoTrack::getSelectedFrame(){
 	return selectedFrame + currentLoop * (outFrame-inFrame);
 }
-
-//void ofxTLVideoTrack::purgeOldThumbnails(){
-//	for(int i = 0; i < videoThumbs.size(); i++){
-//		//TODO
-//	}
-//}
 
 void ofxTLVideoTrack::exit(ofEventArgs& args){
     stopThread();	

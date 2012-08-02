@@ -41,6 +41,7 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 
 #define TICKER_HEIGHT 20
 #define ZOOMER_HEIGHT 14
+#define INOUT_HEIGHT 7
 
 ofxTimeline::ofxTimeline()
 :	mouseoverPlayheadPosition(0),
@@ -99,18 +100,23 @@ void ofxTimeline::setup(){
 	tabs->setup();
 	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
 
+    inoutTrack = new ofxTLInOut();
+    inoutTrack->setTimeline(this);
+    inoutTrack->setup();
+    inoutTrack->setDrawRect(ofRectangle(offset.x, tabs->getBottomEdge(), width, INOUT_HEIGHT));
+    
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
 	ticker->setup();
-	ticker->setDrawRect(ofRectangle(offset.x, offset.y+TICKER_HEIGHT, width, TICKER_HEIGHT));
+	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
 	
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
 	zoomer->setXMLFileName(filenamePrefix + "_zoomer.xml");
 	zoomer->setup();
-	zoomer->setDrawRect(ofRectangle(offset.y, offset.y+TICKER_HEIGHT*2, width, ZOOMER_HEIGHT));
+	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
 	
-	colors.loadColors();
+	colors.load();
 
 	enable();    
     
@@ -369,9 +375,9 @@ void ofxTimeline::disable(){
 }
 
 //clears every element
-void ofxTimeline::reset(){
+void ofxTimeline::clear(){
 	for(int i = 0; i < pages.size(); i++){
-        pages[i]->reset();
+        pages[i]->clear();
     }
 }
 
@@ -468,7 +474,7 @@ ofVec2f ofxTimeline::getBottomRight(){
 
 void ofxTimeline::updatePagePositions(){
 	if(isSetup){
-		ofVec2f pageOffset = ofVec2f(0, ticker->getDrawRect().y+ticker->getDrawRect().height);
+		ofVec2f pageOffset = ofVec2f(0, inoutTrack->getBottomEdge());
 		for(int i = 0; i < pages.size(); i++){
 			pages[i]->setContainer(pageOffset, width);
 		}
@@ -566,7 +572,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
         currentPage->timelineLostFocus();
     }
     focus = timelineHasFocus;
-
+    inoutTrack->mousePressed(args);
 	ticker->mousePressed(args);
 	currentPage->mousePressed(args);
 	zoomer->mousePressed(args);
@@ -580,6 +586,7 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
         return;
     }
     
+    inoutTrack->mouseMoved(args);
 	ticker->mouseMoved(args);
 	currentPage->mouseMoved(args);
 	zoomer->mouseMoved(args);
@@ -590,7 +597,8 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
     	modalTrack->mouseDragged(args, false);
         return;
     }
-
+    
+	inoutTrack->mouseDragged(args);
 	ticker->mouseDragged(args);
 	currentPage->mouseDragged(args);
 	zoomer->mouseDragged(args);
@@ -602,6 +610,7 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
         return;
     }
     
+    inoutTrack->mouseReleased(args);
 	ticker->mouseReleased(args);
 	tabs->mouseReleased(args);
 	currentPage->mouseReleased(args);
@@ -686,13 +695,19 @@ void ofxTimeline::recalculateBoundingRects(){
 	else{
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
-	ticker->setDrawRect( ofRectangle(offset.x, offset.y+tabs->getDrawRect().height, width, TICKER_HEIGHT) );
-	updatePagePositions();
+    
+    ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, TICKER_HEIGHT) );
 
-	zoomer->setDrawRect(ofRectangle(offset.x, offset.y+currentPage->getComputedHeight()+ticker->getDrawRect().height+tabs->getDrawRect().height, width, ZOOMER_HEIGHT));
+    inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, INOUT_HEIGHT) );
+    
+    updatePagePositions();
+
+	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, ZOOMER_HEIGHT));
 	
-	ofRectangle tickerRect = ofRectangle(offset.x, offset.y+tabs->getDrawRect().height,
-											width,ticker->getDrawRect().height+currentPage->getComputedHeight()+ZOOMER_HEIGHT);
+    inoutTrack->setPageRectangle(currentPage->getDrawRect());
+    
+	ofRectangle tickerRect = ofRectangle(offset.x, ticker->getDrawRect().y,
+											width, currentPage->getBottomEdge()-ticker->getDrawRect().y);
 	ticker->setTotalDrawRect(tickerRect);		
 	
 	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+ZOOMER_HEIGHT - offset.y);
@@ -774,7 +789,6 @@ void ofxTimeline::draw(){
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
         ofDisableLighting();
-        
 		ofEnableAlphaBlending();
 		
 		if (pages.size() > 1) {
@@ -784,7 +798,8 @@ void ofxTimeline::draw(){
 		currentPage->draw();
 		zoomer->draw();
 		ticker->draw();
-		
+		inoutTrack->draw();
+        
 		glPopAttrib();
 		ofPopStyle();
 	}
@@ -805,11 +820,9 @@ void ofxTimeline::addPage(string name, bool makeCurrent){
 	}
     
 	ofxTLPage* newPage = new ofxTLPage();
-	
     newPage->timeline = this;
 	newPage->setName(name);
 	newPage->setup();
-//	newPage->setAutosave(autosave);
 	newPage->setZoomBounds(zoomer->getViewRange());
 	newPage->setTicker(ticker);
     
@@ -995,7 +1008,7 @@ ofImage* ofxTimeline::getImage(string name, int atFrame){
 
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string name, string videoPath){
 	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();
-    if(videoTrack->loadMovie(videoPath)){
+    if(videoTrack->load(videoPath)){
         videoTrack->setCreatedByTimeline(true);
         addTrack(name, videoTrack);
         return videoTrack;
@@ -1003,11 +1016,16 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string name, string videoPath){
     else {
         ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
     }
+    delete videoTrack;
     return NULL;
 }
 
+ofxTLVideoTrack* ofxTimeline::getVideoTrack(string videoTrackName){
+	return (ofxTLVideoTrack*)getTrack(videoTrackName);
+}
+
 ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
-    ofxTLVideoTrack* track = (ofxTLVideoTrack*)getTrack(videoTrackName);
+    ofxTLVideoTrack* track = getVideoTrack(videoTrackName);
     if(track == NULL){
         ofLogError("ofxTimeline::getPlayer -- video player is null");
         return ofPtr<ofVideoPlayer>(); //null ptr
@@ -1015,6 +1033,25 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     return track->getPlayer();
 }
 
+void ofxTimeline::bringTrackToTop(string name){
+    bringTrackToTop(getTrack(name));
+}
+
+void ofxTimeline::bringTrackToTop(ofxTLTrack* track){
+    if(track != NULL){
+		trackNameToPage[track->getName()]->bringTrackToTop(track);
+    }
+}
+
+void ofxTimeline::bringTrackToBottom(string name){
+	bringTrackToBottom(getTrack(name));    
+}
+
+void ofxTimeline::bringTrackToBottom(ofxTLTrack* track){
+    if(track != NULL){
+		trackNameToPage[track->getName()]->bringTrackToBottom(track);        
+    }
+}
 
 //TODO: replace with ofxTimecode formatting
 string ofxTimeline::formatTime(float time){
@@ -1068,4 +1105,3 @@ float ofxTimeline::screenXtoNormalizedX(float x, ofRange outputRange){
 float ofxTimeline::normalizedXtoScreenX(float x, ofRange inputRange){
 	return ofMap(x, inputRange.min, inputRange.max, getDrawRect().x, getDrawRect().x+getDrawRect().width, false);
 }
-

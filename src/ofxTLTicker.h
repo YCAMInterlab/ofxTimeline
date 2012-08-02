@@ -36,6 +36,7 @@
 
 #include "ofMain.h"
 #include "ofxTLTrack.h"
+
 typedef struct{
 	float screenX;
 	int weight;

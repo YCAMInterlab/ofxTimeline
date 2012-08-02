@@ -69,9 +69,8 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void save();
 	virtual void load();
 	
-	virtual void reset();
 	virtual void clear();
-	
+		
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();

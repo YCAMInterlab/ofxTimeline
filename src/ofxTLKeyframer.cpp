@@ -95,16 +95,11 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
 }
 
-
 void ofxTLKeyframer::clear(){
 	for(int i = 0; i < keyframes.size(); i++){
 		delete keyframes[i];
 	}
-	keyframes.clear();	
-}
-
-void ofxTLKeyframer::reset(){
-	clear();
+	keyframes.clear();		
 }
 
 void ofxTLKeyframer::save(){

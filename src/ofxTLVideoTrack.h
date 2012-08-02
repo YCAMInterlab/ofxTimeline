@@ -22,9 +22,12 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	ofxTLVideoTrack();
 	~ofxTLVideoTrack();
 	
-	void setup();
-	void draw();
-    bool loadMovie(string moviePath);
+	virtual void setup();
+	virtual void draw();
+    virtual void enable();
+    virtual void disable();
+    
+    bool load(string moviePath);
 
     void setPlayer(ofVideoPlayer& newPlayer);
     void setPlayer(ofPtr<ofVideoPlayer> newPlayer);
@@ -68,9 +71,10 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     float getContentHeight();
 
     void framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs);
-        
 	ofPtr<ofVideoPlayer> player;
 	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a memory compromise to have 2 videos but but speeds things up big time
+	ofMutex backLock; // to protect backThumbs
+    vector<ofxTLVideoThumb> backThumbs; //used to generate thumbs on the back thread, then copies them onto the main thread
     
     bool pauseThumbGeneration;
     void threadedFunction();
