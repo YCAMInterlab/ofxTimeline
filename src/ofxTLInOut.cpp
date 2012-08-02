@@ -3,7 +3,8 @@
 #include "ofxTimeline.h"
 
 ofxTLInOut::ofxTLInOut()
- : 	dragOffset(0), 
+ : ofxTLTrack(),
+	dragOffset(0), 
 	draggingIn(false), 
     draggingOut(false),
 	hoveringIn(false),
@@ -54,9 +55,9 @@ void ofxTLInOut::draw(){
 	
 	if(bounds.x+bounds.width > outPointX){
 		ofSetColor(timeline->getColors().disabledColor,120);
-		ofRect(outPointX, bounds.y, (bounds.x+bounds.width) - outPointX, pageRect.height);	
+		ofRect(outPointX, pageRect.y, (bounds.x+bounds.width) - outPointX, pageRect.height);	
 		ofSetColor(timeline->getColors().highlightColor);
-		ofLine(outPointX, bounds.y, outPointX, bounds.y+pageRect.height);
+		ofLine(outPointX, pageRect.y, outPointX, pageRect.y+pageRect.height);
 	}
 	
 	ofPopStyle();
@@ -105,7 +106,7 @@ void ofxTLInOut::mousePressed(ofMouseEventArgs& args){
         }
     }
     
-    cout << "dist to in " << abs(distToIn) << " out " << abs(distToOut) << " " << draggingIn << " " << draggingOut << endl;
+    //cout << "dist to in " << abs(distToIn) << " out " << abs(distToOut) << " " << draggingIn << " " << draggingOut << endl;
 }
 
 void ofxTLInOut::mouseDragged(ofMouseEventArgs& args){
@@ -118,6 +119,34 @@ void ofxTLInOut::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTLInOut::mouseReleased(ofMouseEventArgs& args){
-    draggingIn = draggingOut = false;
+    if(draggingIn || draggingOut){
+	    draggingIn = draggingOut = false;
+        save();
+    }
+}
+
+void ofxTLInOut::load(){
+    
+	ofxXmlSettings settings;
+	if(!settings.loadFile(xmlFileName)){
+		ofLog(OF_LOG_ERROR, "ofxTLZoomer -- couldn't load zoom settings file");
+        timeline->setInOutRange(ofRange(0,1.0));
+		return;
+	}
+    	settings.pushTag("inout");
+	timeline->setInOutRange(ofRange(settings.getValue("in", 0.0),settings.getValue("out", 1.0)));
+	settings.popTag();
+    
+}
+
+void ofxTLInOut::save(){
+    
+	ofxXmlSettings savedSettings;
+	savedSettings.addTag("inout");
+	savedSettings.pushTag("inout");
+	savedSettings.addValue("in", timeline->getInOutRange().min);
+	savedSettings.addValue("out", timeline->getInOutRange().max);
+	savedSettings.popTag();//zoom
+	savedSettings.saveFile(xmlFileName);    
 }
 

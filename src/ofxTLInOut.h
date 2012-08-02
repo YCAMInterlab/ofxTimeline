@@ -13,6 +13,9 @@ class ofxTLInOut : public ofxTLTrack {
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
     
+    virtual void load();
+	virtual void save();
+    
     void setPageRectangle(ofRectangle pageRectangle);
     
   protected:
@@ -24,6 +27,4 @@ class ofxTLInOut : public ofxTLTrack {
     bool hoveringOut;
 	    
     ofRectangle pageRect;
-//    bool onInHandle(int screenX);
-//    bool onOutHandle(int screenX);
 };

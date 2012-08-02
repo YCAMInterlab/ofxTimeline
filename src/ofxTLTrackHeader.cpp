@@ -62,7 +62,7 @@ void ofxTLTrackHeader::draw(){
 	
 	ofNoFill();
 	ofSetColor(track->getTimeline()->getColors().textColor);
-	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 15) );
+	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 10) );
 	
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
 	ofRect(bounds);
@@ -99,8 +99,7 @@ void ofxTLTrackHeader::mouseDragged(ofMouseEventArgs& args){
 	if(draggingSize){
 		ofRectangle trackRect = track->getDrawRect();
 		trackRect.height = MAX(0, args.y - trackRect.y - dragOffset);
-		track->setDrawRect(trackRect);
-		
+		track->setDrawRect(trackRect);		
 		recalculateFooter();		
 	}
 }

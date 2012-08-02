@@ -37,7 +37,7 @@
 #include "ofMain.h"
 #include "ofxTLTrack.h"
 
-#define FOOTER_HEIGHT 10
+#define FOOTER_HEIGHT 4
 
 class ofxTLTrackHeader : public ofxTLTrack
 {

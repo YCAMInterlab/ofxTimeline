@@ -54,6 +54,7 @@ ofxTLTrack::~ofxTLTrack(){
 }
 
 void ofxTLTrack::setup(){
+
     enable();
     load();
 }

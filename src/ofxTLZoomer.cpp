@@ -50,11 +50,6 @@ ofxTLZoomer::~ofxTLZoomer(){
 	
 }
 
-void ofxTLZoomer::setup(){
-	enable();
-	load();
-}
-
 void ofxTLZoomer::draw(){
 	ofPushStyle();
 	ofEnableSmoothing();

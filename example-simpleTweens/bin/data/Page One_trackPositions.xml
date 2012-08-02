@@ -1,0 +1,20 @@
+<positions>
+    <element name="Colors">
+        <x>0</x>
+        <y>171</y>
+        <width>1024</width>
+        <height>50</height>
+    </element>
+    <element name="Rotate X">
+        <x>0</x>
+        <y>39</y>
+        <width>1024</width>
+        <height>50</height>
+    </element>
+    <element name="Rotate Y">
+        <x>0</x>
+        <y>105</y>
+        <width>1024</width>
+        <height>50</height>
+    </element>
+</positions>

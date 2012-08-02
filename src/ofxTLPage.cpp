@@ -75,8 +75,8 @@ void ofxTLPage::setup(){
 	
 	ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
 	isSetup = true;
-	headerHeight = 20;
-	defaultTrackHeight = 50;
+	headerHeight = 12;
+	defaultTrackHeight = 30;
 	loadTrackPositions(); //name must be set
 }
 
@@ -448,7 +448,6 @@ void ofxTLPage::recalculateHeight(){
 		totalHeight += thisHeader.height + trackRectangle.height + FOOTER_HEIGHT;
 		
 		savedTrackPositions[headers[i]->name] = trackRectangle;
-
 	}
 	
 	trackContainerRect.height = totalHeight;

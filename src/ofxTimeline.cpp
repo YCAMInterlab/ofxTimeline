@@ -102,11 +102,13 @@ void ofxTimeline::setup(){
 
     inoutTrack = new ofxTLInOut();
     inoutTrack->setTimeline(this);
+    inoutTrack->setXMLFileName(filenamePrefix+"_inout.xml");
     inoutTrack->setup();
     inoutTrack->setDrawRect(ofRectangle(offset.x, tabs->getBottomEdge(), width, INOUT_HEIGHT));
     
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
+    //todo save ticker positin
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
 	
@@ -118,7 +120,7 @@ void ofxTimeline::setup(){
 	
 	colors.load();
 
-	enable();    
+	enable();
     
 	ofAddListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
