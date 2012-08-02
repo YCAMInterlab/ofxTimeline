@@ -121,6 +121,10 @@ class ofxTLTrack
 	virtual void load(){};
 	virtual void clear(){};
 	
+    //override this if your track can be used as the timeControl
+    //for example video and audio tracks implement this
+    virtual bool isPlaying(){ return false; }
+    
 	//add any points (in screenspace x) that should be snapped to
 	virtual void getSnappingPoints(vector<float>& points){};
 	

@@ -44,11 +44,8 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 #define INOUT_HEIGHT 7
 
 ofxTimeline::ofxTimeline()
-:	mouseoverPlayheadPosition(0),
-	playbackPlayheadPosition(0),
-	width(1024),
+:	width(1024),
 	offset(ofVec2f(0,0)),
-	modalIsShown(false),
 	autosave(true),
 	isFrameBased(false),
 	timelineHasFocus(false),
@@ -64,6 +61,7 @@ ofxTimeline::ofxTimeline()
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL),
 	modalTrack(NULL),
+	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
 	currentTime(0.0)
@@ -208,7 +206,11 @@ void ofxTimeline::flagTrackModified(ofxTLTrack* track){
 
 void ofxTimeline::play(){
 
-	if(!isPlaying){
+    if(timeControl != NULL){
+        timeControl->play();
+        return;
+    }
+	if(!getIsPlaying()){
         if(isDone()){
             setPercentComplete(0.0);
         }
@@ -224,16 +226,26 @@ void ofxTimeline::play(){
 }
 
 void ofxTimeline::stop(){
-	if(isPlaying){
-		isPlaying = false;
-		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
-		ofxTLPlaybackEventArgs args = createPlaybackEvent();
-		ofNotifyEvent(timelineEvents.playbackEnded, args);
+    if(timeControl != NULL){
+        timeControl->stop();
+        return;
+    }
+
+	if(getIsPlaying()){
+        isPlaying = false;
+        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+        ofxTLPlaybackEventArgs args = createPlaybackEvent();
+        ofNotifyEvent(timelineEvents.playbackEnded, args);
 	}
 }
 
 bool ofxTimeline::togglePlay(){
-	if(isPlaying){
+    if(timeControl != NULL){
+        timeControl->togglePlay();
+        return;
+    }
+
+	if(getIsPlaying()){
 		stop();
 	}
 	else{
@@ -242,11 +254,11 @@ bool ofxTimeline::togglePlay(){
 		}
 		play();
 	}
-	return isPlaying;
+	return getIsPlaying();
 }
 
 bool ofxTimeline::getIsPlaying(){
-	return isPlaying;
+	return timeControl != NULL ? timeControl->isPlaying() : isPlaying;
 }
 
 void ofxTimeline::setCurrentFrame(int newFrame){
@@ -492,10 +504,6 @@ void ofxTimeline::setSnapping(bool snapping){
 }
 
 void ofxTimeline::presentedModalContent(ofxTLTrack* newModalTrack){
-//	if(modalTrack != NULL){
-//        ofLogError("ofxTimline -- track " + modalTrack->getName() + " asked for modality while " + newModalTrack->getName() + " is still holding the lock");
-//    }
-
     modalTrack = newModalTrack;
 }
 
@@ -740,6 +748,7 @@ ofLoopType ofxTimeline::getLoopType(){
 	return loopType;
 }
 
+//TODO: probably will be broken for in/out point sets
 bool ofxTimeline::isDone(){
 	return getPercentComplete() == 1.0 && getLoopType() == OF_LOOP_NONE;   
 }
@@ -856,6 +865,14 @@ bool ofxTimeline::isModal(){
 
 ofxTLTrack* ofxTimeline::getModalTrack(){
     return modalTrack;
+}
+
+void ofxTimeline::setTimecontrolTrack(ofxTLTimeController* track){
+    timeControl = track;
+}
+
+ofxTLTimeController* ofxTimeline::getTimecontrolTrack(){
+    return timeControl;
 }
 
 //can be used to add custom elements

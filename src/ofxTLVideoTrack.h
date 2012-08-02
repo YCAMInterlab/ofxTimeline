@@ -12,12 +12,12 @@
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
 #include "ofxTLImageTrack.h"
+#include "ofxTLTimeController.h"
 
-//TODO: Integrate into ofxTLImageTrack
 //TODO: Playback control system for overall timeline
 //TODO: Start and stop points (w handles!) (saving!)
 
-class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
+class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTimeController {
   public:
 	ofxTLVideoTrack();
 	~ofxTLVideoTrack();
@@ -54,6 +54,11 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	void setInFrame(int inFrame);
 	void setOutFrame(int outFrame);
 
+    virtual void togglePlay();
+    virtual void play();
+    virtual void stop();
+    virtual bool isPlaying();
+    	
   protected:
     
 	int selectedFrame;
@@ -65,6 +70,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	int outFrame;
 	
     bool canCalculateThumbs();
+    bool currentlyPlaying;
     
     //width and height of image elements
     float getContentWidth();
@@ -76,7 +82,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	ofMutex backLock; // to protect backThumbs
     vector<ofxTLVideoThumb> backThumbs; //used to generate thumbs on the back thread, then copies them onto the main thread
     
-    bool pauseThumbGeneration;
+	void playheadScrubbed(ofxTLPlaybackEventArgs& args);
+        
     void threadedFunction();
     void exit(ofEventArgs& args);
     

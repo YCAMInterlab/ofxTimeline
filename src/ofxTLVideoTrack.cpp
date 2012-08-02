@@ -18,6 +18,7 @@ ofxTLVideoTrack::ofxTLVideoTrack()
 	inFrame = -1;
 	outFrame = -1;
     currentlyZooming = false;
+    currentlyPlaying = false;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
@@ -33,46 +34,107 @@ void ofxTLVideoTrack::setup(){
 void ofxTLVideoTrack::enable(){
     ofxTLImageTrack::enable();
     ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+    ofAddListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 }
 
 void ofxTLVideoTrack::disable(){
+    stop();
     ofxTLImageTrack::enable();
     ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+    ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
+}
+
+void ofxTLVideoTrack::togglePlay(){
+    if(!isLoaded()) return;
+    
+    if(isPlaying()){
+        stop();
+    }
+    else{
+        play();
+    }
+}
+
+void ofxTLVideoTrack::play(){
+    if(isLoaded()){
+        if(!player->isPlaying()){
+            player->play();
+        }
+        player->setSpeed(1.0);
+        
+        
+        currentlyPlaying = true;
+        ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+        ofNotifyEvent(events().playbackStarted, args);
+
+    }
+}
+
+void ofxTLVideoTrack::stop(){
+    if(isLoaded()){
+        player->setSpeed(0.0);
+        ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+        ofNotifyEvent(events().playbackEnded, args);
+        currentlyPlaying = false;    
+    }
+}
+
+bool ofxTLVideoTrack::isPlaying(){
+	return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
 }
 
 void ofxTLVideoTrack::update(ofEventArgs& args){
-	if(player == NULL){
+    
+	if(!isLoaded()){
 		return;
 	}
 	
-   	if(player->isPlaying() && player->getSpeed() > 0.0){
-		
+   	if(timeline->getTimecontrolTrack() == this && isPlaying()){
+        
+        //this will happen if the user calls play on the video itself
+		if(!currentlyPlaying){
+            play(); //to trigger events
+        }
+        
+        if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
+            //cout << "reset in frame from " << player->getCurrentFrame() << endl;
+            player->setFrame(inFrame);
+            //cout << "	to: " << player->getCurrentFrame() << endl;
+        }
+        
+        if(lastFrame > player->getCurrentFrame()){
+            currentLoop++;
+            //cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
+        }
+
+        if(timeline->getInOutRange().max < player->getPosition() || timeline->getInOutRange().min > player->getPosition()){
+            if(timeline->getInOutRange().min > player->getPosition() && timeline->getLoopType() == OF_LOOP_NONE){
+                stop();
+            }
+            else{
+				selectFrame(timeline->getInOutRange().min*player->getTotalNumFrames());
+                ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+                ofNotifyEvent(events().playbackLooped, args);
+            }
+        }
+//        if(timeline->getOutFrame() < getCurrentFrame() || timeline->getInFrame() > getCurrentFrame() ){				
+//            if(timeline->getInFrame() > player->getCurrentFrame() && timeline->getLoopType() == OF_LOOP_NONE){
+//                player->stop();
+//            }
+//            else {
+//                //player->setFrame( timeline->getInFrame() % player->getTotalNumFrames());
+//                selectFrame(timeline->getInFrame());
+//            }
+//        }
+        
+//        timeline->setCurrentFrame(getCurrentFrame());
+        timeline->setPercentComplete(player->getPosition());
+        lastFrame = player->getCurrentFrame();
+        
+        /*
         //cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
 		if(timeline->getIsFrameBased()){
             
-			if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
-                //cout << "reset in frame from " << player->getCurrentFrame() << endl;
-				player->setFrame(inFrame);
-                //cout << "	to: " << player->getCurrentFrame() << endl;
-			}
-			
-			if(lastFrame > player->getCurrentFrame()){
-				currentLoop++;
-                //cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
-			}
-			
-			if(timeline->getOutFrame() < getCurrentFrame() || timeline->getInFrame() > getCurrentFrame() ){				
-				if(timeline->getInFrame() > player->getCurrentFrame() && timeline->getLoopType() == OF_LOOP_NONE){
-					player->stop();
-				}
-				else {
-					//player->setFrame( timeline->getInFrame() % player->getTotalNumFrames());
-					selectFrame(timeline->getInFrame());
-				}
-			}
-            
-			timeline->setCurrentFrame(getCurrentFrame());
-			lastFrame = player->getCurrentFrame();
 		}
 		else{
 			if(timeline->getOutTime() < player->getPosition()*player->getDuration() || timeline->getInTime() > player->getPosition()*player->getDuration() ){
@@ -80,9 +142,25 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 			}
 			timeline->setCurrentTime( player->getPosition() * player->getDuration());
 		}
+        */
+        player->update();
 	}
+    else{
+        if(player->getSpeed() != 0){
+	        player->setSpeed(0);
+        }
+        if(currentlyPlaying){
+            stop();
+        }
+    }
 }
 
+void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
+    if(isLoaded() && !currentlyPlaying){
+        player->setPosition(args.currentPercent);
+        player->update();
+    }
+}
 
 void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) {
 
@@ -94,7 +172,6 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
     for(int i = 0; i < videoThumbs.size(); i++){
         for(int j = 0; j < newThumbs.size(); j++){
             if(videoThumbs[i].framenum == newThumbs[j].framenum && videoThumbs[i].loaded){
-                //newThumbs[j].create(videoThumbs[i].thumb->getPixelsRef());
                 newThumbs[j].thumb = videoThumbs[i].thumb;
                 newThumbs[j].loaded = true;
                 break;
@@ -114,18 +191,18 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
 void ofxTLVideoTrack::threadedFunction(){
     
 	while(isThreadRunning()){
-        backLock.lock();
-        if(!currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
+        if(!ofGetMousePressed() && !currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
+            backLock.lock();
             for(int i = 0; i < backThumbs.size(); i++){
                 if(!backThumbs[i].loaded){
-                    if(currentlyZooming){
+                    if(currentlyZooming || ofGetMousePressed()){
                         break;
                     }
                     backthreadedPlayer->setFrame(backThumbs[i].framenum);			
                     backthreadedPlayer->update();                
-                    if(currentlyZooming){
+                    if(currentlyZooming || ofGetMousePressed()){
                         break;
-                    }                    
+                    }                   
                     backThumbs[i].create(backthreadedPlayer->getPixelsRef());
                     
                     lock();
@@ -134,10 +211,10 @@ void ofxTLVideoTrack::threadedFunction(){
 
                 }
             }
+            backLock.unlock();
         }
-        backLock.unlock();
         
-        ofSleepMillis(50);     
+        ofSleepMillis(100);     
     }
 }
 
@@ -161,12 +238,18 @@ void ofxTLVideoTrack::setPlayer(ofVideoPlayer& newPlayer){
 void ofxTLVideoTrack::setPlayer(ofPtr<ofVideoPlayer> newPlayer){
     player = newPlayer;
     if(player->isLoaded()){
+        
         calculateFramePositions();
         backthreadedPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());
         backthreadedPlayer->setUseTexture(false);
         backthreadedPlayer->loadMovie(player->getMoviePath());
 		inFrame = 0;
 		outFrame = player->getTotalNumFrames();
+        
+        player->play();
+        player->setSpeed(0.);
+        player->setFrame(0);
+        player->update();
     }
     else {
 		ofLogError("ofxTLVideoTrack::setPlayer -- setting a video player before loading movie doesn't work!");
@@ -291,7 +374,7 @@ void ofxTLVideoTrack::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
-	if(hover){
+	if(hasFocus()){
 		if(args.key == OF_KEY_LEFT){
 			selectFrame(MAX(selectedFrame-1, 0));
 		}
@@ -312,8 +395,6 @@ int ofxTLVideoTrack::selectFrame(int frame){
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;
 }
-
-
 
 void ofxTLVideoTrack::toggleThumbs(){
 	thumbsEnabled = !thumbsEnabled;

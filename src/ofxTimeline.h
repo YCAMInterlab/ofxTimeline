@@ -58,6 +58,7 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
+#include "ofxTLTimeController.h"
 
 class ofxTimeline {
   public:
@@ -123,6 +124,7 @@ class ofxTimeline {
     virtual void flagTrackModified(ofxTLTrack* track); 
     
     //playback
+    //TODO: move these into a time controller of its own
 	virtual void play();
 	virtual void stop();
 	virtual bool togglePlay();
@@ -221,7 +223,13 @@ class ofxTimeline {
     virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     virtual ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     virtual ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
-	    
+    
+    //used for audio and video.
+    //we punt to the track to control time.
+    //this can be a video or audio track
+    virtual void setTimecontrolTrack(ofxTLTimeController* track);
+	virtual ofxTLTimeController* getTimecontrolTrack();
+    
 	//for custom tracks
 	virtual void addTrack(string name, ofxTLTrack* track);
 
@@ -309,6 +317,7 @@ class ofxTimeline {
 	ofxTLZoomer* zoomer;
 
     ofxTLTrack* modalTrack;
+    ofxTLTimeController* timeControl;
     
 	float width;
 	ofVec2f offset;
@@ -340,10 +349,7 @@ class ofxTimeline {
 	ofLoopType loopType;
 	int playbackStartFrame;
 	double playbackStartTime;	
-	float mouseoverPlayheadPosition;
-	float playbackPlayheadPosition;
-	
-	bool modalIsShown;
+
 	bool autosave;
 	
 	bool isFrameBased;

@@ -16,29 +16,15 @@ class ofxTLVideoThumb {
 	ofxTLVideoThumb();
 	~ofxTLVideoThumb();
 	
-//	void setup(int framenum, string thumbpath);
 	void create(ofPixels& thumbPixels);
-
-//	void load();
+    
 	void unload();
-	
-//	string sourcepath;
-//	string filepath;
 	
 	int framenum;
     long timestamp; //generally millis from the beginning of the sequence
-
 	bool loaded;
-//  bool pixelsReady;
-//	bool exists;
 
     bool useTexture;
 	ofPtr<ofImage> thumb;
-	
-//	bool visible;
 	ofRectangle displayRect;
-	
-//	float targetWidth;
-//	float targetHeight;
-//	float timeloaded;
 };

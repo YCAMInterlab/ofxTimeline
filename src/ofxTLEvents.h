@@ -82,7 +82,8 @@ class ofxTLEvents {
 	ofEvent<ofxTLPlaybackEventArgs> playbackStarted;
 	ofEvent<ofxTLPlaybackEventArgs> playbackEnded;
 	ofEvent<ofxTLPlaybackEventArgs> playbackLooped;
-	
+	ofEvent<ofxTLPlaybackEventArgs> playheadScrubbed;
+    
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
