@@ -7,62 +7,75 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 	
-    
+    //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);
 	timeline.setDurationInFrames(90);
 	timeline.setLoopType(OF_LOOP_NORMAL);
-	
-	timeline.addKeyframes("brightness");
-    timeline.addKeyframes("contrast");
-    timeline.addKeyframes("saturation");
+    
+    //add keyframes for  our shader
+	timeline.addKeyframes("brightness", ofRange(0.0, 2.0), 1.0);
+    timeline.addKeyframes("contrast", ofRange(.5, 2.0), 1.0);
+    timeline.addKeyframes("saturation", ofRange(0.0, 1.5), 1.0);
     timeline.addSwitcher("invert");
 	
+    //set the color palette
 	timeline.getColors().load("defaultColors.xml");
 	
     loaded = false;
 	rendering = false;
+    renderFolder = "renders/"; //this is where rendered frames will be saved to
     
+    //initialize the shader
     colorControl.load("colorcontrol");
     colorControl.begin();
     colorControl.setUniform1i("tex", 0);
     colorControl.end();
     
+    //load the last video 
 	if(settings.loadFile("settings.xml")){
         string videoPath = settings.getValue("videoPath", "");
         if(videoPath != ""){
             loadVideo(videoPath);
         }
     }
+    
+    //load our display font
+    verdana.loadFont("verdana.ttf", 15, true, true);
+	verdana.setLineHeight(34.0f);
+	verdana.setLetterSpacing(1.035);
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
     
-    if(loaded){
-        //calculate a the view for the movie, scaled into the center between the timeline and the buttons
-        float availableHeight = ofGetHeight() - timeline.getBottomLeft().y - BUTTON_HEIGHT;
-        
-        if(ofGetWidth() / availableHeight > contentRectangle.width/contentRectangle.height){
-            outputRectangle.height = availableHeight;
-            outputRectangle.width = contentRectangle.width * availableHeight / contentRectangle.height;
-        }
-        else {
-            outputRectangle.width  = ofGetWidth();
-            outputRectangle.height = contentRectangle.height * ofGetWidth()/contentRectangle.width;
-        }
-        outputRectangle.x =  ofGetWidth()/2 - outputRectangle.width/2;
-        outputRectangle.y = timeline.getBottomLeft().y;
-	}
+    //update views
+    if(!loaded){
+        contentRectangle = ofRectangle(0,0, 16, 9); 
+    }
+    //calculate a the view for the movie, scaled into the center between the timeline and the buttons
+    float availableHeight = ofGetHeight() - timeline.getBottomLeft().y - BUTTON_HEIGHT;
+    if(ofGetWidth() / availableHeight > contentRectangle.width/contentRectangle.height){
+        outputRectangle.height = availableHeight;
+        outputRectangle.width = contentRectangle.width * availableHeight / contentRectangle.height;
+    }
+    else {
+        outputRectangle.width  = ofGetWidth();
+        outputRectangle.height = contentRectangle.height * ofGetWidth()/contentRectangle.width;
+    }
+    outputRectangle.x =  ofGetWidth()/2 - outputRectangle.width/2;
+    outputRectangle.y = timeline.getBottomLeft().y;
     
-    loadVideoButton = ofRectangle(0, ofGetHeight()-BUTTON_HEIGHT-1, ofGetWidth()/2, BUTTON_HEIGHT);
-    renderButton = ofRectangle(ofGetWidth()/2, ofGetHeight()-BUTTON_HEIGHT-1, ofGetWidth()/2, BUTTON_HEIGHT);
+    //loadVideoButton = ofRectangle(0, 0, ofGetWidth()/2, BUTTON_HEIGHT);
+    renderButton = ofRectangle(outputRectangle.x, outputRectangle.y+outputRectangle.height, outputRectangle.width, BUTTON_HEIGHT-1);
+    
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-	ofBackground(.15*255);
+	ofBackground(.15*255); //pro apps background color
 
     if(loaded){
 		colorControl.begin();
@@ -70,21 +83,33 @@ void testApp::draw(){
         colorControl.setUniform1f("contrast", timeline.getKeyframeValue("contrast"));
         colorControl.setUniform1f("saturation", timeline.getKeyframeValue("saturation"));
         colorControl.setUniform1i("invert", (timeline.getSwitcherOn("invert") ? 1 : 0) );
-    	timeline.getVideoTrack("Video")->getPlayer()->draw(outputRectangle);        
+    	timeline.getVideoPlayer("Video")->draw(outputRectangle);        
 		colorControl.end();
+    }
+    else{
+        ofPushStyle();
+        ofNoFill();
+        ofSetColor(timeline.getColors().keyColor);
+        ofRect(outputRectangle);
+        string instructions = "Drag & Drop a Video file";
+        float width = verdana.getStringBoundingBox("Drag & Drop a Video file", 0, 0).width;
+        verdana.drawString(instructions, outputRectangle.x+outputRectangle.width/2 - width/2, outputRectangle.y + outputRectangle.height/2);
+        ofPopStyle();
+    }
+    
+    if(rendering){
+        renderCurrentFrame();
     }
     
     ofPushStyle();
 	ofNoFill();
     ofRect(loadVideoButton);
+    string renderString = rendering ? ("Cancel Render : " + ofToString(currentRenderFrame - timeline.getInFrame()) + "/" + ofToString(timeline.getOutFrame()-timeline.getInFrame()))  : "Start Render";
+    verdana.drawString(renderString, renderButton.x + 10, renderButton.y + renderButton.height*.75);
     ofRect(renderButton);
     ofPopStyle();
     
-	timeline.draw();
-    if(timeline.getIsPlaying()){
-//        cout << timeline.getVideoTrack("Video")->getPlayer()->getTotalNumFrames()/timeline.getVideoTrack("Video")->getPlayer()->getDuration() << endl;
-//        cout << timeline.getVideoTrack("Video")->getPlayer()->getPosition()*timeline.getVideoTrack("Video")->getPlayer()->getTotalNumFrames() << endl;
-    }
+	timeline.draw();    
 }
 
 //--------------------------------------------------------------
@@ -103,10 +128,11 @@ void testApp::loadVideo(string videoPath){
         contentRectangle = ofRectangle(0,0, videoTrack->getPlayer()->getWidth(), videoTrack->getPlayer()->getHeight());
         frameBuffer.allocate(contentRectangle.width, contentRectangle.height, GL_RGB);
         
-        timeline.clear();
+        //timeline.clear();
         //At the moment with video and audio tracks
         //ofxTimeline only works correctly if the duration of the track == the duration of the timeline
         //plan is to be able to fix this but for now...
+        timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
         timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
         timeline.setTimecontrolTrack(videoTrack); //video playback will control the time
 		timeline.bringTrackToTop(videoTrack);
@@ -119,6 +145,40 @@ void testApp::loadVideo(string videoPath){
 }
 
 //--------------------------------------------------------------
+void testApp::renderCurrentFrame(){
+    
+    //update the video and the timeline to the current frame
+    timeline.getVideoPlayer("Video")->setFrame(currentRenderFrame);
+    timeline.getVideoPlayer("Video")->update();
+    timeline.setCurrentFrame(currentRenderFrame);
+    
+    //draw the video with the shader into the frame buffer
+    frameBuffer.begin();
+    ofClear(0,0,0);
+    colorControl.begin();
+    colorControl.setUniform1f("brightness", timeline.getKeyframeValue("brightness"));
+    colorControl.setUniform1f("contrast", timeline.getKeyframeValue("contrast"));
+    colorControl.setUniform1f("saturation", timeline.getKeyframeValue("saturation"));
+    colorControl.setUniform1i("invert", (timeline.getSwitcherOn("invert") ? 1 : 0) );
+    timeline.getVideoPlayer("Video")->draw(contentRectangle);//draw the frame buffer at full frame
+    colorControl.end();
+	frameBuffer.end();
+    
+    //save the image to file and update to the next frame
+    ofImage saveImage;
+    frameBuffer.readToPixels(saveImage.getPixelsRef());
+    char filename[1024];
+    sprintf(filename, "%s/frame_%05d.png",renderFolder.c_str(),currentRenderFrame);
+    saveImage.saveImage(filename);
+    currentRenderFrame++;
+    if(currentRenderFrame > timeline.getOutFrame()){
+        rendering = false;
+        timeline.enable();
+		timeline.setCurrentFrame(timeline.getInFrame());
+    }
+}
+
+
 void testApp::keyPressed(int key){
 	if(key == ' ' && loaded){
         timeline.togglePlay();
@@ -129,13 +189,9 @@ void testApp::keyPressed(int key){
 	}
     
     if(key == 'c'){
+        //reload shader
         colorControl.load("colorcontrol");
     }
-}
-
-//--------------------------------------------------------------
-void testApp::startRender(){
-	
 }
 
 //--------------------------------------------------------------
@@ -155,7 +211,24 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-
+	if(loaded && renderButton.inside(x,y)){
+        if(rendering){
+            rendering = false;
+            timeline.enable();
+        }
+        else{
+            //Make sure the render folder exists.
+            //this will put all the frames into bin/data/renders
+            ofDirectory renders(renderFolder);
+            if(!renders.exists()){
+                renders.create(true);
+            }
+			rendering = true;
+            currentRenderFrame = timeline.getInFrame();
+            timeline.stop();
+            timeline.disable();
+        }
+    }
 }
 
 //--------------------------------------------------------------

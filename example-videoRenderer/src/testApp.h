@@ -31,10 +31,17 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 
     void loadVideo(string videoPath);
-	void startRender();
     
     bool loaded;
     bool rendering;
+    int currentRenderFrame;
+    void renderCurrentFrame();
+    
+    string renderFolder;
+    
+    
+    ofTrueTypeFont verdana;
+    
     //saves between loads
     ofxXmlSettings settings;
     
@@ -42,7 +49,7 @@ class testApp : public ofBaseApp{
     //brightness,contrast,saturation shader found here: http://mouaif.wordpress.com/2009/01/05/photoshop-math-with-glsl-shaders/
     ofShader colorControl; 
     ofFbo frameBuffer;
-    
+
     ofRectangle contentRectangle; //matched to video size
     ofRectangle outputRectangle;
     ofRectangle loadVideoButton;
