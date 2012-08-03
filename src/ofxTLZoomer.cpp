@@ -106,10 +106,11 @@ void ofxTLZoomer::load() {
 	
 	ofxXmlSettings settings;
 	if(!settings.loadFile(xmlFileName)){
-		ofLog(OF_LOG_ERROR, "ofxTLZoomer -- couldn't load zoom settings file");
+		ofLog(OF_LOG_ERROR, "ofxTLZoomer -- couldn't load zoom settings file " + xmlFileName);
+        currentViewRange = ofRange(0., 1.0);
 		return;
 	}
-
+    
 	settings.pushTag("zoom");
 	currentViewRange = ofRange(settings.getValue("min", 0.0),
 							   settings.getValue("max", 1.0));

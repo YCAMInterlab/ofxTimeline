@@ -102,34 +102,31 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
             //cout << "	to: " << player->getCurrentFrame() << endl;
         }
         
-        if(lastFrame > player->getCurrentFrame()){
+        if(selectedFrame > player->getCurrentFrame()){
             currentLoop++;
             //cout << "LOOPED! with last frame " << lastFrame << " " << player->getCurrentFrame() << " current loop " << currentLoop << endl;
         }
 
-        if(timeline->getInOutRange().max < player->getPosition() || timeline->getInOutRange().min > player->getPosition()){
-            if(timeline->getInOutRange().min > player->getPosition() && timeline->getLoopType() == OF_LOOP_NONE){
-                stop();
+        //if(timeline->getInOutRange().max < player->getPosition()){
+        if(timeline->getOutFrame() <= player->getCurrentFrame()){
+            if(timeline->getLoopType() == OF_LOOP_NONE){
+                stop();                
             }
             else{
-				selectFrame(timeline->getInOutRange().min*player->getTotalNumFrames());
+                int loopFrame = timeline->getInFrame();
+				selectFrame(loopFrame);
                 ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-                ofNotifyEvent(events().playbackLooped, args);
+                ofNotifyEvent(events().playbackLooped, args);                
             }
         }
-//        if(timeline->getOutFrame() < getCurrentFrame() || timeline->getInFrame() > getCurrentFrame() ){				
-//            if(timeline->getInFrame() > player->getCurrentFrame() && timeline->getLoopType() == OF_LOOP_NONE){
-//                player->stop();
-//            }
-//            else {
-//                //player->setFrame( timeline->getInFrame() % player->getTotalNumFrames());
-//                selectFrame(timeline->getInFrame());
-//            }
-//        }
+        //else if(timeline->getInOutRange().min > player->getPosition()){
+        if(timeline->getInFrame() > player->getCurrentFrame()){
+            int loopFrame = timeline->getInFrame();
+            selectFrame(loopFrame);
+        }
         
-//        timeline->setCurrentFrame(getCurrentFrame());
         timeline->setPercentComplete(player->getPosition());
-        lastFrame = player->getCurrentFrame();
+        selectedFrame = player->getCurrentFrame();
         
         /*
         //cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
@@ -157,8 +154,10 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
     if(isLoaded() && !currentlyPlaying){
-        player->setPosition(args.currentPercent);
+        selectFrame(args.currentFrame);
         player->update();
+//        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
+//        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;
     }
 }
 
@@ -350,8 +349,9 @@ void ofxTLVideoTrack::mouseMoved(ofMouseEventArgs& args){
 void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
+        player->update();
 		if(timeline->getMovePlayheadOnDrag()){
-			timeline->setPercentComplete(screenXtoNormalizedX(args.x, zoomBounds));
+			timeline->setPercentComplete(screenXtoNormalizedX(args.x));
 		}
 	}
 }
@@ -374,12 +374,12 @@ void ofxTLVideoTrack::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
-	if(hasFocus()){
+	if(isLoaded() && hasFocus()){
 		if(args.key == OF_KEY_LEFT){
 			selectFrame(MAX(selectedFrame-1, 0));
 		}
 		else if(args.key == OF_KEY_RIGHT){
-			selectFrame(MIN(selectedFrame+1, videoThumbs.size()-1));		
+			selectFrame(MIN(selectedFrame+1, player->getTotalNumFrames()-1));		
 		}
 	}	
 }
@@ -387,7 +387,7 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 int ofxTLVideoTrack::selectFrame(int frame){
 //	selectedFrame = frame % videoThumbs.size();
 	selectedFrame = inFrame + (frame % (outFrame - inFrame));
-	lastFrame = selectedFrame;
+
 	currentLoop = frame / (outFrame-inFrame);
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);

@@ -292,6 +292,8 @@ void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
 void ofxTLTicker::mouseDragged(ofMouseEventArgs& args){
 	if(dragging){
 		updateTimelinePosition();
+        ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(events().playheadScrubbed, args);
 	}	
 }
 

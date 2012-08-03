@@ -136,6 +136,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
     
     keysAreDraggable = !ofGetModifierKeyShift();
+    keysDidDrag = false;
 
     bool didJustDeselect = false;
 	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
@@ -145,7 +146,8 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
     	    timeline->unselectAll();
-            //didJustDeselect = true; //debatable. settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
+            //debatable. settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
+            //didJustDeselect = true; 
         }
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
@@ -156,9 +158,8 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
             selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
             keyframes.push_back(selectedKeyframe);
             selectedKeyframe->grabOffset = ofVec2f(0,0);
-            timeline->flagTrackModified(this);
             updateKeyframeSort();
-            
+            keysDidDrag = true; //triggers a save after mouseup
             for(int i = 0; i < keyframes.size(); i++){
                 if(keyframes[i] == selectedKeyframe){
                     selectedKeyframeIndex = i;
@@ -181,7 +182,6 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
-        keysDidDrag = false;
         updateDragOffsets(screenpoint);				
 		if(selectedKeyframe != NULL && args.button == 0){
 			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);

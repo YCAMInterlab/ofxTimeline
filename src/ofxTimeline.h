@@ -66,7 +66,12 @@ class ofxTimeline {
 	~ofxTimeline();
 
 	virtual void setup();
-	
+    
+    //used mostly for generating unique XML
+    //for custom names, call setup() before calling name
+    virtual void setName(string name);
+    virtual string getName();
+	    
     bool toggleEnabled();
     virtual void enable();
 	virtual void disable();
@@ -78,7 +83,7 @@ class ofxTimeline {
     virtual void loadTracksFromFolder(string folderPath);
     
     //timing setup functions
-    void setFrameRate(int fps);    
+    void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
 	void setDurationInSeconds(float seconds);
     
@@ -336,7 +341,7 @@ class ofxTimeline {
     bool timelineHasFocus;
     
     ofxXmlSettings settings;
-	string filenamePrefix;
+	string name;
 	
 	ofRectangle totalDrawRect;
 	bool isEnabled; //allows for editing

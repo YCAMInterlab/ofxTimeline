@@ -64,7 +64,6 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
 	int selectedFrame;
 	int currentLoop;
 	bool thumbsEnabled;
-	int lastFrame;
 		
 	int inFrame;
 	int outFrame;

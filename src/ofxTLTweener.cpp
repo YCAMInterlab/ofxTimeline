@@ -100,7 +100,7 @@ void ofxTLTweener::draw(){
             ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
             timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
             if(keysAreDraggable){
-				ofDrawBitmapString(frameString+"|"+ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y+10);
+				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
             }
 			ofFill();
 		}
