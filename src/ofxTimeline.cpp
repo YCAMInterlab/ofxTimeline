@@ -173,8 +173,9 @@ bool ofxTimeline::toggleShow(){
 }
 
 void ofxTimeline::setShowTimeControls(bool shouldShowTimeControls){
-    showTicker = showInoutControl = showZoomer = shouldShowTimeControls;
-    recalculateBoundingRects();
+    setShowInoutControl(shouldShowTimeControls);
+    setShowZoomer(shouldShowTimeControls);
+    setShowTicker(shouldShowTimeControls);
 }
 
 void ofxTimeline::setShowTicker(bool shouldShowTicker){
@@ -189,6 +190,12 @@ void ofxTimeline::setShowInoutControl(bool shouldShowInoutControl){
 
 void ofxTimeline::setShowZoomer(bool shouldShowZoomer){
     showZoomer = shouldShowZoomer;
+    if(showZoomer){
+		zoomer->load();        
+    }
+    else{
+        zoomer->setViewRange(ofRange(0,1.0));
+    }
     recalculateBoundingRects();
 }
 
@@ -360,11 +367,11 @@ void ofxTimeline::setOutPointAtPlayhead(){
 }
 
 void ofxTimeline::setInPointAtPercent(float percent){
-	inoutRange.min = percent;
+	inoutRange.min = ofClamp(percent, 0, inoutRange.max);
 }
 
 void ofxTimeline::setOutPointAtPercent(float percent){
-	inoutRange.max = percent;
+	inoutRange.max = ofClamp(percent, inoutRange.min, 1.0);
 }
 
 void ofxTimeline::setInPointAtFrame(int frame){
@@ -831,6 +838,12 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
 //	else{
 //		currentTime = ofGetElapsedTimef() - playbackStartTime;
     
+    if(currentTime < durationInSeconds*inoutRange.min){
+        currentTime = durationInSeconds*inoutRange.min;
+        playbackStartTime = timer.getAppTime() - currentTime;
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);       
+    }
+    
     if(currentTime >= durationInSeconds*inoutRange.max){
         if(loopType == OF_LOOP_NONE){
             currentTime = durationInSeconds*inoutRange.max;
@@ -861,8 +874,10 @@ void ofxTimeline::draw(){
         
 		currentPage->draw();
 		if(showZoomer)zoomer->draw();
-		if(showTicker)ticker->draw();
-		if(showInoutControl)inoutTrack->draw();
+        
+		//draw these because they overlay the rest of the timeline with info
+        ticker->draw();
+		inoutTrack->draw();
         
 		glPopAttrib();
 		ofPopStyle();

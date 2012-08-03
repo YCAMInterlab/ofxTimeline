@@ -15,28 +15,31 @@ ofxTLInOut::ofxTLInOut()
 
 void ofxTLInOut::draw(){
     ofPushStyle();
-    ofSetLineWidth(3);
-    int inScreenX = normalizedXtoScreenX( timeline->getInOutRange().min );
-    int outScreenX = normalizedXtoScreenX( timeline->getInOutRange().max ); 
     
-    if(inScreenX > bounds.x && inScreenX < bounds.x+bounds.width){
-        if(hoveringIn){
-            ofSetColor(timeline->getColors().highlightColor);
+    if(bounds.height > 2){
+        ofSetLineWidth(3);
+        int inScreenX = normalizedXtoScreenX( timeline->getInOutRange().min );
+        int outScreenX = normalizedXtoScreenX( timeline->getInOutRange().max ); 
+        
+        if(inScreenX > bounds.x && inScreenX < bounds.x+bounds.width){
+            if(hoveringIn){
+                ofSetColor(timeline->getColors().highlightColor);
+            }
+            else{
+                ofSetColor(timeline->getColors().keyColor);
+            }
+            ofLine(inScreenX, bounds.y, inScreenX, bounds.y+bounds.height);
         }
-        else{
-	        ofSetColor(timeline->getColors().keyColor);
-        }
-        ofLine(inScreenX, bounds.y, inScreenX, bounds.y+bounds.height);
-    }
 
-    if(outScreenX > bounds.x && outScreenX < bounds.x+bounds.width){
-        if(hoveringIn){
-            ofSetColor(timeline->getColors().highlightColor);
+        if(outScreenX > bounds.x && outScreenX < bounds.x+bounds.width){
+            if(hoveringIn){
+                ofSetColor(timeline->getColors().highlightColor);
+            }
+            else{
+                ofSetColor(timeline->getColors().keyColor);
+            }
+            ofLine(outScreenX, bounds.y, outScreenX, bounds.y+bounds.height);
         }
-        else{
-	        ofSetColor(timeline->getColors().keyColor);
-        }
-        ofLine(outScreenX, bounds.y, outScreenX, bounds.y+bounds.height);
     }
     
     //draw inout over the whole thing

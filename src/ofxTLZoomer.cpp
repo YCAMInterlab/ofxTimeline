@@ -252,3 +252,11 @@ void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
 ofRange ofxTLZoomer::getViewRange() {
 	return currentViewRange;
 }
+
+ofRange ofxTLZoomer::setViewRange(ofRange newRange){
+	ofxTLZoomEventArgs zoomEvent;
+    zoomEvent.sender = timeline;    
+    zoomEvent.oldZoom = currentViewRange;
+	currentViewRange = zoomEvent.currentZoom = newRange;
+	ofNotifyEvent(events().zoomEnded, zoomEvent); 
+}

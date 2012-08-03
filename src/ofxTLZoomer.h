@@ -59,7 +59,8 @@ class ofxTLZoomer : public ofxTLTrack
 	bool isActive();
 	
 	ofRange getViewRange();
-	
+	ofRange setViewRange(ofRange newRange);
+    
   private:
 
 	void notifyZoomStarted();

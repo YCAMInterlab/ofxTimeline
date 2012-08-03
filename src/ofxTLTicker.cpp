@@ -80,8 +80,6 @@ void ofxTLTicker::draw(){
 			
 			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
 		}
-		
-		
 	}
 	//Time based
 	else {
@@ -91,34 +89,36 @@ void ofxTLTicker::draw(){
 		float durationInview = endTime-startTime;
 		float secondsPerPixel = durationInview / bounds.width;
 		
-		//draw ticker marks
-		ofSetLineWidth(1);
-		ofSetColor(200, 180, 40);
-		float heightMultiplier = .75;
-		for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
-			//float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
-			float x = screenXForTime(i);
-			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-		}
+        if(bounds.height > 2){
+            //draw ticker marks
+            ofSetLineWidth(1);
+            ofSetColor(200, 180, 40);
+            float heightMultiplier = .75;
+            for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
+                //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
+                float x = screenXForTime(i);
+                ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            }
 		
-		//draw regular increments
-		int bigTickStep;
-		if(durationInview < 1){ //draw big tick every 100 millis
-			bigTickStep = .1;
-		}
-		else if(durationInview < 60){ // draw big tick every second
-			bigTickStep = 1;
-		}
-		else {
-			bigTickStep = 60;
-		}
-		ofSetLineWidth(3);
-		heightMultiplier = .5;		
-		for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
-			float x = screenXForTime(i);
-			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-		}
-		
+            //draw regular increments
+            int bigTickStep;
+            if(durationInview < 1){ //draw big tick every 100 millis
+                bigTickStep = .1;
+            }
+            else if(durationInview < 60){ // draw big tick every second
+                bigTickStep = 1;
+            }
+            else {
+                bigTickStep = 60;
+            }
+            ofSetLineWidth(3);
+            heightMultiplier = .5;		
+            for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
+                float x = screenXForTime(i);
+                ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            }
+        }
+        
 		if(drawBPMGrid){
 			updateBPMPoints();
 			ofPushStyle();
@@ -143,13 +143,15 @@ void ofxTLTicker::draw(){
 			text = timeline->formatTime(timeForScreenX(ofGetMouseX()));
 		}
 		
-		textH = 10;
-		textW = (text.size()+1)*7;
-        int previewTimecodeX = ofClamp(ofGetMouseX()+5, bounds.x, bounds.x+bounds.width-textW-5);
-		ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
-		//draw playhead line
-		ofSetColor(timeline->getColors().textColor);
-		ofDrawBitmapString(text, previewTimecodeX, bounds.y+textH*2);
+        if(bounds.height > 2){
+            textH = 10;
+            textW = (text.size()+1)*7;
+            int previewTimecodeX = ofClamp(ofGetMouseX()+5, bounds.x, bounds.x+bounds.width-textW-5);
+            ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
+            //draw playhead line
+            ofSetColor(timeline->getColors().textColor);
+            ofDrawBitmapString(text, previewTimecodeX, bounds.y+textH*2);
+        }
 		
 		ofSetColor(timeline->getColors().highlightColor);
 		ofSetLineWidth(1);
@@ -157,34 +159,34 @@ void ofxTLTicker::draw(){
 	}
 	
 	//draw current frame
-	int currentFrameX;
-	if (timeline->getIsFrameBased()) {
-		text = ofToString(timeline->getCurrentFrame());
-		currentFrameX = screenXForIndex(timeline->getCurrentFrame());
-	}
-	else{
-		text = timeline->formatTime(timeline->getCurrentTime());
-		currentFrameX = screenXForTime(timeline->getCurrentTime());
-	}
-	
-	textH = 10;
-	textW = (text.size()+1)*7;
-	
+    //TIMECODE
+    int currentFrameX;
+    if (timeline->getIsFrameBased()) {
+        text = ofToString(timeline->getCurrentFrame());
+        currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+    }
+    else{
+        text = timeline->formatTime(timeline->getCurrentTime());
+        currentFrameX = screenXForTime(timeline->getCurrentTime());
+    }
+    
+    if(bounds.height > 2){
 
-    int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
-	ofSetColor(timeline->getColors().backgroundColor);
-	ofRect(timeCodeX-5, bounds.y, textW, textH);
-	ofSetColor(timeline->getColors().textColor);
-	ofDrawBitmapString(text, timeCodeX, bounds.y+textH);
+        textH = 10;
+        textW = (text.size()+1)*7;
+        int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
+        ofSetColor(timeline->getColors().backgroundColor);
+        ofRect(timeCodeX-5, bounds.y, textW, textH);
+        ofSetColor(timeline->getColors().textColor);
+        ofDrawBitmapString(text, timeCodeX, bounds.y+textH);
+    }
 	
-	
-	if(timeline->getIsPlaying()){
-		ofSetColor(timeline->getColors().keyColor);
-	}
-	else{
-		ofSetColor(timeline->getColors().outlineColor);
-	}
-	
+    if(timeline->getIsPlaying()){
+        ofSetColor(timeline->getColors().keyColor);
+    }
+    else{
+        ofSetColor(timeline->getColors().outlineColor);
+    }
 	//draw playhead line
 	ofSetLineWidth(1);
 	ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);
