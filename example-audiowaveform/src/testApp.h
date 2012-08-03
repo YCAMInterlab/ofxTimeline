@@ -21,11 +21,9 @@ class testApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
-	ofLight light;
-	ofColor currentColor;
-	
 	ofxTimeline timeline;
 	ofxTLAudioWaveform waveform;
-	
-	void receivedTrigger(ofxTLTriggerEventArgs& trigger);
+
+    float lastBang;
+	void bangFired(ofxTLBangEventArgs& bang);
 };

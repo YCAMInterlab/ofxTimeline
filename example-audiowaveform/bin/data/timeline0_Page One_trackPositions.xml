@@ -1,0 +1,14 @@
+<positions>
+    <element name="Track">
+        <x>0</x>
+        <y>39</y>
+        <width>1020</width>
+        <height>566</height>
+    </element>
+    <element name="clickbangs">
+        <x>0</x>
+        <y>621</y>
+        <width>1020</width>
+        <height>132</height>
+    </element>
+</positions>
