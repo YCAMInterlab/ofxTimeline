@@ -29,4 +29,4 @@ apps/*/*/obj
 */*/*.tags
 */bin/timelineExample
 
-example-videoplayer/bin/data/video_thumbs/
+example-videoRenderer/bin/data/renders/
