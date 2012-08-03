@@ -1,0 +1,17 @@
+<keyframes>
+    <key>
+        <flag>RED</flag>
+        <x>0.0859375</x>
+        <y>0.54</y>
+    </key>
+    <key>
+        <flag>BLUE</flag>
+        <x>0.533203</x>
+        <y>0.44</y>
+    </key>
+    <key>
+        <flag>GREEN</flag>
+        <x>0.851562</x>
+        <y>0.54</y>
+    </key>
+</keyframes>

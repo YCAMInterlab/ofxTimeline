@@ -732,19 +732,13 @@ void ofxTimeline::recalculateBoundingRects(){
 	}
     
     ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, TICKER_HEIGHT) );
-
     inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, INOUT_HEIGHT) );
-    
     updatePagePositions();
-
 	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, ZOOMER_HEIGHT));
-	
     inoutTrack->setPageRectangle(currentPage->getDrawRect());
-    
 	ofRectangle tickerRect = ofRectangle(offset.x, ticker->getDrawRect().y,
-											width, currentPage->getBottomEdge()-ticker->getDrawRect().y);
+                                        width, currentPage->getBottomEdge()-ticker->getDrawRect().y);
 	ticker->setTotalDrawRect(tickerRect);		
-	
 	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+ZOOMER_HEIGHT - offset.y);
 }
 
