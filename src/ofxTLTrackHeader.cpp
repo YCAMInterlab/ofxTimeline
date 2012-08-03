@@ -47,6 +47,7 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
 	track = newTrack;
+	nameField.disable();
 }
 
 ofxTLTrack* ofxTLTrackHeader::getTrack(){
@@ -62,7 +63,12 @@ void ofxTLTrackHeader::draw(){
 	
 	ofNoFill();
 	ofSetColor(track->getTimeline()->getColors().textColor);
-	ofDrawBitmapString( name, ofPoint(bounds.x + 30, bounds.y + 10) );
+	// TODO: set these somewhere else instead of setting it every frame here
+    nameField.bounds.x = bounds.x;
+    nameField.bounds.y = bounds.y +1;
+    // set name if it's empty and we're not editing
+    if(nameField.text == "" && nameField.isEnabled == false) nameField.text = name;
+    nameField.draw();
 	
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
 	ofRect(bounds);
@@ -82,6 +88,10 @@ void ofxTLTrackHeader::draw(){
 	}
 	
 	ofPopStyle();
+}
+
+string ofxTLTrackHeader::getDisplayName() {
+    return nameField.text;
 }
 
 void ofxTLTrackHeader::mousePressed(ofMouseEventArgs& args){

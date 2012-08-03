@@ -36,6 +36,7 @@
 
 #include "ofMain.h"
 #include "ofxTLTrack.h"
+#include "ofxTextInputField.h"
 
 #define FOOTER_HEIGHT 4
 
@@ -46,6 +47,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	~ofxTLTrackHeader();
 	
 	string name;	
+	string getDisplayName();
 	
 	virtual void draw();
 	
@@ -63,6 +65,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	
   protected:
 	ofxTLTrack* track;
+	ofxTextInputField nameField;
 	
 	void recalculateFooter();
 	

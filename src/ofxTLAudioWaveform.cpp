@@ -208,4 +208,16 @@ void ofxTLAudioWaveform::togglePlay(){
 		play();
 	}
 }
+
+bool ofxTLAudioWaveform::getIsPlaying() {
+    return player.getIsPlaying();
+}
+
+void ofxTLAudioWaveform::setSpeed(float speed) {
+    player.setSpeed(speed);
+}
+
+float ofxTLAudioWaveform::getSpeed() {
+    return player.getSpeed();
+}
    
