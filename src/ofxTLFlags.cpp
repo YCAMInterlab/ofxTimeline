@@ -104,12 +104,12 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
     //selection model is designed so that you can type into
     //mulitple fields at once
     if(clickedTextField != NULL){
-        clickedTextField->textField.enable();
-        enteringText = true;
         timeline->presentedModalContent(this);
-        if(!ofGetModifierKeyShift() && !isKeyframeSelected(clickedTextField)){
+        if(!ofGetModifierKeyShift() /*&& !isKeyframeSelected(clickedTextField)*/){
             timeline->unselectAll();
         }
+        clickedTextField->textField.enable();
+        enteringText = true;
         //make sure this 
         selectKeyframe(clickedTextField);
         return;

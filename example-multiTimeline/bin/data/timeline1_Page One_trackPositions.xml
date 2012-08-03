@@ -1,0 +1,14 @@
+<positions>
+    <element name="0">
+        <x>0</x>
+        <y>255</y>
+        <width>512</width>
+        <height>30</height>
+    </element>
+    <element name="timeline_0">
+        <x>0</x>
+        <y>255</y>
+        <width>512</width>
+        <height>30</height>
+    </element>
+</positions>
