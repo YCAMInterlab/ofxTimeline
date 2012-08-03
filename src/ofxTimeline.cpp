@@ -35,7 +35,6 @@
 #include "ofxTimeline.h"
 #include "ofxTLUtils.h"
 
-
 //increments to keep auto generated names unique
 static int timelineNumber = 0;
 
@@ -53,13 +52,18 @@ ofxTimeline::ofxTimeline()
 	autosave(true),
 	isFrameBased(false),
 	timelineHasFocus(false),
+	showTicker(true), 
+	showInoutControl(true),
+	showZoomer(true),
 	durationInSeconds(100.0f/30.0f),
 	isShowing(true),
-//	name("timeline_" + ofToString(timelineNumber++)),
 	isSetup(false),
 	usingEvents(false),
 	isPlaying(false),
+	isEnabled(false),
+	dragAnchorSet(false),
 	snappingEnabled(false),
+	globalDragAnchor(0),
 	movePlayheadOnPaste(true),
 	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
@@ -77,6 +81,9 @@ ofxTimeline::~ofxTimeline(){
 		ofRemoveListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
+        //TODO: move to shared pointers 
+        //this breaks timelines that are statically declared because 
+        //there is no copy/assignment constructor
 		for(int i = 0; i < pages.size(); i++){ 
 			delete pages[i];
 		}
@@ -163,6 +170,26 @@ void ofxTimeline::hide(){
 bool ofxTimeline::toggleShow(){
 	isShowing = !isShowing;
 	return isShowing;
+}
+
+void ofxTimeline::setShowTimeControls(bool shouldShowTimeControls){
+    showTicker = showInoutControl = showZoomer = shouldShowTimeControls;
+    recalculateBoundingRects();
+}
+
+void ofxTimeline::setShowTicker(bool shouldShowTicker){
+    showTicker = shouldShowTicker;
+    recalculateBoundingRects();
+}
+
+void ofxTimeline::setShowInoutControl(bool shouldShowInoutControl){
+    showInoutControl = shouldShowInoutControl;
+    recalculateBoundingRects();
+}
+
+void ofxTimeline::setShowZoomer(bool shouldShowZoomer){
+    showZoomer = shouldShowZoomer;
+    recalculateBoundingRects();
 }
 
 ofxTLColors& ofxTimeline::getColors(){
@@ -731,15 +758,15 @@ void ofxTimeline::recalculateBoundingRects(){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
     
-    ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, TICKER_HEIGHT) );
-    inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, INOUT_HEIGHT) );
+    ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
+    inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
     updatePagePositions();
-	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, ZOOMER_HEIGHT));
+	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, showZoomer ? ZOOMER_HEIGHT : 0));
     inoutTrack->setPageRectangle(currentPage->getDrawRect());
 	ofRectangle tickerRect = ofRectangle(offset.x, ticker->getDrawRect().y,
                                         width, currentPage->getBottomEdge()-ticker->getDrawRect().y);
 	ticker->setTotalDrawRect(tickerRect);		
-	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+ZOOMER_HEIGHT - offset.y);
+	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+zoomer->getDrawRect().height - offset.y);
 }
 
 
@@ -825,9 +852,9 @@ void ofxTimeline::draw(){
 		}
         
 		currentPage->draw();
-		zoomer->draw();
-		ticker->draw();
-		inoutTrack->draw();
+		if(showZoomer)zoomer->draw();
+		if(showTicker)ticker->draw();
+		if(showInoutControl)inoutTrack->draw();
         
 		glPopAttrib();
 		ofPopStyle();

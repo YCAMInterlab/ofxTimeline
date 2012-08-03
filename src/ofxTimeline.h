@@ -103,11 +103,18 @@ class ofxTimeline {
 	virtual void show();
 	virtual void hide();
 	virtual bool toggleShow();
-	virtual void save();
+    
+    //show/hide ticker,zoomer,inout all at once
+    virtual void setShowTimeControls(bool shouldShowTimeControls);
+    
+    virtual void setShowTicker(bool shouldShowTicker);
+    virtual void setShowInoutControl(bool shouldShowInoutControl);
+    virtual void setShowZoomer(bool shouldShowZoomer);
     
     //autosave will always write to XML file on each major change 
     //otherwise call save manually to write the files
     void setAutosave(bool autosave);
+	virtual void save();
 
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTime(float time);
@@ -116,7 +123,6 @@ class ofxTimeline {
 	virtual int getCurrentFrame();
 	virtual float getCurrentTime();
 	virtual float getPercentComplete();
-
 
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
@@ -339,6 +345,10 @@ class ofxTimeline {
 	ofRange inoutRange;
 	
     bool timelineHasFocus;
+    
+    bool showTicker; 
+    bool showInoutControl; 
+    bool showZoomer;
     
     ofxXmlSettings settings;
 	string name;
