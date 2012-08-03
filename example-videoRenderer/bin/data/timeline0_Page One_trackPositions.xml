@@ -1,0 +1,32 @@
+<positions>
+    <element name="Video">
+        <x>0</x>
+        <y>39</y>
+        <width>1024</width>
+        <height>30</height>
+    </element>
+    <element name="brightness">
+        <x>0</x>
+        <y>85</y>
+        <width>1024</width>
+        <height>67</height>
+    </element>
+    <element name="contrast">
+        <x>0</x>
+        <y>168</y>
+        <width>1024</width>
+        <height>61</height>
+    </element>
+    <element name="invert">
+        <x>0</x>
+        <y>327</y>
+        <width>1024</width>
+        <height>29</height>
+    </element>
+    <element name="saturation">
+        <x>0</x>
+        <y>245</y>
+        <width>1024</width>
+        <height>66</height>
+    </element>
+</positions>
