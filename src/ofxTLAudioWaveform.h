@@ -43,6 +43,10 @@ class ofxTLAudioWaveform : public ofxTLTrack
 	
 	virtual void boundsChanged(ofEventArgs& args);
 	
+	virtual void setSpeed(float speed);
+    virtual float getSpeed();
+    virtual bool getIsPlaying();
+	
   protected:	
     
 	bool shouldRecomputePreview;
