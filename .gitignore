@@ -30,3 +30,4 @@ apps/*/*/obj
 */bin/timelineExample
 
 example-videoRenderer/bin/data/renders/
+oldExamples/
