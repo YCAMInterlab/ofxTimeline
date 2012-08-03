@@ -178,7 +178,9 @@ class ofxTimeline {
 	void toggleSnapping();
 	
 	//setting a BPM allows for a global measure across the timeline
-	//this is useful for snapping to intervals 
+	//this is useful for snapping to intervals
+	void setBPM(float bpm);
+	float getBPM();
 	void enableSnapToBPM(float bpm); //beats per minute
 	void toggleDrawBPMGrid();
 	void enableDrawBPMGrid(bool enableGrid);

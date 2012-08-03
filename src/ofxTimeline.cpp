@@ -548,6 +548,14 @@ void ofxTimeline::updatePagePositions(){
 	}
 }
 
+void ofxTimeline::setBPM(float bpm) {
+    ticker->setBPM(bpm);
+}
+
+float ofxTimeline::getBPM() {
+	return ticker->getBPM();
+}
+
 void ofxTimeline::setSnapping(bool snapping){
 	snappingEnabled = snapping;
 	for(int i = 0; i < pages.size(); i++){

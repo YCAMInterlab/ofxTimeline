@@ -201,6 +201,10 @@ void ofxTLTicker::setBPM(float newBpm){
 	hasBPM = true;
 }
 
+float ofxTLTicker::getBPM(){
+	return bpm;
+}
+
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
