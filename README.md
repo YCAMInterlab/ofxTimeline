@@ -23,6 +23,7 @@ ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTL
 ## Switches ##
 ## VideoTrack ##
 ## AudioTrack ##
+![AudioTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/AudioTrack.png)
 
 # Designing custom Tracks 
 
