@@ -59,6 +59,7 @@ class ofxTLTicker : public ofxTLTrack
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 
+	virtual float getBPM();
 	virtual void setBPM(float bpm);
 	virtual void getSnappingPoints(vector<float>& points);
 	virtual bool getDrawBPMGrid();
