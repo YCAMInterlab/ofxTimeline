@@ -49,6 +49,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	string name;	
 	string getDisplayName();
 	
+	virtual void setup();
 	virtual void draw();
 	
 	virtual void mousePressed(ofMouseEventArgs& args);

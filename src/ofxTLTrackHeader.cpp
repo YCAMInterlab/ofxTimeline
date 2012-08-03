@@ -47,11 +47,16 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
 	track = newTrack;
-	nameField.disable();
+//	nameField.disable();
 }
 
 ofxTLTrack* ofxTLTrackHeader::getTrack(){
 	return track;    
+}
+
+void ofxTLTrackHeader::setup(){
+    //don't call superconstrutor -- no need to load or enable
+	nameField.setup();    
 }
 
 void ofxTLTrackHeader::draw(){
@@ -62,12 +67,14 @@ void ofxTLTrackHeader::draw(){
 	ofPushStyle();
 	
 	ofNoFill();
-	ofSetColor(track->getTimeline()->getColors().textColor);
+	ofSetColor(getTimeline()->getColors().textColor);
 	// TODO: set these somewhere else instead of setting it every frame here
     nameField.bounds.x = bounds.x;
-    nameField.bounds.y = bounds.y +1;
+    nameField.bounds.y = bounds.y;
     // set name if it's empty and we're not editing
-    if(nameField.text == "" && nameField.isEnabled == false) nameField.text = name;
+    if(nameField.text == "" && !nameField.getIsEnabled()){
+    	nameField.text = name;   
+    }
     nameField.draw();
 	
 	ofSetColor(track->getTimeline()->getColors().outlineColor);

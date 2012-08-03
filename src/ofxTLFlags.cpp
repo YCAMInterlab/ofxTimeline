@@ -66,13 +66,15 @@ void ofxTLFlags::draw(){
 		ofRect(key->display);
         
 		ofSetColor(timeline->getColors().textColor);		
-		if(enteringText && isKeyframeSelected(key)){
-			key->textField.draw(screenX, textHeight-10); //-10 accounts for textfield's offset
-		}
-		else {
-			string timeString = timeline->formatTime(key->position.x);
-			ofDrawBitmapString(key->textField.text, screenX+5, textHeight);
-		}
+//		if(enteringText && isKeyframeSelected(key)){
+            key->textField.bounds.x = screenX;
+            key->textField.bounds.y = key->display.y;//-10 accounts for textfield's offset
+			key->textField.draw(); 
+//		}
+//		else {
+//			string timeString = timeline->formatTime(key->position.x);
+//			ofDrawBitmapString(key->textField.text, screenX+5, textHeight);
+//		}
 	}
 	ofPopStyle();
 }
@@ -86,6 +88,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
         return;
     }
         
+    
     ofxTLFlag* clickedTextField = NULL;    
     //look at each element to see if a text field was clicked
     for(int i = 0; i < keyframes.size(); i++){
@@ -101,6 +104,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
     //selection model is designed so that you can type into
     //mulitple fields at once
     if(clickedTextField != NULL){
+        clickedTextField->textField.enable();
         enteringText = true;
         timeline->presentedModalContent(this);
         if(!ofGetModifierKeyShift() && !isKeyframeSelected(clickedTextField)){
@@ -119,6 +123,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
         return;
     }
     
+    
     //if we get all the way here we didn't click on a text field and we aren't
     //currently entering text so proceed as normal
     ofxTLBangs::mousePressed(args);
@@ -134,18 +139,19 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
 	
 	if(enteringText){
         //enter key submits the values
+        //This could be done be responding to the event from the text field itself...
         if(args.key == OF_KEY_RETURN){
             enteringText = false;
             timeline->dismissedModalContent();
             timeline->flagTrackModified(this);
         }
         //otherwise pipe the keypress into all the selected textfields
-        else {
-	        for(int i = 0; i < selectedKeyframes.size(); i++){
-                ofxTLFlag* key = (ofxTLFlag*)selectedKeyframes[i];
-				key->textField.keyPressed(args);
-            }
-        }
+//        else {
+//	        for(int i = 0; i < selectedKeyframes.size(); i++){
+//                ofxTLFlag* key = (ofxTLFlag*)selectedKeyframes[i];
+//				key->textField.keyPressed(args);
+//            }
+//        }
     }
     //normal behavior for nudging and deleting and stuff
 	else{
@@ -157,6 +163,13 @@ ofxTLKeyframe* ofxTLFlags::newKeyframe(ofVec2f point){
 	ofxTLFlag* key = new ofxTLFlag();
     key->position = point;
 	return key;
+}
+
+void ofxTLFlags::unselectAll(){
+	for(int i = 0; i < selectedKeyframes.size(); i++){
+        ((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
+    }
+    ofxTLKeyframer::unselectAll();
 }
 
 void ofxTLFlags::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){

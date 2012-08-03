@@ -123,8 +123,6 @@ void ofxTimeline::setup(){
 	zoomer->setTimeline(this);
 	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
 	
-    setName("timeline" + ofToString(timelineNumber++));
-    
 	colors.load();
 
 	enable();
@@ -134,6 +132,9 @@ void ofxTimeline::setup(){
 
     //You can change this name by calling setPageName()
 	addPage("Page One", true);
+    
+    setName("timeline" + ofToString(timelineNumber++));
+
 }
 
 void ofxTimeline::setName(string newName){
@@ -145,6 +146,8 @@ void ofxTimeline::setName(string newName){
         
         zoomer->setXMLFileName(name + "_zoomer.xml");
         zoomer->setup();
+        
+        currentPage->loadTrackPositions();
     }
 }
 
@@ -876,8 +879,8 @@ void ofxTimeline::draw(){
 		if(showZoomer)zoomer->draw();
         
 		//draw these because they overlay the rest of the timeline with info
-        ticker->draw();
-		inoutTrack->draw();
+        ticker->_draw();
+		inoutTrack->_draw();
         
 		glPopAttrib();
 		ofPopStyle();

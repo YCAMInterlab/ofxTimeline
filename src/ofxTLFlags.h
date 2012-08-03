@@ -57,7 +57,8 @@ class ofxTLFlags : public ofxTLBangs {
     virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
 
 	virtual void keyPressed(ofKeyEventArgs& args);
-	
+	virtual void unselectAll();
+    
 protected:
     
     virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
