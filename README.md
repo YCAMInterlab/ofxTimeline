@@ -5,6 +5,7 @@ Thanks!
 
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
+Cover of the timeline sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
 
 ofxTimeline is a simple to use openFrameworks addon for graphically editing values over time.
 
@@ -119,9 +120,9 @@ ofxTimeline was developed as part of the  [Guest Research Projector v.2 at YCAM 
 ![Additional Support](http://www.jamesgeorge.org/images/ofxtimeline/github/SupportedBy.png)
 
 [Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for (BlueBeams) 
-[The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the RGBDToolkit project
+
+[The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the [RGBDToolkit](http://www.rgbdtoolkit.com) project
+
 [Eyebeam](http://http://eyebeam.org/)
 
 Also a huge thank you to [Creative Applications](creativeapplications.net) for [publishing the initial experiment](http://www.creativeapplications.net/openframeworks/ofxtimeline-openframeworks/) which brought a lot of interested people together to get this to where it is now.
-
-Cover of the timeline sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
