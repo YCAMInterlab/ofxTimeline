@@ -137,13 +137,9 @@ A bang is a simple time marker that sends an event when the playhead passes it. 
 
 MyClass.h
 
-    class MyClass {
-    
       ofxTimeline timeline;
       void receivedBang(ofxTLBangEventArgs& bang);
       
-    };
-
 MyClass.cpp
 
     //--------------------------------------------------------------
@@ -159,7 +155,9 @@ MyClass.cpp
         particleGenerator.start(); //some example response
       }
     }
+    
 .
+
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Tweens ###
@@ -180,7 +178,9 @@ Flags are like Bangs but allow the user to enter text on each flag. The value ca
     void MyClass::receivedBang(ofxTLBangEventArgs& bang){      
       ofLogNotice("Bang fired from track " + bang.flag);
     }   
+
 .
+
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTLFlags
 
 ### Switches ###
@@ -212,12 +212,12 @@ The timeline's duration must match the video's duration.
 
 AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
 
-To add an AudioTrack 
+To add an AudioTrack to your project, add the declaration to your .h file
 
     ofxTimeline timeline;
     ofxTLAudioWaveform waveform;
 
-In your .cpp file
+And n your .cpp file add the track and load a file
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
@@ -230,30 +230,35 @@ In your .cpp file
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
         if(key == ' '){
-    		//timeline.togglePlay();
+            //calling play on the waveform controls the timeline playback
     		waveform.togglePlay();
     	}
+    }
 
 The timeline's duration must match the audio's duration.
 
     ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
 
-External Custom Tracks
+## 3rd Party Custom Tracks ##
+
+ofxTimeline can be integrated with other addons or time based media, below are examples of just a few
+
 ### CameraTrack ###
 
-ofxTLTrack -> ofxTLBangs -> ofxTLCameraTrack
+https://github.com/obviousjim/ofxCameraTrack
 
 ### DepthImageSequence ###
 
+https://github.com/obviousjim/ofxRGBDepth // [RGBDToolkit](http://wwww.rgbdtoolkit.com)
+
 ### MidiTrack ###
 
+https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNot](https://vimeo.com/46793363)
 
 ## Designing custom Tracks ##
 
-The track system is designed to be extensible. 
-
-
+The track system is designed to be extensible. Template and tutorial on different patterns for extending forthcoming.
 
 ## Supported By ##
 
