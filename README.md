@@ -1,5 +1,5 @@
 # WORK IN PROGRESS - DO NOT PUBLICIZE #
-This project is part of a 3 month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way here to share and contribute ideas. I hope that after the residency I can publish a developed theory and practice together. For the moment however it's important that this project stay under the radar as the ideas are still in formation.
+This project is part of a three month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way here to share and contribute ideas. I hope that after the residency I can publish a developed theory and practice together. For the moment however it's important that this project stay under the radar as the ideas are still in formation.
 
 Thanks! 
 
@@ -36,19 +36,19 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 - Easy to implement your own tracks
 - A growing eco system of community developed track and extensions
 
-## Markdown plus h2 with a custom ID ##         {#id-goes-here}
+
 ## Examples ##
 
-### Simple Tweener ### {#example-simple}
+### Simple Tweener
 Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
 
-### Audio Waveform ### {#example-audio}
+### Audio Waveform
 Audio Waveform shows how to add an audio track to a project.
 
-### Video Renderer ### {#example-video}
+### Video Renderer
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
 
-### Multi-timeline (experimental) {exmaple-multitimeline}
+### Multi-timeline (experimental)
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 
 ## Using ofxTimeline in your project ##
