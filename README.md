@@ -38,13 +38,13 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 
 ## Examples ##
 
-### Simple Tweener {example-simple}
+### Simple Tweener ### {#example-simple}
 Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
 
-### Audio Waveform {example-audio}
+### Audio Waveform ### {#example-audio}
 Audio Waveform shows how to add an audio track to a project.
 
-### Video Renderer {example-video}
+### Video Renderer ### {example-video}
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
 
 ### Multi-timeline (experimental) {exmaple-multitimeline}
@@ -54,12 +54,13 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 ofxTimeline requires a few different add ons
 
 ## Track Types ##
-
 ofxTimeline has several built in track types for doing standard timeline tasks. 
 
 ### Bangs ###
 ![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
 A bang is a simple time marker that sends an event when the playhead passes it.
+
+Example use:
 
 
 ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
@@ -119,10 +120,10 @@ ofxTimeline was developed as part of the  [Guest Research Projector v.2 at YCAM 
 
 ![Additional Support](http://www.jamesgeorge.org/images/ofxtimeline/github/SupportedBy.png)
 
-[Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for (BlueBeams) 
+[Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for [BlueBeams](https://vimeo.com/35931265) .
 
-[The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the [RGBDToolkit](http://www.rgbdtoolkit.com) project
+[The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the [RGBDToolkit](http://www.rgbdtoolkit.com) project.
 
-[Eyebeam](http://http://eyebeam.org/)
+[Eyebeam](http://http://eyebeam.org/) Who's community has prompted many of the thoughts provoking the development of ofxTimeline during my residency in Spring 2012.
 
 Also a huge thank you to [Creative Applications](creativeapplications.net) for [publishing the initial experiment](http://www.creativeapplications.net/openframeworks/ofxtimeline-openframeworks/) which brought a lot of interested people together to get this to where it is now.
