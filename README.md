@@ -1,19 +1,24 @@
+# WORK IN PROGRESS - DO NOT PUBLICIZE #
+This project is part of a 3 month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way to this site to share and contribute ideas. I hope that after three months we can publish the theory and practice together. For the moment however it's important that this project say a bit under the radar as the ideas are still in formation.
+
+Thanks! 
+
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 
 ofxTimeline is a simple to use openFrameworks addon for graphically editing values over time.
 
-It's is a lot like other openFrameworks GUIs: connecting parameters in an app to an editable graphical interface. ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific durations. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls in openFrameworks with just a few lines of code.
+It's is a lot like other openFrameworks GUIs that connect your code parameters to an editable graphical interface. However ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific moments. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls with just a few lines of code.
 
 ## General tools for specific projects ##
 
 ofxTimeline is an inquiry into how reusable components for building intuitive applications can change the way we create. 
 
-Interface based applications for creative media are most commonly expensive big box applications like After Effects or Cinema4d, which deny creative reinterpretation or modification by their users. Open source alternatives are dependent on tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting efficient reusable tools from these applications. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
+Interface based applications for creative media are most commonly expensive big box applications like After Effects or Cinema4d, which deny creative reinterpretation or modification by their users. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
 
-If an ecosystem of components for building small and intuitive media applications were to exist, what new processes could we expose? What collaborations between creative coders and other designers and artists emerge? 
+If an ecosystem of components for building small and intuitive media applications were to exist, what new processes could we invent? What collaborations between creative coders and other designers and artists would emerge? 
 
-ofxTimeline and is the product of the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org). 
+ofxTimeline is the product of the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org). 
 
 Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
 
