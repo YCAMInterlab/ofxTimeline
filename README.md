@@ -56,10 +56,10 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 
 ### Clone ofxTimeline and Dependencies 
 to download the timeline open up the terminal and type
-  $cd of_0071_osx_release/addons
-  $git clone https://github.com/YCAMInterlab/ofxTimeline.git
-  $cd ofxTimeline/
-  $./clone_addons.sh
+    $cd of_0071_osx_release/addons
+    $git clone https://github.com/YCAMInterlab/ofxTimeline.git
+    $cd ofxTimeline/
+    $./clone_addons.sh
 
 This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
 
@@ -77,11 +77,12 @@ in your testApp.h file add:
     #include "ofxTimeline.h" //add timeline include
 
     class testApp : public ofBaseApp{
-     public:
+    public:
       ofxTimeline timeline; //inside of the class add a timeline
 
 in your setup fon testApp.cpp file set up the timeline
 
+    //--------------------------------------------------------------
     void testApp::setup(){
       
       timeline.setup(); //registers events
@@ -93,7 +94,9 @@ in your setup fon testApp.cpp file set up the timeline
   
 in your draw or update function, read the value
   
+    //--------------------------------------------------------------
     void testApp::draw(){
+      //the value of changingRadius will be different depending on the timeline
       float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
@@ -101,6 +104,18 @@ in your draw or update function, read the value
       timeline.draw();
     }
     
+It's a good convention to put in hotkeys for play and show hide in keyPressed
+
+    //--------------------------------------------------------------
+    void testApp::keyPressed(int key){
+      if(key == ' '){
+        timeline.togglePlay();
+      }
+      if(key == 'h'){
+        timeline.toggleShow();
+      }
+    }
+
 ## Track Types
 ofxTimeline has several built in track types for doing standard timeline tasks. 
 
@@ -112,15 +127,23 @@ A bang is a simple time marker that sends an event when the playhead passes it.
 To use a bang track you need a class that listens to bang events, like so:
 
 MyClass.h
-    ofxTimeline timeline;
-    void receivedBang(ofxTLBangEventArgs& bang);
+
+    class MyClass {
+    
+      ofxTimeline timeline;
+      void receivedBang(ofxTLBangEventArgs& bang);
+      
+    };
 
 MyClass.cpp
+
+    //--------------------------------------------------------------
     void MyClass::setup(){
       timeline.addBangs("trigger particles");
       ofAddListener(timeline.events().bangFired, this, &testApp::receivedBang);
     }
     
+    //--------------------------------------------------------------
     void MyClass::receivedBang(ofxTLBangEventArgs& bang){
       ofLogNotice("Bang fired from track " + bang->track.getName());
       if(bang->track.getName() == "trigger particles"){
@@ -128,14 +151,17 @@ MyClass.cpp
       }
     }
 
-Inheritance: 
-ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
+Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Tweens ###
 ![Tweens](http://www.jamesgeorge.org/images/ofxtimeline/github/TweenTrack.png)
 
+Tweens change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
 
-ofxTLTrack -> ofxTLKeyframes -> ofxTLTweens
+Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in ofxTween (
+
+
+Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLTweens
 
 ### Flags ###
 ![Flags](http://www.jamesgeorge.org/images/ofxtimeline/github/FlagTrack.png)
