@@ -52,9 +52,21 @@ Video Renderer shows how to build a simple video effects app using the timeline 
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 
 
-## Using ofxTimeline in your project
+## Controls ##
 
-### Clone ofxTimeline and Dependencies 
+
+### Editing ###
+
+### Zooming ###
+
+### Selecting elements ###
+
+### Resizing ###
+
+
+## Including ofxTimeline in your openFrameworks project
+
+### Clone ofxTimeline and dependencies 
 to download the timeline open up the terminal and type
     $cd of_0071_osx_release/addons
     $git clone https://github.com/YCAMInterlab/ofxTimeline.git
@@ -67,7 +79,6 @@ This will download the necessary addons, but won't overwrite any changes if you 
 In Xcode open up the project you'd like to include the timeline. Drag and drop the ofxTimeline folder in from the finder into Xcode navigator under addons/
 
 If you plan on using the Audiowaveform see additional instructions. Otherwise you can remove the examples-*/, and libs/ folder, as well as removeing the referenc to the ofxTLAudioTrack source files
-
 
 ### Add a timeline to your code
 
@@ -122,9 +133,7 @@ ofxTimeline has several built in track types for doing standard timeline tasks.
 ### Bangs
 ![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
 
-A bang is a simple time marker that sends an event when the playhead passes it.
-
-To use a bang track you need a class that listens to bang events, like so:
+A bang is a simple time marker that sends an event when the playhead passes it. To use a bang track you need a class that listens to bang events, like so:
 
 MyClass.h
 
@@ -146,45 +155,89 @@ MyClass.cpp
     //--------------------------------------------------------------
     void MyClass::receivedBang(ofxTLBangEventArgs& bang){
       ofLogNotice("Bang fired from track " + bang->track.getName());
-      if(bang->track.getName() == "trigger particles"){
+      if(bang.track->getName() == "trigger particles"){
         particleGenerator.start(); //some example response
       }
     }
-
-Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
+.
+    Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Tweens ###
 ![Tweens](http://www.jamesgeorge.org/images/ofxtimeline/github/TweenTrack.png)
 
 Tweens change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
 
-Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in ofxTween (
+Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in [ofxTween](https://github.com/arturoc/ofxTween)
 
-
-Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLTweens
+    Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLTweens
 
 ### Flags ###
 ![Flags](http://www.jamesgeorge.org/images/ofxtimeline/github/FlagTrack.png)
 
-Inheritance  hierarchy:
-ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTLFlags
+Flags are like Bangs but allow the user to enter text on each flag. The value can be read in the event
+
+    //--------------------------------------------------------------
+    void MyClass::receivedBang(ofxTLBangEventArgs& bang){      
+      ofLogNotice("Bang fired from track " + bang.flag);
+    }   
+.
+    Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTLFlags
 
 ### Switches ###
 ![Switches](http://www.jamesgeorge.org/images/ofxtimeline/github/SwitchTrack.png)
 
-ofxTLTrack -> ofxTLBangs -> ofxTLSwitches
+Switches provide a simple control to turn regions of the timeline on and off.
+
+    Inheritance: ofxTLTrack -> ofxTLBangs -> ofxTLSwitches
 
 ### VideoTrack ###
 ![VideoTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/VideoTrack.png)
 
-ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
-ofxTLVideoTrack can control time
+VideoTracks let a user interactively scrub through a video and sequence effects in time with the playback. When a video track is added the video playback will control the playback of the entire timeline. 
+
+        ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
+        if(videoTrack != NULL){ //in the case the video load failed check against null
+            timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+            timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+            timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
+        }
+
+The timeline's duration must match the video's duration.
+
+    ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+
 
 ### AudioTrack ###
 ![AudioTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/AudioTrack.png)
 
-ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
-AudioTrack can control time
+AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
+
+To add an AudioTrack 
+
+    ofxTimeline timeline;
+    ofxTLAudioWaveform waveform;
+
+In your .cpp file
+
+    //--------------------------------------------------------------
+    void testApp::keyPressed(int key){
+        //... setup stuff
+        timeline.addTrack("Track", &waveform);
+        waveform.loadSoundfile("myAudioFile.wav");
+        timeline.setDurationInSeconds(waveform.getDuration());
+    }
+
+    //--------------------------------------------------------------
+    void testApp::keyPressed(int key){
+        if(key == ' '){
+    		//timeline.togglePlay();
+    		waveform.togglePlay();
+    	}
+
+The timeline's duration must match the audio's duration.
+
+    ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+
 
 External Custom Tracks
 ### CameraTrack ###
