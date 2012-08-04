@@ -3,9 +3,11 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	ofSetFrameRate(60);
-	ofSetVerticalSync(true);
+//	ofSetFrameRate(60);
+//	ofSetVerticalSync(true);
 	ofSetEscapeQuitsApp(false);
+    
+	ofSetLogLevel(OF_LOG_VERBOSE);
     
 	timeline.setup();
     timeline.setFrameRate(24);
@@ -36,18 +38,27 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+	
+    ofBackground(.15*255);
+    ofDrawBitmapString(ofToString(ofGetFrameRate(), 3), ofGetWidth()-100, ofGetHeight()-50);
     
-	ofBackground(.15*255);
-	timeline.draw(); 
+    timeline.draw(); 
+
     sublines[0]->setOffset(timeline.getBottomLeft());
-    for(int i = 0; i < sublines.size(); i++){
+    
+//    return;
+	
+	
+
+    for(int i = 0; i < MAX(sublines.size()-mouseX/1000, 0); i++){
+        
         if(i != 0){
             sublines[i]->setOffset(sublines[i-1]->getBottomLeft());
         }
         sublines[i]->draw();
     }
     
-    ofDrawBitmapString(ofToString(ofGetFrameRate(), 3), ofGetWidth()-100, ofGetHeight()-50);
+
 }
 
 //--------------------------------------------------------------
@@ -55,6 +66,12 @@ void testApp::keyPressed(int key){
     if(timeline.isModal()){
         return;
     }
+    
+    if(key == 'h'){
+        for(int i = 0; i < sublines.size(); i++){
+            sublines[i]->toggleShow();
+        }            
+    }    
     
 	if(key ==  ' '){
         timeline.togglePlay();      

@@ -90,6 +90,7 @@ void ofxTLTrackHeader::draw(){
 	else{
 		ofSetColor(track->getTimeline()->getColors().disabledColor);
 	}
+    
 	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
 		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
 	}

@@ -68,6 +68,7 @@ void ofxTLTweener::draw(){
 	ofEnableSmoothing();
 
 	// DRAW KEYFRAME LINES
+
 	ofSetColor(timeline->getColors().highlightColor);
 	ofNoFill();
 	ofBeginShape();

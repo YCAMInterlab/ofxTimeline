@@ -218,7 +218,7 @@ void ofxTLVideoTrack::threadedFunction(){
 }
 
 bool ofxTLVideoTrack::load(string moviePath){
-
+    
     ofPtr<ofVideoPlayer> newPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());    
     if(newPlayer->loadMovie(moviePath)){
         setPlayer( newPlayer );

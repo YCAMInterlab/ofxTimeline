@@ -6,7 +6,7 @@ void testApp::setup(){
 	
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
-	
+	ofSetEscapeQuitsApp(false);
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);

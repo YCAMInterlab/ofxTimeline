@@ -496,12 +496,12 @@ void ofxTimeline::setAutosave(bool doAutosave){
 }
 
 void ofxTimeline::setOffset(ofVec2f newOffset){
-	offset = newOffset;
-	updatePagePositions();
-	//recalculateBoundingRects();
-	ofEventArgs args;
-	ofNotifyEvent(timelineEvents.viewWasResized, args);
-
+    if(offset != newOffset){
+        offset = newOffset;
+        updatePagePositions();
+        ofEventArgs args;
+        ofNotifyEvent(timelineEvents.viewWasResized, args);
+    }
 }
 
 void ofxTimeline::setLockWidthToWindow(bool lockWidth){
@@ -823,23 +823,6 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
     else {
         currentTime = timer.getAppTime() - playbackStartTime;
     }
-//		currentFrame = ofGetFrameNum() - playbackStartFr	ame;
-//		if(currentFrame >= durationInFrames*inoutRange.max){
-//			if(loopType == OF_LOOP_NONE){
-//				currentFrame = durationInFrames*inoutRange.max;
-//				stop();
-//			}
-//			else if(loopType == OF_LOOP_NORMAL && durationInFrames > 0) {
-//				playbackStartFrame += getDurationInFrames() * inoutRange.span();
-//				currentFrame %= int(durationInFrames * inoutRange.span());
-//				currentFrame += durationInFrames*inoutRange.min;
-//				ofxTLPlaybackEventArgs args = createPlaybackEvent();
-//				ofNotifyEvent(ofxTLEvents.playbackLooped, args);
-//			}
-//		}
-//	}
-//	else{
-//		currentTime = ofGetElapsedTimef() - playbackStartTime;
     
     if(currentTime < durationInSeconds*inoutRange.min){
         currentTime = durationInSeconds*inoutRange.min;
