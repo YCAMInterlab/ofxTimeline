@@ -44,7 +44,7 @@ Simple Tweener shows how to use two keyframes and a switcher to animate and colo
 ### Audio Waveform ### {#example-audio}
 Audio Waveform shows how to add an audio track to a project.
 
-### Video Renderer ### {example-video}
+### Video Renderer ### {#example-video}
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
 
 ### Multi-timeline (experimental) {exmaple-multitimeline}
