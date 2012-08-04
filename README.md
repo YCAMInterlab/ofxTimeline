@@ -40,16 +40,21 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 ## Examples ##
 
 ### Simple Tweener
+![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
+
 Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
 
 ### Audio Waveform
 Audio Waveform shows how to add an audio track to a project.
+![AudioWaveform](http://www.jamesgeorge.org/images/ofxtimeline/github/example-audioWaveform.png)
 
 ### Video Renderer
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
+![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
 
 ### Multi-timeline (experimental)
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
+![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 
 ## Controls ##
@@ -68,6 +73,7 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 
 ### Clone ofxTimeline and dependencies 
 to download the timeline open up the terminal and type
+
     $cd of_0071_osx_release/addons
     $git clone https://github.com/YCAMInterlab/ofxTimeline.git
     $cd ofxTimeline/
