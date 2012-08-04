@@ -1,5 +1,5 @@
 # WORK IN PROGRESS - DO NOT PUBLICIZE #
-This project is part of a 3 month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way to this site to share and contribute ideas. I hope that after three months we can publish the theory and practice together. For the moment however it's important that this project say a bit under the radar as the ideas are still in formation.
+This project is part of a 3 month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way here to share and contribute ideas. I hope that after the residency I can publish a developed theory and practice together. For the moment however it's important that this project stay under the radar as the ideas are still in formation.
 
 Thanks! 
 
@@ -8,7 +8,7 @@ Thanks!
 
 ofxTimeline is a simple to use openFrameworks addon for graphically editing values over time.
 
-It's is a lot like other openFrameworks GUIs that connect your code parameters to an editable graphical interface. However ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific moments. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls with just a few lines of code.
+It's a lot like other openFrameworks GUIs that connect your parameters in code to an editable graphical interface. However ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific moments. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls with just a few lines of code.
 
 ## General tools for specific projects ##
 
@@ -23,30 +23,30 @@ ofxTimeline is the product of the [Guest Research Projector v.2 at YCAM Interlab
 Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
 
 ## Major features ##
-
-- Saving and loading of values to XML
-- Creation of curves and smooth interpolation
-- Zooming in for precise control and long durations
-- Smooth playback with precise timing
+- Very few lines of code to use
+- Precise millisecond level timing, nano-second accurate no drift playback
+- Several usable track types out of the box, such as curved tweens and video tracks with thumbnail previews
+- Convenient controls for efficient editing, such as multi-select, copy+paste, arrow keys nudging, and snapping to points
+- Zooming in for detailed control and long durations
 - Loading of audio and video files with thumbnail and waveform previews
-- Convenient controls, such as multi select, copy+paste, arrow key nudging, and snapping
-- Paging and view resizing
+- Saving and loading of values to XML
+- Adding multiple pages and dragging to resize view
 - Ability to set Beats Per Minute measure marks conjunction with snapping
 - Easy to implement your own tracks
-- With a growing eco system of community developed track and extensions
+- A growing eco system of community developed track and extensions
 
 ## Examples ##
 
-### Simple Tweener ### {example-simple}
+### Simple Tweener {example-simple}
 Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
 
-### Audio Waveform ### {example-audio}
+### Audio Waveform {example-audio}
 Audio Waveform shows how to add an audio track to a project.
 
-### Video Renderer ### {example-video}
+### Video Renderer {example-video}
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
 
-### Multi-timeline (experimental) ### {exmaple-multitimeline}
+### Multi-timeline (experimental) {exmaple-multitimeline}
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 
 ## Using ofxTimeline in your project ##
@@ -59,6 +59,7 @@ ofxTimeline has several built in track types for doing standard timeline tasks.
 ### Bangs ###
 ![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
 A bang is a simple time marker that sends an event when the playhead passes it.
+
 
 ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
