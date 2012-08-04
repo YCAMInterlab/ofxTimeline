@@ -72,14 +72,16 @@ If you plan on using the Audiowaveform see additional instructions. Otherwise yo
 ### Add a timeline to your code
 
 in your testApp.h file add:
+
     #include "ofMain.h"
     #include "ofxTimeline.h" //add timeline include
 
     class testApp : public ofBaseApp{
-      //... 
+     public:
       ofxTimeline timeline; //inside of the class add a timeline
 
 in your setup fon testApp.cpp file set up the timeline
+
     void testApp::setup(){
       
       timeline.setup(); //registers events
@@ -104,11 +106,29 @@ ofxTimeline has several built in track types for doing standard timeline tasks.
 
 ### Bangs
 ![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
+
 A bang is a simple time marker that sends an event when the playhead passes it.
 
-Example use:
+To use a bang track you need a class that listens to bang events, like so:
 
+MyClass.h
+    ofxTimeline timeline;
+    void receivedBang(ofxTLBangEventArgs& bang);
 
+MyClass.cpp
+    void MyClass::setup(){
+      timeline.addBangs("trigger particles");
+      ofAddListener(timeline.events().bangFired, this, &testApp::receivedBang);
+    }
+    
+    void MyClass::receivedBang(ofxTLBangEventArgs& bang){
+      ofLogNotice("Bang fired from track " + bang->track.getName());
+      if(bang->track.getName() == "trigger particles"){
+        particleGenerator.start(); //some example response
+      }
+    }
+
+Inheritance: 
 ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Tweens ###
