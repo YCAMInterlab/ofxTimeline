@@ -34,15 +34,13 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 - Adding multiple pages and dragging to resize view
 - Ability to set Beats Per Minute measure marks conjunction with snapping
 - Easy to implement your own tracks
-- A growing eco system of community developed track and extensions
-
+- A collection of community developed tracks and extensions
 
 ## Examples ##
 
 ### Simple Tweener
-![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
-
 Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
+![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
 
 ### Audio Waveform
 Audio Waveform shows how to add an audio track to a project.
