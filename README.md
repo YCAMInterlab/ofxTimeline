@@ -112,9 +112,11 @@ The track system is designed to be extensible.
 
 ofxTimeline was developed as part of the  [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org) at the [YCAMInterLab](http://interlab.ycam.jp/)
 
-![YCAM](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
+![YCAM](http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png)
 
 ### Additional support  ###
+
+![Additional Support](http://www.jamesgeorge.org/images/ofxtimeline/github/SupportedBy.png)
 
 [Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for (BlueBeams) 
 [The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the RGBDToolkit project
