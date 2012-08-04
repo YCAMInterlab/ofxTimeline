@@ -3,9 +3,15 @@
 
 ofxTimeline is a simple to use openFrameworks addon for graphically editing values over time.
 
-It's is a lot like other openFrameworks GUIs: connecting parameters in an app to an editable graphical interface. ofxTimeline has the concept of time build into it, letting you create smoothly changing values or events occurring at specific durations. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls in openFrameworks with just a few lines of code.
+It's is a lot like other openFrameworks GUIs: connecting parameters in an app to an editable graphical interface. ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific durations. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls in openFrameworks with just a few lines of code.
 
-The project is part of a inquiry into the question: How can open source and reusable tools for highly-interactive applications change we create? Interface based applications for creativity are limited to expensive big box software. If an ecosystem of open source components for quickly building usable applications were to exist, what new processes could we invent? How could UI based applications better facilitate collaborations between creative coders and other designers and artists? 
+## General tools for Specific projects ##
+
+The project is an inquiry into how reusable and open source tools for highly-interactive applications can change the way we create. 
+
+Interface based applications for creative media are either expensive big box software like After Effects or Cinema4d which don't allow for creative reinterpretation or modification by the end users. Open source alternatives are dependent on specific applications like [Blender](http://blender.org) or [VLMC](http://www.videolan.org/vlmc/) or [Audacity](http://audacity.sourceforge.net/), and all of which are GPL liberally licensed letting other use it unrestricted. 
+
+If an ecosystem of components to quickly build usable very applications for specific project were to exist, what new processes could we invent? How could UI based applications better facilitate collaborations between creative coders and other designers and artists? 
 
 ofxTimeline and is the product of the  [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org). 
 
