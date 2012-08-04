@@ -51,13 +51,58 @@ Video Renderer shows how to build a simple video effects app using the timeline 
 ### Multi-timeline (experimental)
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 
-## Using ofxTimeline in your project ##
-ofxTimeline requires a few different add ons
 
-## Track Types ##
+## Using ofxTimeline in your project
+
+### Clone ofxTimeline and Dependencies 
+to download the timeline open up the terminal and type
+  $cd of_0071_osx_release/addons
+  $git clone https://github.com/YCAMInterlab/ofxTimeline.git
+  $cd ofxTimeline/
+  $./clone_addons.sh
+
+This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
+
+### Add ofxTimeline to your project
+In Xcode open up the project you'd like to include the timeline. Drag and drop the ofxTimeline folder in from the finder into Xcode navigator under addons/
+
+If you plan on using the Audiowaveform see additional instructions. Otherwise you can remove the examples-*/, and libs/ folder, as well as removeing the referenc to the ofxTLAudioTrack source files
+
+
+### Add a timeline to your code
+
+in your testApp.h file add:
+    #include "ofMain.h"
+    #include "ofxTimeline.h" //add timeline include
+
+    class testApp : public ofBaseApp{
+      //... 
+      ofxTimeline timeline; //inside of the class add a timeline
+
+in your setup fon testApp.cpp file set up the timeline
+    void testApp::setup(){
+      
+      timeline.setup(); //registers events
+      timeline.setDurationInSeconds(60); //sets time
+      timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
+      
+      //add a track
+      timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
+  
+in your draw or update function, read the value
+  
+    void testApp::draw(){
+      float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
+      //use the value for something amazing!
+      ofCircle(mouseX, mouseY, changingRadius);
+      //don't forget to draw your timeline so you can edit it.
+      timeline.draw();
+    }
+    
+## Track Types
 ofxTimeline has several built in track types for doing standard timeline tasks. 
 
-### Bangs ###
+### Bangs
 ![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
 A bang is a simple time marker that sends an event when the playhead passes it.
 
