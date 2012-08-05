@@ -39,6 +39,11 @@
 #include "ofxTLTrackHeader.h"
 #include "ofxTLEvents.h"
 
+//typedef struct {
+//	long millis;
+//    float screenX;
+//} ofxTLSnapPoint;
+
 class ofxTimeline;
 class ofxTLTicker;
 class ofxTLPage {
@@ -77,11 +82,11 @@ class ofxTLPage {
 	virtual void loadTracksFromFolder(string folderPath);
     
 	virtual void setSnapping(bool snapping);
-	virtual void enableSnapToOtherTracks(bool snapToOthes);
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args);
-	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void enableSnapToOtherTracks(bool snapToOthers);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
+	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 		
 	virtual void nudgeBy(ofVec2f nudgePercent);
 	
@@ -106,7 +111,7 @@ class ofxTLPage {
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
 	
-	virtual void setDragAnchor(float anchor);
+	virtual void setDragOffsetTime(long offsetMillis);
 	
     ofxTimeline* timeline;
     
@@ -128,13 +133,13 @@ class ofxTLPage {
 	
 	bool headerHasFocus;
 	
-	vector<float> snapPoints;
-	float snappingTolerance;
+	vector<long> snapPoints; //in millis
+	float snappingTolerance; //in pixels
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
 	void refreshSnapPoints();
 	
-	float dragAnchor;
+	long millisecondDragOffset;
 	
     bool draggingSelectionRectangle;
     ofVec2f selectionRectangleAnchor;

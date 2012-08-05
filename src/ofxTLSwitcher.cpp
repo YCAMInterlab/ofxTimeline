@@ -17,8 +17,8 @@ void ofxTLSwitcher::draw(){
 	ofFill();
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        int startScreenX = normalizedXtoScreenX(switchKey->time.min);
-        int endScreenX = normalizedXtoScreenX(switchKey->time.max);
+        float startScreenX = millisToScreenX(switchKey->timeRange.min);
+        float endScreenX = millisToScreenX(switchKey->timeRange.max);
 		switchKey->display = ofRectangle(startScreenX, bounds.y, endScreenX-startScreenX, bounds.height);
 
         //draw handles
@@ -95,17 +95,17 @@ void ofxTLSwitcher::draw(){
 bool ofxTLSwitcher::isOn(float percent){
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        if(switchKey->time.min > percent){
+        if(switchKey->timeRange.min > percent){
             break;
         }
-        if(switchKey->time.contains(percent)){
+        if(switchKey->timeRange.contains(percent)){
             return true;
         }
     }
     return false;
 }
 
-void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){    
+void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args, long millis){    
     
     //check to see if we are close to any edges, if so select them
     bool startSelected = false;
@@ -150,7 +150,7 @@ void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args){
 
     if(!endSelected && !startSelected){
     	//normal selection from above
-	    ofxTLKeyframer::mousePressed(args);
+	    ofxTLKeyframer::mousePressed(args, millis);
     }
     
     //move through the keyframes, if both the start and the end have been selected
@@ -189,21 +189,21 @@ void ofxTLSwitcher::updateEdgeDragOffsets(float screenX){
     }
 }
 
-void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
+void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, long millis){
     
     //update to make sure that any keyframes with edges selected are properly added or removed 
     
     //do the normal dragging behavior for selected keyframes
-    ofxTLKeyframer::mouseDragged(args, snapped);
+    ofxTLKeyframer::mouseDragged(args, millis);
 
-    //the superclass will move the ->position.x value with the drag
+    //the superclass will move the ->time value with the drag
     //so we look at the selected keyframes values and see if their changed
     //if so update both the min and the max time so the control moves as a block
 	for(int i = 0; i < selectedKeyframes.size(); i++){
         ofxTLSwitch* switchKey =  (ofxTLSwitch*)selectedKeyframes[i];
-        float dif = switchKey->position.x - switchKey->time.min;
-        switchKey->time.min = switchKey->position.x;
-        switchKey->time.max += dif;
+        long dif = switchKey->time - switchKey->timeRange.min;
+        switchKey->timeRange.min = switchKey->time;
+        switchKey->timeRange.max += dif;
     }
     
     //now look for any keys with just beginning and ends selected
@@ -212,21 +212,21 @@ void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
 	for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
         if(switchKey->startSelected){
-            switchKey->time.min = screenXtoNormalizedX(args.x - switchKey->edgeDragOffset);
-            switchKey->position.x = switchKey->time.min;
+            switchKey->timeRange.min = screenXToMillis(args.x - switchKey->edgeDragOffset);
+            switchKey->time = switchKey->timeRange.min;
         }
         else if(switchKey->endSelected){
-            switchKey->time.max = screenXtoNormalizedX(args.x - switchKey->edgeDragOffset);
+            switchKey->timeRange.max = screenXToMillis(args.x - switchKey->edgeDragOffset);
         }
     }
 
     for(int i = 0; i < keyframes.size(); i++){
         //check to see if the user reversed the value and swap them really quick
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-		if(switchKey->time.min > switchKey->time.max){
-            float tempPos = switchKey->time.max;
-            switchKey->time.max = switchKey->time.min;
-            switchKey->time.min = switchKey->position.x = tempPos;
+		if(switchKey->timeRange.min > switchKey->timeRange.max){
+            float tempPos = switchKey->timeRange.max;
+            switchKey->timeRange.max = switchKey->timeRange.min;
+            switchKey->timeRange.min = switchKey->time = tempPos;
             bool tempSelect = switchKey->startSelected;
             switchKey->startSelected = switchKey->endSelected;
             switchKey->endSelected = tempSelect;
@@ -236,7 +236,7 @@ void ofxTLSwitcher::mouseDragged(ofMouseEventArgs& args, bool snapped){
     //TODO: no overlaps!!
 }
 
-void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
+void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args, long millis){
     
     endHover = startHover = false;
     for(int i = 0; i < keyframes.size(); i++){
@@ -256,39 +256,44 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args){
             return; //cancels call to parent
         }
     }
-    ofxTLKeyframer::mouseMoved(args);
+    ofxTLKeyframer::mouseMoved(args, millis);
 }
 
-void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args){
-	ofxTLKeyframer::mouseReleased(args);
+void ofxTLSwitcher::mouseReleased(ofMouseEventArgs& args, long millis){
+	ofxTLKeyframer::mouseReleased(args, millis);
 }
 
-void ofxTLSwitcher::regionSelected(ofRange timeRange, ofRange valueRange){
+void ofxTLSwitcher::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        cout << "range is " << timeRange << " this switch is " << switchKey->time << endl;
-    	if(switchKey->time.intersects(timeRange)){
-            cout << "	selecting keyframe!" << endl;
+    	if(switchKey->timeRange.intersects(timeRange)){
             selectKeyframe(switchKey);
         }
     }
 }
 
-ofxTLKeyframe* ofxTLSwitcher::newKeyframe(ofVec2f point){
+ofxTLKeyframe* ofxTLSwitcher::newKeyframe(){
     ofxTLSwitch* switchKey = new ofxTLSwitch();
-    switchKey->position = point; //Not used, but hacked for storage purposes
-    switchKey->time.min = point.x;
-    switchKey->time.max = point.x;// + getSmallRange();
+    //in the case of a click, start at the mouse positiion
+    //if this is being restored from XML, the next call to restore will override this with what is in the XML
+    switchKey->timeRange.min = switchKey->timeRange.max = screenXToMillis(ofGetMouseX());
     switchKey->startSelected = false;
     switchKey->endSelected   = true; //true so you can drag the range to start with
     return switchKey;
 }
 
 void ofxTLSwitcher::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
-    //pull the saved x/y values into min/max a little tricky...
+    //pull the saved time into min, and our custom max value
     ofxTLSwitch* switchKey = (ofxTLSwitch*)key;
-    switchKey->time.min = switchKey->position.x;
-	switchKey->time.max = xmlStore.getValue("max", switchKey->time.min);
+    switchKey->timeRange.min = switchKey->time;
+    //
+    string timecode = xmlStore.getValue("max", "00:00:00:000");
+    if(timecode.find(":") == string::npos){
+        switchKey->timeRange.max = ofToFloat(timecode) * timeline->getDurationInMilliseconds(); //Legacy max of 0-1
+    }
+    else{
+		switchKey->timeRange.max = timeline->getTimecode().millisForTimecode(timecode);
+    }
     //this is so freshly restored keys won't have ends selected but click keys will
     switchKey->startSelected = switchKey->endSelected = false; 
 }
@@ -296,13 +301,8 @@ void ofxTLSwitcher::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 void ofxTLSwitcher::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     //push the time range into X/Y
     ofxTLSwitch* switchKey = (ofxTLSwitch* )key;
-    switchKey->position.x = switchKey->time.min;
-	xmlStore.addValue("max", switchKey->time.max);
-}
-
-float ofxTLSwitcher::getSmallRange(){
-    //just return 2% of the view as an arbr
- 	return screenXtoNormalizedX(bounds.width*.01) - screenXtoNormalizedX(0);
+    switchKey->time = switchKey->timeRange.min;
+	xmlStore.addValue("max", timeline->getTimecode().timecodeForMillis(switchKey->timeRange.max));
 }
 
 ofxTLKeyframe* ofxTLSwitcher::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){

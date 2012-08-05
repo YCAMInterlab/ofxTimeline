@@ -6,7 +6,8 @@ void testApp::setup(){
 	
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
-	
+	ofSetEscapeQuitsApp(false);
+    
     //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);

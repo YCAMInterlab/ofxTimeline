@@ -37,8 +37,8 @@
 
 class ofxTLSwitch : public ofxTLKeyframe {
   public:
-    //NOTE this does not use position, but copies everything into the range
-	ofRange time;
+    //NOTE this does not use time, but copies everything into the range
+	ofLongRange timeRange;
 	
 	//ui stuff
     //	ofRange dragOffsets;
@@ -57,17 +57,17 @@ class ofxTLSwitcher : public ofxTLKeyframer {
     
     virtual bool isOn(float percent);
     
-    virtual void mousePressed(ofMouseEventArgs& args);
-    virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
-    virtual void mouseReleased(ofMouseEventArgs& args);
-    virtual void mouseMoved(ofMouseEventArgs& args);
+    virtual void mousePressed(ofMouseEventArgs& args, long millis);
+    virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+    virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+    virtual void mouseMoved(ofMouseEventArgs& args, long millis);
     
-    virtual void regionSelected(ofRange timeRange, ofRange valueRange);
+    virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 
     virtual void unselectAll();
     
   protected:
-    virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
+    virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
@@ -77,8 +77,6 @@ class ofxTLSwitcher : public ofxTLKeyframer {
     bool startHover;
     bool endHover;
     
-    //a small distance that changes on the viewport
-    float getSmallRange();
     
     bool edgeSelected;
 };

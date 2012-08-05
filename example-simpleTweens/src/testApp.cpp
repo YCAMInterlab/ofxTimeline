@@ -3,9 +3,10 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	ofSetFrameRate(30);
+	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
-	
+	ofSetEscapeQuitsApp(false);
+    
 	glEnable(GL_DEPTH_TEST);
 	ofEnableLighting();
 	
@@ -35,7 +36,7 @@ void testApp::setup(){
     //and also speeding up with the 
     //try setting this to true and see the difference
     timeline.setFrameBased(false);
-
+	
     //Bang events are fired whenever a Bang or a Flag is passed in the timeline
 	ofAddListener(timeline.events().bangFired, this, &testApp::receivedBang);
 

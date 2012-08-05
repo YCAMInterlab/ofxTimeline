@@ -26,34 +26,43 @@ void ofxTLTweener::setValueRange(ofRange range, float newDefaultValue){
 
 //main function to get values out of the timeline, operates on the given value range
 float ofxTLTweener::getValueAtPercent(float percent){
-	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
+//	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
+    return getValueAtTime(percent*timeline->getDurationInMilliseconds());
 }
 
-float ofxTLTweener::sampleAt(float percent){
-	percent = ofClamp(percent, 0, 1.0);
+float ofxTLTweener::getValueAtTime(long sampleTime){
+	return ofMap(sampleAtTime(sampleTime), 0.0, 1.0, valueRange.min, valueRange.max, false);
+}
+
+float ofxTLTweener::sampleAtPercent(float percent){
+	return sampleAtTime(percent * timeline->getDurationInMilliseconds());
+}
+
+float ofxTLTweener::sampleAtTime(long sampleTime){
+	sampleTime = ofClamp(sampleTime, 0, timeline->getDurationInMilliseconds());
 	
 	//edge cases
 	if(keyframes.size() == 0){
 		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
 	}
 	
-	if(percent < keyframes[0]->position.x){
-		return keyframes[0]->position.y;
+	if(sampleTime < keyframes[0]->time){
+		return keyframes[0]->value;
 	}
 	
-	if(percent > keyframes[keyframes.size()-1]->position.x){
-		return keyframes[keyframes.size()-1]->position.y;
+	if(sampleTime > keyframes[keyframes.size()-1]->time){
+		return keyframes[keyframes.size()-1]->value;
 	}
 	
 	for(int i = 1; i < keyframes.size(); i++){
-		if(keyframes[i]->position.x >= percent){
+		if(keyframes[i]->time >= sampleTime){
             ofxTLTweenKeyframe* tweenKey = (ofxTLTweenKeyframe*)keyframes[i-1];
-			float percentBetween = ofxTween::map(percent, tweenKey->position.x, keyframes[i]->position.x, 0.0, 1.0, false, *tweenKey->easeFunc->easing, tweenKey->easeType->type);
-			return tweenKey->position.y * (1.-percentBetween) + keyframes[i]->position.y*percentBetween;
+			float percentBetween = ofxTween::map(sampleTime, tweenKey->time, keyframes[i]->time, 0.0, 1.0, false, *tweenKey->easeFunc->easing, tweenKey->easeType->type);
+			return tweenKey->value * (1.-percentBetween) + keyframes[i]->value*percentBetween;
 		}
 	}
 	
-	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(percent, 4));
+	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
 	return defaultValue;
 }
 
@@ -73,13 +82,13 @@ void ofxTLTweener::draw(){
 	ofNoFill();
 	ofBeginShape();
 	if(keyframes.size() == 0 || keyframes.size() == 1){
-		ofVertex(bounds.x, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
-		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAt(.5)*bounds.height);
+		ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
+		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
 	}
 	else{
-		for(int p = 0; p <= bounds.width; p++){
+		for(int p = bounds.x; p <= bounds.width; p++){
             //TODO: cache this into a poly line to avoid insane sampling.
-			ofVertex(bounds.x + p,  bounds.y + bounds.height - sampleAt(ofMap(p, 0, bounds.width, zoomBounds.min, zoomBounds.max, true)) * bounds.height);
+			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
 	}
 	ofEndShape(false);
@@ -93,13 +102,11 @@ void ofxTLTweener::draw(){
 		}
 		
 		ofSetColor(timeline->getColors().textColor);
-		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
-        
+//		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
+  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);      
 		if(isKeyframeSelected( keyframes[i] )){
-			float keysValue = ofMap(keyframes[i]->position.y, 0, 1.0, valueRange.min, valueRange.max, true);
-			string frameString = timeline->getIsFrameBased() ? 
-            ofToString(int(keyframes[i]->position.x*timeline->getDurationInFrames())) : 
-            timeline->formatTime(keyframes[i]->position.x*timeline->getDurationInSeconds());
+			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			string frameString = timeline->formatTime(keyframes[i]->time);
             if(keysAreDraggable){
 				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
             }
@@ -124,9 +131,10 @@ void ofxTLTweener::draw(){
 	ofPopStyle();
 }
 
-ofxTLKeyframe* ofxTLTweener::newKeyframe(ofVec2f point){
+
+ofxTLKeyframe* ofxTLTweener::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
-	k->position = point;
+//	k->position = point;
 	k->easeFunc = easingFunctions[0];
 	k->easeType = easingTypes[0];
 	return k;
@@ -185,7 +193,7 @@ void ofxTLTweener::drawModalContent(){
     }
 }
 
-void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
+void ofxTLTweener::mousePressed(ofMouseEventArgs& args, long millis){
 
     if(drawingEasingWindow){
         //see if we clicked on an
@@ -213,13 +221,13 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args){
         }
     }
     else{
-        ofxTLKeyframer::mousePressed(args);
+        ofxTLKeyframer::mousePressed(args, millis);
     }
 }
 
-void ofxTLTweener::mouseDragged(ofMouseEventArgs& args, bool snapped){
+void ofxTLTweener::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
-        ofxTLKeyframer::mouseDragged(args, snapped);
+        ofxTLKeyframer::mouseDragged(args, millis);
     }
 }
 

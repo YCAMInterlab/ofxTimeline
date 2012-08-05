@@ -1,7 +1,13 @@
 <positions>
     <element name="2">
         <x>0</x>
-        <y>361</y>
+        <y>351</y>
+        <width>512</width>
+        <height>39</height>
+    </element>
+    <element name="someSwitches">
+        <x>0</x>
+        <y>367</y>
         <width>512</width>
         <height>30</height>
     </element>

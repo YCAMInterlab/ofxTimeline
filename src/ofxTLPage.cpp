@@ -47,6 +47,7 @@ ofxTLPage::ofxTLPage()
 	isSetup(false),
 	snappingTolerance(12),
 	ticker(NULL),
+	millisecondDragOffset(0),
 	snapToOtherTracksEnabled(true),
 	headerHasFocus(false),
 	focusedTrack(NULL),
@@ -132,7 +133,7 @@ void ofxTLPage::timelineLostFocus(){
 }
 
 #pragma mark events
-void ofxTLPage::mousePressed(ofMouseEventArgs& args){
+void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
     
 	draggingInside = trackContainerRect.inside(args.x, args.y);
 	ofxTLTrack* newFocus = NULL;
@@ -153,7 +154,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
             bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
             headerHasFocus |= (clickIsInFooter || clickIsInHeader);
             if(tracks[headers[i]->name]->isEnabled()){ 
-                tracks[headers[i]->name]->_mousePressed(args);
+                tracks[headers[i]->name]->_mousePressed(args, millis);
 				if(clickIsInTrack || clickIsInHeader){
                     newFocus = tracks[headers[i]->name];
                 }
@@ -172,96 +173,102 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args){
     }    
 }
 
-void ofxTLPage::mouseMoved(ofMouseEventArgs& args){
+void ofxTLPage::mouseMoved(ofMouseEventArgs& args, long millis){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
-		tracks[headers[i]->name]->_mouseMoved(args);
+		tracks[headers[i]->name]->_mouseMoved(args, millis);
 	}	
+    
+    if(!draggingInside){
+        timeline->setHoverTime(millis);
+    }
 }
 
-void ofxTLPage::mouseDragged(ofMouseEventArgs& args){
-	if(draggingInside){
-		bool snapped = false;
-		float snapPercent = 0;
-        if(draggingSelectionRectangle){
-            selectionRectangle = ofRectangle(selectionRectangleAnchor.x, selectionRectangleAnchor.y, 
-									 args.x-selectionRectangleAnchor.x, args.y-selectionRectangleAnchor.y);
-			if(selectionRectangle.width < 0){
-				selectionRectangle.x = selectionRectangle.x+selectionRectangle.width;
-				selectionRectangle.width = -selectionRectangle.width;
-			}
-            
-			if(selectionRectangle.height < 0){
-				selectionRectangle.y = selectionRectangle.y+selectionRectangle.height;
-				selectionRectangle.height = -selectionRectangle.height;
-			}
-            
-            //clamp to the bounds
-            if(selectionRectangle.x < trackContainerRect.x){
-                float widthBehind =  trackContainerRect.x - selectionRectangle.x;
-                selectionRectangle.x = trackContainerRect.x;
-                selectionRectangle.width -= widthBehind;
-            }
-			
-            if(selectionRectangle.y < trackContainerRect.y){
-                float heightAbove =  trackContainerRect.y - selectionRectangle.y;
-                selectionRectangle.y = trackContainerRect.y;
-                selectionRectangle.height -= heightAbove;
-            }
-            
-            if(selectionRectangle.x+selectionRectangle.width > trackContainerRect.x+trackContainerRect.width){
-                selectionRectangle.width = (trackContainerRect.x+trackContainerRect.width - selectionRectangle.x);                
-            }
-            if(selectionRectangle.y+selectionRectangle.height > trackContainerRect.y+trackContainerRect.height){
-                selectionRectangle.height = (trackContainerRect.y+trackContainerRect.height - selectionRectangle.y);
-            }
+void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
+	if(!draggingInside){
+    	return;
+    }
+    if(draggingSelectionRectangle){
+        selectionRectangle = ofRectangle(selectionRectangleAnchor.x, selectionRectangleAnchor.y, 
+                                 args.x-selectionRectangleAnchor.x, args.y-selectionRectangleAnchor.y);
+        if(selectionRectangle.width < 0){
+            selectionRectangle.x = selectionRectangle.x+selectionRectangle.width;
+            selectionRectangle.width = -selectionRectangle.width;
         }
-        else {
-            if(snappingEnabled){
-                
-                refreshSnapPoints();
-                
-                float closestSnapDistance = snappingTolerance;
-                float closestSnapPoint;
-                //modify drag X if it should be snapped
+        
+        if(selectionRectangle.height < 0){
+            selectionRectangle.y = selectionRectangle.y+selectionRectangle.height;
+            selectionRectangle.height = -selectionRectangle.height;
+        }
+        
+        //clamp to the bounds
+        if(selectionRectangle.x < trackContainerRect.x){
+            float widthBehind =  trackContainerRect.x - selectionRectangle.x;
+            selectionRectangle.x = trackContainerRect.x;
+            selectionRectangle.width -= widthBehind;
+        }
+        
+        if(selectionRectangle.y < trackContainerRect.y){
+            float heightAbove =  trackContainerRect.y - selectionRectangle.y;
+            selectionRectangle.y = trackContainerRect.y;
+            selectionRectangle.height -= heightAbove;
+        }
+        
+        if(selectionRectangle.x+selectionRectangle.width > trackContainerRect.x+trackContainerRect.width){
+            selectionRectangle.width = (trackContainerRect.x+trackContainerRect.width - selectionRectangle.x);                
+        }
+        if(selectionRectangle.y+selectionRectangle.height > trackContainerRect.y+trackContainerRect.height){
+            selectionRectangle.height = (trackContainerRect.y+trackContainerRect.height - selectionRectangle.y);
+        }
+    }
+    else {
+        if(snappingEnabled){
+            refreshSnapPoints();
+            if(snapPoints.size() > 0){
+                long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0); //hack to find distance in millseconds
+                long closestSnapDistance = snappingToleranceMillis;
+                int closestSnapPoint;
                 for(int i = 0; i < snapPoints.size(); i++){
-                    float distanceToPoint = abs(args.x - snapPoints[i]);
+                    long distanceToPoint = abs(millis - snapPoints[i]);
                     if(distanceToPoint < closestSnapDistance){
                         closestSnapPoint = i;
                         closestSnapDistance = distanceToPoint; 
                     }
                 }
                 
-                if(closestSnapDistance < snappingTolerance){
-                    args.x = snapPoints[closestSnapPoint] + dragAnchor;
-                    snapPercent = snapPoints[closestSnapPoint];
-                    snapped = true;
+                if(closestSnapDistance < snappingToleranceMillis){
+                    //if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
+                    millis = snapPoints[closestSnapPoint] + millisecondDragOffset; 
                 }
             }
-            
-            for(int i = 0; i < headers.size(); i++){
-                headers[i]->mouseDragged(args);
-                if(!headerHasFocus){
-                    tracks[headers[i]->name]->mouseDragged(args, snapped);
-                }
+        }
+        
+        timeline->setHoverTime(millis - millisecondDragOffset);
+        for(int i = 0; i < headers.size(); i++){
+            headers[i]->mouseDragged(args);
+            if(!headerHasFocus){
+                tracks[headers[i]->name]->mouseDragged(args, millis);
             }
-        }        
-	}
+        }
+    }        
 }
 
-void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
+void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(draggingInside){
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mouseReleased(args);
-			tracks[headers[i]->name]->_mouseReleased(args);
+			tracks[headers[i]->name]->_mouseReleased(args, millis);
 		}		
 		draggingInside = false;
+        //TODO: add hovering back in
+//        timeline->setHoverPosition(args.x);
+        timeline->setHoverTime(millis);
 	}
-    
+
 	if(draggingSelectionRectangle){
 		draggingSelectionRectangle = false;
-        ofRange timeRange = ofRange(timeline->screenXtoNormalizedX(selectionRectangle.x),
-                                    timeline->screenXtoNormalizedX(selectionRectangle.x+selectionRectangle.width));
+        ofLongRange timeRange = ofLongRange(timeline->screenXToMillis(selectionRectangle.x),
+                                            timeline->screenXToMillis(selectionRectangle.x+selectionRectangle.width));
 		for(int i = 0; i < headers.size(); i++){
             ofRectangle trackBounds = tracks[headers[i]->name]->getDrawRect();
 			ofRange valueRange = ofRange(ofMap(selectionRectangle.y, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
@@ -273,8 +280,8 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args){
     }
 }
 
-void ofxTLPage::setDragAnchor(float anchor){
-	dragAnchor = anchor;
+void ofxTLPage::setDragOffsetTime(long offsetMillis){
+	millisecondDragOffset = offsetMillis;
 }
 
 void ofxTLPage::refreshSnapPoints(){

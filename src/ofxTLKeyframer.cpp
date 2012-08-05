@@ -40,7 +40,7 @@
 #include "ofxTLUtils.h"
 
 bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
-	return a->position.x < b->position.x;
+	return a->time < b->time;
 }
 
 ofxTLKeyframer::ofxTLKeyframer() 
@@ -83,7 +83,30 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 		
 		for(int i = 0; i < numKeyTags; i++){
 			xmlStore.pushTag("key", i);
-			ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),xmlStore.getValue("y", 0.0)));
+			//ofxTLKeyframe* key = newKeyframe(ofVec2f(xmlStore.getValue("x", 0.0),xmlStore.getValue("y", 0.0)));
+            ofxTLKeyframe* key = newKeyframe();
+            
+            string legacyX = xmlStore.getValue("x", "");
+            //if there is a decimal this is most likely an old save so let's 
+            //convert it based on the current duration
+            if(legacyX != ""){
+                ofLogNotice() << "ofxTLKeyframer::createKeyframesFromXML -- Found legacy time " + legacyX << endl;
+                float normalizedTime = ofToFloat(legacyX);
+                key->time = normalizedTime*timeline->getDurationInMilliseconds();
+            }
+            else {
+                string timecode = xmlStore.getValue("time", "00:00:00:000");
+	            key->time = timeline->getTimecode().millisForTimecode(timecode);    
+            }
+            
+            float legacyYValue = xmlStore.getValue("y", 0.0);
+            if(legacyYValue != 0.0){
+                ofLogNotice() << "ofxTLKeyframer::createKeyframesFromXML -- Found legacy value " << legacyYValue << endl;
+                key->value = legacyYValue;
+            }
+            else{
+	            key->value = xmlStore.getValue("value", 0.0f);
+            }
 			restoreKeyframe(key, xmlStore);			
 			xmlStore.popTag(); //key
 			keyContainer.push_back( key );
@@ -120,8 +143,10 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
         
         //calling store before saving the default values gives the subclass a chance to modify them
         storeKeyframe(keys[i], savedkeyframes); 
-		savedkeyframes.addValue("x", keys[i]->position.x);
-		savedkeyframes.addValue("y", keys[i]->position.y);
+		//savedkeyframes.addValue("x", keys[i]->position.x);
+        //savedkeyframes.addValue("x", keys[i]->time);
+        savedkeyframes.addValue("time", timeline->getTimecode().timecodeForMillis(keys[i]->time));
+		savedkeyframes.addValue("value", keys[i]->value);
         
 		savedkeyframes.popTag(); //key
 	}
@@ -132,7 +157,7 @@ string ofxTLKeyframer::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 	return str;
 }
 
-void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
+void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
     
     keysAreDraggable = !ofGetModifierKeyShift();
@@ -155,9 +180,11 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
             timeline->unselectAll();
 
             //add a new one
-            selectedKeyframe = newKeyframe( keyframePointForCoord(screenpoint) );
+            selectedKeyframe = newKeyframe();
+            selectedKeyframe->time = millis;
+            selectedKeyframe->value = screenYToValue(screenpoint.y);
             keyframes.push_back(selectedKeyframe);
-            selectedKeyframe->grabOffset = ofVec2f(0,0);
+            //selectedKeyframe->grabOffset = ofVec2f(0,0);
             updateKeyframeSort();
             keysDidDrag = true; //triggers a save after mouseup
             for(int i = 0; i < keyframes.size(); i++){
@@ -182,12 +209,13 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 	
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
-        updateDragOffsets(screenpoint);				
+        updateDragOffsets(screenpoint, millis);				
 		if(selectedKeyframe != NULL && args.button == 0){
-			timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
+            //timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
+            timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 			//move the playhead
 			if(timeline->getMovePlayheadOnDrag()){
-				timeline->setPercentComplete(selectedKeyframe->position.x);
+				timeline->setCurrentTimeMillis(selectedKeyframe->time);
 			}
 		}
 		else if(args.button == 2){
@@ -195,40 +223,40 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args){
 		}
 	}
 }
-
-void ofxTLKeyframer::regionSelected(ofRange timeRange, ofRange valueRange){
+//TODO change to ofLongRange timeRange and ofFloatRange valueRange
+void ofxTLKeyframer::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-        if(timeRange.contains(keyframes[i]->position.x) && valueRange.contains(1.-keyframes[i]->position.y)){
+        if(timeRange.contains(float(keyframes[i]->time)/timeline->getDurationInMilliseconds()) && valueRange.contains(1.-keyframes[i]->value)){
             selectKeyframe(keyframes[i]);
         }
 	}
 }
 
-void ofxTLKeyframer::updateDragOffsets(ofVec2f screenpoint){
+void ofxTLKeyframer::updateDragOffsets(ofVec2f screenpoint, long grabMillis){
 	for(int k = 0; k < selectedKeyframes.size(); k++){
-		selectedKeyframes[k]->grabOffset = screenpoint - coordForKeyframePoint(selectedKeyframes[k]->position);
+		//selectedKeyframes[k]->grabOffset = screenpoint - coordForKeyframePoint(selectedKeyframes[k]->position);
+        selectedKeyframes[k]->grabTimeOffset  = grabMillis - selectedKeyframes[k]->time;
+        selectedKeyframes[k]->grabValueOffset = screenpoint.y - valueToScreenY(selectedKeyframes[k]->value);
 	}
 }
 
-void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args){
-	ofxTLTrack::mouseMoved(args);
+void ofxTLKeyframer::mouseMoved(ofMouseEventArgs& args, long millis){
+	ofxTLTrack::mouseMoved(args, millis);
 	int unused;
 	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y), unused );
 }
 
-void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, bool snapped){
-
+void ofxTLKeyframer::mouseDragged(ofMouseEventArgs& args, long millis){
     if(keysAreDraggable && selectedKeyframes.size() != 0){
         ofVec2f screenpoint(args.x,args.y);
         for(int k = 0; k < selectedKeyframes.size(); k++){
             ofVec2f newScreenPosition;
-            newScreenPosition.x = screenpoint.x - selectedKeyframes[k]->grabOffset.x;
-            newScreenPosition.y = screenpoint.y - selectedKeyframes[k]->grabOffset.y;
-            ofVec2f newposition = keyframePointForCoord(newScreenPosition);
-            selectedKeyframes[k]->position = newposition;
+            selectedKeyframes[k]->time = millis - selectedKeyframes[k]->grabTimeOffset;
+            selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
+            selectedKeyframes[k]->screenPosition = screenPositionForKeyframe(selectedKeyframes[k]);
         }
         if(selectedKeyframe != NULL && timeline->getMovePlayheadOnDrag()){
-            timeline->setPercentComplete(selectedKeyframe->position.x);
+            timeline->setCurrentTimeMillis(selectedKeyframe->time);
         }
         timeline->flagUserChangedValue();
         keysDidDrag = true;
@@ -240,18 +268,18 @@ void ofxTLKeyframer::updateKeyframeSort(){
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
 }
 
-void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args){
-
+void ofxTLKeyframer::mouseReleased(ofMouseEventArgs& args, long millis){
 	keysAreDraggable = false;
     if(keysDidDrag){
         timeline->flagTrackModified(this);
     }
 }
 
-void ofxTLKeyframer::getSnappingPoints(vector<float>& points){
+void ofxTLKeyframer::getSnappingPoints(vector<long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
-			points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
+			points.push_back(keyframes[i]->time);
+			//points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
 		}
 	}
 }
@@ -278,10 +306,10 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 			//normalize and add at playhead
 			for(int i = 0; i < keyContainer.size(); i++){
 				if(i != 0){
-					keyContainer[i]->position.x -= keyContainer[0]->position.x;
-					keyContainer[i]->position.x += timeline->getPercentComplete();
+					keyContainer[i]->time -= keyContainer[0]->time;
+					keyContainer[i]->time += timeline->getCurrentTimeMillis();
 				}
-				if(keyContainer[i]->position.x <= 1.0){
+				if(keyContainer[i]->time <= timeline->getDurationInMilliseconds()){
 					selectedKeyframes.push_back(keyContainer[i]);
 					keyframes.push_back(keyContainer[i]);
 				}
@@ -289,9 +317,9 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 					delete keyContainer[i];
 				}
 			}
-			keyContainer[0]->position.x = timeline->getPercentComplete();
+			keyContainer[0]->time = timeline->getCurrentTimeMillis();
 			if(timeline->getMovePlayheadOnPaste()){
-				timeline->setPercentComplete( keyContainer[keyContainer.size()-1]->position.x );
+				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
 			}
 			updateKeyframeSort();
             timeline->flagTrackModified(this);
@@ -315,8 +343,8 @@ void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 
 void ofxTLKeyframer::nudgeBy(ofVec2f nudgePercent){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
-		selectedKeyframes[i]->position.x = ofClamp(selectedKeyframes[i]->position.x + nudgePercent.x, 0, 1.0);
-		selectedKeyframes[i]->position.y = ofClamp(selectedKeyframes[i]->position.y + nudgePercent.y, 0, 1.0);
+		selectedKeyframes[i]->time  = ofClamp(selectedKeyframes[i]->time + timeline->getDurationInMilliseconds()*nudgePercent.x, 0, timeline->getDurationInMilliseconds());
+		selectedKeyframes[i]->value = ofClamp(selectedKeyframes[i]->value + nudgePercent.y, 0, 1.0);
 	}
 	
     timeline->flagTrackModified(this);
@@ -338,10 +366,12 @@ void ofxTLKeyframer::deleteSelectedKeyframes(){
 }
 
 ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
-	float mindistance = 15;
+	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
-		ofVec2f keyonscreen = coordForKeyframePoint(keyframes[i]->position);
-		if(keyonscreen.distance( p ) < mindistance){
+		ofVec2f keyonscreen = screenPositionForKeyframe(keyframes[i]);
+//        ofVec2f keyonscreen = ofVec2f(timeline->millisToScreenX(keyframes[i]->time), 
+//                                      ofMap(keyframes[i]->value, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true));
+		if(keyonscreen.squareDistance( p ) < minDistanceSquared){
 			selectedIndex = i;
 			return keyframes[i];
 		}
@@ -378,26 +408,29 @@ bool ofxTLKeyframer::isKeyframeSelected(ofxTLKeyframe* k){
 
 bool ofxTLKeyframer::isKeyframeIsInBounds(ofxTLKeyframe* key){
 	if(zoomBounds.min == 0.0 && zoomBounds.max == 1.0) return true;
-	
-	return key->position.x >= zoomBounds.min && key->position.x <= zoomBounds.max;
+	long duration = timeline->getDurationInMilliseconds();
+	return key->time >= zoomBounds.min*duration && key->time <= zoomBounds.max*duration;
 }
 
-ofVec2f ofxTLKeyframer::coordForKeyframePoint(ofVec2f keyframePoint){
-	return ofVec2f(ofMap(keyframePoint.x, zoomBounds.min, zoomBounds.max, bounds.x, bounds.x+bounds.width, false),
-				   ofMap(keyframePoint.y, 1.0, 0.0, bounds.y, bounds.y+bounds.height, true));
+ofVec2f ofxTLKeyframer::screenPositionForKeyframe(ofxTLKeyframe* keyframe){
+    return ofVec2f(millisToScreenX(keyframe->time), 
+                   valueToScreenY(keyframe->value));
 }
 
 bool ofxTLKeyframer::screenpointIsInBounds(ofVec2f screenpoint){
 	return bounds.inside(screenpoint);
 }
 
-ofVec2f ofxTLKeyframer::keyframePointForCoord(ofVec2f coord){
-	return ofVec2f(ofMap(coord.x, bounds.x, bounds.x+bounds.width,  zoomBounds.min, zoomBounds.max, false),
-				   ofMap(coord.y, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true));
+float ofxTLKeyframer::screenYToValue(float screenY){
+    return ofMap(screenY, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true);
 }
 
-ofxTLKeyframe* ofxTLKeyframer::newKeyframe(ofVec2f point){
+float ofxTLKeyframer::valueToScreenY(float value){
+	return ofMap(value, 1.0, 0.0, bounds.y, bounds.y+bounds.height, true);
+}
+
+ofxTLKeyframe* ofxTLKeyframer::newKeyframe(){
 	ofxTLKeyframe* k = new ofxTLKeyframe();
-	k->position = point;
+//	k->position = point;
 	return k;
 }

@@ -2,13 +2,13 @@
     <element name="Track">
         <x>0</x>
         <y>39</y>
-        <width>1020</width>
-        <height>566</height>
+        <width>1024</width>
+        <height>132</height>
     </element>
     <element name="clickbangs">
         <x>0</x>
-        <y>621</y>
-        <width>1020</width>
-        <height>132</height>
+        <y>187</y>
+        <width>1024</width>
+        <height>59</height>
     </element>
 </positions>

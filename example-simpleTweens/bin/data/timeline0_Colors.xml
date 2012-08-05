@@ -1,17 +1,17 @@
 <keyframes>
     <key>
         <flag>RED</flag>
-        <x>0.0859375</x>
-        <y>0.54</y>
-    </key>
-    <key>
-        <flag>BLUE</flag>
-        <x>0.533203</x>
-        <y>0.44</y>
+        <time>00:00:00:369</time>
+        <value>0.39</value>
     </key>
     <key>
         <flag>GREEN</flag>
-        <x>0.851562</x>
-        <y>0.54</y>
+        <time>00:00:01:353</time>
+        <value>0.24082</value>
+    </key>
+    <key>
+        <flag>BLUE</flag>
+        <time>00:00:02:554</time>
+        <value>0.54</value>
     </key>
 </keyframes>

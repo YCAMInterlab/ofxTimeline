@@ -117,18 +117,18 @@ void ofxTLTrack::_draw(){
     draw();
 }
 
-void ofxTLTrack::_mousePressed(ofMouseEventArgs& args){
+void ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
     active = bounds.inside(args.x, args.y);
-    mousePressed(args);
+    mousePressed(args, millis);
 }
 
-void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args){
+void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args, long millis){
 	hover = bounds.inside(args.x, args.y);
-	mouseMoved(args);    
+	mouseMoved(args, millis);    
 }
 
-void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args){
-    mouseReleased(args);
+void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args, long millis){
+    mouseReleased(args, millis);
     active = false;
 }
 
@@ -208,6 +208,14 @@ float ofxTLTrack::screenXtoNormalizedX(float x){
     return timeline->screenXtoNormalizedX(x);
 }
 
+long ofxTLTrack::screenXToMillis(float x){
+    return timeline->screenXToMillis(x);
+}
+
+float ofxTLTrack::millisToScreenX(long millis){
+    return timeline->millisToScreenX(millis);
+}
+
 float ofxTLTrack::normalizedXtoScreenX(float x){
     return timeline->normalizedXtoScreenX(x);
 }
@@ -250,7 +258,7 @@ float ofxTLTrack::timeForScreenX(float screenX){
 
 float ofxTLTrack::screenXForTime(float time, float durationInSeconds){
 	float startTime = zoomBounds.min * durationInSeconds;
-	float endTime = zoomBounds.max *durationInSeconds;
+	float endTime = zoomBounds.max * durationInSeconds;
 	return ofMap(time, startTime, endTime, bounds.x, bounds.x+bounds.width, false);
 }
 

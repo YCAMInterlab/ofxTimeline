@@ -11,3 +11,5 @@ git clone https://github.com/obviousjim/ofxTween.git
 git clone https://github.com/obviousjim/ofxMSATimer.git
 
 git clone https://github.com/Flightphase/ofxTextInputField.git
+
+git clone https://github.com/Flightphase/ofxRange.git

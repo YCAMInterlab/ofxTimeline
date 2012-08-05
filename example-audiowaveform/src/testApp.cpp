@@ -29,7 +29,6 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::bangFired(ofxTLBangEventArgs& bang){
-	cout << "bang" << endl;    
     lastBang = timeline.getCurrentTime();
 }
 

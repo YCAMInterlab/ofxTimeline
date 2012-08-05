@@ -1,98 +1,106 @@
 <keyframes>
     <key>
-        <x>0.0439453</x>
-        <y>0.527363</y>
+        <time>00:00:00:325</time>
+        <value>0.527363</value>
     </key>
     <key>
-        <x>0.116211</x>
-        <y>0.532338</y>
+        <time>00:00:00:497</time>
+        <value>0.532338</value>
     </key>
     <key>
-        <x>0.145508</x>
-        <y>0.477612</y>
+        <time>00:00:00:622</time>
+        <value>0.477612</value>
     </key>
     <key>
-        <x>0.233398</x>
-        <y>0.502488</y>
+        <time>00:00:00:749</time>
+        <value>0.651515</value>
     </key>
     <key>
-        <x>0.233398</x>
-        <y>0.462687</y>
+        <time>00:00:00:874</time>
+        <value>0.621212</value>
     </key>
     <key>
-        <x>0.233398</x>
-        <y>0.641791</y>
+        <time>00:00:00:998</time>
+        <value>0.641791</value>
     </key>
     <key>
-        <x>0.291992</x>
-        <y>0.462687</y>
+        <time>00:00:00:998</time>
+        <value>0.502488</value>
     </key>
     <key>
-        <x>0.321289</x>
-        <y>0.303483</y>
+        <time>00:00:00:998</time>
+        <value>0.462687</value>
     </key>
     <key>
-        <x>0.350586</x>
-        <y>0.447761</y>
+        <time>00:00:01:248</time>
+        <value>0.462687</value>
     </key>
     <key>
-        <x>0.436524</x>
-        <y>0.402985</y>
+        <time>00:00:01:374</time>
+        <value>0.303483</value>
     </key>
     <key>
-        <x>0.4375</x>
-        <y>0.333333</y>
+        <time>00:00:01:499</time>
+        <value>0.447761</value>
     </key>
     <key>
-        <x>0.452148</x>
-        <y>0.373134</y>
+        <time>00:00:01:867</time>
+        <value>0.402985</value>
     </key>
     <key>
-        <x>0.481445</x>
-        <y>0.298507</y>
+        <time>00:00:01:871</time>
+        <value>0.333333</value>
     </key>
     <key>
-        <x>0.525391</x>
-        <y>0.323383</y>
+        <time>00:00:01:933</time>
+        <value>0.373134</value>
     </key>
     <key>
-        <x>0.525391</x>
-        <y>0.303483</y>
+        <time>00:00:02:059</time>
+        <value>0.298507</value>
     </key>
     <key>
-        <x>0.583984</x>
-        <y>0.39801</y>
+        <time>00:00:02:247</time>
+        <value>0.323383</value>
     </key>
     <key>
-        <x>0.613281</x>
-        <y>0.293532</y>
+        <time>00:00:02:247</time>
+        <value>0.303483</value>
     </key>
     <key>
-        <x>0.642578</x>
-        <y>0.303483</y>
+        <time>00:00:02:497</time>
+        <value>0.39801</value>
     </key>
     <key>
-        <x>0.685547</x>
-        <y>0.308458</y>
+        <time>00:00:02:623</time>
+        <value>0.293532</value>
     </key>
     <key>
-        <x>0.730469</x>
-        <y>0.283582</y>
+        <time>00:00:02:748</time>
+        <value>0.303483</value>
     </key>
     <key>
-        <x>0.788086</x>
-        <y>0.328358</y>
+        <time>00:00:02:932</time>
+        <value>0.308458</value>
     </key>
     <key>
-        <x>0.817383</x>
-        <y>0.278607</y>
+        <time>00:00:03:124</time>
+        <value>0.283582</value>
     </key>
     <key>
-        <x>0.917969</x>
-        <y>0.318408</y>
+        <time>00:00:03:379</time>
+        <value>0.226663</value>
     </key>
     <key>
-        <x>0.917969</x>
-        <y>0.298507</y>
+        <time>00:00:03:499</time>
+        <value>0.227759</value>
+    </key>
+    <key>
+        <time>00:00:03:629</time>
+        <value>0.226086</value>
+    </key>
+    <key>
+        <time>00:00:03:875</time>
+        <value>0.240084</value>
     </key>
 </keyframes>

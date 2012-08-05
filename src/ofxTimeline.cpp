@@ -63,7 +63,7 @@ ofxTimeline::ofxTimeline()
 	isEnabled(false),
 	dragAnchorSet(false),
 	snappingEnabled(false),
-	globalDragAnchor(0),
+	dragMillsecondOffset(0),
 	movePlayheadOnPaste(true),
 	movePlayheadOnDrag(false),
 	inoutRange(ofRange(0.0,1.0)),
@@ -331,14 +331,24 @@ void ofxTimeline::setPercentComplete(float percent){
     currentTime = percent*durationInSeconds;
 }
 
-void ofxTimeline::setCurrentTime(float time){
+void ofxTimeline::setHoverTime(long millisTime){
+	ticker->setHoverTime(millisTime);
+}
+
+void ofxTimeline::setCurrentTimeSeconds(float time){
 	currentTime = time;
 }
+
+void ofxTimeline::setCurrentTimeMillis(long millis){
+    
+}
+
 
 void ofxTimeline::setFrameRate(float fps){
     //TODO: Retime track contents?
 	timecode.setFPS(fps);    
 }
+
 void ofxTimeline::setFrameBased(bool frameBased){
     isFrameBased = frameBased;
 }
@@ -349,6 +359,10 @@ bool ofxTimeline::getIsFrameBased(){
 
 int ofxTimeline::getCurrentFrame(){
     return timecode.frameForSeconds(currentTime);
+}
+
+long ofxTimeline::getCurrentTimeMillis(){
+    return currentTime*1000;
 }
 
 float ofxTimeline::getCurrentTime(){
@@ -481,6 +495,10 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 
 int ofxTimeline::getDurationInFrames(){
     return timecode.frameForSeconds(durationInSeconds);
+}
+
+long ofxTimeline::getDurationInMilliseconds(){
+	return durationInSeconds*1000;    //TODO: update to store currentTime in millis
 }
 
 float ofxTimeline::getDurationInSeconds(){
@@ -637,13 +655,13 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+    long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
-    	modalTrack->mousePressed(args);
+    	modalTrack->mousePressed(args,millis);
         return;
     }
     
-	dragAnchorSet = false;
     bool focus = getDrawRect().inside(args.x, args.y);
 	if(focus && !timelineHasFocus){
     	currentPage->timelineGainedFocus();    
@@ -654,25 +672,29 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     focus = timelineHasFocus;
     inoutTrack->mousePressed(args);
 	ticker->mousePressed(args);
-	currentPage->mousePressed(args);
+	currentPage->mousePressed(args,millis);
 	zoomer->mousePressed(args);
 
 	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
+    long millis = screenXToMillis(args.x);
+    
     if(modalTrack != NULL){
-    	modalTrack->mouseMoved(args);
+    	modalTrack->mouseMoved(args, millis);
         return;
     }
     
     inoutTrack->mouseMoved(args);
 	ticker->mouseMoved(args);
-	currentPage->mouseMoved(args);
+	currentPage->mouseMoved(args, millis);
 	zoomer->mouseMoved(args);
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
+    long millis = screenXToMillis(args.x);
+    
     if(modalTrack != NULL){
     	modalTrack->mouseDragged(args, false);
         return;
@@ -680,20 +702,24 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
     
 	inoutTrack->mouseDragged(args);
 	ticker->mouseDragged(args);
-	currentPage->mouseDragged(args);
+	currentPage->mouseDragged(args, millis);
 	zoomer->mouseDragged(args);
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
+    long millis = screenXToMillis(args.x);
+    
+    dragAnchorSet = false;
+
     if(modalTrack != NULL){
-    	modalTrack->mouseReleased(args);
+    	modalTrack->mouseReleased(args, millis);
         return;
     }
     
     inoutTrack->mouseReleased(args);
 	ticker->mouseReleased(args);
 	tabs->mouseReleased(args);
-	currentPage->mouseReleased(args);
+	currentPage->mouseReleased(args, millis);
 	zoomer->mouseReleased(args);
 }
 
@@ -1006,8 +1032,7 @@ bool ofxTimeline::getSwitcherOn(string trackName, float atTime){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
-    return switcher->isOn(atTime/durationInSeconds);   
-
+    return switcher->isOn(atTime/durationInSeconds);
 }
 
 bool ofxTimeline::getSwitcherOn(string trackName){
@@ -1126,9 +1151,12 @@ void ofxTimeline::bringTrackToBottom(ofxTLTrack* track){
     }
 }
 
-//TODO: replace with ofxTimecode formatting
-string ofxTimeline::formatTime(float time){
-    return timecode.timecodeForSeconds(time);
+string ofxTimeline::formatTime(float seconds){
+    return timecode.timecodeForSeconds(seconds);
+}
+
+string ofxTimeline::formatTime(long millis){
+    return timecode.timecodeForMillis(millis);
 }
 
 string ofxTimeline::nameToXMLName(string trackName){
@@ -1141,16 +1169,16 @@ string ofxTimeline::nameToXMLName(string trackName){
 	return xmlName;	    
 }
 
-void ofxTimeline::setDragAnchor(float dragAnchor){
-	globalDragAnchor = dragAnchor;
+void ofxTimeline::setDragTimeOffset(long millisecondOffset){
+	dragMillsecondOffset = millisecondOffset;
 	for(int i = 0; i < pages.size(); i++){
-		pages[i]->setDragAnchor( dragAnchor );
-	}
+        currentPage->setDragOffsetTime(dragMillsecondOffset);
+    }
 	dragAnchorSet = true;
 }
 
-float ofxTimeline::getDragAnchor(){
-	return globalDragAnchor;
+float ofxTimeline::getDragTimeOffset(){
+	return dragAnchorSet ? dragMillsecondOffset : 0.;
 }
 
 ofVec2f ofxTimeline::getNudgePercent(){
@@ -1161,13 +1189,19 @@ ofVec2f ofxTimeline::getBigNudgePercent(){
 	return ofVec2f(zoomer->getViewRange().span()*.02, 0.02);	
 }
 
+long ofxTimeline::screenXToMillis(float x){
+	return screenXtoNormalizedX(x) * durationInSeconds * 1000;
+}
+
+float ofxTimeline::millisToScreenX(long millis){
+    return normalizedXtoScreenX(millis/(durationInSeconds*1000));
+}
+
 float ofxTimeline::screenXtoNormalizedX(float x){
-	//return ofMap(x, bounds.x, bounds.x+bounds.width, zoomBounds.min, zoomBounds.max, true);
     return screenXtoNormalizedX(x, zoomer->getViewRange());
 }
 
 float ofxTimeline::normalizedXtoScreenX(float x){
-    //	return ofMap(x, zoomBounds.min, zoomBounds, bounds.x, bounds.x+bounds.width, true);
     return normalizedXtoScreenX(x, zoomer->getViewRange());
 }
 

@@ -25,10 +25,10 @@ class ofxTLAudioWaveform : public ofxTLTrack
 	virtual void loadSoundfile(string filepath);
 	virtual float getDuration(); //in seconds
 	
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
-	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
+	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	

@@ -1,57 +1,67 @@
 <keyframes>
     <key>
-        <max>0.662904</max>
-        <x>0.647139</x>
-        <y>0.259259</y>
+        <max>00:00:01:517</max>
+        <time>00:00:01:333</time>
+        <value>0.206897</value>
     </key>
     <key>
-        <max>0.690591</max>
-        <x>0.669567</x>
-        <y>0.444444</y>
+        <max>00:00:01:675</max>
+        <time>00:00:01:582</time>
+        <value>0.551724</value>
     </key>
     <key>
-        <max>0.7148</max>
-        <x>0.698236</x>
-        <y>0.444444</y>
+        <max>00:00:01:846</max>
+        <time>00:00:01:766</time>
+        <value>0.448276</value>
     </key>
     <key>
-        <max>0.727814</max>
-        <x>0.721808</x>
-        <y>0.444444</y>
+        <max>00:00:01:943</max>
+        <time>00:00:01:880</time>
+        <value>0.51341</value>
     </key>
     <key>
-        <max>0.730969</max>
-        <x>0.729609</x>
-        <y>0.444444</y>
+        <max>00:00:02:055</max>
+        <time>00:00:02:038</time>
+        <value>0.482759</value>
     </key>
     <key>
-        <max>0.73347</max>
-        <x>0.732328</x>
-        <y>0.444444</y>
+        <max>00:00:02:133</max>
+        <time>00:00:02:083</time>
+        <value>0.375479</value>
     </key>
     <key>
-        <max>0.735428</max>
-        <x>0.734014</x>
-        <y>0.407407</y>
+        <max>00:00:02:183</max>
+        <time>00:00:02:165</time>
+        <value>0.444444</value>
     </key>
     <key>
-        <max>0.737929</max>
-        <x>0.736679</x>
-        <y>0.333333</y>
+        <max>00:00:02:192</max>
+        <time>00:00:02:188</time>
+        <value>0.444444</value>
     </key>
     <key>
-        <max>0.740757</max>
-        <x>0.738854</x>
-        <y>0.296296</y>
+        <max>00:00:02:201</max>
+        <time>00:00:02:196</time>
+        <value>0.444444</value>
     </key>
     <key>
-        <max>0.744564</max>
-        <x>0.742497</x>
-        <y>0.407407</y>
+        <max>00:00:02:213</max>
+        <time>00:00:02:210</time>
+        <value>0.333333</value>
     </key>
     <key>
-        <max>0.747555</max>
-        <x>0.745923</x>
-        <y>0.407407</y>
+        <max>00:00:02:222</max>
+        <time>00:00:02:216</time>
+        <value>0.296296</value>
+    </key>
+    <key>
+        <max>00:00:02:233</max>
+        <time>00:00:02:227</time>
+        <value>0.407407</value>
+    </key>
+    <key>
+        <max>00:00:02:242</max>
+        <time>00:00:02:237</time>
+        <value>0.407407</value>
     </key>
 </keyframes>

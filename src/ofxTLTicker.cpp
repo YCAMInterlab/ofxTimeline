@@ -54,6 +54,7 @@ void ofxTLTicker::draw(){
 	
 	int textH, textW;
 	string text;
+    /*
 	if(timeline->getIsFrameBased()){
 		
 		int curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
@@ -83,70 +84,65 @@ void ofxTLTicker::draw(){
 	}
 	//Time based
 	else {
-		//draw tickers with time
-		float startTime = zoomBounds.min * timeline->getDurationInSeconds();
-		float endTime = zoomBounds.max * timeline->getDurationInSeconds();
-		float durationInview = endTime-startTime;
-		float secondsPerPixel = durationInview / bounds.width;
-		
-        if(bounds.height > 2){
-            //draw ticker marks
-            ofSetLineWidth(1);
-            ofSetColor(200, 180, 40);
-            float heightMultiplier = .75;
-            for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
-                //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
-                float x = screenXForTime(i);
-                ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-            }
-		
-            //draw regular increments
-            int bigTickStep;
-            if(durationInview < 1){ //draw big tick every 100 millis
-                bigTickStep = .1;
-            }
-            else if(durationInview < 60){ // draw big tick every second
-                bigTickStep = 1;
-            }
-            else {
-                bigTickStep = 60;
-            }
-            ofSetLineWidth(3);
-            heightMultiplier = .5;		
-            for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
-                float x = screenXForTime(i);
-                ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-            }
+        */
+    //draw tickers with time
+    float startTime = zoomBounds.min * timeline->getDurationInSeconds();
+    float endTime = zoomBounds.max * timeline->getDurationInSeconds();
+    float durationInview = endTime-startTime;
+    float secondsPerPixel = durationInview / bounds.width;
+    
+    if(bounds.height > 2){
+        //draw ticker marks
+        ofSetLineWidth(1);
+        ofSetColor(200, 180, 40);
+        float heightMultiplier = .75;
+        for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
+            //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
+            float x = screenXForTime(i);
+            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
         }
-        
-		if(drawBPMGrid){
-			updateBPMPoints();
-			ofPushStyle();
-			ofSetColor(255, 255, 255, 50);
-			for(int i = 0; i < bpmScreenPoints.size(); i++){
-				ofSetLineWidth(bpmScreenPoints[i].weight);
-				ofLine(bpmScreenPoints[i].screenX, getBottomEdge(), bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height);
-			}
-			ofPopStyle();
-		}
-	}
+    
+        //draw regular increments
+        int bigTickStep;
+        if(durationInview < 1){ //draw big tick every 100 millis
+            bigTickStep = .1;
+        }
+        else if(durationInview < 60){ // draw big tick every second
+            bigTickStep = 1;
+        }
+        else {
+            bigTickStep = 60;
+        }
+        ofSetLineWidth(3);
+        heightMultiplier = .5;		
+        for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
+            float x = screenXForTime(i);
+            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+        }
+    }
+    
+    if(drawBPMGrid){
+        updateBPMPoints(); //wow don't do this every frame
+        ofPushStyle();
+        ofSetColor(255, 255, 255, 50);
+        for(int i = 0; i < bpmScreenPoints.size(); i++){
+            ofSetLineWidth(bpmScreenPoints[i].weight);
+            ofLine(bpmScreenPoints[i].screenX, getBottomEdge(), bpmScreenPoints[i].screenX, totalDrawRect.y+totalDrawRect.height);
+        }
+        ofPopStyle();
+    }
+	//}
 
 	//highlite current mouse position
 	if(hover){
 		//draw background rect
 		ofSetColor(timeline->getColors().backgroundColor);
-		if (timeline->getIsFrameBased()) {
-			text = ofToString(indexForScreenX(ofGetMouseX()));
-		}
-		else{
-			//text = ofToString();
-			text = timeline->formatTime(timeForScreenX(ofGetMouseX()));
-		}
-		
+        float screenX = millisToScreenX(hoverTime);
+		text = timeline->formatTime(hoverTime);
         if(bounds.height > 2){
             textH = 10;
             textW = (text.size()+1)*7;
-            int previewTimecodeX = ofClamp(ofGetMouseX()+5, bounds.x, bounds.x+bounds.width-textW-5);
+            int previewTimecodeX = ofClamp(screenX+5, bounds.x, bounds.x+bounds.width-textW-5);
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
             //draw playhead line
             ofSetColor(timeline->getColors().textColor);
@@ -155,7 +151,8 @@ void ofxTLTicker::draw(){
 		
 		ofSetColor(timeline->getColors().highlightColor);
 		ofSetLineWidth(1);
-		ofLine(ofGetMouseX(), totalDrawRect.y, ofGetMouseX(), totalDrawRect.y+totalDrawRect.height);
+
+        ofLine(screenX, totalDrawRect.y, screenX, totalDrawRect.y+totalDrawRect.height);
 	}
 	
 	//draw current frame
@@ -198,6 +195,10 @@ void ofxTLTicker::draw(){
 	ofPopStyle();
 }
 
+void ofxTLTicker::setHoverTime(long millis){
+    hoverTime = millis;
+}
+
 void ofxTLTicker::setBPM(float newBpm){
 	bpm = newBpm;
 	hasBPM = true;
@@ -210,13 +211,13 @@ float ofxTLTicker::getBPM(){
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
-void ofxTLTicker::getSnappingPoints(vector<float>& points){
+void ofxTLTicker::getSnappingPoints(vector<long>& points){
 	//for now just add
 	if(!drawBPMGrid){
 		updateBPMPoints();
 	}
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
-		points.push_back(bpmScreenPoints[i].screenX);
+		points.push_back(bpmScreenPoints[i].millis);
 	}
 }
 
@@ -228,7 +229,8 @@ void ofxTLTicker::updateBPMPoints(){
 		double oneMeasure = 1.0/(bpm/60.);
 		double halfMeasure = oneMeasure/2;
 		double quarterMeasure = halfMeasure/2;
-		
+
+        
 		bool showMeasure = false;
 		bool showHalfMeasure = false;
 		bool showQuarterMeasure = false;
@@ -240,23 +242,28 @@ void ofxTLTicker::updateBPMPoints(){
 			}
 		}
 		
-			
+
+        int currentMeasure = 0;        
 		while(currentPoint < timeline->getDurationInSeconds()){
 			ofxTLBPMPoint measures[4];
 			int numMeasures = 0;
 			if(showMeasure){
+                measures[0].millis = currentPoint * 1000;
 				measures[0].screenX = screenXForTime(currentPoint);
 				measures[0].weight = 4;
 				numMeasures = 1;
 			}
 			if(showHalfMeasure){
+                measures[1].millis = (currentPoint+halfMeasure) * 1000;
 				measures[1].screenX = screenXForTime(currentPoint+halfMeasure);
 				measures[1].weight = 2;
 				numMeasures = 2;
 			}
 			if(showQuarterMeasure){
+                measures[2].millis = (currentPoint+quarterMeasure) * 1000;
 				measures[2].screenX = screenXForTime(currentPoint+quarterMeasure);
 				measures[2].weight = 1;
+                measures[3].millis = (currentPoint+halfMeasure+quarterMeasure) * 1000;
 				measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
 				measures[3].weight = 1;
 				numMeasures = 4;
@@ -266,11 +273,14 @@ void ofxTLTicker::updateBPMPoints(){
 			
 			for(int m = 0; m < numMeasures; m++){
 				if( isOnScreen(measures[m].screenX) ){
+                    //cout << "current measure is " << measures[m].millis << endl;
 					bpmScreenPoints.push_back( measures[m] );
 				}
 			}
 
-			currentPoint += oneMeasure;
+            currentMeasure++;
+			currentPoint = currentMeasure*oneMeasure;
+
 		}
 	}	
 }
@@ -317,11 +327,5 @@ void ofxTLTicker::setTotalDrawRect(ofRectangle drawRect){
 }
 
 void ofxTLTicker::updateTimelinePosition(){
-	if(timeline->getIsFrameBased()){
-		timeline->setCurrentFrame(indexForScreenX(ofGetMouseX()));
-	}
-	else{
-		timeline->setCurrentTime(timeForScreenX(ofGetMouseX()));
-	}
-	
+	timeline->setCurrentTimeSeconds(timeForScreenX(ofGetMouseX()));
 }

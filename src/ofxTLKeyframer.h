@@ -42,9 +42,15 @@
 
 class ofxTLKeyframe {
   public:
-	ofVec2f position; // x is value, y is time, all 0 - 1.0	
-	//ui interaction vars -- only set when dragging
-	ofVec2f grabOffset; 
+	ofVec2f screenPosition; // cached screen position
+    long time; //in millis
+    float value; //normalized
+    long grabTimeOffset;
+    float grabValueOffset;
+    
+//	//ui interaction vars -- only set when dragging
+//	ofVec2f grabOffset; 
+//    ofVec2f position;
 };
 
 class ofxTLKeyframer : public ofxTLTrack
@@ -55,16 +61,16 @@ class ofxTLKeyframer : public ofxTLTrack
 
 	virtual void draw();
 	
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
-	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
+	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 	
 	virtual void nudgeBy(ofVec2f nudgePercent);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void getSnappingPoints(vector<float>& points);
+	virtual void getSnappingPoints(vector<long>& points);
 	
 	virtual void save();
 	virtual void load();
@@ -78,10 +84,10 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void selectAll();
 	virtual void unselectAll();
     
-    virtual void regionSelected(ofRange timeRange, ofRange valueRange);
+    virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 	
   protected:
-	virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
+	virtual ofxTLKeyframe* newKeyframe();
 
 	vector<ofxTLKeyframe*> keyframes;
 
@@ -102,7 +108,7 @@ class ofxTLKeyframer : public ofxTLTrack
 	bool keysAreDraggable;
 	
 	virtual void updateKeyframeSort();
-	virtual void updateDragOffsets(ofVec2f screenpoint);
+	virtual void updateDragOffsets(ofVec2f screenpoint, long grabMillis);
 
 	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
 	virtual void createKeyframesFromXML(ofxXmlSettings xml, vector<ofxTLKeyframe*>& keyContainer);
@@ -112,8 +118,10 @@ class ofxTLKeyframer : public ofxTLTrack
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args){};
 
 	bool screenpointIsInBounds(ofVec2f screenpoint);
-	ofVec2f coordForKeyframePoint(ofVec2f keyframePoint);
-	ofVec2f keyframePointForCoord(ofVec2f coord);
+	ofVec2f screenPositionForKeyframe(ofxTLKeyframe* keyframe);
+//	ofVec2f keyframePointForCoord(ofVec2f coord);
+    float screenYToValue(float screenY);
+	float valueToScreenY(float value);
 	
 	bool keysDidDrag;
 	bool keysDidNudge;

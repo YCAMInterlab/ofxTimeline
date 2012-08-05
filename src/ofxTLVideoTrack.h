@@ -34,10 +34,9 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
     ofPtr<ofVideoPlayer> getPlayer();
     
 	virtual void update(ofEventArgs& args);
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
-	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
+	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 		

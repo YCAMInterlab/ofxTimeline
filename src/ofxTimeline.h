@@ -95,7 +95,8 @@ class ofxTimeline {
 	int getDurationInFrames();
 	float getDurationInSeconds();
 	string getDurationInTimecode();
-    
+    long getDurationInMilliseconds();
+        
     virtual void setLoopType(ofLoopType newType);
 	virtual ofLoopType getLoopType();
     bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
@@ -117,13 +118,15 @@ class ofxTimeline {
 	virtual void save();
 
 	virtual void setCurrentFrame(int currentFrame);
-	virtual void setCurrentTime(float time);
+	virtual void setCurrentTimeSeconds(float time);
+    virtual void setCurrentTimeMillis(long millis);
 	virtual void setPercentComplete(float percent);
 	
 	virtual int getCurrentFrame();
 	virtual float getCurrentTime();
-	virtual float getPercentComplete();
-
+	virtual long getCurrentTimeMillis();
+    virtual float getPercentComplete();
+	
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
     virtual void flagUserChangedValue();
@@ -275,11 +278,13 @@ class ofxTimeline {
 	//and the mouse.  
 	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
-	void setDragAnchor(float dragAnchor);
-	float getDragAnchor();
-	
-    string formatTime(float time);
-    
+	void setDragTimeOffset(long millisecondOffset);
+	float getDragTimeOffset();
+    void setHoverTime(long millisTime);
+        
+    string formatTime(float seconds);
+    string formatTime(long millis);
+
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
     //when an track calls presentedModalContent all key and mouse action will be sent directly to that tracks
@@ -289,6 +294,8 @@ class ofxTimeline {
     void dismissedModalContent();
     
     //time <-> pixel translation helpers
+    long screenXToMillis(float x);
+    float millisToScreenX(long millis); 
     float screenXtoNormalizedX(float x);
     float normalizedXtoScreenX(float x);
     float screenXtoNormalizedX(float x, ofRange outputRange);
@@ -308,7 +315,8 @@ class ofxTimeline {
 	bool usingEvents;
 	bool snappingEnabled;
 	bool movePlayheadOnPaste;
-	float globalDragAnchor;
+//	float globalDragAnchor;
+    long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
 	bool lockWidthToWindow;
     
@@ -361,7 +369,7 @@ class ofxTimeline {
 	bool isPlaying; //moves playhead along
 	bool userChangedValue; //did value change this frame;
     
-	float currentTime;
+	float currentTime; //TODO: switch to millis!
 	
 	ofLoopType loopType;
 	int playbackStartFrame;

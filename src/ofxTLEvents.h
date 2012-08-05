@@ -67,6 +67,9 @@ class ofxTLBangEventArgs : public ofEventArgs {
   public:
     ofxTimeline* sender;
 	ofxTLTrack* track;
+	float currentPercent;
+	float currentTime;
+	int currentFrame;
 	string flag;
 };
 

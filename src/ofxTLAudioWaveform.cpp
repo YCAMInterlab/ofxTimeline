@@ -52,7 +52,7 @@ void ofxTLAudioWaveform::update(ofEventArgs& args){
 	lastPercent = player.getPosition();
 
     //currently only supports timelines with duration == duration of player
-    timeline->setCurrentTime(player.getPosition() * player.getDuration());
+    timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 }
 
 void ofxTLAudioWaveform::draw(){
@@ -67,23 +67,19 @@ void ofxTLAudioWaveform::draw(){
 		return;
 	}
 	
-	if(!timeline->getIsFrameBased()){
-		ofPushStyle();
-		ofSetColor(timeline->getColors().keyColor);
-		ofNoFill();
-		
-		for(int i = 0; i < previews.size(); i++){
-			ofPushMatrix();
-			ofTranslate( normalizedXtoScreenX(computedZoomBounds.min, zoomBounds)  - normalizedXtoScreenX(zoomBounds.min, zoomBounds), 0, 0);
-			ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
-			previews[i].draw();
-			ofPopMatrix();
-		}
-		ofPopStyle();
-	}
-	else {
-		//TODO implement frame based with audio waveform
-	}	
+
+    ofPushStyle();
+    ofSetColor(timeline->getColors().keyColor);
+    ofNoFill();
+    
+    for(int i = 0; i < previews.size(); i++){
+        ofPushMatrix();
+        ofTranslate( normalizedXtoScreenX(computedZoomBounds.min, zoomBounds)  - normalizedXtoScreenX(zoomBounds.min, zoomBounds), 0, 0);
+        ofScale(computedZoomBounds.span()/zoomBounds.span(), 1, 1);
+        previews[i].draw();
+        ofPopMatrix();
+    }
+    ofPopStyle();
 }
 
 void ofxTLAudioWaveform::recomputePreview(){
@@ -141,16 +137,16 @@ void ofxTLAudioWaveform::recomputePreview(){
 	shouldRecomputePreview = false;
 }
 
-void ofxTLAudioWaveform::mousePressed(ofMouseEventArgs& args){
+void ofxTLAudioWaveform::mousePressed(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseMoved(ofMouseEventArgs& args){
+void ofxTLAudioWaveform::mouseMoved(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseDragged(ofMouseEventArgs& args, bool snapped){
+void ofxTLAudioWaveform::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseReleased(ofMouseEventArgs& args){
+void ofxTLAudioWaveform::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
@@ -178,11 +174,11 @@ void ofxTLAudioWaveform::boundsChanged(ofEventArgs& args){
 void ofxTLAudioWaveform::play(){
 	if(!player.getIsPlaying()){
 		
-		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
-		player.setPosition(lastPercent);
+//		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
 
 		player.play();
+		player.setPosition(timeline->getPercentComplete());
 		ofAddListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();

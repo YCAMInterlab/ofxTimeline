@@ -80,15 +80,15 @@ class ofxTLTrack
 	virtual void setXMLFileName(string filename);
 	
     //parent wrappers that call virtual versions implemented by subclasses
-    void _mousePressed(ofMouseEventArgs& args);
-    void _mouseMoved(ofMouseEventArgs& args);
-    void _mouseReleased(ofMouseEventArgs& args);
+    void _mousePressed(ofMouseEventArgs& args, long millis);
+    void _mouseMoved(ofMouseEventArgs& args, long millis);
+    void _mouseReleased(ofMouseEventArgs& args, long millis);
     
 	//standard events to be implement in subclasses
-	virtual void mousePressed(ofMouseEventArgs& args){}
-	virtual void mouseMoved(ofMouseEventArgs& args){}
-	virtual void mouseDragged(ofMouseEventArgs& args, bool snapped){};
-	virtual void mouseReleased(ofMouseEventArgs& args){};
+    virtual void mousePressed(ofMouseEventArgs& args, long millis){}
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis){}
+    virtual void mouseDragged(ofMouseEventArgs& args, long millis){}; 
+	virtual void mouseReleased(ofMouseEventArgs& args, long mllis){};
 	
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	virtual void nudgeBy(ofVec2f nudgePercent){};
@@ -101,7 +101,7 @@ class ofxTLTrack
     //it passes normalized 0-1 ranges for time (x) and value (y)
     //It's the responsability of the ofxTLTrack to respond appropriately
     //and select the relevant elements under the track
-    virtual void regionSelected(ofRange timeRange, ofRange valueRange){};
+    virtual void regionSelected(ofLongRange timeRange, ofRange valueRange){};
     
 	//copy+paste
 	virtual string copyRequest(){return "";};
@@ -126,7 +126,7 @@ class ofxTLTrack
     virtual bool isPlaying(){ return false; }
     
 	//add any points (in screenspace x) that should be snapped to
-	virtual void getSnappingPoints(vector<float>& points){};
+	virtual void getSnappingPoints(vector<long>& points){};
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
@@ -146,11 +146,13 @@ class ofxTLTrack
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
-
 	virtual float screenXtoNormalizedX(float x, ofRange outputRange);
 	virtual float normalizedXtoScreenX(float x, ofRange inputRange);
 
-    //TODO: move this to the main timline
+    virtual long screenXToMillis(float x);    
+    virtual float millisToScreenX(long millis);
+
+    //TODO: check if these are used any more
 	virtual int indexForScreenX(int mouseX);
 	virtual int screenXForIndex(int index);
 	virtual int indexForScreenX(int screenX, int durationInFrames);

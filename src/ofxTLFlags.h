@@ -53,15 +53,15 @@ class ofxTLFlags : public ofxTLBangs {
 	
 	virtual void draw();
 	
-	virtual void mousePressed(ofMouseEventArgs& args);
-    virtual void mouseDragged(ofMouseEventArgs& args, bool snapped);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+    virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void unselectAll();
     
 protected:
     
-    virtual ofxTLKeyframe* newKeyframe(ofVec2f point);
+    virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
     virtual void bangFired(ofxTLKeyframe* key);

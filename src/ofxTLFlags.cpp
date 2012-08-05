@@ -58,8 +58,8 @@ void ofxTLFlags::draw(){
 	ofSetLineWidth(5);
 	for(int i = keyframes.size()-1; i >= 0; i--){
         ofxTLFlag* key = (ofxTLFlag*)keyframes[i];
-		int screenX = normalizedXtoScreenX(key->position.x, zoomBounds);
-
+//		int screenX = normalizedXtoScreenX(key->position.x);
+		int screenX = millisToScreenX(key->time);
 		ofSetColor(timeline->getColors().backgroundColor);		
 		int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
 		key->display = ofRectangle(screenX+2.5, textHeight-10, 100, 15);
@@ -67,9 +67,9 @@ void ofxTLFlags::draw(){
         
 		ofSetColor(timeline->getColors().textColor);		
 //		if(enteringText && isKeyframeSelected(key)){
-            key->textField.bounds.x = screenX;
-            key->textField.bounds.y = key->display.y;//-10 accounts for textfield's offset
-			key->textField.draw(); 
+        key->textField.bounds.x = screenX;
+        key->textField.bounds.y = key->display.y;//-10 accounts for textfield's offset
+        key->textField.draw(); 
 //		}
 //		else {
 //			string timeString = timeline->formatTime(key->position.x);
@@ -80,15 +80,14 @@ void ofxTLFlags::draw(){
 }
 
 //main function to get values out of the timeline, operates on the given value range
-void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
+void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 	
     //if we aren't entering text and someone has the shift key held down don't let us go into modal
     if(!enteringText && ofGetModifierKeyShift()){
-        ofxTLBangs::mousePressed(args);
+        ofxTLBangs::mousePressed(args, millis);
         return;
     }
         
-    
     ofxTLFlag* clickedTextField = NULL;    
     //look at each element to see if a text field was clicked
     for(int i = 0; i < keyframes.size(); i++){
@@ -126,12 +125,12 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args){
     
     //if we get all the way here we didn't click on a text field and we aren't
     //currently entering text so proceed as normal
-    ofxTLBangs::mousePressed(args);
+    ofxTLBangs::mousePressed(args, millis);
 }
 
-void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, bool snapped){
+void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, long millis){
     if(!enteringText){
-        ofxTLBangs::mouseDragged(args, snapped);
+        ofxTLBangs::mouseDragged(args, millis);
     }
 }
 
@@ -159,9 +158,8 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
     }    
 }
 
-ofxTLKeyframe* ofxTLFlags::newKeyframe(ofVec2f point){
+ofxTLKeyframe* ofxTLFlags::newKeyframe(){
 	ofxTLFlag* key = new ofxTLFlag();
-    key->position = point;
 	return key;
 }
 
@@ -186,6 +184,9 @@ void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
+    args.currentPercent = timeline->getPercentComplete();
+    args.currentFrame = timeline->getCurrentFrame();
+    args.currentTime = timeline->getCurrentTime();    
     args.flag = ((ofxTLFlag*)key)->textField.text;
     ofNotifyEvent(events().bangFired, args);    
 }

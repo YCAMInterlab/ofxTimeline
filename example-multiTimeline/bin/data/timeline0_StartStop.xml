@@ -1,102 +1,112 @@
 <keyframes>
     <key>
         <flag>start&gt;0</flag>
-        <x>0.00976562</x>
-        <y>0.284916</y>
+        <time>00:00:00:976</time>
+        <value>0.284916</value>
     </key>
     <key>
         <flag>start&gt;1</flag>
-        <x>0.0214844</x>
-        <y>0.530726</y>
+        <time>00:00:02:148</time>
+        <value>0.530726</value>
     </key>
     <key>
         <flag>start&gt;2</flag>
-        <x>0.0400391</x>
-        <y>0.519553</y>
+        <time>00:00:04:003</time>
+        <value>0.519553</value>
     </key>
     <key>
         <flag>start&gt;3</flag>
-        <x>0.0576172</x>
-        <y>0.597765</y>
+        <time>00:00:05:761</time>
+        <value>0.597765</value>
     </key>
     <key>
         <flag>start&gt;4</flag>
-        <x>0.0751953</x>
-        <y>0.486033</y>
+        <time>00:00:07:519</time>
+        <value>0.486033</value>
     </key>
     <key>
         <flag>start&gt;5</flag>
-        <x>0.0917969</x>
-        <y>0.418994</y>
+        <time>00:00:09:179</time>
+        <value>0.418994</value>
     </key>
     <key>
         <flag>start&gt;6</flag>
-        <x>0.108398</x>
-        <y>0.324022</y>
+        <time>00:00:10:839</time>
+        <value>0.324022</value>
     </key>
     <key>
         <flag>start&gt;7</flag>
-        <x>0.12207</x>
-        <y>0.27933</y>
+        <time>00:00:12:207</time>
+        <value>0.27933</value>
     </key>
     <key>
         <flag>start&gt;8</flag>
-        <x>0.135742</x>
-        <y>0.128492</y>
+        <time>00:00:13:574</time>
+        <value>0.128492</value>
     </key>
     <key>
         <flag>start&gt;9</flag>
-        <x>0.151367</x>
-        <y>0.0782123</y>
+        <time>00:00:15:136</time>
+        <value>0.0782123</value>
+    </key>
+    <key>
+        <flag>Typing</flag>
+        <time>00:00:22:046</time>
+        <value>0.681081</value>
+    </key>
+    <key>
+        <flag>something</flag>
+        <time>00:00:27:409</time>
+        <value>0.621622</value>
     </key>
     <key>
         <flag>stop&gt;0</flag>
-        <x>0.794922</x>
-        <y>0.329609</y>
+        <time>00:01:19:492</time>
+        <value>0.329609</value>
     </key>
     <key>
         <flag>stop&gt;1</flag>
-        <x>0.806641</x>
-        <y>0.575419</y>
+        <time>00:01:20:664</time>
+        <value>0.575419</value>
     </key>
     <key>
         <flag>stop&gt;2</flag>
-        <x>0.825196</x>
-        <y>0.564246</y>
+        <time>00:01:22:519</time>
+        <value>0.564246</value>
     </key>
     <key>
         <flag>stop&gt;3</flag>
-        <x>0.842774</x>
-        <y>0.642458</y>
+        <time>00:01:24:277</time>
+        <value>0.642458</value>
     </key>
     <key>
         <flag>stop&gt;4</flag>
-        <x>0.860352</x>
-        <y>0.530726</y>
+        <time>00:01:26:035</time>
+        <value>0.530726</value>
     </key>
     <key>
         <flag>stop&gt;5</flag>
-        <x>0.876954</x>
-        <y>0.463687</y>
+        <time>00:01:27:695</time>
+        <value>0.463687</value>
     </key>
     <key>
         <flag>stop&gt;6</flag>
-        <x>0.893555</x>
-        <y>0.368715</y>
+        <time>00:01:29:355</time>
+        <value>0.368715</value>
     </key>
     <key>
         <flag>stop&gt;7</flag>
-        <x>0.907227</x>
-        <y>0.324023</y>
+        <time>00:01:30:722</time>
+        <value>0.324023</value>
     </key>
     <key>
         <flag>stop&gt;8</flag>
-        <x>0.920899</x>
-        <y>0.173185</y>
+        <time>00:01:32:089</time>
+        <value>0.173185</value>
     </key>
     <key>
         <flag>stop&gt;9</flag>
-        <x>0.936524</x>
-        <y>0.122905</y>
+        <time>00:01:33:652</time>
+        <value>0.122905</value>
     </key>
 </keyframes>

@@ -3,29 +3,29 @@
         <x>0</x>
         <y>39</y>
         <width>1024</width>
-        <height>30</height>
+        <height>53</height>
     </element>
     <element name="brightness">
         <x>0</x>
-        <y>85</y>
+        <y>108</y>
         <width>1024</width>
-        <height>67</height>
+        <height>66</height>
     </element>
     <element name="contrast">
         <x>0</x>
-        <y>168</y>
+        <y>190</y>
         <width>1024</width>
         <height>61</height>
     </element>
     <element name="invert">
         <x>0</x>
-        <y>327</y>
+        <y>349</y>
         <width>1024</width>
         <height>29</height>
     </element>
     <element name="saturation">
         <x>0</x>
-        <y>245</y>
+        <y>267</y>
         <width>1024</width>
         <height>66</height>
     </element>

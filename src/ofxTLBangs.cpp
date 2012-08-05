@@ -28,30 +28,36 @@ void ofxTLBangs::draw(){
     
     ofPushStyle();
     ofFill();
-    ofSetLineWidth(5);
     for(int i = keyframes.size()-1; i >= 0; i--){
-        int screenX = normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
+        //int screenX = normalizedXtoScreenX(keyframes[i]->position.x);
+        int screenX = millisToScreenX(keyframes[i]->time);
         if(isKeyframeSelected(keyframes[i])){
+            ofSetLineWidth(2);
             ofSetColor(timeline->getColors().textColor);
         }
         else if(keyframes[i] == hoverKeyframe){
+            ofSetLineWidth(4);
             ofSetColor(timeline->getColors().highlightColor);
         }
         else{
+            ofSetLineWidth(4);
             ofSetColor(timeline->getColors().keyColor);
         }
         
-        int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
         ofLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
-        ofSetColor(timeline->getColors().backgroundColor);                
+        //debug text system
+//        ofSetColor(timeline->getColors().keyColor);                
+//        int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
+//        ofDrawBitmapString(timeline->formatTime(keyframes[i]->time), screenX, textHeight);
     }
     ofPopStyle();
 
 }
 
-void ofxTLBangs::regionSelected(ofRange timeRange, ofRange valueRange){
+void ofxTLBangs::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-        if(timeRange.contains(keyframes[i]->position.x)){
+//        if(timeRange.contains( keyframes[i]->position.x)){
+    	if(timeRange.contains( keyframes[i]->time )){
             selectKeyframe(keyframes[i]);
         }
 	}
@@ -60,7 +66,8 @@ void ofxTLBangs::regionSelected(ofRange timeRange, ofRange valueRange){
 ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
     if(bounds.inside(p.x,p.y)){
         for(int i = 0; i < keyframes.size(); i++){
-            float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
+//            float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
+            float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);            
             if (abs(offset) < 5) {
                 selectedIndex = i;
                 return keyframes[i];
@@ -72,9 +79,10 @@ ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
 }
 
 void ofxTLBangs::update(ofEventArgs& args){
-	float thisTimelinePoint = timeline->getPercentComplete();
+	long thisTimelinePoint = timeline->getCurrentTimeMillis();
 	for(int i = 0; i < keyframes.size(); i++){
-		if(lastTimelinePoint < keyframes[i]->position.x && thisTimelinePoint > keyframes[i]->position.x){
+		if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
+//            ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 			bangFired(keyframes[i]);
         }
 	}
@@ -85,11 +93,14 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
+    args.currentPercent = timeline->getPercentComplete();
+    args.currentFrame = timeline->getCurrentFrame();
+    args.currentTime = timeline->getCurrentTime();
     ofNotifyEvent(events().bangFired, args);    
 }
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
-	lastTimelinePoint = timeline->getPercentComplete();
+	lastTimelinePoint = timeline->getCurrentTimeMillis();
 	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
 }
 
