@@ -190,8 +190,8 @@ void ofxTLVideoTrack::framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs) 
 void ofxTLVideoTrack::threadedFunction(){
     
 	while(isThreadRunning()){
+        backLock.lock();
         if(!ofGetMousePressed() && !currentlyZooming && thumbsEnabled && backthreadedPlayer != NULL && backthreadedPlayer->isLoaded()){
-            backLock.lock();
             for(int i = 0; i < backThumbs.size(); i++){
                 if(!backThumbs[i].loaded){
                     if(currentlyZooming || ofGetMousePressed()){
@@ -210,9 +210,9 @@ void ofxTLVideoTrack::threadedFunction(){
 
                 }
             }
-            backLock.unlock();
         }
-        
+        backLock.unlock();
+     
         ofSleepMillis(100);     
     }
 }
@@ -239,9 +239,12 @@ void ofxTLVideoTrack::setPlayer(ofPtr<ofVideoPlayer> newPlayer){
     if(player->isLoaded()){
         
         calculateFramePositions();
+        backLock.lock();
         backthreadedPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());
         backthreadedPlayer->setUseTexture(false);
         backthreadedPlayer->loadMovie(player->getMoviePath());
+        backLock.unlock();
+        
 		inFrame = 0;
 		outFrame = player->getTotalNumFrames();
         

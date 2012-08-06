@@ -149,9 +149,13 @@ void testApp::loadVideo(string videoPath){
 void testApp::renderCurrentFrame(){
     
     //update the video and the timeline to the current frame
-    timeline.getVideoPlayer("Video")->setFrame(currentRenderFrame);
+    int startFrame = timeline.getVideoPlayer("Video")->getCurrentFrame();
+    //timeline.getVideoPlayer("Video")->setFrame(currentRenderFrame);
+    timeline.getVideoPlayer("Video")->nextFrame();
     timeline.getVideoPlayer("Video")->update();
-    timeline.setCurrentFrame(currentRenderFrame);
+    int videoFrameToRender = timeline.getVideoPlayer("Video")->getCurrentFrame();
+    float timeToSetTimeline = timeline.getVideoPlayer("Video")->getPosition() * timeline.getVideoPlayer("Video")->getDuration();
+    timeline.setCurrentFrame(videoFrameToRender);
     
     //draw the video with the shader into the frame buffer
     frameBuffer.begin();
@@ -164,6 +168,8 @@ void testApp::renderCurrentFrame(){
     timeline.getVideoPlayer("Video")->draw(contentRectangle);//draw the frame buffer at full frame
     colorControl.end();
 	frameBuffer.end();
+    
+    cout << "RENDERING -- Target Current Frame: " << currentRenderFrame << " start frame " << startFrame << " video frame (+1) " << videoFrameToRender << " video reports time " << timeToSetTimeline << " timeline difference " << (timeToSetTimeline - timeline.getCurrentTime()) << " frame " << timeline.getCurrentFrame() << endl;
     
     //save the image to file and update to the next frame
     ofImage saveImage;
@@ -226,6 +232,7 @@ void testApp::mousePressed(int x, int y, int button){
             }
 			rendering = true;
             currentRenderFrame = timeline.getInFrame();
+            timeline.getVideoPlayer("Video")->getPlayer()->setFrame(currentRenderFrame);
             timeline.stop();
             timeline.disable();
         }
