@@ -12,10 +12,9 @@ void testApp::setup(){
 	timeline.setLoopType(OF_LOOP_NORMAL);
     timeline.getColors().load("defaultColors.xml");
 	
-    
-	timeline.setSnapping(true);
-	timeline.enableSnapToBPM(120.f);
-	timeline.enableDrawBPMGrid(true);
+    timeline.setBPM(120.f);
+	timeline.enableSnapToBPM(true);
+	timeline.setShowBPMGrid(true);
 	
 	timeline.addTrack("Track", &waveform);
     waveform.loadSoundfile("4chan.wav");

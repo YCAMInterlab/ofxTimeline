@@ -24,6 +24,8 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E70044B615D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E70044B415D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.cpp */; };
+		E70044C915D2AEF8007DDE24 /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E70044C215D2AEF8007DDE24 /* libsndfile.a */; };
 		E7814E1714ABC97E00A5D589 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7814E1614ABC97E00A5D589 /* OpenAL.framework */; };
 		E7DC502C15CBC0BE00A3C3FF /* ofxTLInOut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7DC502A15CBC0BE00A3C3FF /* ofxTLInOut.cpp */; };
 		E7F67C7615C7CB1E00E5F681 /* ofxTextInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67C7415C7CB1E00E5F681 /* ofxTextInputField.cpp */; };
@@ -43,8 +45,6 @@
 		E7F67CDA15C7CB5800E5F681 /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67CD615C7CB5800E5F681 /* ofxMSATimer.cpp */; };
 		E7F67D0715C7CB9000E5F681 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = E7F67CE715C7CB9000E5F681 /* kiss_fft.c */; };
 		E7F67D0815C7CB9000E5F681 /* kiss_fftr.c in Sources */ = {isa = PBXBuildFile; fileRef = E7F67CE815C7CB9000E5F681 /* kiss_fftr.c */; };
-		E7F67D0915C7CB9000E5F681 /* ofOpenALSoundPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67CEA15C7CB9000E5F681 /* ofOpenALSoundPlayer.cpp */; };
-		E7F67D0B15C7CB9000E5F681 /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F67CF915C7CB9000E5F681 /* libsndfile.a */; };
 		E7F67D3815C7CBDC00E5F681 /* ofxTimeline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67D0F15C7CBDB00E5F681 /* ofxTimeline.cpp */; };
 		E7F67D3915C7CBDC00E5F681 /* ofxTLAudioWaveform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67D1115C7CBDB00E5F681 /* ofxTLAudioWaveform.cpp */; };
 		E7F67D3A15C7CBDC00E5F681 /* ofxTLBangs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7F67D1315C7CBDB00E5F681 /* ofxTLBangs.cpp */; };
@@ -123,6 +123,11 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E70044B415D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofOpenALSoundPlayer_TimelineAdditions.cpp; sourceTree = "<group>"; };
+		E70044B515D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofOpenALSoundPlayer_TimelineAdditions.h; sourceTree = "<group>"; };
+		E70044B915D2AEF8007DDE24 /* sndfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndfile.h; sourceTree = "<group>"; };
+		E70044BA15D2AEF8007DDE24 /* sndfile.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sndfile.hh; sourceTree = "<group>"; };
+		E70044C215D2AEF8007DDE24 /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsndfile.a; sourceTree = "<group>"; };
 		E7814E1614ABC97E00A5D589 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		E7DC502A15CBC0BE00A3C3FF /* ofxTLInOut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLInOut.cpp; sourceTree = "<group>"; };
 		E7DC502B15CBC0BE00A3C3FF /* ofxTLInOut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLInOut.h; sourceTree = "<group>"; };
@@ -164,10 +169,6 @@
 		E7F67CE615C7CB9000E5F681 /* _kiss_fft_guts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _kiss_fft_guts.h; sourceTree = "<group>"; };
 		E7F67CE715C7CB9000E5F681 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kiss_fft.c; sourceTree = "<group>"; };
 		E7F67CE815C7CB9000E5F681 /* kiss_fftr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kiss_fftr.c; sourceTree = "<group>"; };
-		E7F67CEA15C7CB9000E5F681 /* ofOpenALSoundPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofOpenALSoundPlayer.cpp; sourceTree = "<group>"; };
-		E7F67CEB15C7CB9000E5F681 /* ofOpenALSoundPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofOpenALSoundPlayer.h; sourceTree = "<group>"; };
-		E7F67CF715C7CB9000E5F681 /* sndfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sndfile.h; sourceTree = "<group>"; };
-		E7F67CF915C7CB9000E5F681 /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsndfile.a; sourceTree = "<group>"; };
 		E7F67D0F15C7CBDB00E5F681 /* ofxTimeline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTimeline.cpp; sourceTree = "<group>"; };
 		E7F67D1015C7CBDB00E5F681 /* ofxTimeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTimeline.h; sourceTree = "<group>"; };
 		E7F67D1115C7CBDB00E5F681 /* ofxTLAudioWaveform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLAudioWaveform.cpp; sourceTree = "<group>"; };
@@ -238,7 +239,7 @@
 				E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */,
 				E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */,
 				E7814E1714ABC97E00A5D589 /* OpenAL.framework in Frameworks */,
-				E7F67D0B15C7CB9000E5F681 /* libsndfile.a in Frameworks */,
+				E70044C915D2AEF8007DDE24 /* libsndfile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +335,50 @@
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 			);
 			name = openFrameworks;
+			sourceTree = "<group>";
+		};
+		E70044B315D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions */ = {
+			isa = PBXGroup;
+			children = (
+				E70044B415D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.cpp */,
+				E70044B515D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.h */,
+			);
+			name = ofOpenALSoundPlayer_TimelineAdditions;
+			path = ../ofOpenALSoundPlayer_TimelineAdditions;
+			sourceTree = "<group>";
+		};
+		E70044B715D2AEF8007DDE24 /* sndfile */ = {
+			isa = PBXGroup;
+			children = (
+				E70044B815D2AEF8007DDE24 /* include */,
+				E70044BB15D2AEF8007DDE24 /* lib */,
+			);
+			path = sndfile;
+			sourceTree = "<group>";
+		};
+		E70044B815D2AEF8007DDE24 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				E70044B915D2AEF8007DDE24 /* sndfile.h */,
+				E70044BA15D2AEF8007DDE24 /* sndfile.hh */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		E70044BB15D2AEF8007DDE24 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				E70044C115D2AEF8007DDE24 /* osx */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		E70044C115D2AEF8007DDE24 /* osx */ = {
+			isa = PBXGroup;
+			children = (
+				E70044C215D2AEF8007DDE24 /* libsndfile.a */,
+			);
+			path = osx;
 			sourceTree = "<group>";
 		};
 		E7F67C7015C7CB1E00E5F681 /* ofxTextInputField */ = {
@@ -437,8 +482,7 @@
 			isa = PBXGroup;
 			children = (
 				E7F67CDC15C7CB9000E5F681 /* kiss */,
-				E7F67CE915C7CB9000E5F681 /* ofOpenALSoundPlayer */,
-				E7F67CEC15C7CB9000E5F681 /* sndfile */,
+				E70044B715D2AEF8007DDE24 /* sndfile */,
 			);
 			name = libs;
 			path = ../../../addons/ofxTimeline/libs;
@@ -447,6 +491,7 @@
 		E7F67CDC15C7CB9000E5F681 /* kiss */ = {
 			isa = PBXGroup;
 			children = (
+				E70044B315D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions */,
 				E7F67CDD15C7CB9000E5F681 /* include */,
 				E7F67CE515C7CB9000E5F681 /* src */,
 			);
@@ -470,48 +515,6 @@
 				E7F67CE815C7CB9000E5F681 /* kiss_fftr.c */,
 			);
 			path = src;
-			sourceTree = "<group>";
-		};
-		E7F67CE915C7CB9000E5F681 /* ofOpenALSoundPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				E7F67CEA15C7CB9000E5F681 /* ofOpenALSoundPlayer.cpp */,
-				E7F67CEB15C7CB9000E5F681 /* ofOpenALSoundPlayer.h */,
-			);
-			path = ofOpenALSoundPlayer;
-			sourceTree = "<group>";
-		};
-		E7F67CEC15C7CB9000E5F681 /* sndfile */ = {
-			isa = PBXGroup;
-			children = (
-				E7F67CF515C7CB9000E5F681 /* osx */,
-			);
-			path = sndfile;
-			sourceTree = "<group>";
-		};
-		E7F67CF515C7CB9000E5F681 /* osx */ = {
-			isa = PBXGroup;
-			children = (
-				E7F67CF615C7CB9000E5F681 /* include */,
-				E7F67CF815C7CB9000E5F681 /* lib */,
-			);
-			path = osx;
-			sourceTree = "<group>";
-		};
-		E7F67CF615C7CB9000E5F681 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				E7F67CF715C7CB9000E5F681 /* sndfile.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		E7F67CF815C7CB9000E5F681 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				E7F67CF915C7CB9000E5F681 /* libsndfile.a */,
-			);
-			path = lib;
 			sourceTree = "<group>";
 		};
 		E7F67D0E15C7CBDB00E5F681 /* src */ = {
@@ -728,7 +731,6 @@
 				E7F67CDA15C7CB5800E5F681 /* ofxMSATimer.cpp in Sources */,
 				E7F67D0715C7CB9000E5F681 /* kiss_fft.c in Sources */,
 				E7F67D0815C7CB9000E5F681 /* kiss_fftr.c in Sources */,
-				E7F67D0915C7CB9000E5F681 /* ofOpenALSoundPlayer.cpp in Sources */,
 				E7F67D3815C7CBDC00E5F681 /* ofxTimeline.cpp in Sources */,
 				E7F67D3915C7CBDC00E5F681 /* ofxTLAudioWaveform.cpp in Sources */,
 				E7F67D3A15C7CBDC00E5F681 /* ofxTLBangs.cpp in Sources */,
@@ -750,6 +752,7 @@
 				E7F67D4B15C7CBDC00E5F681 /* ofxTLZoomer.cpp in Sources */,
 				E7F67D6615C7CC0000E5F681 /* ofxTimecode.cpp in Sources */,
 				E7DC502C15CBC0BE00A3C3FF /* ofxTLInOut.cpp in Sources */,
+				E70044B615D2AEE7007DDE24 /* ofOpenALSoundPlayer_TimelineAdditions.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -912,11 +915,19 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/src/kiss/lib/linux\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/linux/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/osx/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/win32/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13 = "\"$(SRCROOT)/../libs/sndfile/lib/linux\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14 = "\"$(SRCROOT)/../libs/sndfile/lib/linux64\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15 = "\"$(SRCROOT)/../libs/sndfile/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16 = "\"$(SRCROOT)/../libs/sndfile/lib/win32\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/src/kiss/lib/linux64\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../libs/kiss/lib/linux\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../libs/kiss/lib/linux64\"";
@@ -1023,11 +1034,19 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/src/kiss/lib/linux\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_10 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/linux/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_11 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/osx/lib\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_12 = "\"$(SRCROOT)/../../../addons/ofxTimeline/libs/sndfile/win32/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_13 = "\"$(SRCROOT)/../libs/sndfile/lib/linux\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_14 = "\"$(SRCROOT)/../libs/sndfile/lib/linux64\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_15 = "\"$(SRCROOT)/../libs/sndfile/lib/osx\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_16 = "\"$(SRCROOT)/../libs/sndfile/lib/win32\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/src/kiss/lib/linux64\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/../libs/kiss/lib/linux\"";
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/../libs/kiss/lib/linux64\"";

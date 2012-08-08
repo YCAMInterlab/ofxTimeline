@@ -35,8 +35,8 @@ void ofxTLAudioWaveform::disable(){
 
 void ofxTLAudioWaveform::loadSoundfile(string filepath){
 	player.loadSound(filepath, false);
-	cout << "duration is " << player.getDuration() << endl;
-	cout << "num samples " << player.getBuffer().size() << endl;
+//	cout << "duration is " << player.getDuration() << endl;
+//	cout << "num samples " << player.getBuffer().size() << endl;
 	shouldRecomputePreview = true;
 }
 
