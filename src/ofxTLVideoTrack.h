@@ -53,7 +53,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
 	void setInFrame(int inFrame);
 	void setOutFrame(int outFrame);
 
-    virtual void togglePlay();
+    virtual bool togglePlay();
     virtual void play();
     virtual void stop();
     virtual bool isPlaying();

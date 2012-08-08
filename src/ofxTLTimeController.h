@@ -9,7 +9,7 @@
 
 class ofxTLTimeController {
   public:
-    virtual void togglePlay() = 0;
+    virtual bool togglePlay() = 0;
     virtual void play() = 0;
     virtual void stop() = 0;
     virtual bool isPlaying() = 0;

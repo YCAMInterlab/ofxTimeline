@@ -44,14 +44,16 @@ void ofxTLVideoTrack::disable(){
     ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 }
 
-void ofxTLVideoTrack::togglePlay(){
-    if(!isLoaded()) return;
+bool ofxTLVideoTrack::togglePlay(){
+    if(!isLoaded()) return false;
     
     if(isPlaying()){
         stop();
+        return false;
     }
     else{
         play();
+        return true;
     }
 }
 
