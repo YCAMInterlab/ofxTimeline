@@ -143,6 +143,7 @@ void ofxTLTicker::draw(){
             textH = 10;
             textW = (text.size()+1)*7;
             int previewTimecodeX = ofClamp(screenX+5, bounds.x, bounds.x+bounds.width-textW-5);
+            ofFill();
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
             //draw playhead line
             ofSetColor(timeline->getColors().textColor);
@@ -173,6 +174,7 @@ void ofxTLTicker::draw(){
         textW = (text.size()+1)*7;
         int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
         ofSetColor(timeline->getColors().backgroundColor);
+        ofFill();
         ofRect(timeCodeX-5, bounds.y, textW, textH);
         ofSetColor(timeline->getColors().textColor);
         ofDrawBitmapString(text, timeCodeX, bounds.y+textH);

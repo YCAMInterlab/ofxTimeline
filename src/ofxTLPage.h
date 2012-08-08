@@ -78,6 +78,9 @@ class ofxTLPage {
 	virtual ofxTLTrack* getTrack(string name);
 	virtual void removeTrack(string name);
     
+    //computed on the fly so please use sparingly if you have a lot of track
+    vector<ofxTLTrack*> getTracks();
+
     //given a folder the page will look for xml files to load within that
 	virtual void loadTracksFromFolder(string folderPath);
     
@@ -114,8 +117,6 @@ class ofxTLPage {
 	virtual void setDragOffsetTime(long offsetMillis);
 	
     ofxTimeline* timeline;
-    
-    
     
   protected:
     

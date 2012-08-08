@@ -380,6 +380,15 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 	tracks[trackName] = track;
 }
 
+//computed on the fly so please use sparingly if you have a lot of track
+vector<ofxTLTrack*> ofxTLPage::getTracks(){
+    vector<ofxTLTrack*> tracks;
+    for(int i = 0; i < headers.size(); i++){
+        tracks.push_back( headers[i]->getTrack() );
+    }
+    return tracks;
+}
+
 ofxTLTrack* ofxTLPage::getTrack(string trackName){
 	if(tracks.find(trackName) == tracks.end()){
 		ofLogError("ofxTLPage -- Couldn't find element named " + trackName + " on page " + name);

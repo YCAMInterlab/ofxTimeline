@@ -84,17 +84,12 @@ ofxTimeline::~ofxTimeline(){
         //TODO: move to shared pointers 
         //this breaks timelines that are statically declared because 
         //there is no copy/assignment constructor
-		for(int i = 0; i < pages.size(); i++){ 
-			delete pages[i];
-		}
-		pages.clear();
-		
-		delete ticker;
-		delete tabs;
-		delete zoomer;
-		
+		reset();
         
-        cout << "*** DESTRUCTORING**" << endl;
+        delete ticker;
+        delete tabs;
+        delete zoomer;
+
 	}
 }
 
@@ -272,7 +267,7 @@ void ofxTimeline::play(){
         }
 		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		isPlaying = true;
-        currentTime = ofClamp(currentTime, getInTime(), getOutTime());
+        currentTime = ofClamp(currentTime, getInTimeInSeconds(), getOutTimeInSeconds());
         
         playbackStartTime = timer.getAppTime() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
@@ -302,12 +297,12 @@ void ofxTimeline::stop(){
 
 bool ofxTimeline::togglePlay(){
     if(!isEnabled){
-        return;
+        return false;
     }
     
     if(timeControl != NULL){
-        timeControl->togglePlay();
-        return;
+        return timeControl->togglePlay();
+        ;
     }
 
 	if(getIsPlaying()){
@@ -331,6 +326,10 @@ void ofxTimeline::setPercentComplete(float percent){
     currentTime = percent*durationInSeconds;
 }
 
+void ofxTimeline::setCurrentTimecode(string timecodeString){
+    currentTime = timecode.secondsForTimecode(timecodeString);
+}
+
 void ofxTimeline::setHoverTime(long millisTime){
 	ticker->setHoverTime(millisTime);
 }
@@ -340,12 +339,10 @@ void ofxTimeline::setCurrentTimeSeconds(float time){
 }
 
 void ofxTimeline::setCurrentTimeMillis(long millis){
-    
+	currentTime = millis/1000.;
 }
 
-
 void ofxTimeline::setFrameRate(float fps){
-    //TODO: Retime track contents?
 	timecode.setFPS(fps);    
 }
 
@@ -373,56 +370,63 @@ float ofxTimeline::getPercentComplete(){
     return currentTime / durationInSeconds;
 }
 
-//TODO: santize in/out 
-//TODO: all should call overloaded function so it's easier to subclass
+string ofxTimeline::getCurrentTimecode(){
+    return timecode.timecodeForSeconds(currentTime);
+}
+
 void ofxTimeline::setInPointAtPlayhead(){
-    setInPointAtTime(currentTime);
+    setInPointAtSeconds(currentTime);
 }
-
-void ofxTimeline::setOutPointAtPlayhead(){
-    setOutPointAtTime(currentTime);
-}
-
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = ofClamp(percent, 0, inoutRange.max);
 }
+void ofxTimeline::setInPointAtSeconds(float time){
+	setInPointAtPercent(time/durationInSeconds);	    
+}
+void ofxTimeline::setInPointAtFrame(int frame){
+    setInPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
+}
+void ofxTimeline::setInPointAtMillis(long millis){
+    setInPointAtPercent(millis / (1000. * durationInSeconds) );
+}
+void ofxTimeline::setInPointAtTimecode(string timecodeString){
+    setInPointAtPercent(timecode.secondsForTimecode(timecodeString) / durationInSeconds);
+}
 
+void ofxTimeline::setOutPointAtPlayhead(){
+    setOutPointAtSeconds(currentTime);
+}
 void ofxTimeline::setOutPointAtPercent(float percent){
 	inoutRange.max = ofClamp(percent, inoutRange.min, 1.0);
 }
-
-void ofxTimeline::setInPointAtFrame(int frame){
-    inoutRange.min = timecode.secondsForFrame(frame) / durationInSeconds;
-}
-
 void ofxTimeline::setOutPointAtFrame(float frame){
-    inoutRange.max = timecode.secondsForFrame(frame) / durationInSeconds;
+    setOutPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
 }
-
-void ofxTimeline::setInPointAtTime(float time){
-	inoutRange.min = time/durationInSeconds;	    
+void ofxTimeline::setOutPointAtSeconds(float time){
+    setOutPointAtPercent(time/durationInSeconds);
 }
-
-void ofxTimeline::setOutPointAtTime(float time){
-    inoutRange.max = time/durationInSeconds;
+void ofxTimeline::setOutPointAtMillis(long millis){
+    setOutPointAtPercent(millis / (1000. * durationInSeconds) );
+}
+void ofxTimeline::setOutPointAtTimecode(string timecodeString){
+    setOutPointAtPercent(timecode.secondsForTimecode(timecodeString) / durationInSeconds);    
 }
 
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
+    if(inoutPercentRange.min > inoutPercentRange.max) return;
 	inoutRange = inoutPercentRange;
 }
 
 void ofxTimeline::setCurrentTimeToInPoint(){
-	inoutRange.min = getPercentComplete();
-	if(inoutRange.max < inoutRange.min){
-		inoutRange.max = 1.0;
-	}
+    setPercentComplete(inoutRange.min);
 }
 
 void ofxTimeline::setCurrentTimeToOutPoint(){
-	inoutRange.max = getPercentComplete();
-	if(inoutRange.min > inoutRange.max){
-		inoutRange.min = 0.0;
-	}	
+    setPercentComplete(inoutRange.max);
+}
+
+void ofxTimeline::clearInOut(){
+	setInOutRange(ofRange(0.0,1.0));    
 }
 
 ofRange ofxTimeline::getInOutRange(){
@@ -430,19 +434,35 @@ ofRange ofxTimeline::getInOutRange(){
 }
 
 int ofxTimeline::getInFrame(){
-	return timecode.frameForSeconds(getInTime());
+	return timecode.frameForSeconds(getInTimeInSeconds());
 }
 
 int ofxTimeline::getOutFrame(){
-    return timecode.frameForSeconds(getOutTime());
+    return timecode.frameForSeconds(getOutTimeInSeconds());
 }
 
-float ofxTimeline::getInTime(){
+float ofxTimeline::getInTimeInSeconds(){
 	return durationInSeconds*inoutRange.min;
 }
 
-float ofxTimeline::getOutTime(){
+float ofxTimeline::getOutTimeInSeconds(){
 	return durationInSeconds*inoutRange.max;
+}
+
+long ofxTimeline::getInTimeInMillis(){
+    return getInTimeInSeconds()*1000;
+}
+
+string ofxTimeline::getInPointTimecode(){
+	return timecode.timecodeForSeconds(getInTimeInSeconds());
+}
+
+long ofxTimeline::getOutTimeInMillis(){
+    return getOutTimeInSeconds()*1000;    
+}
+
+string ofxTimeline::getOutPointTimecode(){
+	return timecode.timecodeForSeconds(getOutTimeInSeconds());    
 }
 
 bool ofxTimeline::toggleEnabled(){
@@ -471,6 +491,14 @@ void ofxTimeline::clear(){
     }
 }
 
+void ofxTimeline::reset(){ //gets rid of everything
+    for(int i = 0; i < pages.size(); i++){ 
+        delete pages[i];
+    }
+    pages.clear();
+    trackNameToPage.clear();
+}
+
 void ofxTimeline::save(){
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->save();
@@ -491,6 +519,14 @@ void ofxTimeline::setDurationInSeconds(float seconds){
         return;
     }
 	durationInSeconds = seconds;
+}
+
+void ofxTimeline::setDurationInMillis(long millis){
+    durationInSeconds = millis/1000.;
+}
+
+void ofxTimeline::setDurationInTimecode(string timecodeString){
+    durationInSeconds = timecode.secondsForTimecode(timecodeString);
 }
 
 int ofxTimeline::getDurationInFrames(){
@@ -931,6 +967,16 @@ void ofxTimeline::setPageName(string newName){
 	currentPage->loadTrackPositions();
 }
 
+void ofxTimeline::setPageName(string newName, int index){
+	if(index < 0 || index >= pages.size()){
+        ofLogError("ofxTimeline::setPageName -- index out of bounds");
+        return;
+    }
+    tabs->changeName(pages[index]->getName(), newName);
+    pages[index]->setName(newName);
+    pages[index]->loadTrackPositions();
+}
+
 void ofxTimeline::setCurrentPage(string pageName){
 	tabs->selectPage(pageName);
 }
@@ -1073,6 +1119,10 @@ ofxTLEvents& ofxTimeline::events(){
 
 ofxTimecode& ofxTimeline::getTimecode(){
     return timecode;
+}
+
+vector<ofxTLPage*>& ofxTimeline::getPages(){
+    return pages;
 }
 
 ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName){

@@ -66,18 +66,40 @@ class ofxTimeline {
 	~ofxTimeline();
 
 	virtual void setup();
+
+    bool toggleEnabled();
+    virtual void enable();
+	virtual void disable();
     
+    virtual void clear(); //clears every track
+    virtual void reset(); //gets rid of everything
+
     //used mostly for generating unique XML
     //for custom names, call setup() before calling name
     virtual void setName(string name);
     virtual string getName();
-	    
-    bool toggleEnabled();
-    virtual void enable();
-	virtual void disable();
-	
-    virtual void clear(); //clears every track
-    
+
+    //playback
+	virtual void play();
+	virtual void stop();
+	virtual bool togglePlay();
+	virtual bool getIsPlaying();
+
+    virtual void setLoopType(ofLoopType newType);
+	virtual ofLoopType getLoopType();
+    bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
+
+	virtual bool toggleShow();    
+    virtual void show();
+	virtual void hide();
+	virtual void draw();
+
+    //show/hide ticker,zoomer,inout all at once
+    virtual void setShowTimeControls(bool shouldShowTimeControls);
+    virtual void setShowTicker(bool shouldShowTicker);
+    virtual void setShowInoutControl(bool shouldShowInoutControl);
+    virtual void setShowZoomer(bool shouldShowZoomer);
+
     //loads calls load on all tracks from the given folder
     //really useful for setting up 'project' directories
     virtual void loadTracksFromFolder(string folderPath);
@@ -86,32 +108,19 @@ class ofxTimeline {
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
 	void setDurationInSeconds(float seconds);
-    
+	void setDurationInMillis(long millis);
+    void setDurationInTimecode(string timecode);
+
+	int getDurationInFrames();
+	float getDurationInSeconds();
+    long getDurationInMilliseconds();
+	string getDurationInTimecode();
+
     //frame based mode timelines will never skip frames, and will advance at the speed of openFrameworks
     //regardless of the FPS that you set the timeline to
     void setFrameBased(bool frameBased);
 	bool getIsFrameBased();
-    
-	int getDurationInFrames();
-	float getDurationInSeconds();
-	string getDurationInTimecode();
-    long getDurationInMilliseconds();
-        
-    virtual void setLoopType(ofLoopType newType);
-	virtual ofLoopType getLoopType();
-    bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
-    
-	virtual void show();
-	virtual void hide();
-	virtual bool toggleShow();
-    
-    //show/hide ticker,zoomer,inout all at once
-    virtual void setShowTimeControls(bool shouldShowTimeControls);
-    
-    virtual void setShowTicker(bool shouldShowTicker);
-    virtual void setShowInoutControl(bool shouldShowInoutControl);
-    virtual void setShowZoomer(bool shouldShowZoomer);
-    
+
     //autosave will always write to XML file on each major change 
     //otherwise call save manually to write the files
     void setAutosave(bool autosave);
@@ -121,12 +130,17 @@ class ofxTimeline {
 	virtual void setCurrentTimeSeconds(float time);
     virtual void setCurrentTimeMillis(long millis);
 	virtual void setPercentComplete(float percent);
-	
+	virtual void setCurrentTimecode(string timecodeString);
+    
+    virtual void setCurrentTimeToInPoint();
+	virtual void setCurrentTimeToOutPoint();
+
 	virtual int getCurrentFrame();
 	virtual float getCurrentTime();
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
-	
+	virtual string getCurrentTimecode();
+    
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
     virtual void flagUserChangedValue();
@@ -137,33 +151,34 @@ class ofxTimeline {
     //it'll trigger a save if autosave is on, and it'll add to the undo queue for that page
     virtual void flagTrackModified(ofxTLTrack* track); 
     
-    //playback
-    //TODO: move these into a time controller of its own
-	virtual void play();
-	virtual void stop();
-	virtual bool togglePlay();
-	virtual bool getIsPlaying();
-    
     //in and out point setting, respected by internal time
-	virtual void setInPointAtPlayhead();
-    virtual void setOutPointAtPlayhead();
 	virtual void setInPointAtPercent(float percent);
+	void setInPointAtFrame(int frame);
+	void setInPointAtSeconds(float time);
+    void setInPointAtMillis(long millis);
+    void setInPointAtTimecode(string timecode);
+	void setInPointAtPlayhead();
+    
 	virtual void setOutPointAtPercent(float percent);
-	virtual void setInPointAtFrame(int frame);
-	virtual void setOutPointAtFrame(float frame);
-	virtual void setInPointAtTime(float time);
-	virtual void setOutPointAtTime(float time);
-
+	void setOutPointAtFrame(float frame);
+	void setOutPointAtSeconds(float time);
+	void setOutPointAtMillis(long millis);
+    void setOutPointAtTimecode(string timecode);
+    void setOutPointAtPlayhead();
+    
 	virtual void setInOutRange(ofRange inoutPercentRange);
-	
+	virtual void clearInOut();
+    
     ofRange getInOutRange();
 	int getInFrame();
-	int getOutFrame();
-	float getInTime();
-	float getOutTime();
-
-	virtual void setCurrentTimeToInPoint();
-	virtual void setCurrentTimeToOutPoint();
+	float getInTimeInSeconds();
+	long getInTimeInMillis();
+    string getInPointTimecode();
+    
+    int getOutFrame();
+	float getOutTimeInSeconds();
+	long getOutTimeInMillis();
+    string getOutPointTimecode();
 
 	virtual void setOffset(ofVec2f offset);
     virtual void setLockWidthToWindow(bool lockWidth);
@@ -198,10 +213,10 @@ class ofxTimeline {
 	
 	void unselectAll();
 
-	virtual void draw();
 
 	virtual void addPage(string name, bool makeCurrent = true);
 	virtual void setPageName(string newName);
+	virtual void setPageName(string newName, int index);
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
@@ -230,6 +245,7 @@ class ofxTimeline {
     ofxTLFlags* addFlags(string name, string xmlFileName);
 
     //TODO: remove image sequence from the core?
+    //or fix it up.
 	virtual ofxTLImageSequence* addImageSequence(string name);
 	virtual ofxTLImageSequence* addImageSequence(string name, string directory);
 	virtual ofImage* getImage(string name);
@@ -267,7 +283,8 @@ class ofxTimeline {
 
 	ofxTLColors& getColors();
 	ofxTimecode& getTimecode();
-
+	vector<ofxTLPage*>& getPages();
+    
 	ofVec2f getNudgePercent();
 	ofVec2f getBigNudgePercent();
 
@@ -308,14 +325,12 @@ class ofxTimeline {
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
     
-    
     string nameToXMLName(string name);
     
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
 	bool movePlayheadOnPaste;
-//	float globalDragAnchor;
     long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
 	bool lockWidthToWindow;

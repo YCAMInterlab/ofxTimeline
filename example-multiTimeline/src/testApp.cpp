@@ -45,10 +45,6 @@ void testApp::draw(){
     timeline.draw(); 
 
     sublines[0]->setOffset(timeline.getBottomLeft());
-    
-//    return;
-	
-	
 
     for(int i = 0; i < MAX(sublines.size()-mouseX/1000, 0); i++){
         

@@ -13,6 +13,7 @@ ofxTLVideoThumb::ofxTLVideoThumb(){
 	framenum= -1;
 	loaded = false;
     useTexture = true;
+    timestamp = 0;
 }
 
 ofxTLVideoThumb::~ofxTLVideoThumb(){
