@@ -191,19 +191,24 @@ class ofxTimeline {
     ofVec2f getTopLeft();
 	ofVec2f getBottomLeft();
     ofVec2f getBottomRight();
-    
-	void setSnapping(bool snapping);
-	void toggleSnapping();
-	
+    	
 	//setting a BPM allows for a global measure across the timeline
 	//this is useful for snapping to intervals
 	void setBPM(float bpm);
 	float getBPM();
-	void enableSnapToBPM(float bpm); //beats per minute
-	void toggleDrawBPMGrid();
-	void enableDrawBPMGrid(bool enableGrid);
-	void enableSnapToOtherKeyframes(bool enableSnapToOther);
 	
+    bool toggleSnapToBPM();
+    void enableSnapToBPM(bool enableSnap);
+    bool getSnapToBPM();
+    
+	bool toggleShowBPMGrid();
+	void setShowBPMGrid(bool enableGrid);
+    bool getShowBPMGrid();
+    
+    bool toggleSnapToOtherKeyframes();
+	void enableSnapToOtherKeyframes(bool enableSnapToOther);
+	bool getSnapToOtherElements();
+    
 	void setMovePlayheadOnPaste(bool move);
 	bool getMovePlayheadOnPaste();	
 	string getPasteboard();
@@ -212,7 +217,6 @@ class ofxTimeline {
 	bool getMovePlayheadOnDrag();
 	
 	void unselectAll();
-
 
 	virtual void addPage(string name, bool makeCurrent = true);
 	virtual void setPageName(string newName);
@@ -330,6 +334,7 @@ class ofxTimeline {
 	bool isSetup;
 	bool usingEvents;
 	bool snappingEnabled;
+    
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
@@ -338,6 +343,8 @@ class ofxTimeline {
 	string pasteboard;
 
 	bool movePlayheadOnDrag;
+    bool snapToBPM;
+    bool snapToOtherElements;
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
 
@@ -354,6 +361,7 @@ class ofxTimeline {
 
     ofxTLTrack* modalTrack;
     ofxTLTimeController* timeControl;
+
     
 	float width;
 	ofVec2f offset;

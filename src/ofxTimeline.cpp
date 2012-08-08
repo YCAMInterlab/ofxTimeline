@@ -62,7 +62,8 @@ ofxTimeline::ofxTimeline()
 	isPlaying(false),
 	isEnabled(false),
 	dragAnchorSet(false),
-	snappingEnabled(false),
+	snapToBPM(false),
+	snapToOtherElements(true),
 	dragMillsecondOffset(0),
 	movePlayheadOnPaste(true),
 	movePlayheadOnDrag(false),
@@ -302,7 +303,6 @@ bool ofxTimeline::togglePlay(){
     
     if(timeControl != NULL){
         return timeControl->togglePlay();
-        ;
     }
 
 	if(getIsPlaying()){
@@ -570,12 +570,12 @@ bool ofxTimeline::getLockWidthToWindow(){
 }
 
 void ofxTimeline::setWidth(float newWidth){
-	width = newWidth;
-	updatePagePositions();
-//	recalculateBoundingRects();
-	ofEventArgs args;
-	ofNotifyEvent(events().viewWasResized, args);
-
+    if(width != newWidth){
+        width = newWidth;
+        updatePagePositions();
+        ofEventArgs args;
+        ofNotifyEvent(events().viewWasResized, args);
+    }
 }
 
 void ofxTimeline::collapseAllTracks(){
@@ -612,21 +612,6 @@ void ofxTimeline::updatePagePositions(){
 	}
 }
 
-void ofxTimeline::setBPM(float bpm) {
-    ticker->setBPM(bpm);
-}
-
-float ofxTimeline::getBPM() {
-	return ticker->getBPM();
-}
-
-void ofxTimeline::setSnapping(bool snapping){
-	snappingEnabled = snapping;
-	for(int i = 0; i < pages.size(); i++){
-		pages[i]->setSnapping(snappingEnabled);
-	}
-}
-
 void ofxTimeline::presentedModalContent(ofxTLTrack* newModalTrack){
     modalTrack = newModalTrack;
 }
@@ -639,26 +624,51 @@ void ofxTimeline::unselectAll(){
 	currentPage->unselectAll();
 }
 
-void ofxTimeline::toggleSnapping(){
-	setSnapping(!snappingEnabled);
+void ofxTimeline::setBPM(float bpm) {
+    ticker->setBPM(bpm);
 }
 
-void ofxTimeline::enableSnapToBPM(float bpm){
-	ticker->setBPM(bpm);
+float ofxTimeline::getBPM() {
+	return ticker->getBPM();
+}
+
+bool ofxTimeline::toggleSnapToBPM(){
+	snapToBPM = !snapToBPM;
+    return snapToBPM;
+}
+
+void ofxTimeline::enableSnapToBPM(bool enableSnap){
+    snapToBPM = enableSnap;
+}
+
+bool ofxTimeline::getSnapToBPM(){
+    return snapToBPM;
+}
+
+bool ofxTimeline::toggleShowBPMGrid(){
+    ticker->setDrawBPMGrid(!ticker->getDrawBPMGrid());		
+	return ticker->getDrawBPMGrid();
+}
+
+void ofxTimeline::setShowBPMGrid(bool enableGrid){
+    ticker->setDrawBPMGrid(enableGrid);
+}
+
+bool ofxTimeline::getShowBPMGrid(){
+    return ticker->getDrawBPMGrid();
+}
+
+bool ofxTimeline::toggleSnapToOtherKeyframes(){
+    snapToOtherElements = !snapToOtherElements;
+    return snapToOtherElements;
 }
 
 void ofxTimeline::enableSnapToOtherKeyframes(bool enableSnapToOther){
-	for(int i = 0; i < pages.size(); i++){
-		currentPage->enableSnapToOtherTracks(enableSnapToOther);
-	}
+    snapToOtherElements = enableSnapToOther;
 }
 
-void ofxTimeline::toggleDrawBPMGrid(){
-	ticker->setDrawBPMGrid(!ticker->getDrawBPMGrid());		
-}
-
-void ofxTimeline::enableDrawBPMGrid(bool enableGrid){
-	ticker->setDrawBPMGrid(enableGrid);
+bool ofxTimeline::getSnapToOtherElements(){
+    return snapToOtherElements;
 }
 
 #pragma mark EVENTS
@@ -711,7 +721,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 	currentPage->mousePressed(args,millis);
 	zoomer->mousePressed(args);
 
-	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
+//	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
@@ -788,7 +798,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	else if(ofGetModifierKeyControl() && args.key == 1){ //select all
 		currentPage->selectAll();						
 	}
-	
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
 			ofVec2f nudgeAmount = ofGetModifierKeyShift() ? getBigNudgePercent() : getNudgePercent();

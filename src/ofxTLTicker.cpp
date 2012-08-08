@@ -122,7 +122,7 @@ void ofxTLTicker::draw(){
     }
     
     if(drawBPMGrid){
-        updateBPMPoints(); //wow don't do this every frame
+        updateBPMPoints(); //wow... don't do this every frame
         ofPushStyle();
         ofSetColor(255, 255, 255, 50);
         for(int i = 0; i < bpmScreenPoints.size(); i++){
@@ -214,15 +214,17 @@ float ofxTLTicker::getBPM(){
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
 void ofxTLTicker::getSnappingPoints(vector<long>& points){
-	//for now just add
+
 	if(!drawBPMGrid){
 		updateBPMPoints();
 	}
+    
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
 		points.push_back(bpmScreenPoints[i].millis);
 	}
 }
 
+//TODO: find a way to make this not happen every frame
 void ofxTLTicker::updateBPMPoints(){
 	
 	bpmScreenPoints.clear();
@@ -243,7 +245,6 @@ void ofxTLTicker::updateBPMPoints(){
 				showQuarterMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
 			}
 		}
-		
 
         int currentMeasure = 0;        
 		while(currentPoint < timeline->getDurationInSeconds()){
@@ -251,38 +252,35 @@ void ofxTLTicker::updateBPMPoints(){
 			int numMeasures = 0;
 			if(showMeasure){
                 measures[0].millis = currentPoint * 1000;
-				measures[0].screenX = screenXForTime(currentPoint);
+				measures[0].screenX = millisToScreenX(measures[0].millis);
 				measures[0].weight = 4;
 				numMeasures = 1;
 			}
 			if(showHalfMeasure){
                 measures[1].millis = (currentPoint+halfMeasure) * 1000;
-				measures[1].screenX = screenXForTime(currentPoint+halfMeasure);
+				measures[1].screenX = millisToScreenX(measures[1].millis);
 				measures[1].weight = 2;
 				numMeasures = 2;
 			}
 			if(showQuarterMeasure){
                 measures[2].millis = (currentPoint+quarterMeasure) * 1000;
-				measures[2].screenX = screenXForTime(currentPoint+quarterMeasure);
+				measures[2].screenX = millisToScreenX(measures[2].millis);
 				measures[2].weight = 1;
                 measures[3].millis = (currentPoint+halfMeasure+quarterMeasure) * 1000;
-				measures[3].screenX = screenXForTime(currentPoint+halfMeasure+quarterMeasure);
+				measures[3].screenX = millisToScreenX(measures[3].millis);
 				measures[3].weight = 1;
 				numMeasures = 4;
 			}
 			
-//			cout << "measures " << measures[0].screenX << endl;
-			
 			for(int m = 0; m < numMeasures; m++){
 				if( isOnScreen(measures[m].screenX) ){
-                    //cout << "current measure is " << measures[m].millis << endl;
+
 					bpmScreenPoints.push_back( measures[m] );
 				}
 			}
 
             currentMeasure++;
 			currentPoint = currentMeasure*oneMeasure;
-
 		}
 	}	
 }

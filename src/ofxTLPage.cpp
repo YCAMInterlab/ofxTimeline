@@ -48,7 +48,7 @@ ofxTLPage::ofxTLPage()
 	snappingTolerance(12),
 	ticker(NULL),
 	millisecondDragOffset(0),
-	snapToOtherTracksEnabled(true),
+//	snapToOtherTracksEnabled(true),
 	headerHasFocus(false),
 	focusedTrack(NULL),
 	draggingSelectionRectangle(false)
@@ -99,11 +99,12 @@ void ofxTLPage::draw(){
 		headers[i]->draw();
 		tracks[headers[i]->name]->_draw();
 	}	
-	if(draggingInside && snappingEnabled){
+	if(draggingInside && snapPoints.size() > 0){
 		ofPushStyle();
 		ofSetColor(255,255,255,100);
 		for(int i = 0; i < snapPoints.size(); i++){
-			ofLine(snapPoints[i], trackContainerRect.y, snapPoints[i], trackContainerRect.y+trackContainerRect.height);
+			ofLine(timeline->millisToScreenX(snapPoints[i]), trackContainerRect.y, 
+                   timeline->millisToScreenX(snapPoints[i]), trackContainerRect.y+trackContainerRect.height);
 		}
 		ofPopStyle();
 	}
@@ -143,9 +144,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
             selectionRectangle = ofRectangle(args.x,args.y,0,0);
         }
-		if(snappingEnabled){
-			refreshSnapPoints();
-		}
+		refreshSnapPoints();
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
@@ -222,7 +221,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
         }
     }
     else {
-        if(snappingEnabled){
+        if(snapPoints.size() > 0){
             refreshSnapPoints();
             if(snapPoints.size() > 0){
                 long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0); //hack to find distance in millseconds
@@ -260,8 +259,6 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 			tracks[headers[i]->name]->_mouseReleased(args, millis);
 		}		
 		draggingInside = false;
-        //TODO: add hovering back in
-//        timeline->setHoverPosition(args.x);
         timeline->setHoverTime(millis);
 	}
 
@@ -287,12 +284,13 @@ void ofxTLPage::setDragOffsetTime(long offsetMillis){
 void ofxTLPage::refreshSnapPoints(){
 	//get the snapping points
 	snapPoints.clear();
-	if(snapToOtherTracksEnabled){
+	if(timeline->getSnapToOtherElements()){
 		for(int i = 0; i < headers.size(); i++){
 			tracks[headers[i]->name]->getSnappingPoints(snapPoints);	
 		}
 	}
-	if(ticker != NULL){
+    
+	if(ticker != NULL && timeline->getSnapToBPM()){
 		ticker->getSnappingPoints(snapPoints);
 	}	
 }
@@ -482,13 +480,6 @@ float ofxTLPage::getBottomEdge(){
     return trackContainerRect.y + trackContainerRect.height;
 }
 
-void ofxTLPage::setSnapping(bool snapping){
-	snappingEnabled = snapping;
-}
-
-void ofxTLPage::enableSnapToOtherTracks(bool snapToOthes){
-	snapToOtherTracksEnabled = snapToOthes;
-}
 
 #pragma mark saving/restoring state
 void ofxTLPage::loadTrackPositions(){
