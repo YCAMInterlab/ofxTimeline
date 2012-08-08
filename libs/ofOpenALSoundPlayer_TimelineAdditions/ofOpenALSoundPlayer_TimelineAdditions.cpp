@@ -1,4 +1,4 @@
-#include "ofOpenALSoundPlayer.h"
+#include "ofOpenALSoundPlayer_TimelineAdditions.h"
 
 //#ifdef OF_SOUND_PLAYER_OPENAL
 
@@ -8,28 +8,28 @@
 #include "ofAppRunner.h"
 #include <set>
 
-ALCdevice * ofOpenALSoundPlayer::alDevice = 0;
-ALCcontext * ofOpenALSoundPlayer::alContext = 0;
-vector<float> ofOpenALSoundPlayer::window;
-float ofOpenALSoundPlayer::windowSum=0;
+ALCdevice * ofOpenALSoundPlayer_TimelineAdditions::alDevice = 0;
+ALCcontext * ofOpenALSoundPlayer_TimelineAdditions::alContext = 0;
+vector<float> ofOpenALSoundPlayer_TimelineAdditions::window;
+float ofOpenALSoundPlayer_TimelineAdditions::windowSum=0;
 
 
-kiss_fftr_cfg ofOpenALSoundPlayer::systemFftCfg=0;
-vector<float> ofOpenALSoundPlayer::systemWindowedSignal;
-vector<float> ofOpenALSoundPlayer::systemBins;
-vector<kiss_fft_cpx> ofOpenALSoundPlayer::systemCx_out;
+kiss_fftr_cfg ofOpenALSoundPlayer_TimelineAdditions::systemFftCfg=0;
+vector<float> ofOpenALSoundPlayer_TimelineAdditions::systemWindowedSignal;
+vector<float> ofOpenALSoundPlayer_TimelineAdditions::systemBins;
+vector<kiss_fft_cpx> ofOpenALSoundPlayer_TimelineAdditions::systemCx_out;
 
-static set<ofOpenALSoundPlayer*> players;
+static set<ofOpenALSoundPlayer_TimelineAdditions*> players;
 
-void ofOpenALSoundUpdate(){
-	alcProcessContext(ofOpenALSoundPlayer::alContext);
+void ofOpenALSoundUpdate_TimelineAdditions(){
+	alcProcessContext(ofOpenALSoundPlayer_TimelineAdditions::alContext);
 }
 
 #define BUFFER_STREAM_SIZE 4096
 
 // now, the individual sound player:
 //------------------------------------------------------------
-ofOpenALSoundPlayer::ofOpenALSoundPlayer(){
+ofOpenALSoundPlayer_TimelineAdditions::ofOpenALSoundPlayer_TimelineAdditions(){
 	bLoop 			= false;
 	bLoadedOk 		= false;
 	pan 			= 0.5f;
@@ -49,7 +49,7 @@ ofOpenALSoundPlayer::ofOpenALSoundPlayer(){
 }
 
 // ----------------------------------------------------------------------------
-ofOpenALSoundPlayer::~ofOpenALSoundPlayer(){
+ofOpenALSoundPlayer_TimelineAdditions::~ofOpenALSoundPlayer_TimelineAdditions(){
 	unloadSound();
 	kiss_fftr_free(fftCfg);
 	players.erase(this);
@@ -57,7 +57,7 @@ ofOpenALSoundPlayer::~ofOpenALSoundPlayer(){
 
 //---------------------------------------
 // this should only be called once
-void ofOpenALSoundPlayer::initialize(){
+void ofOpenALSoundPlayer_TimelineAdditions::initialize(){
 	if(!alDevice){
 		alDevice = alcOpenDevice(NULL);
 		alContext = alcCreateContext(alDevice,NULL);
@@ -71,7 +71,7 @@ void ofOpenALSoundPlayer::initialize(){
 }
 
 //---------------------------------------
-void ofOpenALSoundPlayer::createWindow(int size){
+void ofOpenALSoundPlayer_TimelineAdditions::createWindow(int size){
 	if(int(window.size())!=size){
 		windowSum = 0;
 		window.resize(size);
@@ -84,7 +84,7 @@ void ofOpenALSoundPlayer::createWindow(int size){
 }
 
 //---------------------------------------
-void ofOpenALSoundPlayer::close(){
+void ofOpenALSoundPlayer_TimelineAdditions::close(){
 	if(alDevice){
 		alcCloseDevice(alDevice);
 		alDevice = NULL;
@@ -97,11 +97,11 @@ void ofOpenALSoundPlayer::close(){
 }
 
 // ----------------------------------------------------------------------------
-bool ofOpenALSoundPlayer::sfReadFile(string path, vector<short> & buffer, vector<float> & fftAuxBuffer){
+bool ofOpenALSoundPlayer_TimelineAdditions::sfReadFile(string path, vector<short> & buffer, vector<float> & fftAuxBuffer){
 	SF_INFO sfInfo;
 	SNDFILE* f = sf_open(path.c_str(),SFM_READ,&sfInfo);
 	if(!f){
-		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read " + path);
+		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
 		return false;
 	}
 
@@ -119,7 +119,7 @@ bool ofOpenALSoundPlayer::sfReadFile(string path, vector<short> & buffer, vector
 
 		sf_count_t samples_read = sf_read_float (f, &fftAuxBuffer[0], fftAuxBuffer.size());
 		if(samples_read<(int)fftAuxBuffer.size())
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read " + path);
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
 		for (int i = 0 ; i < int(fftAuxBuffer.size()) ; i++){
 			fftAuxBuffer[i] *= scale ;
 			buffer[i] = 32565.0 * fftAuxBuffer[i];
@@ -127,13 +127,13 @@ bool ofOpenALSoundPlayer::sfReadFile(string path, vector<short> & buffer, vector
 	}else{
 		sf_count_t frames_read = sf_readf_short(f,&buffer[0],sfInfo.frames);
 		if(frames_read<sfInfo.frames){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read buffer for " + path);
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read buffer for " + path);
 			return false;
 		}
 		sf_seek(f,0,SEEK_SET);
 		frames_read = sf_readf_float(f,&fftAuxBuffer[0],sfInfo.frames);
 		if(frames_read<sfInfo.frames){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read fft buffer for " + path);
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read fft buffer for " + path);
 			return false;
 		}
 	}
@@ -147,11 +147,11 @@ bool ofOpenALSoundPlayer::sfReadFile(string path, vector<short> & buffer, vector
 
 #ifdef OF_USING_MPG123
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::mpg123ReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
+bool ofOpenALSoundPlayer_TimelineAdditions::mpg123ReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
 	int err = MPG123_OK;
 	mpg123_handle * f = mpg123_new(NULL,&err);
 	if(mpg123_open(f,path.c_str())!=MPG123_OK){
-		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read " + path);
+		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
 		return false;
 	}
 
@@ -159,7 +159,7 @@ bool ofOpenALSoundPlayer::mpg123ReadFile(string path,vector<short> & buffer,vect
 	long int rate;
 	mpg123_getformat(f,&rate,&channels,&encoding);
 	if(encoding!=MPG123_ENC_SIGNED_16){
-		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: unsupported encoding");
+		ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: unsupported encoding");
 		return false;
 	}
 	samplerate = rate;
@@ -184,12 +184,12 @@ bool ofOpenALSoundPlayer::mpg123ReadFile(string path,vector<short> & buffer,vect
 #endif
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::sfStream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
+bool ofOpenALSoundPlayer_TimelineAdditions::sfStream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
 	if(!streamf){
 		SF_INFO sfInfo;
 		streamf = sf_open(path.c_str(),SFM_READ,&sfInfo);
 		if(!streamf){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read " + path);
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
 			return false;
 		}
 
@@ -218,7 +218,7 @@ bool ofOpenALSoundPlayer::sfStream(string path,vector<short> & buffer,vector<flo
 			fftAuxBuffer.resize(samples_read);
 			buffer.resize(samples_read);
 			setPosition(0);
-			if(!bLoop) stopThread(false);
+			if(!bLoop) stopThread();
 			stream_samples_read = 0;
 			stream_end = true;
 		}
@@ -233,7 +233,7 @@ bool ofOpenALSoundPlayer::sfStream(string path,vector<short> & buffer,vector<flo
 			fftAuxBuffer.resize(frames_read*channels);
 			buffer.resize(frames_read*channels);
 			setPosition(0);
-			if(!bLoop) stopThread(false);
+			if(!bLoop) stopThread();
 			stream_samples_read = 0;
 			stream_end = true;
 		}
@@ -247,21 +247,21 @@ bool ofOpenALSoundPlayer::sfStream(string path,vector<short> & buffer,vector<flo
 
 #ifdef OF_USING_MPG123
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::mpg123Stream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
+bool ofOpenALSoundPlayer_TimelineAdditions::mpg123Stream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
 	if(!mp3streamf){
 		int err = MPG123_OK;
 		mp3streamf = mpg123_new(NULL,&err);
 		if(mpg123_open(mp3streamf,path.c_str())!=MPG123_OK){
 			mpg123_close(mp3streamf);
 			mpg123_delete(mp3streamf);
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: couldnt read " + path);
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
 			return false;
 		}
 
 		long int rate;
 		mpg123_getformat(mp3streamf,&rate,&channels,&stream_encoding);
 		if(stream_encoding!=MPG123_ENC_SIGNED_16){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: unsupported encoding");
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: unsupported encoding");
 			return false;
 		}
 		samplerate = rate;
@@ -283,7 +283,7 @@ bool ofOpenALSoundPlayer::mpg123Stream(string path,vector<short> & buffer,vector
 		setPosition(0);
 		buffer.resize(done/2);
 		fftAuxBuffer.resize(done/2);
-		if(!bLoop) stopThread(false);
+		if(!bLoop) stopThread();
 		stream_end = true;
 	}
 
@@ -297,7 +297,7 @@ bool ofOpenALSoundPlayer::mpg123Stream(string path,vector<short> & buffer,vector
 #endif
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::stream(string fileName, vector<short> & buffer){
+void ofOpenALSoundPlayer_TimelineAdditions::stream(string fileName, vector<short> & buffer){
 #ifdef OF_USING_MPG123
 	if(ofFilePath::getFileExt(fileName)=="mp3" || ofFilePath::getFileExt(fileName)=="MP3" || mp3streamf){
 		if(!mpg123Stream(fileName,buffer,fftAuxBuffer)) return;
@@ -316,7 +316,7 @@ void ofOpenALSoundPlayer::stream(string fileName, vector<short> & buffer){
 	}
 }
 
-void ofOpenALSoundPlayer::readFile(string fileName, vector<short> & buffer){
+void ofOpenALSoundPlayer_TimelineAdditions::readFile(string fileName, vector<short> & buffer){
 #ifdef OF_USING_MPG123
 	if(ofFilePath::getFileExt(fileName)!="mp3" && ofFilePath::getFileExt(fileName)!="MP3"){
 		if(!sfReadFile(fileName,buffer,fftAuxBuffer)) return;
@@ -338,7 +338,7 @@ void ofOpenALSoundPlayer::readFile(string fileName, vector<short> & buffer){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
+bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_stream){
 
 	fileName = ofToDataPath(fileName);
 	bLoadedOk = false;
@@ -374,13 +374,13 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 		sources.resize(1);
 		alGenSources(1, &sources[0]);
 		if (alGetError() != AL_NO_ERROR)
-			return;
+			return false;
 
 		for(int i=0; i<(int)buffers.size(); i++){
 			alBufferData(buffers[i],format,&buffer[0],buffer.size()*2,samplerate);
 			if (alGetError() != AL_NO_ERROR){
-				ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error creating buffer");
-				return;
+				ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error creating buffer");
+				return false;
 			}
 			if(isStreaming){
 				stream(fileName,buffer);
@@ -410,8 +410,8 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 					}
 					alBufferData(buffers[s*2+i],format,&multibuffer[i][0],buffer.size()/channels*2,samplerate);
 					if (alGetError() != AL_NO_ERROR){
-						ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error creating stereo buffers for " + fileName);
-						return;
+						ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error creating stereo buffers for " + fileName);
+						return false;
 					}
 					alSourceQueueBuffers(sources[i],1,&buffers[s*2+i]);
 					stream(fileName,buffer);
@@ -425,8 +425,8 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 				}
 				alBufferData(buffers[i],format,&multibuffer[i][0],buffer.size()/channels*2,samplerate);
 				if (alGetError() != AL_NO_ERROR){
-					ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error creating stereo buffers for " + fileName);
-					return;
+					ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error creating stereo buffers for " + fileName);
+					return false;
 				}
 				alSourcei (sources[i], AL_BUFFER,   buffers[i]   );
 			}
@@ -434,8 +434,8 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 
 		for(int i=0;i<channels;i++){
 			if (alGetError() != AL_NO_ERROR){
-				ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error creating stereo sources for " + fileName);
-				return;
+				ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error creating stereo sources for " + fileName);
+				return false;
 			}
 
 			// only stereo panning
@@ -451,10 +451,11 @@ void ofOpenALSoundPlayer::loadSound(string fileName, bool is_stream){
 		}
 	}
 	bLoadedOk = true;
+	return true;
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::threadedFunction(){
+void ofOpenALSoundPlayer_TimelineAdditions::threadedFunction(){
 	vector<vector<short> > multibuffer;
 	multibuffer.resize(channels);
 	while(isThreadRunning()){
@@ -506,7 +507,7 @@ void ofOpenALSoundPlayer::threadedFunction(){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::update(ofEventArgs & args){
+void ofOpenALSoundPlayer_TimelineAdditions::update(ofEventArgs & args){
 
 	for(int i=1; i<int(sources.size())/channels; ){
 		ALint state;
@@ -523,15 +524,15 @@ void ofOpenALSoundPlayer::update(ofEventArgs & args){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::unloadSound(){
-//	ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer::update);
+void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
+//	ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	alDeleteBuffers(buffers.size(),&buffers[0]);
 	alDeleteSources(sources.size(),&sources[0]);
 	streamf = 0;
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::getIsPlaying(){
+bool ofOpenALSoundPlayer_TimelineAdditions::getIsPlaying(){
 	if(sources.empty()) return false;
 	if(isStreaming) return isThreadRunning();
 	ALint state;
@@ -544,7 +545,7 @@ bool ofOpenALSoundPlayer::getIsPlaying(){
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::getIsPaused(){
+bool ofOpenALSoundPlayer_TimelineAdditions::getIsPaused(){
 	if(sources.empty()) return false;
 	ALint state;
 	bool paused=true;
@@ -556,30 +557,30 @@ bool ofOpenALSoundPlayer::getIsPaused(){
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer::getSpeed(){
+float ofOpenALSoundPlayer_TimelineAdditions::getSpeed(){
 	return speed;
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer::getPan(){
+float ofOpenALSoundPlayer_TimelineAdditions::getPan(){
 	return pan;
 }
 
-float ofOpenALSoundPlayer::getDuration(){
+float ofOpenALSoundPlayer_TimelineAdditions::getDuration(){
 	return duration;
 }
 
-int ofOpenALSoundPlayer::getNumChannels(){
+int ofOpenALSoundPlayer_TimelineAdditions::getNumChannels(){
 	return channels;
 }
 
 //------------------------------------------------------------
-vector<short> & ofOpenALSoundPlayer::getBuffer(){
+vector<short> & ofOpenALSoundPlayer_TimelineAdditions::getBuffer(){
 	return buffer;
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setVolume(float vol){
+void ofOpenALSoundPlayer_TimelineAdditions::setVolume(float vol){
 	volume = vol;
 	if(sources.empty()) return;
 	if(channels==1){
@@ -590,17 +591,17 @@ void ofOpenALSoundPlayer::setVolume(float vol){
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer::getVolume(){
+float ofOpenALSoundPlayer_TimelineAdditions::getVolume(){
 	return volume;    
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer::isLoaded(){
+bool ofOpenALSoundPlayer_TimelineAdditions::isLoaded(){
     return bLoadedOk;
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setPosition(float pct){
+void ofOpenALSoundPlayer_TimelineAdditions::setPosition(float pct){
 	if(sources.empty()) return;
 #ifdef OF_USING_MPG123
 	if(mp3streamf){
@@ -618,14 +619,14 @@ void ofOpenALSoundPlayer::setPosition(float pct){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setPositionMS(int ms){
+void ofOpenALSoundPlayer_TimelineAdditions::setPositionMS(int ms){
     if(duration == 0) return;
 
 	setPosition( ms / 1000. / duration);
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer::getPosition(){
+float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
 	if(duration==0) return 0;
 	if(sources.empty()) return 0;
 	float pos;
@@ -644,7 +645,7 @@ float ofOpenALSoundPlayer::getPosition(){
 }
 
 //------------------------------------------------------------
-int ofOpenALSoundPlayer::getPositionMS(){
+int ofOpenALSoundPlayer_TimelineAdditions::getPositionMS(){
 	if(duration==0) return 0;
 	if(sources.empty()) return 0;
 	int pos;
@@ -665,7 +666,7 @@ int ofOpenALSoundPlayer::getPositionMS(){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setPan(float p){
+void ofOpenALSoundPlayer_TimelineAdditions::setPan(float p){
 	if(sources.empty()) return;
 	if(channels==1){
 		p=p*2-1;
@@ -685,7 +686,7 @@ void ofOpenALSoundPlayer::setPan(float p){
 
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setPaused(bool bP){
+void ofOpenALSoundPlayer_TimelineAdditions::setPaused(bool bP){
 	if(sources.empty()) return;
 	if(bP){
 		alSourcePausev(sources.size(),&sources[0]);
@@ -698,7 +699,7 @@ void ofOpenALSoundPlayer::setPaused(bool bP){
 
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setSpeed(float spd){
+void ofOpenALSoundPlayer_TimelineAdditions::setSpeed(float spd){
 	for(int i=0;i<channels;i++){
 		alSourcef(sources[sources.size()-channels+i],AL_PITCH,spd);
 	}
@@ -707,7 +708,7 @@ void ofOpenALSoundPlayer::setSpeed(float spd){
 
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer::setLoop(bool bLp){
+void ofOpenALSoundPlayer_TimelineAdditions::setLoop(bool bLp){
 	if(bMultiPlay) return; // no looping on multiplay
 	bLoop = bLp;
 	if(isStreaming) return;
@@ -717,22 +718,22 @@ void ofOpenALSoundPlayer::setLoop(bool bLp){
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::setMultiPlay(bool bMp){
+void ofOpenALSoundPlayer_TimelineAdditions::setMultiPlay(bool bMp){
 	if(isStreaming && bMp){
-		ofLog(OF_LOG_WARNING,"ofOpenALSoundPlayer: no support for multiplay streams by now");
+		ofLog(OF_LOG_WARNING,"ofOpenALSoundPlayer_TimelineAdditions: no support for multiplay streams by now");
 		return;
 	}
 	bMultiPlay = bMp;		// be careful with this...
 	if(sources.empty()) return;
 	if(bMultiPlay){
-		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
+		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	}else{
-		ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
+		ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	}
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::play(){
+void ofOpenALSoundPlayer_TimelineAdditions::play(){
 
 	// if the sound is set to multiplay, then create new sources,
 	// do not multiplay on loop or we won't be able to stop it
@@ -740,7 +741,7 @@ void ofOpenALSoundPlayer::play(){
 		sources.resize(sources.size()+channels);
 		alGenSources(channels, &sources[sources.size()-channels]);
 		if (alGetError() != AL_NO_ERROR){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error creating multiplay stereo sources");
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error creating multiplay stereo sources");
 			return;
 		}
 		for(int i=0;i<channels;i++){
@@ -758,14 +759,14 @@ void ofOpenALSoundPlayer::play(){
 		}
 
 		if (alGetError() != AL_NO_ERROR){
-			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer: error assigning multiplay buffers");
+			ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: error assigning multiplay buffers");
 			return;
 		}
 	}
 	alSourcePlayv(channels,&sources[sources.size()-channels]);
 
 	if(bMultiPlay){
-		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer::update);
+		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	}
 	if(isStreaming){
 		setPosition(0);
@@ -776,12 +777,12 @@ void ofOpenALSoundPlayer::play(){
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::stop(){
+void ofOpenALSoundPlayer_TimelineAdditions::stop(){
 	alSourceStopv(channels,&sources[sources.size()-channels]);
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::initFFT(int bands){
+void ofOpenALSoundPlayer_TimelineAdditions::initFFT(int bands){
 	if(int(bins.size())==bands) return;
 	int signalSize = (bands-1)*2;
 	if(fftCfg!=0) kiss_fftr_free(fftCfg);
@@ -792,7 +793,7 @@ void ofOpenALSoundPlayer::initFFT(int bands){
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::initSystemFFT(int bands){
+void ofOpenALSoundPlayer_TimelineAdditions::initSystemFFT(int bands){
 	if(int(systemBins.size())==bands) return;
 	int signalSize = (bands-1)*2;
 	if(systemFftCfg!=0) kiss_fftr_free(systemFftCfg);
@@ -802,7 +803,7 @@ void ofOpenALSoundPlayer::initSystemFFT(int bands){
 	createWindow(signalSize);
 }
 
-float * ofOpenALSoundPlayer::getCurrentBufferSum(int size){
+float * ofOpenALSoundPlayer_TimelineAdditions::getCurrentBufferSum(int size){
 	if(int(windowedSignal.size())!=size){
 		windowedSignal.resize(size);
 	}
@@ -831,7 +832,7 @@ float * ofOpenALSoundPlayer::getCurrentBufferSum(int size){
 }
 
 // ----------------------------------------------------------------------------
-float * ofOpenALSoundPlayer::getSpectrum(int bands){
+float * ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
 	initFFT(bands);
 	bins.assign(bins.size(),0);
 	if(sources.empty()) return &bins[0];
@@ -849,7 +850,7 @@ float * ofOpenALSoundPlayer::getSpectrum(int bands){
 }
 
 // ----------------------------------------------------------------------------
-float * ofOpenALSoundPlayer::getSystemSpectrum(int bands){
+float * ofOpenALSoundPlayer_TimelineAdditions::getSystemSpectrum(int bands){
 	initSystemFFT(bands);
 	systemBins.assign(systemBins.size(),0);
 	if(players.empty()) return &systemBins[0];
@@ -860,7 +861,7 @@ float * ofOpenALSoundPlayer::getSystemSpectrum(int bands){
 	}
 	systemWindowedSignal.assign(systemWindowedSignal.size(),0);
 
-	set<ofOpenALSoundPlayer*>::iterator it;
+	set<ofOpenALSoundPlayer_TimelineAdditions*>::iterator it;
 	for(it=players.begin();it!=players.end();it++){
 		if(!(*it)->getIsPlaying()) continue;
 		float * buffer = (*it)->getCurrentBufferSum(signalSize);
@@ -879,7 +880,7 @@ float * ofOpenALSoundPlayer::getSystemSpectrum(int bands){
 }
 
 // ----------------------------------------------------------------------------
-void ofOpenALSoundPlayer::runWindow(vector<float> & signal){
+void ofOpenALSoundPlayer_TimelineAdditions::runWindow(vector<float> & signal){
 	for(int i = 0; i < (int)signal.size(); i++)
 		signal[i] *= window[i];
 }

@@ -10,7 +10,7 @@
 
 #include "ofMain.h"
 #include "ofxTLTrack.h"
-#include "ofOpenALSoundPlayer.h"
+#include "ofOpenALSoundPlayer_TimelineAdditions.h"
 
 class ofxTLAudioWaveform : public ofxTLTrack
 {
@@ -55,7 +55,7 @@ class ofxTLAudioWaveform : public ofxTLTrack
 	
 	float lastPercent;
 	virtual void update(ofEventArgs& args);
-	ofOpenALSoundPlayer player;
+	ofOpenALSoundPlayer_TimelineAdditions player;
 	
 	ofRange computedZoomBounds;
 };

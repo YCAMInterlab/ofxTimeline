@@ -66,14 +66,14 @@
 //virtual float getVolume() = 0;
 
 // --------------------- player functions:
-class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
+class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public ofThread {
 
 	public:
 
-		ofOpenALSoundPlayer();
-		virtual ~ofOpenALSoundPlayer();
+		ofOpenALSoundPlayer_TimelineAdditions();
+		virtual ~ofOpenALSoundPlayer_TimelineAdditions();
 
-		void loadSound(string fileName, bool stream = false);
+		bool loadSound(string fileName, bool stream = false);
 		void unloadSound();
 		void play();
 		void stop();
@@ -106,6 +106,8 @@ class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
 		static float * getSystemSpectrum(int bands);
 
 		vector<short> & getBuffer();
+		
+		static ALCcontext * alContext;
 	protected:
 		void threadedFunction();
 
@@ -141,7 +143,7 @@ class ofOpenALSoundPlayer : public ofBaseSoundPlayer, public ofThread {
 		unsigned int length; // in samples;
 
 		static ALCdevice * alDevice;
-		static ALCcontext * alContext;
+
 		static vector<float> window;
 		static float windowSum;
 
