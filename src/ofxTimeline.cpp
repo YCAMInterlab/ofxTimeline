@@ -497,6 +497,11 @@ void ofxTimeline::reset(){ //gets rid of everything
     }
     pages.clear();
     trackNameToPage.clear();
+    currentPage = NULL;
+    modalTrack = NULL;
+    timeControl = NULL;
+	addPage("Page One", true);
+
 }
 
 void ofxTimeline::save(){
