@@ -93,12 +93,13 @@ void ofxTLSwitcher::draw(){
 }
 
 bool ofxTLSwitcher::isOn(float percent){
+    unsigned long millis = percent*timeline->getDurationInMilliseconds();
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        if(switchKey->timeRange.min > percent){
+        if(switchKey->timeRange.min > millis){
             break;
         }
-        if(switchKey->timeRange.contains(percent)){
+        if(switchKey->timeRange.contains(millis)){
             return true;
         }
     }
