@@ -223,10 +223,11 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
 		}
 	}
 }
-//TODO change to ofLongRange timeRange and ofFloatRange valueRange
+
 void ofxTLKeyframer::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-        if(timeRange.contains(float(keyframes[i]->time)/timeline->getDurationInMilliseconds()) && valueRange.contains(1.-keyframes[i]->value)){
+        cout << "time range is " << timeRange << " and keyframe is " << keyframes[i]->time << endl;
+        if(timeRange.contains(keyframes[i]->time) && valueRange.contains(1.-keyframes[i]->value)){
             selectKeyframe(keyframes[i]);
         }
 	}

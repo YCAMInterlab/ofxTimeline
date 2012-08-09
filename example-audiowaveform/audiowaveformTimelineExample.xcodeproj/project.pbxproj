@@ -263,6 +263,7 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E7814E1614ABC97E00A5D589 /* OpenAL.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
 				E4C2424610CC5A17004149E2 /* IOKit.framework */,
@@ -312,7 +313,6 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
 				E4B69B5B0A3A1756003C02F2 /* audiowaveformTimelineExampleDebug.app */,
-				E7814E1614ABC97E00A5D589 /* OpenAL.framework */,
 			);
 			sourceTree = "<group>";
 		};

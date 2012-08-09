@@ -5,7 +5,7 @@ void testApp::setup(){
 	
 //	ofSetFrameRate(60);
 //	ofSetVerticalSync(true);
-	ofSetEscapeQuitsApp(false);
+//	ofSetEscapeQuitsApp(false);
     
 	ofSetLogLevel(OF_LOG_VERBOSE);
     
