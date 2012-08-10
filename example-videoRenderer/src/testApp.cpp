@@ -93,7 +93,7 @@ void testApp::draw(){
         ofSetColor(timeline.getColors().keyColor);
         ofRect(outputRectangle);
         string instructions = "Drag & Drop a Video file";
-        float width = verdana.getStringBoundingBox("Drag & Drop a Video file", 0, 0).width;
+        float width = verdana.getStringBoundingBox("Drag & Drop a Video file or press load video", 0, 0).width;
         verdana.drawString(instructions, outputRectangle.x+outputRectangle.width/2 - width/2, outputRectangle.y + outputRectangle.height/2);
         ofPopStyle();
     }
@@ -105,8 +105,12 @@ void testApp::draw(){
     ofPushStyle();
 	ofNoFill();
     ofRect(loadVideoButton);
-    string renderString = rendering ? ("Cancel Render : " + ofToString(currentRenderFrame - timeline.getInFrame()) + "/" + ofToString(timeline.getOutFrame()-timeline.getInFrame()))  : "Start Render";
-    verdana.drawString(renderString, renderButton.x + 10, renderButton.y + renderButton.height*.75);
+    if(loaded){
+	    string renderString = rendering ? ("Cancel Render : " + ofToString(currentRenderFrame - timeline.getInFrame()) + "/" + ofToString(timeline.getOutFrame()-timeline.getInFrame()))  : "Start Render";
+	    verdana.drawString(renderString, renderButton.x + 10, renderButton.y + renderButton.height*.75);
+    }else{
+    	verdana.drawString("load video", renderButton.x + 10, renderButton.y + renderButton.height*.75);
+    }
     ofRect(renderButton);
     ofPopStyle();
     
@@ -236,6 +240,11 @@ void testApp::mousePressed(int x, int y, int button){
             timeline.stop();
             timeline.disable();
         }
+    }else if(renderButton.inside(x,y)){
+       	ofFileDialogResult result = ofSystemLoadDialog("select video",false);
+       	if(result.bSuccess){
+       		loadVideo(result.getPath());
+       	}
     }
 }
 
