@@ -24,6 +24,8 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E726AFA615D4C22B00C941A3 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E726AFA515D4C22B00C941A3 /* CoreVideo.framework */; };
+		E726AFA815D4C23000C941A3 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E726AFA715D4C23000C941A3 /* QTKit.framework */; };
 		E73CCA1415CAA8990017C706 /* colorcontrol.frag in Sources */ = {isa = PBXBuildFile; fileRef = E73CCA1215CAA8990017C706 /* colorcontrol.frag */; };
 		E73CCA1515CAA8990017C706 /* colorcontrol.vert in Sources */ = {isa = PBXBuildFile; fileRef = E73CCA1315CAA8990017C706 /* colorcontrol.vert */; };
 		E7D21C1E15C8EB9500777DA0 /* ofxMSATimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E7D21C1A15C8EB9500777DA0 /* ofxMSATimer.cpp */; };
@@ -119,6 +121,8 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E726AFA515D4C22B00C941A3 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		E726AFA715D4C23000C941A3 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = System/Library/Frameworks/QTKit.framework; sourceTree = SDKROOT; };
 		E73CCA1115CA98FB0017C706 /* ofxTLTimeController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxTLTimeController.h; sourceTree = "<group>"; };
 		E73CCA1215CAA8990017C706 /* colorcontrol.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorcontrol.frag; path = bin/data/colorcontrol.frag; sourceTree = SOURCE_ROOT; };
 		E73CCA1315CAA8990017C706 /* colorcontrol.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorcontrol.vert; path = bin/data/colorcontrol.vert; sourceTree = SOURCE_ROOT; };
@@ -210,6 +214,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E726AFA815D4C23000C941A3 /* QTKit.framework in Frameworks */,
+				E726AFA615D4C22B00C941A3 /* CoreVideo.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
 				E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */,
 				E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */,
@@ -247,6 +253,8 @@
 		BBAB23C913894ECA00AA2426 /* system frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E726AFA715D4C23000C941A3 /* QTKit.framework */,
+				E726AFA515D4C22B00C941A3 /* CoreVideo.framework */,
 				E4C2424410CC5A17004149E2 /* AppKit.framework */,
 				E4C2424510CC5A17004149E2 /* Cocoa.framework */,
 				E4C2424610CC5A17004149E2 /* IOKit.framework */,

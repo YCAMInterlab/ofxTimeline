@@ -59,6 +59,8 @@ class ofxTLFlags : public ofxTLBangs {
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void unselectAll();
     
+    virtual string getTrackType();
+    
 protected:
     
     virtual ofxTLKeyframe* newKeyframe();

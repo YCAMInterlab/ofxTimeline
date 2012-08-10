@@ -96,6 +96,10 @@ void ofxTLTrack::setName(string _name){
 	name = _name;
 }
 
+string ofxTLTrack::getTrackType(){
+	return "Track";    
+}
+
 string ofxTLTrack::getName(){
 	return name;
 }

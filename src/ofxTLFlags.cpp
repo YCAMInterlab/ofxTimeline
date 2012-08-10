@@ -191,3 +191,8 @@ void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofNotifyEvent(events().bangFired, args);    
 }
 
+string ofxTLFlags::getTrackType(){
+    return "Flags";
+}
+
+

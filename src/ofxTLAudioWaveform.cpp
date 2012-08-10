@@ -216,4 +216,9 @@ void ofxTLAudioWaveform::setSpeed(float speed) {
 float ofxTLAudioWaveform::getSpeed() {
     return player.getSpeed();
 }
+
+string ofxTLAudioWaveform::getTrackType(){
+    return "Track";    
+}
+
    

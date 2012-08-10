@@ -134,6 +134,8 @@ class ofxTLTrack
 	string getName();
 	void setName(string name);
 		
+    virtual string getTrackType();
+    
 	bool getCreatedByTimeline();
 	void setCreatedByTimeline(bool created);
 	ofxTLEvents& events(); //convenience wrapper for timeline events;

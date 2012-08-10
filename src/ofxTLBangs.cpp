@@ -111,3 +111,7 @@ void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
 void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = 0;
 }
+
+string ofxTLBangs::getTrackType(){
+    return "Bangs";
+}

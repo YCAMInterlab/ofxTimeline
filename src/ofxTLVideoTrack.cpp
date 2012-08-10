@@ -418,3 +418,6 @@ void ofxTLVideoTrack::exit(ofEventArgs& args){
     stopThread();	
 }
 
+string ofxTLVideoTrack::getTrackType(){
+    return "VideoTrack";
+}

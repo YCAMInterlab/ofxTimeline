@@ -86,6 +86,8 @@ class ofxTLKeyframer : public ofxTLTrack
     
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 	
+    virtual string getTrackType();
+    
   protected:
 	virtual ofxTLKeyframe* newKeyframe();
 

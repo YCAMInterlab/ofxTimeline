@@ -46,7 +46,9 @@ class ofxTLAudioWaveform : public ofxTLTrack
 	virtual void setSpeed(float speed);
     virtual float getSpeed();
     virtual bool getIsPlaying();
-	
+    
+	virtual string getTrackType();
+
   protected:	
     
 	bool shouldRecomputePreview;

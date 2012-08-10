@@ -58,6 +58,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
     virtual void stop();
     virtual bool isPlaying();
     	
+    virtual string getTrackType();
+    
   protected:
     
 	int selectedFrame;

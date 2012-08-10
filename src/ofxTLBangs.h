@@ -22,6 +22,8 @@ class ofxTLBangs : public ofxTLKeyframer {
 	virtual void playbackLooped(ofxTLPlaybackEventArgs& args);
 	virtual void playbackEnded(ofxTLPlaybackEventArgs& args);
     
+    virtual string getTrackType();
+    
  protected:
 
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);

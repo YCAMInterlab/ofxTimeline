@@ -66,6 +66,10 @@ float ofxTLTweener::sampleAtTime(long sampleTime){
 	return defaultValue;
 }
 
+string ofxTLTweener::getTrackType(){
+	return "Tweens";    
+}
+
 void ofxTLTweener::draw(){
 	
 	if(bounds.width == 0 || bounds.height == 0){

@@ -432,6 +432,9 @@ float ofxTLKeyframer::valueToScreenY(float value){
 
 ofxTLKeyframe* ofxTLKeyframer::newKeyframe(){
 	ofxTLKeyframe* k = new ofxTLKeyframe();
-//	k->position = point;
 	return k;
+}
+
+string ofxTLKeyframer::getTrackType(){
+    return "Keyframes";
 }

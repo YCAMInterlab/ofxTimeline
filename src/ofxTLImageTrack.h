@@ -19,6 +19,8 @@ class ofxTLImageTrack : public ofxTLTrack {
 
     virtual void drawRectChanged();
     
+    virtual string getTrackType();
+    
   protected:
     
     bool currentlyZooming;

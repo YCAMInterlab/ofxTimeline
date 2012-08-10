@@ -306,6 +306,9 @@ class ofxTimeline {
     string formatTime(float seconds);
     string formatTime(long millis);
 
+    string nameToXMLName(string name);
+    string confirmedUniqueName(string name);
+
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
     //when an track calls presentedModalContent all key and mouse action will be sent directly to that tracks
@@ -329,7 +332,6 @@ class ofxTimeline {
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
     
-    string nameToXMLName(string name);
     
 	bool isSetup;
 	bool usingEvents;

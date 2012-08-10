@@ -91,6 +91,8 @@ class ofxTLImageSequence : public ofxTLTrack {
 		
 	void purgeFrames();
 	
+    virtual string getTrackType();
+    
   protected:
     
     int historySize; //how many images to keep in the history queue

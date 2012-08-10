@@ -46,6 +46,8 @@ class ofxTLTweener : public ofxTLKeyframer {
 	virtual float getValueAtPercent(float percent);
 	virtual float getValueAtTime(long sampleTime);
     
+    virtual string getTrackType();
+    
   protected:
     virtual float sampleAtPercent(float percent); //less accurate
     virtual float sampleAtTime(long sampleTime);

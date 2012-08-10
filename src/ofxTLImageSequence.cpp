@@ -281,6 +281,9 @@ void ofxTLImageSequence::purgeFrames()
     }
 }
 
+string ofxTLImageSequence::getTrackType(){
+    return "ImageSequence";
+}
 //void ofxTLImageSequence::purgeThumbs()
 //{
 //	vector<ofxTLImageSequenceFrame*> sortableFrames;

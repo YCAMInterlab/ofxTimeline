@@ -317,3 +317,7 @@ ofxTLKeyframe* ofxTLSwitcher::keyframeAtScreenpoint(ofVec2f p, int& selectedInde
     selectedIndex = -1;
     return NULL;
 }
+
+string ofxTLSwitcher::getTrackType(){
+    return "Swtiches";
+}
