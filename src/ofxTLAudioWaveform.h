@@ -16,7 +16,7 @@ class ofxTLAudioWaveform : public ofxTLTrack
 {
   public:	
 	ofxTLAudioWaveform();
-	~ofxTLAudioWaveform();
+	virtual ~ofxTLAudioWaveform();
 	
 	virtual void enable();
     virtual void disable();

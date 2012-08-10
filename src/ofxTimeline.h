@@ -63,7 +63,7 @@
 class ofxTimeline {
   public:
 	ofxTimeline();
-	~ofxTimeline();
+	virtual ~ofxTimeline();
 
 	virtual void setup();
 
@@ -100,6 +100,11 @@ class ofxTimeline {
     virtual void setShowInoutControl(bool shouldShowInoutControl);
     virtual void setShowZoomer(bool shouldShowZoomer);
 
+    //sets where to save all timeline-related meta data xml files
+    virtual void setWorkingFolder(string folderPath);
+    //sets where to save all timeline-related meta data xml files
+    virtual string getWorkingFolder();
+    
     //loads calls load on all tracks from the given folder
     //really useful for setting up 'project' directories
     virtual void loadTracksFromFolder(string folderPath);
@@ -332,6 +337,8 @@ class ofxTimeline {
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
     
+    //can be blank, default save to bin/data/
+    string workingFolder; 
     
 	bool isSetup;
 	bool usingEvents;
@@ -347,8 +354,7 @@ class ofxTimeline {
 	bool movePlayheadOnDrag;
     bool snapToBPM;
     bool snapToOtherElements;
-	//only enabled while playing
-	virtual void update(ofEventArgs& updateArgs);
+    
 
 	ofxTLColors colors;
 	map<string, ofxTLPage*> trackNameToPage;
@@ -364,10 +370,12 @@ class ofxTimeline {
     ofxTLTrack* modalTrack;
     ofxTLTimeController* timeControl;
 
-    
 	float width;
 	ofVec2f offset;
 
+	//only enabled while playing
+	virtual void update(ofEventArgs& updateArgs);
+    
 	virtual void enableEvents();
 	virtual void disableEvents();
 
@@ -377,6 +385,7 @@ class ofxTimeline {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
 	
+    //TODO convert to long
 	ofRange inoutRange;
 	
     bool timelineHasFocus;
@@ -394,8 +403,8 @@ class ofxTimeline {
 	bool isPlaying; //moves playhead along
 	bool userChangedValue; //did value change this frame;
     
-	float currentTime; //TODO: switch to millis!
-	
+    //TODO: switch to millis!
+	float currentTime; 	
 	ofLoopType loopType;
 	int playbackStartFrame;
 	double playbackStartTime;	

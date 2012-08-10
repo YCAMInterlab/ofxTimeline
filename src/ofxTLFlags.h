@@ -49,7 +49,7 @@ class ofxTLFlag : public ofxTLKeyframe {
 class ofxTLFlags : public ofxTLBangs {
   public:
 	ofxTLFlags();
-	~ofxTLFlags();
+	virtual ~ofxTLFlags();
 	
 	virtual void draw();
 	

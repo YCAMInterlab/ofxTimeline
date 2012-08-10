@@ -135,12 +135,12 @@ void ofxTimeline::setup(){
 
 void ofxTimeline::setName(string newName){
     if(newName != name){
-        cout << "setting name to " << newName << endl;
+        
 	    name = newName;
-        inoutTrack->setXMLFileName(name + "_inout.xml");
+        inoutTrack->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_inout.xml") );
         inoutTrack->setup();
         
-        zoomer->setXMLFileName(name + "_zoomer.xml");
+        zoomer->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_zoomer.xml") );
         zoomer->setup();
         
         currentPage->loadTrackPositions();
@@ -149,6 +149,17 @@ void ofxTimeline::setName(string newName){
 
 string ofxTimeline::getName(){
     return name;
+}
+
+void ofxTimeline::setWorkingFolder(string folderPath){
+    inoutTrack->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_inout.xml") );
+    zoomer->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_zoomer.xml") );
+
+    workingFolder = folderPath;
+}
+
+string ofxTimeline::getWorkingFolder(){
+    return workingFolder;
 }
 
 void ofxTimeline::loadTracksFromFolder(string folderPath){

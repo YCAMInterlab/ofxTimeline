@@ -31,7 +31,7 @@ class ofxTLTweenKeyframe : public ofxTLKeyframe{
 class ofxTLTweener : public ofxTLKeyframer {
   public:
     ofxTLTweener();
-    ~ofxTLTweener();
+    virtual ~ofxTLTweener();
 
     virtual void draw();
     virtual void drawModalContent();

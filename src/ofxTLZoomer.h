@@ -42,7 +42,7 @@ class ofxTLZoomer : public ofxTLTrack
 {
   public:
 	ofxTLZoomer();
-	~ofxTLZoomer();
+	virtual ~ofxTLZoomer();
 	
 	virtual void draw();
 		

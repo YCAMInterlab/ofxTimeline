@@ -51,7 +51,7 @@ class ofxTLSwitch : public ofxTLKeyframe {
 class ofxTLSwitcher : public ofxTLKeyframer {
   public:
 	ofxTLSwitcher();
-	~ofxTLSwitcher();
+	virtual ~ofxTLSwitcher();
 
     virtual void draw();
     

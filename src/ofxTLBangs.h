@@ -8,7 +8,7 @@
 class ofxTLBangs : public ofxTLKeyframer {
   public:
     ofxTLBangs();
-	~ofxTLBangs();
+	virtual ~ofxTLBangs();
 	
     virtual void enable();
     virtual void disable();

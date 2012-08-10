@@ -54,7 +54,7 @@ typedef struct
 class ofxTLImageSequence : public ofxTLTrack {
   public:
 	ofxTLImageSequence();
-	~ofxTLImageSequence();
+	virtual ~ofxTLImageSequence();
 	
 	virtual void setup();
 	virtual void draw();

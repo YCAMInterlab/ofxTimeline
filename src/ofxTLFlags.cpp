@@ -37,11 +37,15 @@
 #include "ofxTimeline.h"
 #include "ofxTLUtils.h"
 
-ofxTLFlags::ofxTLFlags(){
+ofxTLFlags::ofxTLFlags()
+{
 	enteringText = false;
 }
 
-ofxTLFlags::~ofxTLFlags(){
+ofxTLFlags::~ofxTLFlags()
+{
+        
+
 }
 
 void ofxTLFlags::draw(){

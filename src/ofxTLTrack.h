@@ -45,7 +45,7 @@ class ofxTLTrack
 {
   public:
 	ofxTLTrack();
-	~ofxTLTrack();
+	virtual ~ofxTLTrack();
 	
 	virtual void setup();
     void _draw(); //calls draw() internally plus some universal stuff

@@ -484,7 +484,7 @@ float ofxTLPage::getBottomEdge(){
 #pragma mark saving/restoring state
 void ofxTLPage::loadTrackPositions(){
 	ofxXmlSettings trackPositions;
-	if(trackPositions.loadFile(timeline->getName() + "_" + name + "_trackPositions.xml")){
+	if(trackPositions.loadFile(ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml"))){
 		
 		//cout << "loading element position " << name << "_trackPositions.xml" << endl;
 		
@@ -526,7 +526,7 @@ void ofxTLPage::saveTrackPositions(){
 		curElement++;
 	}
 	trackPositions.popTag();
-	trackPositions.saveFile(timeline->getName() + "_" + name + "_trackPositions.xml");
+	trackPositions.saveFile( ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml") );
 }
 
 

@@ -20,7 +20,7 @@
 class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTimeController {
   public:
 	ofxTLVideoTrack();
-	~ofxTLVideoTrack();
+	virtual ~ofxTLVideoTrack();
 	
 	virtual void setup();
 	virtual void draw();

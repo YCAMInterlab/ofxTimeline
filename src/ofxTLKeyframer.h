@@ -57,7 +57,7 @@ class ofxTLKeyframer : public ofxTLTrack
 {
   public:	
 	ofxTLKeyframer();
-	~ofxTLKeyframer();
+	virtual ~ofxTLKeyframer();
 
 	virtual void draw();
 	

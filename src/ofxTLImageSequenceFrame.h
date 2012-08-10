@@ -40,7 +40,7 @@ class ofxTLImageSequenceFrame
 {
   public:
 	ofxTLImageSequenceFrame();
-	~ofxTLImageSequenceFrame();
+	virtual ~ofxTLImageSequenceFrame();
 	
 	string filename;
     string thumbFilename;

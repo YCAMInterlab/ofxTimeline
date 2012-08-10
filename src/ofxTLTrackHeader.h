@@ -44,7 +44,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 {
   public:	
 	ofxTLTrackHeader();
-	~ofxTLTrackHeader();
+	virtual ~ofxTLTrackHeader();
 	
 	string name;	
 	string getDisplayName();

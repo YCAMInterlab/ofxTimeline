@@ -50,7 +50,7 @@ class ofxTLPage {
   public:
 	
 	ofxTLPage();
-	~ofxTLPage();
+	virtual ~ofxTLPage();
 	
 	virtual void setup();
 	virtual void draw();

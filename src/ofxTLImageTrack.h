@@ -9,7 +9,7 @@
 class ofxTLImageTrack : public ofxTLTrack {
   public:
 	ofxTLImageTrack();
-    ~ofxTLImageTrack();
+    virtual ~ofxTLImageTrack();
     
     virtual bool isLoaded() = 0;
     

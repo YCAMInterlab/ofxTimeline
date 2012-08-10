@@ -14,7 +14,7 @@
 class ofxTLVideoThumb {
   public:
 	ofxTLVideoThumb();
-	~ofxTLVideoThumb();
+	virtual ~ofxTLVideoThumb();
 	
 	void create(ofPixels& thumbPixels);
     
