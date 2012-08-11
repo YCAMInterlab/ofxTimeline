@@ -39,7 +39,7 @@ void ofxTLVideoTrack::enable(){
 
 void ofxTLVideoTrack::disable(){
     stop();
-    ofxTLImageTrack::enable();
+    ofxTLImageTrack::disable();
     ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
     ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 }

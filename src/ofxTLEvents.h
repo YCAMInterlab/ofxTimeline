@@ -70,6 +70,7 @@ class ofxTLBangEventArgs : public ofEventArgs {
 	float currentPercent;
 	float currentTime;
 	int currentFrame;
+    long currentMillis;
 	string flag;
 };
 

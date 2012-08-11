@@ -50,7 +50,9 @@ ofxTLTrack::ofxTLTrack()
 }
 
 ofxTLTrack::~ofxTLTrack(){
-	disable();
+    if(isEnabled()){
+		disable();
+    }
 }
 
 void ofxTLTrack::setup(){

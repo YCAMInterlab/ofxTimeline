@@ -42,10 +42,12 @@ class ofxTLTweener : public ofxTLKeyframer {
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
     
     virtual void setValueRange(ofRange range, float defaultValue = 0);
+    virtual ofRange getValueRange();
+    
 	//main function to get values out of the timeline, operates on the given value range
 	virtual float getValueAtPercent(float percent);
-	virtual float getValueAtTime(long sampleTime);
-    
+	virtual float getValueAtTimeInMillis(long sampleTime);
+
     virtual string getTrackType();
     
   protected:

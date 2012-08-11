@@ -37,15 +37,11 @@
 
 ofxTLTicker::ofxTLTicker() {
 	dragging = false;
+    hasBPM = false;
+	drawBPMGrid = false;
 }
 
 ofxTLTicker::~ofxTLTicker(){
-}
-
-void ofxTLTicker::setup(){
-	enable();
-	hasBPM = false;
-	drawBPMGrid = false;
 }
 
 void ofxTLTicker::draw(){

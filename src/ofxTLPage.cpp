@@ -73,12 +73,13 @@ ofxTLPage::~ofxTLPage(){
 
 #pragma mark utility
 void ofxTLPage::setup(){
-	
-	ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
-	isSetup = true;
-	headerHeight = 12;
-	defaultTrackHeight = 30;
-	loadTrackPositions(); //name must be set
+	if(!isSetup){
+        isSetup = true;
+        headerHeight = 12;
+        defaultTrackHeight = 30;
+        loadTrackPositions(); //name must be set
+        ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
+    }
 }
 
 //given a folder the page will look for xml files to load within that

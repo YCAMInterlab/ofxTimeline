@@ -27,6 +27,7 @@ class ofxTLBangs : public ofxTLKeyframer {
  protected:
 
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+    bool isPlayingBack;
     void update(ofEventArgs& args);
     long lastTimelinePoint;
 

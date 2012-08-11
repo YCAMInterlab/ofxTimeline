@@ -92,8 +92,7 @@ void ofxTLSwitcher::draw(){
     
 }
 
-bool ofxTLSwitcher::isOn(float percent){
-    unsigned long millis = percent*timeline->getDurationInMilliseconds();
+bool ofxTLSwitcher::isOnAtMillis(long millis){
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
         if(switchKey->timeRange.min > millis){
@@ -103,7 +102,12 @@ bool ofxTLSwitcher::isOn(float percent){
             return true;
         }
     }
-    return false;
+    return false;    
+}
+
+bool ofxTLSwitcher::isOnAtPercent(float percent){
+    unsigned long millis = percent*timeline->getDurationInMilliseconds();
+    return isOnAtMillis(millis);
 }
 
 void ofxTLSwitcher::mousePressed(ofMouseEventArgs& args, long millis){    
@@ -319,5 +323,5 @@ ofxTLKeyframe* ofxTLSwitcher::keyframeAtScreenpoint(ofVec2f p, int& selectedInde
 }
 
 string ofxTLSwitcher::getTrackType(){
-    return "Swtiches";
+    return "Switches";
 }

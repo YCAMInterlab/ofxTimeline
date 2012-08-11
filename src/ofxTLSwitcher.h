@@ -54,8 +54,9 @@ class ofxTLSwitcher : public ofxTLKeyframer {
 	virtual ~ofxTLSwitcher();
 
     virtual void draw();
-    
-    virtual bool isOn(float percent);
+
+    virtual bool isOnAtMillis(long millis);
+    virtual bool isOnAtPercent(float percent);
     
     virtual void mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);

@@ -49,7 +49,6 @@ class ofxTLTicker : public ofxTLTrack
 	ofxTLTicker();
 	~ofxTLTicker();
 	
-	virtual void setup();
 	virtual void draw();
 	
 	//set the draw rect for the whole keyframer interface

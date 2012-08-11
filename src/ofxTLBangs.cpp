@@ -4,20 +4,28 @@
 
 ofxTLBangs::ofxTLBangs(){
     lastTimelinePoint = 0;
+    isPlayingBack = false;
 }
 
 ofxTLBangs::~ofxTLBangs(){
-    
+	disable();
 }
 
 void ofxTLBangs::enable(){
-    ofxTLKeyframer::enable();
-	events().registerPlaybackEvents(this);    
+    if(!isEnabled()){
+	    ofxTLKeyframer::enable();
+		events().registerPlaybackEvents(this);    
+    }
 }
 
 void ofxTLBangs::disable(){
-    ofxTLKeyframer::disable();
-    events().removePlaybackEvents(this);
+    if(isEnabled()){
+        if (isPlayingBack) {
+        	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
+        }
+	    ofxTLKeyframer::disable();
+    	events().removePlaybackEvents(this);
+    }
 }
 
 void ofxTLBangs::draw(){
@@ -93,6 +101,7 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
+    args.currentMillis = timeline->getCurrentTimeMillis();
     args.currentPercent = timeline->getPercentComplete();
     args.currentFrame = timeline->getCurrentFrame();
     args.currentTime = timeline->getCurrentTime();
@@ -102,10 +111,12 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = timeline->getCurrentTimeMillis();
 	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
+    isPlayingBack = true;
 }
 
 void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
 	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
+    isPlayingBack = true;
 }
 
 void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){

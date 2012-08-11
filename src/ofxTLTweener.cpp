@@ -24,13 +24,17 @@ void ofxTLTweener::setValueRange(ofRange range, float newDefaultValue){
     defaultValue = newDefaultValue;
 }
 
+ofRange ofxTLTweener::getValueRange(){
+	return valueRange;    
+}
+
 //main function to get values out of the timeline, operates on the given value range
 float ofxTLTweener::getValueAtPercent(float percent){
 //	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
-    return getValueAtTime(percent*timeline->getDurationInMilliseconds());
+    return getValueAtTimeInMillis(percent*timeline->getDurationInMilliseconds());
 }
 
-float ofxTLTweener::getValueAtTime(long sampleTime){
+float ofxTLTweener::getValueAtTimeInMillis(long sampleTime){
 	return ofMap(sampleAtTime(sampleTime), 0.0, 1.0, valueRange.min, valueRange.max, false);
 }
 

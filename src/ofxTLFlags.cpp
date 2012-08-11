@@ -188,6 +188,7 @@ void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
+    args.currentMillis = timeline->getCurrentTimeMillis();
     args.currentPercent = timeline->getPercentComplete();
     args.currentFrame = timeline->getCurrentFrame();
     args.currentTime = timeline->getCurrentTime();    

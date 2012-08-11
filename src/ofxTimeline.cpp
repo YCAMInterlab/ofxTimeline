@@ -503,6 +503,7 @@ void ofxTimeline::clear(){
 }
 
 void ofxTimeline::reset(){ //gets rid of everything
+    stop();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
@@ -542,7 +543,13 @@ void ofxTimeline::setDurationInMillis(long millis){
 }
 
 void ofxTimeline::setDurationInTimecode(string timecodeString){
-    durationInSeconds = timecode.secondsForTimecode(timecodeString);
+    float newDuration = timecode.secondsForTimecode(timecodeString);
+    if(newDuration > 0){
+	    durationInSeconds = newDuration;
+    }
+    else{
+        ofLogError() << "ofxTimeline::setDurationInTimecode -- " << timecodeString << " is invalid, please use the format HH:MM:SS:MLS";
+    }
 }
 
 int ofxTimeline::getDurationInFrames(){
@@ -1106,7 +1113,7 @@ bool ofxTimeline::getSwitcherOn(string trackName, float atTime){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
-    return switcher->isOn(atTime/durationInSeconds);
+    return switcher->isOnAtPercent(atTime/durationInSeconds);
 }
 
 bool ofxTimeline::getSwitcherOn(string trackName){
