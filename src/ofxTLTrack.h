@@ -146,7 +146,11 @@ class ofxTLTrack
 	void setTimeline(ofxTimeline* timeline); 
 	string getName();
 	void setName(string name);
-		
+    
+    //optional display name that track headers will use
+    virtual void setDisplayName(string name);
+    virtual string getDisplayName();
+    
     virtual string getTrackType();
     
 	bool getCreatedByTimeline();
@@ -189,6 +193,7 @@ class ofxTLTrack
 	bool createdByTimeline;
 
 	string name;
+    string displayName;
 	string xmlFileName;
 	ofRectangle bounds;
 	ofRange zoomBounds;	

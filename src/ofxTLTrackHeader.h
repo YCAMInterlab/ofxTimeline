@@ -38,7 +38,7 @@
 #include "ofxTLTrack.h"
 #include "ofxTextInputField.h"
 
-#define FOOTER_HEIGHT 4
+#define FOOTER_HEIGHT 6
 
 class ofxTLTrackHeader : public ofxTLTrack
 {
@@ -46,12 +46,12 @@ class ofxTLTrackHeader : public ofxTLTrack
 	ofxTLTrackHeader();
 	virtual ~ofxTLTrackHeader();
 	
-	string name;	
-	string getDisplayName();
-	
-	virtual void setup();
+    string name;
+    
+    virtual void enable();
+    virtual void disable();
+    
 	virtual void draw();
-	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -63,7 +63,8 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void collapseTrack();
     
 	virtual ofRectangle getFooterRect();
-	
+	virtual void textFieldEnter(string& newText);
+    
   protected:
 	ofxTLTrack* track;
 	ofxTextInputField nameField;

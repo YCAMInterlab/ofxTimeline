@@ -163,20 +163,20 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
     keysAreDraggable = !ofGetModifierKeyShift();
     keysDidDrag = false;
 
-    bool didJustDeselect = false;
 	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
     if(isActive() && !ofGetModifierKeyShift()){
+        bool didJustDeselectMulti = false;
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
+            //settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
+            didJustDeselectMulti = timeline->getTotalSelectedItems() > 1;
     	    timeline->unselectAll();
-            //debatable. settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
-            //didJustDeselect = true; 
         }
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
-        if(selectedKeyframe == NULL && !didJustDeselect){
+        if(selectedKeyframe == NULL && !didJustDeselectMulti){
             timeline->unselectAll();
 
             //add a new one
@@ -226,7 +226,6 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
 
 void ofxTLKeyframer::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-        cout << "time range is " << timeRange << " and keyframe is " << keyframes[i]->time << endl;
         if(timeRange.contains(keyframes[i]->time) && valueRange.contains(1.-keyframes[i]->value)){
             selectKeyframe(keyframes[i]);
         }
@@ -351,7 +350,6 @@ void ofxTLKeyframer::loadFromXMLRepresentation(string rep){
     updateKeyframeSort();
     timeline->flagUserChangedValue();    //because this is only called in Undo we don't flag track modified
 }
-
 
 void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){

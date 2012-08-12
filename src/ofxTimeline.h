@@ -222,6 +222,7 @@ class ofxTimeline {
 	bool getMovePlayheadOnPaste();	
 	string getPasteboard();
 	
+    //Undo and Redo
     void enableUndo(bool enabled);
     void undo();
     void redo();
@@ -237,8 +238,23 @@ class ofxTimeline {
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
 	
+    //if a timeline is modal it means that it may be presenting
+    //content outside of the timeline or requiring keyboard input
+    //testApp should respect this value and not trigger other hotkeys
+    //while isModal() is true so the user can freely type
     bool isModal();
     ofxTLTrack* getModalTrack();
+    
+    //Subclass Note
+    //ofxTLTracks that allow for multiple selection
+    //should use this value to change the behavior for creating new items
+    //If a user clicks on a blank part of a track it should only
+    //create a new keyframe if 1 or 0 keys is selected
+    //if 2 or more is selected, it just trigger an unselect all before
+    //create any new items
+    
+    //Returns the number of items selected in the whole timeline
+    int getTotalSelectedItems();
     
 	virtual ofxTLTrack* getTrack(string name);
 	
@@ -406,7 +422,7 @@ class ofxTimeline {
 
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
-	
+    
     //TODO convert to long
 	ofRange inoutRange;
 	

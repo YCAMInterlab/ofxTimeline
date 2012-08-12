@@ -353,13 +353,13 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 	ofxTLTrackHeader* newHeader = new ofxTLTrackHeader();
     newHeader->setTimeline(timeline);
 	newHeader->setTrack(track);
+	newHeader->name = trackName;
 	newHeader->setup();
 
 	//	cout << "adding " << name << " current zoomer is " << zoomer->getDrawRect().y << endl;
 
 	ofRectangle newHeaderRect = ofRectangle(trackContainerRect.x, trackContainerRect.height, trackContainerRect.width, headerHeight);
 	newHeader->setDrawRect(newHeaderRect);
-	newHeader->name = trackName;
 
 	headers.push_back(newHeader);
 

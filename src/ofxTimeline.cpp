@@ -580,12 +580,14 @@ void ofxTimeline::enable(){
 
 void ofxTimeline::disable(){
     if(isEnabled){
+        stop();
 		isEnabled = false;
 		disableEvents();
     }
 }
 
 //clears every element
+//TODO how should this work with UNdo??
 void ofxTimeline::clear(){
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->clear();
@@ -594,6 +596,7 @@ void ofxTimeline::clear(){
 
 void ofxTimeline::reset(){ //gets rid of everything
     stop();
+    	undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
@@ -818,6 +821,9 @@ void ofxTimeline::disableEvents() {
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
 
+    cout << "mouse button? " << args.button << endl;
+    cout << "control pressed? " << ofGetModifierKeyControl() << endl;
+    
     if(modalTrack != NULL){
     	modalTrack->mousePressed(args,millis);
         return;
@@ -1127,6 +1133,15 @@ void ofxTimeline::setCurrentPage(string pageName){
 
 void ofxTimeline::setCurrentPage(int index){
 	tabs->selectPage(index);
+}
+
+int ofxTimeline::getTotalSelectedItems(){
+    int totalSelected = 0;
+    vector<ofxTLTrack*> tracks = currentPage->getTracks();
+    for(int i = 0; i < tracks.size(); i++){
+        totalSelected += tracks[i]->getSelectedItemCount();
+    }
+    return totalSelected;
 }
 
 bool ofxTimeline::isModal(){

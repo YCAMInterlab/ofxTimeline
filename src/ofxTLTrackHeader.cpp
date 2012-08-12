@@ -45,18 +45,35 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 
 }
 
+void ofxTLTrackHeader::enable(){
+	nameField.setup();    
+    ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+
+}
+
+void ofxTLTrackHeader::disable(){
+    ofRemoveListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+}
+
 void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
 	track = newTrack;
-//	nameField.disable();
 }
 
 ofxTLTrack* ofxTLTrackHeader::getTrack(){
 	return track;    
 }
 
-void ofxTLTrackHeader::setup(){
-    //don't call superconstrutor -- no need to load or enable
-	nameField.setup();    
+void ofxTLTrackHeader::textFieldEnter(string& newText){
+    cout << "text field entered to " << newText << endl;
+    if(newText == ""){
+        nameField.text = name;
+    }
+    else{
+        if(track != NULL){
+            track->setDisplayName(newText);
+        }
+    }
+	track->getTimeline()->dismissedModalContent();
 }
 
 void ofxTLTrackHeader::draw(){
@@ -69,12 +86,17 @@ void ofxTLTrackHeader::draw(){
 	ofNoFill();
 	ofSetColor(getTimeline()->getColors().textColor);
 	// TODO: set these somewhere else instead of setting it every frame here
+    // set name if it's empty and we're not editing
+    if(nameField.text != track->getDisplayName() && !nameField.getIsEnabled()){
+    	nameField.text = track->getDisplayName();   
+    }
+    
+    if(nameField.getIsEnabled()){
+    	track->getTimeline()->presentedModalContent(this);
+    }
+    
     nameField.bounds.x = bounds.x;
     nameField.bounds.y = bounds.y;
-    // set name if it's empty and we're not editing
-    if(nameField.text == "" && !nameField.getIsEnabled()){
-    	nameField.text = name;   
-    }
     nameField.draw();
 	
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
@@ -98,9 +120,9 @@ void ofxTLTrackHeader::draw(){
 	ofPopStyle();
 }
 
-string ofxTLTrackHeader::getDisplayName() {
-    return nameField.text;
-}
+//string ofxTLTrackHeader::getDisplayName() {
+//    return nameField.text;
+//}
 
 void ofxTLTrackHeader::mousePressed(ofMouseEventArgs& args){
 	if(footerRect.inside(ofPoint(args.x,args.y))){

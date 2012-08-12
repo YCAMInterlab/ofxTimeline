@@ -98,6 +98,15 @@ void ofxTLTrack::setName(string _name){
 	name = _name;
 }
 
+//optional display name that track headers will use
+void ofxTLTrack::setDisplayName(string name){
+    displayName = name;
+}
+
+string ofxTLTrack::getDisplayName(){
+    return displayName == "" ? name : displayName;
+}
+
 string ofxTLTrack::getTrackType(){
 	return "Track";    
 }
