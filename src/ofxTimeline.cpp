@@ -967,7 +967,8 @@ void ofxTimeline::keyReleased(ofKeyEventArgs& args){
 
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
-	recalculateBoundingRects();
+    
+    ofNotifyEvent(events().viewWasResized, args, this);
 }
 
 #pragma mark DRAWING
@@ -1343,6 +1344,14 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
         return ofPtr<ofVideoPlayer>(); //null ptr
     }
     return track->getPlayer();
+}
+
+ofxTLTrackHeader* ofxTimeline::getTrackHeader(string trackName){
+    return getTrackHeader(getTrack(name));    
+}
+
+ofxTLTrackHeader* ofxTimeline::getTrackHeader(ofxTLTrack* track){
+    return trackNameToPage[track->getName()]->getTrackHeader(track);
 }
 
 void ofxTimeline::bringTrackToTop(string trackName){

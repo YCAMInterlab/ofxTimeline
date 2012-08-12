@@ -76,15 +76,16 @@ class ofxTLPage {
     
 	virtual void addTrack(string name, ofxTLTrack* track);
 	virtual ofxTLTrack* getTrack(string name);
+    virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
+    
 	virtual void removeTrack(string name);
     
-    //computed on the fly so please use sparingly if you have a lot of track
+    //computed on the fly so please use sparingly if you have to call it a lot
     vector<ofxTLTrack*> getTracks();
 
     //given a folder the page will look for xml files to load within that
 	virtual void loadTracksFromFolder(string folderPath);
     
-
 	virtual void mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);

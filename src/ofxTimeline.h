@@ -295,9 +295,12 @@ class ofxTimeline {
     virtual void setTimecontrolTrack(ofxTLTimeController* track);
 	virtual ofxTLTimeController* getTimecontrolTrack();
     
-	//for custom tracks
+	//you can add custom tracks this way
 	virtual void addTrack(string name, ofxTLTrack* track);
 
+    virtual ofxTLTrackHeader* getTrackHeader(string trackName);
+    virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
+    
 	//TODO: bfd
 //   virtual void removeTrack(string name);
     

@@ -75,7 +75,7 @@ ofxTLPage::~ofxTLPage(){
 void ofxTLPage::setup(){
 	if(!isSetup){
         isSetup = true;
-        headerHeight = 12;
+        headerHeight = 15;
         defaultTrackHeight = 30;
         loadTrackPositions(); //name must be set
         ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
@@ -394,6 +394,22 @@ ofxTLTrack* ofxTLPage::getTrack(string trackName){
 		return NULL;
 	}
 	return tracks[trackName];
+}
+
+ofxTLTrackHeader* ofxTLPage::getTrackHeader(ofxTLTrack* track){
+    if(track == NULL){
+        ofLogError() << "ofxTLPage::getTrackHeader -- Attempting to get header for a null track";
+        return NULL;
+    }
+    
+    for(int i = 0; i < headers.size(); i++){
+        if(track == headers[i]->getTrack()){
+            return headers[i];
+        }
+    }
+    
+    ofLogError() << "ofxTLPage::getTrackHeader header for track " << track->getDisplayName() << " Couldn't be found";
+    return NULL;
 }
 
 void ofxTLPage::collapseAllTracks(){
