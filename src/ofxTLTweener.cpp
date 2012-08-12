@@ -15,10 +15,7 @@ ofxTLTweener::ofxTLTweener(){
 	drawingEasingWindow = false;
 }
 
-ofxTLTweener::~ofxTLTweener(){
-    
-}
-
+//TODO potentially scale internal values at this point
 void ofxTLTweener::setValueRange(ofRange range, float newDefaultValue){
 	valueRange = range;
     defaultValue = newDefaultValue;
@@ -110,7 +107,6 @@ void ofxTLTweener::draw(){
 		}
 		
 		ofSetColor(timeline->getColors().textColor);
-//		ofVec2f screenpoint = coordForKeyframePoint(keyframes[i]->position);
   		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);      
 		if(isKeyframeSelected( keyframes[i] )){
 			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
@@ -142,7 +138,6 @@ void ofxTLTweener::draw(){
 
 ofxTLKeyframe* ofxTLTweener::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
-//	k->position = point;
 	k->easeFunc = easingFunctions[0];
 	k->easeType = easingTypes[0];
 	return k;

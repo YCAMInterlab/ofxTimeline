@@ -133,18 +133,30 @@ void ofxTLTrack::_draw(){
 }
 
 void ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
-    active = bounds.inside(args.x, args.y);
-    mousePressed(args, millis);
+    if(enabled){
+	    active = bounds.inside(args.x, args.y);
+    	mousePressed(args, millis);
+    }
 }
 
 void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args, long millis){
-	hover = bounds.inside(args.x, args.y);
-	mouseMoved(args, millis);    
+    if(enabled){
+    	hover = bounds.inside(args.x, args.y);
+		mouseMoved(args, millis);
+    }
+}
+
+void ofxTLTrack::_mouseDragged(ofMouseEventArgs& args, long millis){
+    if(enabled){
+    	mouseDragged(args, millis);
+    }
 }
 
 void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args, long millis){
-    mouseReleased(args, millis);
-    active = false;
+    if(enabled){
+        mouseReleased(args, millis);
+	    active = false;
+    }
 }
 
 void ofxTLTrack::gainedFocus(){

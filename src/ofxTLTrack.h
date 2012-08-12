@@ -82,6 +82,7 @@ class ofxTLTrack
     //parent wrappers that call virtual versions implemented by subclasses
     void _mousePressed(ofMouseEventArgs& args, long millis);
     void _mouseMoved(ofMouseEventArgs& args, long millis);
+    void _mouseDragged(ofMouseEventArgs& args, long millis);
     void _mouseReleased(ofMouseEventArgs& args, long millis);
     
 	//standard events to be implement in subclasses

@@ -75,8 +75,8 @@ ofxTLPage::~ofxTLPage(){
 void ofxTLPage::setup(){
 	if(!isSetup){
         isSetup = true;
-        headerHeight = 15;
-        defaultTrackHeight = 30;
+        headerHeight = 18;
+        defaultTrackHeight = 40;
         loadTrackPositions(); //name must be set
         ofAddListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
     }
@@ -153,11 +153,9 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
             bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
             headerHasFocus |= (clickIsInFooter || clickIsInHeader);
-            if(tracks[headers[i]->name]->isEnabled()){ 
-                tracks[headers[i]->name]->_mousePressed(args, millis);
-				if(clickIsInTrack || clickIsInHeader){
-                    newFocus = tracks[headers[i]->name];
-                }
+            tracks[headers[i]->name]->_mousePressed(args, millis);
+            if(clickIsInTrack || clickIsInHeader){
+                newFocus = tracks[headers[i]->name];
             }
 		}
 	}
@@ -176,8 +174,8 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args, long millis){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
-		tracks[headers[i]->name]->_mouseMoved(args, millis);
-	}	
+        tracks[headers[i]->name]->_mouseMoved(args, millis);
+	}
     
     if(!draggingInside){
         timeline->setHoverTime(millis);
@@ -247,7 +245,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
         for(int i = 0; i < headers.size(); i++){
             headers[i]->mouseDragged(args);
             if(!headerHasFocus){
-                tracks[headers[i]->name]->mouseDragged(args, millis);
+                tracks[headers[i]->name]->_mouseDragged(args, millis);
             }
         }
     }        
