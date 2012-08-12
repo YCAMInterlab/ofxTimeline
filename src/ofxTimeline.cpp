@@ -1038,6 +1038,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
     }
     
     if(currentTime < durationInSeconds*inoutRange.min){
+        cout << "BELOW MIN " << endl;
         currentTime = durationInSeconds*inoutRange.min;
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);       
@@ -1049,9 +1050,11 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
             stop();
         }
         else if(loopType == OF_LOOP_NORMAL) {
-            currentTime = durationInSeconds*inoutRange.min + fmod(currentTime, durationInSeconds*inoutRange.span());
+//        	cout << "before loop at max. currentTime " << currentTime << " startTime " << playbackStartTime << " timer " << timer.getAppTimeSeconds() << " range " <<  durationInSeconds*inoutRange.span() << endl;
+            currentTime = durationInSeconds*inoutRange.min + (currentTime - durationInSeconds*inoutRange.max);
             playbackStartFrame += getDurationInFrames()  * inoutRange.span();
             playbackStartTime  += getDurationInSeconds() * inoutRange.span();
+//        	cout << "after loop at max. currentTime " << currentTime << " startTime " << playbackStartTime << " timer " << timer.getAppTimeSeconds() << " range " <<  durationInSeconds*inoutRange.span() << endl;
             ofxTLPlaybackEventArgs args = createPlaybackEvent();
             ofNotifyEvent(events().playbackLooped, args);
         }
