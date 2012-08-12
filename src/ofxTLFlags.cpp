@@ -122,7 +122,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
     else if(enteringText){
         enteringText = false;
         timeline->dismissedModalContent();
-        timeline->flagTrackModified(this);
+        timeline->flagTrackModified(this); //TODO move this to mouse-released to cooperate with undo
         return;
     }
     

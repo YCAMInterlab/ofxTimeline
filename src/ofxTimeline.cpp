@@ -73,7 +73,9 @@ ofxTimeline::ofxTimeline()
 	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
-	currentTime(0.0)
+	currentTime(0.0),
+	undoPointer(0),
+	undoEnabled(true)
 {
 }
 
@@ -90,7 +92,6 @@ ofxTimeline::~ofxTimeline(){
         delete ticker;
         delete tabs;
         delete zoomer;
-
 	}
 }
 
@@ -225,6 +226,89 @@ string ofxTimeline::getPasteboard(){
 	return pasteboard;
 }
 
+//turn on undo
+void ofxTimeline::enableUndo(bool enabled){
+	undoEnabled = enabled;    
+}
+
+void ofxTimeline::undo(){
+    if(undoPointer > 0){
+    	undoPointer--;
+        restoreToState(undoStack[undoPointer]);
+    }
+}
+
+void ofxTimeline::redo(){
+    if(undoPointer < undoStack.size()-1){
+        undoPointer++;
+		restoreToState(undoStack[undoPointer]);
+    }
+}
+
+
+void ofxTimeline::restoreToState(vector<UndoItem>& state){
+    for(int i = 0; i < state.size(); i++){
+        state[i].track->loadFromXMLRepresentation(state[i].stateBuffer);
+    }
+}
+
+//called on mouse down and key down
+//stores the state of all tracks that could potentially be modified
+//by this action so that we can push ones that actually were changed
+//onto the undo stack
+void ofxTimeline::collectStateBuffers(){
+    
+    if(!undoEnabled) return;
+    
+    vector<ofxTLTrack*> tracks = currentPage->getTracks();
+    stateBuffers.clear();
+    modifiedTracks.clear();
+    for(int i = 0; i < tracks.size(); i++){
+        ofxTLTrack* track = tracks[i];
+        if(track->getSelectedItemCount() > 0){
+            UndoItem ui;
+            ui.track = track;
+            ui.stateBuffer = track->getXMLRepresentation();
+            stateBuffers.push_back(ui);
+        }
+    }
+}
+
+//go through the state buffers and see which tracks were actually modified
+//push the collection of them onto the stack if there were any
+void ofxTimeline::pushUndoStack(){
+    
+    if(!undoEnabled) return;
+    
+    vector<UndoItem> undoCollection;
+    for(int i = 0; i < modifiedTracks.size(); i++){
+        for(int buf = 0; buf < stateBuffers.size(); buf++){
+            //this m
+            if(modifiedTracks[i] == stateBuffers[buf].track){
+                undoCollection.push_back(stateBuffers[buf]);
+            }
+        }
+    }
+    if(undoCollection.size() > 0){
+        //remove any history that we've undone
+        while(undoPointer < undoStack.size()){
+            undoStack.pop_back();
+        }
+        undoStack.push_back(undoCollection);
+        undoPointer = undoStack.size();
+        
+        //store the most recent state at the top of the queue
+        vector<UndoItem> currentState;
+        for(int i = 0; i < modifiedTracks.size(); i++){
+            UndoItem ui;
+            ui.track = modifiedTracks[i];
+            ui.stateBuffer = modifiedTracks[i]->getXMLRepresentation();
+            currentState.push_back(ui);
+        }
+        undoStack.push_back(currentState);
+    }
+}
+
 void ofxTimeline::setMovePlayheadOnDrag(bool movePlayhead){
 	movePlayheadOnDrag = movePlayhead;
 }
@@ -257,7 +341,13 @@ bool ofxTimeline::getUserChangedValue(){
 }
 
 void ofxTimeline::flagTrackModified(ofxTLTrack* track){
+
 	flagUserChangedValue();
+    
+    if(undoEnabled){
+        modifiedTracks.push_back(track);
+    }
+    
     if(autosave){
         track->save();
     }
@@ -703,6 +793,7 @@ void ofxTimeline::enableEvents() {
 		ofAddListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
 		ofAddListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofAddListener(ofEvents().keyReleased, this, &ofxTimeline::keyReleased);
 		ofAddListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = true;
@@ -717,6 +808,7 @@ void ofxTimeline::disableEvents() {
 		ofRemoveListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
 		
 		ofRemoveListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
+		ofRemoveListener(ofEvents().keyReleased, this, &ofxTimeline::keyReleased);
 		ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 		
 		usingEvents = false;
@@ -725,7 +817,7 @@ void ofxTimeline::disableEvents() {
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
-    
+
     if(modalTrack != NULL){
     	modalTrack->mousePressed(args,millis);
         return;
@@ -744,6 +836,9 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 	currentPage->mousePressed(args,millis);
 	zoomer->mousePressed(args);
 
+    //collect state buffers after items are selected
+    collectStateBuffers();
+    
 //	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
 }
 
@@ -790,16 +885,21 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 	tabs->mouseReleased(args);
 	currentPage->mouseReleased(args, millis);
 	zoomer->mouseReleased(args);
+    
+    pushUndoStack();
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-
+	
+    //collect the buffers before the command is sent becasue it's what modifies
+    collectStateBuffers();
+    
     if(modalTrack != NULL){
         modalTrack->keyPressed(args);
         return;
     }
     
-    //	cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << endl;
+    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
@@ -821,6 +921,13 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	else if(ofGetModifierKeyControl() && args.key == 1){ //select all
 		currentPage->selectAll();						
 	}
+    else if(ofGetModifierKeyControl() && ofGetModifierKeyShift() && args.key == 26 && undoEnabled){
+        cout << "redoing" << endl;
+        redo();
+    }
+    else if(ofGetModifierKeyControl() && args.key == 26 && undoEnabled){
+        undo();
+    }
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
 			ofVec2f nudgeAmount = ofGetModifierKeyShift() ? getBigNudgePercent() : getNudgePercent();
@@ -847,6 +954,11 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		zoomer->keyPressed(args);
 	}
 }
+
+void ofxTimeline::keyReleased(ofKeyEventArgs& args){
+    pushUndoStack();
+}
+
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
 	recalculateBoundingRects();

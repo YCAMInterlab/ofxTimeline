@@ -84,6 +84,12 @@ class ofxTLKeyframer : public ofxTLTrack
 	virtual void selectAll();
 	virtual void unselectAll();
     
+    virtual int getSelectedItemCount();
+    
+    //undo
+    virtual string getXMLRepresentation();
+    virtual void loadFromXMLRepresentation(string rep);
+    
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 	
     virtual string getTrackType();
@@ -121,7 +127,7 @@ class ofxTLKeyframer : public ofxTLTrack
 
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f screenPositionForKeyframe(ofxTLKeyframe* keyframe);
-//	ofVec2f keyframePointForCoord(ofVec2f coord);
+
     float screenYToValue(float screenY);
 	float valueToScreenY(float value);
 	

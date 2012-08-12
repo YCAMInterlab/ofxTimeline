@@ -70,7 +70,7 @@ void ofxTLKeyframer::load(){
 	}
 	
 	createKeyframesFromXML(savedkeyframes, keyframes);
-    timeline->flagUserChangedValue();
+	timeline->flagTrackModified(this);
 	updateKeyframeSort();
 }
 
@@ -114,7 +114,6 @@ void ofxTLKeyframer::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 		
 		xmlStore.popTag(); //keyframes
 	}
-	timeline->flagTrackModified(this);
 	sort(keyContainer.begin(), keyContainer.end(), keyframesort);
 }
 
@@ -123,6 +122,7 @@ void ofxTLKeyframer::clear(){
 		delete keyframes[i];
 	}
 	keyframes.clear();		
+    selectedKeyframes.clear();
 }
 
 void ofxTLKeyframer::save(){
@@ -323,7 +323,6 @@ void ofxTLKeyframer::pasteSent(string pasteboard){
 				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
 			}
 			updateKeyframeSort();
-            timeline->flagTrackModified(this);
 		}
 	}
 }
@@ -335,6 +334,24 @@ void ofxTLKeyframer::selectAll(){
 void ofxTLKeyframer::unselectAll(){
 	selectedKeyframes.clear();
 }
+
+int ofxTLKeyframer::getSelectedItemCount(){
+    return selectedKeyframes.size();
+}
+
+string ofxTLKeyframer::getXMLRepresentation(){
+    return getXMLStringForKeyframes(keyframes);
+}
+
+void ofxTLKeyframer::loadFromXMLRepresentation(string rep){
+    clear();
+    ofxXmlSettings buffer;
+    buffer.loadFromBuffer(rep);
+    createKeyframesFromXML(buffer, keyframes);
+    updateKeyframeSort();
+    timeline->flagUserChangedValue();    //because this is only called in Undo we don't flag track modified
+}
+
 
 void ofxTLKeyframer::keyPressed(ofKeyEventArgs& args){
 	if(args.key == OF_KEY_DEL || args.key == OF_KEY_BACKSPACE){
@@ -370,8 +387,6 @@ ofxTLKeyframe* ofxTLKeyframer::keyframeAtScreenpoint(ofVec2f p, int& selectedInd
 	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
 		ofVec2f keyonscreen = screenPositionForKeyframe(keyframes[i]);
-//        ofVec2f keyonscreen = ofVec2f(timeline->millisToScreenX(keyframes[i]->time), 
-//                                      ofMap(keyframes[i]->value, bounds.y, bounds.y+bounds.height, 1.0, 0.0, true));
 		if(keyonscreen.squareDistance( p ) < minDistanceSquared){
 			selectedIndex = i;
 			return keyframes[i];

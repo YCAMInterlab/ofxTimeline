@@ -40,7 +40,7 @@ class ofxTLTweener : public ofxTLKeyframer {
     //the superclass controls keyframe placement
 	virtual void mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
-    
+
     virtual void setValueRange(ofRange range, float defaultValue = 0);
     virtual ofRange getValueRange();
     

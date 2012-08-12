@@ -60,6 +60,11 @@
 #include "ofxTLColors.h"
 #include "ofxTLTimeController.h"
 
+typedef struct {
+    ofxTLTrack* track;
+    string stateBuffer;
+} UndoItem;
+
 class ofxTimeline {
   public:
 	ofxTimeline();
@@ -152,8 +157,7 @@ class ofxTimeline {
     //this returns and clears the flag, generally call once per frame
     virtual bool getUserChangedValue(); 
     
-    //internal tracks call this when a big change has been made
-    //it'll trigger a save if autosave is on, and it'll add to the undo queue for that page
+    //internal tracks call this when a big change has been made and it will trigger a save
     virtual void flagTrackModified(ofxTLTrack* track); 
     
     //in and out point setting, respected by internal time
@@ -218,6 +222,10 @@ class ofxTimeline {
 	bool getMovePlayheadOnPaste();	
 	string getPasteboard();
 	
+    void enableUndo(bool enabled);
+    void undo();
+    void redo();
+    
 	void setMovePlayheadOnDrag(bool updatePlayhead);
 	bool getMovePlayheadOnDrag();
 	
@@ -288,6 +296,7 @@ class ofxTimeline {
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	virtual void keyPressed(ofKeyEventArgs& args);
+	virtual void keyReleased(ofKeyEventArgs& args);
 	virtual void windowResized(ofResizeEventArgs& args);
 
 	ofxTLColors& getColors();
@@ -336,7 +345,21 @@ class ofxTimeline {
     ofxTimecode timecode;
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
+    ofxTLColors colors;
+    	
+	vector<ofxTLPage*> pages;
+	ofxTLPage* currentPage;
     
+    ofxTLInOut* inoutTrack;
+	ofxTLTicker* ticker;
+	ofxTLPageTabs* tabs;
+	ofxTLZoomer* zoomer;
+	
+    map<string, ofxTLPage*> trackNameToPage;
+
+    ofxTLTrack* modalTrack;
+    ofxTLTimeController* timeControl;
+
     //can be blank, default save to bin/data/
     string workingFolder; 
     
@@ -350,26 +373,25 @@ class ofxTimeline {
 	bool lockWidthToWindow;
     
 	string pasteboard;
-
+    
+    bool undoEnabled; //turn off undo if you don't need it, it'll take up a ton of memory
+    void collectStateBuffers();
+    void pushUndoStack();
+    void restoreToState(vector<UndoItem>& state);
+    
+    //this is populated on mouse-down or key-down with all items that could potentially be modified
+	vector<UndoItem> stateBuffers; 
+    //then after the events are propagated all the modified tracks are collected here 
+    vector<ofxTLTrack*> modifiedTracks;
+    //finally, the state buffers for the tracks that were modified are pushed onto the stack say that state may be returned
+    deque< vector<UndoItem> > undoStack;
+    //the undo pointer points into the array and lets the user move through undo/redo actions
+    int undoPointer;
+    
 	bool movePlayheadOnDrag;
     bool snapToBPM;
     bool snapToOtherElements;
     
-
-	ofxTLColors colors;
-	map<string, ofxTLPage*> trackNameToPage;
-	
-	ofxTLPage* currentPage;
-	vector<ofxTLPage*> pages;
-
-    ofxTLInOut* inoutTrack;
-	ofxTLTicker* ticker;
-	ofxTLPageTabs* tabs;
-	ofxTLZoomer* zoomer;
-
-    ofxTLTrack* modalTrack;
-    ofxTLTimeController* timeControl;
-
 	float width;
 	ofVec2f offset;
 

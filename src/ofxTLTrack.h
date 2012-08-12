@@ -110,6 +110,19 @@ class ofxTLTrack
 	virtual void selectAll(){};
 	virtual void unselectAll(){};
 	
+    //returns the number of selected items
+    //this used to determine two things:
+    //1 Should an incoming click create a new item or remove a multiple selection? 
+    //If the timeline has more than 1 item selected incoming clicks that don't hit anything will deselect all
+    //otherwise they'll create a new value on that track
+    //2 Can this track be modified by the current event? If there are selected items
+    //the this track's state will be stored in the undo buffer.
+    virtual int getSelectedItemCount(){ return 0; };
+    
+    //undo
+    virtual string getXMLRepresentation(){return "";};
+    virtual void loadFromXMLRepresentation(string rep){};
+
 	//zoom events
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);

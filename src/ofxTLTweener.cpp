@@ -203,6 +203,7 @@ void ofxTLTweener::drawModalContent(){
 
 void ofxTLTweener::mousePressed(ofMouseEventArgs& args, long millis){
 
+    //TODO: move this to mouse-released to cooperate with UNDO
     if(drawingEasingWindow){
         //see if we clicked on an
         drawingEasingWindow = false;
@@ -213,7 +214,7 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args, long millis){
                 for(int k = 0; k < selectedKeyframes.size(); k++){                    
                     ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
                 }
-                timeline->flagTrackModified(this);
+                timeline->flagTrackModified(this); 
                 return;
             }
         }
