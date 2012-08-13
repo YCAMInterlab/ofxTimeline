@@ -131,6 +131,9 @@ void ofxTLPage::timelineGainedFocus(){
 }
 
 void ofxTLPage::timelineLostFocus(){
+    if(focusedTrack != NULL){
+        focusedTrack->lostFocus();
+    }
     focusedTrack = NULL;
 }
 
@@ -447,8 +450,30 @@ void ofxTLPage::bringTrackToBottom(ofxTLTrack* track){
     ofLogError("ofxTLPage::bringTrackToBottom -- track " + track->getName() + " not found");
 }
 
-void ofxTLPage::removeTrack(string name){
-	//TODO: bfd
+void ofxTLPage::removeTrack(ofxTLTrack* track){
+    if(track == NULL){
+        ofLogError() << "ofxTLPage::removeTrack -- removing null track!" << endl;
+        return;
+    }
+    
+	for(int i = 0; i < headers.size(); i++){
+        if(headers[i]->getTrack() == track){
+            delete headers[i];
+            headers.erase(headers.begin()+i);
+            tracks.erase(track->getName());
+            if(track == focusedTrack){
+                focusedTrack->lostFocus();
+                focusedTrack = NULL;
+            }
+            //TODO smart pointers this won't be necessary
+            if(track->getCreatedByTimeline()){
+                delete track;
+            }
+            recalculateHeight();
+            return;
+        }
+    }
+    ofLogError() << "ofxTLPage::removeTrack -- track named " << track->getName() << " not found!" << endl;
 }
 
 void ofxTLPage::recalculateHeight(){

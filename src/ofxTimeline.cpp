@@ -1038,7 +1038,7 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
     }
     
     if(currentTime < durationInSeconds*inoutRange.min){
-        cout << "BELOW MIN " << endl;
+//        cout << "BELOW MIN " << endl;
         currentTime = durationInSeconds*inoutRange.min;
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);       
@@ -1281,18 +1281,6 @@ ofxTLFlags* ofxTimeline::addFlags(string trackName, string xmlFileName){
 	return newFlags;
 }
 
-ofxTLEvents& ofxTimeline::events(){
-    return timelineEvents;
-}
-
-ofxTimecode& ofxTimeline::getTimecode(){
-    return timecode;
-}
-
-vector<ofxTLPage*>& ofxTimeline::getPages(){
-    return pages;
-}
-
 ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName){
 	ofFileDialogResult result = ofSystemLoadDialog("Load Sequence", true);
 	if(result.bSuccess && ofDirectory::doesDirectoryExist(result.filePath, false)){
@@ -1376,6 +1364,51 @@ void ofxTimeline::bringTrackToBottom(ofxTLTrack* track){
 		trackNameToPage[track->getName()]->bringTrackToBottom(track);        
     }
 }
+
+void ofxTimeline::removeTrack(string name){
+    ofxTLTrack* track = getTrack(name);
+    if(track == NULL){
+        ofLogError() << "ofxTimeline::removeTrack -- Could not find track " << name << " to remove " << endl;
+        return;
+	}
+    if(track == modalTrack){
+        modalTrack = NULL;
+    }
+
+    //quick fix for now -- we need to have Undo and Delete track work together
+    //but to prevent crashes, let's just go through the undo queue and remove any items that have to do with this track
+    for(int i = 0; i < undoStack.size(); i++){
+        for(int q = undoStack[i].size()-1; q >= 0; q--){
+			if(undoStack[i][q].track == track){
+                undoStack[i].erase(undoStack[i].begin() + q);
+                cout << "temporary fix -- deleting undo queue element for track " << track->getName() << endl;
+            }
+        }
+    }
+
+    trackNameToPage[name]->removeTrack(track);
+    trackNameToPage.erase(name);
+	ofEventArgs args;
+	ofNotifyEvent(events().viewWasResized, args);
+    
+}
+
+void ofxTimeline::removeTrack(ofxTLTrack* track){
+    removeTrack(track->getName()); //always delete by name to ensure the track is in this timeline
+}
+
+ofxTLEvents& ofxTimeline::events(){
+    return timelineEvents;
+}
+
+ofxTimecode& ofxTimeline::getTimecode(){
+    return timecode;
+}
+
+vector<ofxTLPage*>& ofxTimeline::getPages(){
+    return pages;
+}
+
 
 string ofxTimeline::formatTime(float seconds){
     return timecode.timecodeForSeconds(seconds);

@@ -301,8 +301,8 @@ class ofxTimeline {
     virtual ofxTLTrackHeader* getTrackHeader(string trackName);
     virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
     
-	//TODO: bfd
-//   virtual void removeTrack(string name);
+    virtual void removeTrack(string name);
+    virtual void removeTrack(ofxTLTrack* track);
     
     //ordering the track
     virtual void bringTrackToTop(string name);
@@ -365,15 +365,14 @@ class ofxTimeline {
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
     ofxTLColors colors;
-    	
-	vector<ofxTLPage*> pages;
-	ofxTLPage* currentPage;
-    
+
     ofxTLInOut* inoutTrack;
 	ofxTLTicker* ticker;
 	ofxTLPageTabs* tabs;
 	ofxTLZoomer* zoomer;
-	
+
+	vector<ofxTLPage*> pages;
+	ofxTLPage* currentPage;
     map<string, ofxTLPage*> trackNameToPage;
 
     ofxTLTrack* modalTrack;

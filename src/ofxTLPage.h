@@ -78,7 +78,7 @@ class ofxTLPage {
 	virtual ofxTLTrack* getTrack(string name);
     virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
     
-	virtual void removeTrack(string name);
+	virtual void removeTrack(ofxTLTrack* track);
     
     //computed on the fly so please use sparingly if you have to call it a lot
     vector<ofxTLTrack*> getTracks();
