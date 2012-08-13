@@ -83,7 +83,7 @@ void ofxTLTweener::draw(){
 
 	// DRAW KEYFRAME LINES
 
-	ofSetColor(timeline->getColors().highlightColor);
+	ofSetColor(timeline->getColors().keyColor);
 	ofNoFill();
 	ofBeginShape();
 	if(keyframes.size() == 0 || keyframes.size() == 1){
@@ -100,35 +100,39 @@ void ofxTLTweener::draw(){
 
     
 	//**** DRAW KEYFRAME DOTS
-	ofSetColor(timeline->getColors().textColor);
+	ofSetColor(timeline->getColors().keyColor);
 	for(int i = 0; i < keyframes.size(); i++){
 		if(!isKeyframeIsInBounds(keyframes[i])){
 			continue;
 		}
 		
-		ofSetColor(timeline->getColors().textColor);
-  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);      
+  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);		
+		if(keyframes[i] == hoverKeyframe){
+			ofPushStyle();
+			ofFill();
+			ofSetColor(timeline->getColors().highlightColor);
+			ofCircle(screenpoint.x, screenpoint.y, 6);
+			ofPopStyle();
+		}
+        
+
 		if(isKeyframeSelected( keyframes[i] )){
+            ofSetColor(timeline->getColors().textColor);
 			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			string frameString = timeline->formatTime(keyframes[i]->time);
             if(keysAreDraggable){
 				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
             }
 			ofFill();
+            ofCircle(screenpoint.x, screenpoint.y, 4);
 		}
 		else{
+            ofSetColor(timeline->getColors().textColor);
 			ofNoFill();
+            ofCircle(screenpoint.x, screenpoint.y, 2);
 		}
 		
-		if(keyframes[i] == hoverKeyframe){
-			ofPushStyle();
-			ofFill();			
-			ofSetColor(timeline->getColors().highlightColor);
-			ofCircle(screenpoint.x, screenpoint.y, 8);
-			ofPopStyle();
-		}
-		
-		ofCircle(screenpoint.x, screenpoint.y, 4);
+
 	}
 	
 	ofPopMatrix();

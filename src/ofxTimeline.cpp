@@ -596,10 +596,11 @@ void ofxTimeline::clear(){
 
 void ofxTimeline::reset(){ //gets rid of everything
     stop();
-    	undoStack.clear();
+    undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
+    setInOutRange(ofRange(0,1.0));
     pages.clear();
     trackNameToPage.clear();
     currentPage = NULL;
@@ -821,8 +822,8 @@ void ofxTimeline::disableEvents() {
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
 
-    cout << "mouse button? " << args.button << endl;
-    cout << "control pressed? " << ofGetModifierKeyControl() << endl;
+//    cout << "mouse button? " << args.button << endl;
+//    cout << "control pressed? " << ofGetModifierKeyControl() << endl;
     
     if(modalTrack != NULL){
     	modalTrack->mousePressed(args,millis);
@@ -1390,7 +1391,6 @@ void ofxTimeline::removeTrack(string name){
     trackNameToPage.erase(name);
 	ofEventArgs args;
 	ofNotifyEvent(events().viewWasResized, args);
-    
 }
 
 void ofxTimeline::removeTrack(ofxTLTrack* track){

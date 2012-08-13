@@ -26,7 +26,7 @@ void ofxTLSwitcher::draw(){
         ofSetLineWidth(2);
         bool keyIsSelected = isKeyframeSelected(switchKey);
         if(keyIsSelected || switchKey->startSelected){
-	        ofSetColor(timeline->getColors().highlightColor);                
+	        ofSetColor(timeline->getColors().textColor);
         }
         else{
 	        ofSetColor(timeline->getColors().keyColor);    
@@ -36,7 +36,7 @@ void ofxTLSwitcher::draw(){
                switchKey->display.x, bounds.y+bounds.height);
 
         if(keyIsSelected || switchKey->endSelected){
-	        ofSetColor(timeline->getColors().highlightColor);                
+	        ofSetColor(timeline->getColors().textColor);                
         }
         else{
 	        ofSetColor(timeline->getColors().keyColor);    
@@ -46,7 +46,7 @@ void ofxTLSwitcher::draw(){
 
         //draw region
         if(keyIsSelected){
-        	ofSetColor(timeline->getColors().highlightColor, 100);    
+        	ofSetColor(timeline->getColors().textColor, 100);    
         }
         else{
         	ofSetColor(timeline->getColors().keyColor, 100);
@@ -255,7 +255,7 @@ void ofxTLSwitcher::mouseMoved(ofMouseEventArgs& args, long millis){
             return; //return cancels call to parent
         }
         float endEdge = switchKey->display.x+switchKey->display.width;
-        if(abs(endEdge - args.x) < 10.0){
+        if(abs(endEdge - args.x) < 10.0 && bounds.inside(args.x,args.y)){
             hoverKeyframe = switchKey;
             endHover = true;
             return; //cancels call to parent

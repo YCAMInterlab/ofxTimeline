@@ -180,6 +180,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
             timeline->unselectAll();
 
             //add a new one
+            //TODO creating keyframes here breaks undo...
             selectedKeyframe = newKeyframe();
             selectedKeyframe->time = millis;
             selectedKeyframe->value = screenYToValue(screenpoint.y);
@@ -210,7 +211,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
         updateDragOffsets(screenpoint, millis);				
-		if(selectedKeyframe != NULL && args.button == 0){
+		if(selectedKeyframe != NULL && args.button == 0 && !ofGetModifierKeyControl()){
             //timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
             timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 			//move the playhead
@@ -218,7 +219,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
 				timeline->setCurrentTimeMillis(selectedKeyframe->time);
 			}
 		}
-		else if(args.button == 2){
+		else if(args.button == 2 || ofGetModifierKeyControl()){
             selectedKeySecondaryClick(args);
 		}
 	}
