@@ -68,7 +68,7 @@ float ofxTLTweener::sampleAtTime(long sampleTime){
 }
 
 string ofxTLTweener::getTrackType(){
-	return "Tweens";    
+	return "Curves";    
 }
 
 void ofxTLTweener::draw(){
