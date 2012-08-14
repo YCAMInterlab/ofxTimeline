@@ -845,8 +845,8 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 
     //collect state buffers after items are selected
     collectStateBuffers();
-    
-//	currentPage->setSnapping(snappingEnabled && dragAnchorSet);
+
+	currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
@@ -906,7 +906,7 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
         return;
     }
     
-    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
+//    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
 	if(ofGetModifierKeyControl() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
@@ -929,7 +929,7 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		currentPage->selectAll();						
 	}
     else if(ofGetModifierKeyControl() && ofGetModifierKeyShift() && args.key == 26 && undoEnabled){
-        cout << "redoing" << endl;
+//        cout << "redoing" << endl;
         redo();
     }
     else if(ofGetModifierKeyControl() && args.key == 26 && undoEnabled){
@@ -1438,14 +1438,21 @@ string ofxTimeline::confirmedUniqueName(string name){
 }
 
 void ofxTimeline::setDragTimeOffset(long millisecondOffset){
+
+    cout << "setting drag time to " << millisecondOffset << endl;
 	dragMillsecondOffset = millisecondOffset;
-	for(int i = 0; i < pages.size(); i++){
-        currentPage->setDragOffsetTime(dragMillsecondOffset);
-    }
+
+    currentPage->setDragOffsetTime(dragMillsecondOffset);
 	dragAnchorSet = true;
 }
 
-float ofxTimeline::getDragTimeOffset(){
+//this can be called from track classes and will cancel snapping
+void ofxTimeline::cancelSnapping(){
+    cout << "snap cancel" << endl;
+	dragAnchorSet = false;
+}
+
+long ofxTimeline::getDragTimeOffset(){
 	return dragAnchorSet ? dragMillsecondOffset : 0.;
 }
 

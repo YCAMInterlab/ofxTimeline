@@ -212,7 +212,7 @@ void ofxTLKeyframer::mousePressed(ofMouseEventArgs& args, long millis){
 	if(selectedKeyframes.size() != 0){
         updateDragOffsets(screenpoint, millis);				
 		if(selectedKeyframe != NULL && args.button == 0 && !ofGetModifierKeyControl()){
-            //timeline->setDragAnchor(selectedKeyframe->grabOffset.x);
+            cout << "selected keyframe is not null" << endl;
             timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 			//move the playhead
 			if(timeline->getMovePlayheadOnDrag()){
@@ -280,7 +280,6 @@ void ofxTLKeyframer::getSnappingPoints(vector<long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
 			points.push_back(keyframes[i]->time);
-			//points.push_back( coordForKeyframePoint(keyframes[i]->position).x );
 		}
 	}
 }

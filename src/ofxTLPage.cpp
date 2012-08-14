@@ -51,7 +51,8 @@ ofxTLPage::ofxTLPage()
 //	snapToOtherTracksEnabled(true),
 	headerHasFocus(false),
 	focusedTrack(NULL),
-	draggingSelectionRectangle(false)
+	draggingSelectionRectangle(false),
+	snappingEnabled(false)
 {
 	//
 }
@@ -148,7 +149,6 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
             selectionRectangle = ofRectangle(args.x,args.y,0,0);
         }
-		refreshSnapPoints();
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
 			headers[i]->mousePressed(args);
@@ -161,6 +161,8 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
                 newFocus = tracks[headers[i]->name];
             }
 		}
+        refreshSnapPoints();
+
 	}
     
     //TODO: explore multi-focus tracks for pasting into many tracks at once
@@ -223,24 +225,23 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
         }
     }
     else {
-        if(snapPoints.size() > 0){
-            refreshSnapPoints();
-            if(snapPoints.size() > 0){
-                long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0); //hack to find distance in millseconds
-                long closestSnapDistance = snappingToleranceMillis;
-                int closestSnapPoint;
-                for(int i = 0; i < snapPoints.size(); i++){
-                    long distanceToPoint = abs(millis - snapPoints[i]);
-                    if(distanceToPoint < closestSnapDistance){
-                        closestSnapPoint = i;
-                        closestSnapDistance = distanceToPoint; 
-                    }
+//        refreshSnapPoints();
+        if(snappingEnabled && snapPoints.size() > 0){
+
+            long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0); //hack to find distance in millseconds
+            long closestSnapDistance = snappingToleranceMillis;
+            int closestSnapPoint;
+            for(int i = 0; i < snapPoints.size(); i++){
+                long distanceToPoint = abs(millis - snapPoints[i]);
+                if(distanceToPoint < closestSnapDistance){
+                    closestSnapPoint = i;
+                    closestSnapDistance = distanceToPoint; 
                 }
-                
-                if(closestSnapDistance < snappingToleranceMillis){
-                    //if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
-                    millis = snapPoints[closestSnapPoint] + millisecondDragOffset; 
-                }
+            }
+            
+            if(closestSnapDistance < snappingToleranceMillis){
+                //if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
+                millis = snapPoints[closestSnapPoint] + millisecondDragOffset;
             }
         }
         
@@ -281,6 +282,10 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 
 void ofxTLPage::setDragOffsetTime(long offsetMillis){
 	millisecondDragOffset = offsetMillis;
+}
+
+void ofxTLPage::setSnappingEnabled(bool enabled){
+	snappingEnabled = enabled;
 }
 
 void ofxTLPage::refreshSnapPoints(){

@@ -333,7 +333,8 @@ class ofxTimeline {
 	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
 	void setDragTimeOffset(long millisecondOffset);
-	float getDragTimeOffset();
+    void cancelSnapping();
+	long getDragTimeOffset();
     void setHoverTime(long millisTime);
         
     string formatTime(float seconds);
@@ -383,7 +384,6 @@ class ofxTimeline {
     
 	bool isSetup;
 	bool usingEvents;
-	bool snappingEnabled;
     
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;

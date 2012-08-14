@@ -44,7 +44,7 @@ class ofxTLSwitch : public ofxTLKeyframe {
     //	ofRange dragOffsets;
 	bool startSelected;
 	bool endSelected;
-    float edgeDragOffset;
+    long edgeDragOffset;
     ofRectangle display;
 };
 
@@ -63,6 +63,7 @@ class ofxTLSwitcher : public ofxTLKeyframer {
     virtual void mouseReleased(ofMouseEventArgs& args, long millis);
     virtual void mouseMoved(ofMouseEventArgs& args, long millis);
     
+    virtual void getSnappingPoints(vector<long>& points);
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 
     virtual void unselectAll();
@@ -74,7 +75,7 @@ class ofxTLSwitcher : public ofxTLKeyframer {
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
-    virtual void updateEdgeDragOffsets(float screenX);
+    virtual void updateEdgeDragOffsets(long clickMillis);
 
 
     bool startHover;

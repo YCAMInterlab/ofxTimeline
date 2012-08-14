@@ -79,6 +79,7 @@ class ofxTLPage {
     virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
     
 	virtual void removeTrack(ofxTLTrack* track);
+
     
     //computed on the fly so please use sparingly if you have to call it a lot
     vector<ofxTLTrack*> getTracks();
@@ -115,21 +116,24 @@ class ofxTLPage {
 	virtual void selectAll();
 	
 	virtual void setDragOffsetTime(long offsetMillis);
-	
+    virtual void setSnappingEnabled(bool enabled);
+    
     ofxTimeline* timeline;
     
   protected:
-    
+
 	//used for getting BPM snaps
 	vector<ofxTLTrackHeader*> headers;
 	map<string, ofxTLTrack*> tracks;
-
-    bool draggingInside;
-
-	ofxTLTicker* ticker;	
+    ofxTLTicker* ticker;
     ofxTLTrack* focusedTrack;
 
+	string name;
+
+    bool isSetup;
+    bool draggingInside;
 	bool headerHasFocus;
+	bool snappingEnabled;
 	
 	vector<long> snapPoints; //in millis
 	float snappingTolerance; //in pixels
@@ -143,8 +147,6 @@ class ofxTLPage {
     ofVec2f selectionRectangleAnchor;
     ofRectangle selectionRectangle;
     
-	bool isSetup;
-	string name;
 	
 	ofRectangle trackContainerRect;
 	float headerHeight;
