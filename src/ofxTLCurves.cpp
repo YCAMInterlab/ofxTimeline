@@ -1,45 +1,45 @@
 //
-//  ofxTLTweener.cpp
+//  ofxTLCurves.cpp
 //  KeyframeSelection
 //
 //  Created by James George on 7/25/12.
 //  Copyright (c) 2012 FlightPhase. All rights reserved.
 //
 
-#include "ofxTLTweener.h"
+#include "ofxTLCurves.h"
 #include "ofxTimeline.h"
 
-ofxTLTweener::ofxTLTweener(){
+ofxTLCurves::ofxTLCurves(){
 	initializeEasings();
 	valueRange = ofRange(0.0, 1.0);
 	drawingEasingWindow = false;
 }
 
 //TODO potentially scale internal values at this point
-void ofxTLTweener::setValueRange(ofRange range, float newDefaultValue){
+void ofxTLCurves::setValueRange(ofRange range, float newDefaultValue){
 	valueRange = range;
     defaultValue = newDefaultValue;
 }
 
-ofRange ofxTLTweener::getValueRange(){
+ofRange ofxTLCurves::getValueRange(){
 	return valueRange;    
 }
 
 //main function to get values out of the timeline, operates on the given value range
-float ofxTLTweener::getValueAtPercent(float percent){
+float ofxTLCurves::getValueAtPercent(float percent){
 //	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
     return getValueAtTimeInMillis(percent*timeline->getDurationInMilliseconds());
 }
 
-float ofxTLTweener::getValueAtTimeInMillis(long sampleTime){
+float ofxTLCurves::getValueAtTimeInMillis(long sampleTime){
 	return ofMap(sampleAtTime(sampleTime), 0.0, 1.0, valueRange.min, valueRange.max, false);
 }
 
-float ofxTLTweener::sampleAtPercent(float percent){
+float ofxTLCurves::sampleAtPercent(float percent){
 	return sampleAtTime(percent * timeline->getDurationInMilliseconds());
 }
 
-float ofxTLTweener::sampleAtTime(long sampleTime){
+float ofxTLCurves::sampleAtTime(long sampleTime){
 	sampleTime = ofClamp(sampleTime, 0, timeline->getDurationInMilliseconds());
 	
 	//edge cases
@@ -63,15 +63,15 @@ float ofxTLTweener::sampleAtTime(long sampleTime){
 		}
 	}
 	
-	ofLog(OF_LOG_ERROR, "ofxTLKeyframer --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
+	ofLog(OF_LOG_ERROR, "ofxTLKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
 	return defaultValue;
 }
 
-string ofxTLTweener::getTrackType(){
+string ofxTLCurves::getTrackType(){
 	return "Curves";    
 }
 
-void ofxTLTweener::draw(){
+void ofxTLCurves::draw(){
 	
 	if(bounds.width == 0 || bounds.height == 0){
 		return;
@@ -140,14 +140,14 @@ void ofxTLTweener::draw(){
 }
 
 
-ofxTLKeyframe* ofxTLTweener::newKeyframe(){
+ofxTLKeyframe* ofxTLCurves::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
 	k->easeFunc = easingFunctions[0];
 	k->easeType = easingTypes[0];
 	return k;
 }
 
-void ofxTLTweener::drawModalContent(){
+void ofxTLCurves::drawModalContent(){
 	
 	//****** DRAW EASING CONTROLS
 	if(!drawingEasingWindow){
@@ -200,7 +200,7 @@ void ofxTLTweener::drawModalContent(){
     }
 }
 
-void ofxTLTweener::mousePressed(ofMouseEventArgs& args, long millis){
+void ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
 
     //TODO: move this to mouse-released to cooperate with UNDO
     if(drawingEasingWindow){
@@ -229,17 +229,17 @@ void ofxTLTweener::mousePressed(ofMouseEventArgs& args, long millis){
         }
     }
     else{
-        ofxTLKeyframer::mousePressed(args, millis);
+        ofxTLKeyframes::mousePressed(args, millis);
     }
 }
 
-void ofxTLTweener::mouseDragged(ofMouseEventArgs& args, long millis){
+void ofxTLCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
-        ofxTLKeyframer::mouseDragged(args, millis);
+        ofxTLKeyframes::mouseDragged(args, millis);
     }
 }
 
-void ofxTLTweener::selectedKeySecondaryClick(ofMouseEventArgs& args){
+void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
                                    MIN(args.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
     
@@ -247,19 +247,19 @@ void ofxTLTweener::selectedKeySecondaryClick(ofMouseEventArgs& args){
     timeline->presentedModalContent(this);
 }
 
-void ofxTLTweener::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
+void ofxTLCurves::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     ofxTLTweenKeyframe* tweenKey =  (ofxTLTweenKeyframe*)key;    
     tweenKey->easeFunc = easingFunctions[ofClamp(xmlStore.getValue("easefunc", 0), 0, easingFunctions.size()-1)];
     tweenKey->easeType = easingTypes[ofClamp(xmlStore.getValue("easetype", 0), 0, easingTypes.size()-1)];
 }
 
-void ofxTLTweener::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
+void ofxTLCurves::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     ofxTLTweenKeyframe* tweenKey =  (ofxTLTweenKeyframe*)key;
     xmlStore.addValue("easefunc", tweenKey->easeFunc->id);
     xmlStore.addValue("easetype", tweenKey->easeType->id);
 }
 
-void ofxTLTweener::initializeEasings(){
+void ofxTLCurves::initializeEasings(){
     
 	//FUNCTIONS ----
 	EasingFunction* ef;

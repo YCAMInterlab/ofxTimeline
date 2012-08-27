@@ -51,10 +51,10 @@
 #include "ofxTLZoomer.h"
 #include "ofxTLTicker.h"
 #include "ofxTLInOut.h"
-#include "ofxTLTweener.h"
+#include "ofxTLCurves.h"
 #include "ofxTLBangs.h"
 #include "ofxTLFlags.h"
-#include "ofxTLSwitcher.h"
+#include "ofxTLSwitches.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
@@ -259,17 +259,17 @@ class ofxTimeline {
 	virtual ofxTLTrack* getTrack(string name);
 	
 	//adding tracks always adds to the current page
-    ofxTLTweener* addKeyframes(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
-	ofxTLTweener* addKeyframes(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
-	virtual float getKeyframeValue(string name); 
-	virtual float getKeyframeValue(string name, float atTime);
-	virtual float getKeyframeValue(string name, int atFrame);
+    ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	ofxTLCurves* addCurves(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	virtual float getValue(string name);
+	virtual float getValue(string name, float atTime);
+	virtual float getValue(string name, int atFrame);
 
-    virtual ofxTLSwitcher* addSwitcher(string name);
-	virtual ofxTLSwitcher* addSwitcher(string name, string xmlFileName);
-	virtual bool getSwitcherOn(string name);
-	virtual bool getSwitcherOn(string name, float atTime);
-	virtual bool getSwitcherOn(string name, int atFrame);
+    virtual ofxTLSwitches* addSwitches(string name);
+	virtual ofxTLSwitches* addSwitches(string name, string xmlFileName);
+	virtual bool isSwitchOn(string name);
+	virtual bool isSwitchOn(string name, float atTime);
+	virtual bool isSwitchOn(string name, int atFrame);
 	
     ofxTLBangs* addBangs(string name);
 	ofxTLBangs* addBangs(string name, string xmlFileName);
@@ -285,6 +285,7 @@ class ofxTimeline {
 	virtual ofImage* getImage(string name, float atTime);
 	virtual ofImage* getImage(string name, int atFrame);
 	
+	virtual ofxTLVideoTrack* addVideoTrack(string trackName);
     virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     virtual ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     virtual ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);

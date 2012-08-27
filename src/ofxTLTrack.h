@@ -74,6 +74,7 @@ class ofxTLTrack
 	virtual ofRectangle getDrawRect();
 	
     //saving and loading
+    //Could potentially be moved out of the main track to keyframe
     virtual string getXMLFilePath();
     virtual string getXMLFileName();
     

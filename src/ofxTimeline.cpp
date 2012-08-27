@@ -138,10 +138,11 @@ void ofxTimeline::setName(string newName){
     if(newName != name){
         
 	    name = newName;
-        inoutTrack->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_inout.xml") );
+		
+        inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
         inoutTrack->setup();
         
-        zoomer->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_zoomer.xml") );
+        zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
         zoomer->setup();
         
         currentPage->loadTrackPositions();
@@ -153,10 +154,9 @@ string ofxTimeline::getName(){
 }
 
 void ofxTimeline::setWorkingFolder(string folderPath){
-    inoutTrack->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_inout.xml") );
-    zoomer->setXMLFileName( ofToDataPath(workingFolder + "/" + name + "_zoomer.xml") );
-
-    workingFolder = folderPath;
+	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
+    inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
+    zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
 }
 
 string ofxTimeline::getWorkingFolder(){
@@ -626,7 +626,7 @@ void ofxTimeline::setDurationInFrames(int frames){
 
 void ofxTimeline::setDurationInSeconds(float seconds){
     if(seconds <= 0.){
-    	ofLogError("ofxTimeline -- Must set a positive time of frames");
+    	ofLogError("ofxTimeline::setDurationInSeconds") << " must set a positive duration";
         return;
     }
 	durationInSeconds = seconds;
@@ -1178,26 +1178,26 @@ void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	ofNotifyEvent(events().viewWasResized, args);
 }
 
-ofxTLTweener* ofxTimeline::addKeyframes(string trackName, ofRange valueRange, float defaultValue){
+ofxTLCurves* ofxTimeline::addCurves(string trackName, ofRange valueRange, float defaultValue){
     string uniqueName = confirmedUniqueName(trackName);
-    return addKeyframes(uniqueName, nameToXMLName(uniqueName), valueRange, defaultValue);
+    return addCurves(uniqueName, nameToXMLName(uniqueName), valueRange, defaultValue);
 }
 
-ofxTLTweener* ofxTimeline::addKeyframes(string trackName, string xmlFileName, ofRange valueRange, float defaultValue){
-	ofxTLTweener* newKeyframer = new ofxTLTweener();
-	newKeyframer->setCreatedByTimeline(true);
-	newKeyframer->setValueRange(valueRange, defaultValue);
-	newKeyframer->setXMLFileName(xmlFileName);
-	addTrack(confirmedUniqueName(trackName), newKeyframer);
-	return newKeyframer;
+ofxTLCurves* ofxTimeline::addCurves(string trackName, string xmlFileName, ofRange valueRange, float defaultValue){
+	ofxTLCurves* newCurves = new ofxTLCurves();
+	newCurves->setCreatedByTimeline(true);
+	newCurves->setValueRange(valueRange, defaultValue);
+	newCurves->setXMLFileName(xmlFileName);
+	addTrack(confirmedUniqueName(trackName), newCurves);
+	return newCurves;
 }
 
-float ofxTimeline::getKeyframeValue(string trackName, float atTime){
+float ofxTimeline::getValue(string trackName, float atTime){
 	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
 		return 0.0;
 	}
-	ofxTLTweener* keyframer = (ofxTLTweener*)trackNameToPage[trackName]->getTrack(trackName);
+	ofxTLCurves* keyframer = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
 	if(keyframer == NULL){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
 		return 0.0;
@@ -1205,12 +1205,12 @@ float ofxTimeline::getKeyframeValue(string trackName, float atTime){
 	return keyframer->getValueAtPercent(atTime/durationInSeconds);
 }
 
-float ofxTimeline::getKeyframeValue(string trackName){
-	return getKeyframeValue(trackName, currentTime);    
+float ofxTimeline::getValue(string trackName){
+	return getValue(trackName, currentTime);    
 }
 
-float ofxTimeline::getKeyframeValue(string trackName, int atFrame){
-    return getKeyframeValue(trackName, timecode.secondsForFrame(atFrame));
+float ofxTimeline::getValue(string trackName, int atFrame){
+    return getValue(trackName, timecode.secondsForFrame(atFrame));
 }
 
 ofxTLTrack* ofxTimeline::getTrack(string trackName){
@@ -1221,39 +1221,39 @@ ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	return trackNameToPage[trackName]->getTrack(trackName);
 }
 
-ofxTLSwitcher* ofxTimeline::addSwitcher(string trackName){
+ofxTLSwitches* ofxTimeline::addSwitches(string trackName){
     string uniqueName = confirmedUniqueName(trackName);
-	return addSwitcher(uniqueName, nameToXMLName(uniqueName));
+	return addSwitches(uniqueName, nameToXMLName(uniqueName));
 }
 
-ofxTLSwitcher* ofxTimeline::addSwitcher(string trackName, string xmlFileName){
-	ofxTLSwitcher* newSwitcher = new ofxTLSwitcher();
-	newSwitcher->setCreatedByTimeline(true);
-	newSwitcher->setXMLFileName(xmlFileName);
-	addTrack(confirmedUniqueName(trackName), newSwitcher);
-	return newSwitcher;
+ofxTLSwitches* ofxTimeline::addSwitches(string trackName, string xmlFileName){
+	ofxTLSwitches* newSwitches = new ofxTLSwitches();
+	newSwitches->setCreatedByTimeline(true);
+	newSwitches->setXMLFileName(xmlFileName);
+	addTrack(confirmedUniqueName(trackName), newSwitches);
+	return newSwitches;
 }
 
-bool ofxTimeline::getSwitcherOn(string trackName, float atTime){
+bool ofxTimeline::isSwitchOn(string trackName, float atTime){
 	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
 	
-	ofxTLSwitcher* switcher = (ofxTLSwitcher*)trackNameToPage[trackName]->getTrack(trackName);
-	if(switcher == NULL){
+	ofxTLSwitches* switches = (ofxTLSwitches*)trackNameToPage[trackName]->getTrack(trackName);
+	if(switches == NULL){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
-    return switcher->isOnAtPercent(atTime/durationInSeconds);
+    return switches->isOnAtPercent(atTime/durationInSeconds);
 }
 
-bool ofxTimeline::getSwitcherOn(string trackName){
-    return getSwitcherOn(trackName, currentTime);    
+bool ofxTimeline::isSwitchOn(string trackName){
+    return isSwitchOn(trackName, currentTime);    
 }
 
-bool ofxTimeline::getSwitcherOn(string trackName, int atFrame){
-	return getSwitcherOn(trackName, timecode.secondsForFrame(atFrame));	
+bool ofxTimeline::isSwitchOn(string trackName, int atFrame){
+	return isSwitchOn(trackName, timecode.secondsForFrame(atFrame));	
 }
 
 ofxTLBangs* ofxTimeline::addBangs(string trackName){
@@ -1311,18 +1311,20 @@ ofImage* ofxTimeline::getImage(string trackName, int atFrame){
 	return NULL;
 }
 
+ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
+	return addVideoTrack(trackName, "");
+}
+
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();
-    if(videoTrack->load(videoPath)){
-        videoTrack->setCreatedByTimeline(true);
-        addTrack(confirmedUniqueName(trackName), videoTrack);
-        return videoTrack;
+	videoTrack->setCreatedByTimeline(true);
+	addTrack(confirmedUniqueName(trackName), videoTrack);
+	if(videoPath != ""){
+	    if(!videoTrack->load(videoPath)){
+        	ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
+		}
     }
-    else {
-        ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
-    }
-    delete videoTrack;
-    return NULL;
+    return videoTrack;
 }
 
 ofxTLVideoTrack* ofxTimeline::getVideoTrack(string videoTrackName){

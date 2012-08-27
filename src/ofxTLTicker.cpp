@@ -298,6 +298,8 @@ void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
 	dragging = bounds.inside(args.x, args.y);
 	if(dragging){
 		updateTimelinePosition();
+        ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(events().playheadScrubbed, args);		
 	}
 }
 

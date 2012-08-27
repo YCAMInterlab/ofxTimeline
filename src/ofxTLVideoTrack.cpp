@@ -59,6 +59,7 @@ bool ofxTLVideoTrack::togglePlay(){
 
 void ofxTLVideoTrack::play(){
     if(isLoaded()){
+        cout << " current video frame is " << player->getCurrentFrame() << " current video time is " << ofxTimecode::timecodeForSeconds(player->getDuration()*player->getPosition()) << " current timeline time is " << timeline->getCurrentTime() << endl;
         if(!player->isPlaying()){
             player->play();
         }
@@ -68,7 +69,6 @@ void ofxTLVideoTrack::play(){
         currentlyPlaying = true;
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
         ofNotifyEvent(events().playbackStarted, args);
-
     }
 }
 
@@ -89,6 +89,10 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
     
 	if(!isLoaded()){
 		return;
+	}
+   	
+	if(timeline->getTimecontrolTrack()){
+		timeline->setCurrentFrame(player->getCurrentFrame());
 	}
 	
    	if(timeline->getTimecontrolTrack() == this && isPlaying()){
@@ -155,9 +159,11 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 }
 
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
+	
     if(isLoaded() && !currentlyPlaying){
         selectFrame(args.currentFrame);
-        player->update();
+
+//        player->update();
 //        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
 //        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;
     }
@@ -200,10 +206,11 @@ void ofxTLVideoTrack::threadedFunction(){
                         break;
                     }
                     backthreadedPlayer->setFrame(backThumbs[i].framenum);			
-                    backthreadedPlayer->update();                
+//                    backthreadedPlayer->update();
                     if(currentlyZooming || ofGetMousePressed()){
                         break;
-                    }                   
+                    }
+					backThumbs[i].useTexture = false;
                     backThumbs[i].create(backthreadedPlayer->getPixelsRef());
                     
                     lock();
@@ -215,7 +222,7 @@ void ofxTLVideoTrack::threadedFunction(){
         }
         backLock.unlock();
      
-        ofSleepMillis(100);     
+        ofSleepMillis(100);
     }
 }
 
@@ -269,7 +276,10 @@ void ofxTLVideoTrack::draw(){
 	if(player == NULL){
 		return;
 	}
-	
+	//inFrame = outFrame = -1;
+    inFrame = 0;
+    outFrame = player->getTotalNumFrames();
+
 	ofPushStyle();
 	
 	if(thumbsEnabled && getDrawRect().height > 10){
@@ -344,6 +354,11 @@ void ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	ofxTLTrack::mousePressed(args, millis);
 	if(getDrawRect().inside(args.x, args.y)){
 		timeline->unselectAll();
+		selectFrame( indexForScreenX(args.x) );
+
+		if(timeline->getMovePlayheadOnDrag()){
+			timeline->setPercentComplete(screenXtoNormalizedX(args.x));
+		}
 	}
 }
 
@@ -354,7 +369,6 @@ void ofxTLVideoTrack::mouseMoved(ofMouseEventArgs& args, long millis){
 void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(bounds.inside(args.x, args.y)){
 		selectFrame( indexForScreenX(args.x) );
-        player->update();
 		if(timeline->getMovePlayheadOnDrag()){
 			timeline->setPercentComplete(screenXtoNormalizedX(args.x));
 		}
@@ -393,6 +407,7 @@ int ofxTLVideoTrack::selectFrame(int frame){
 	currentLoop = frame / (outFrame-inFrame);
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
+	player->update();
 	timeline->flagUserChangedValue();
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;

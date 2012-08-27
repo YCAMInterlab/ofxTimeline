@@ -13,7 +13,7 @@ ofxTLBangs::~ofxTLBangs(){
 
 void ofxTLBangs::enable(){
     if(!isEnabled()){
-	    ofxTLKeyframer::enable();
+	    ofxTLKeyframes::enable();
 		events().registerPlaybackEvents(this);    
     }
 }
@@ -23,7 +23,7 @@ void ofxTLBangs::disable(){
         if (isPlayingBack) {
         	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
         }
-	    ofxTLKeyframer::disable();
+	    ofxTLKeyframes::disable();
     	events().removePlaybackEvents(this);
     }
 }

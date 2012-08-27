@@ -15,10 +15,10 @@ void testApp::setup(){
 	timeline.setLoopType(OF_LOOP_NORMAL);
     
     //add keyframes for  our shader
-	timeline.addKeyframes("brightness", ofRange(0.0, 2.0), 1.0);
-    timeline.addKeyframes("contrast", ofRange(.5, 2.0), 1.0);
-    timeline.addKeyframes("saturation", ofRange(0.0, 1.5), 1.0);
-    timeline.addSwitcher("invert");
+	timeline.addCurves("brightness", ofRange(0.0, 2.0), 1.0);
+    timeline.addCurves("contrast", ofRange(.5, 2.0), 1.0);
+    timeline.addCurves("saturation", ofRange(0.0, 1.5), 1.0);
+    timeline.addSwitches("invert");
 	
     //set the color palette
 	timeline.getColors().load("defaultColors.xml");
@@ -80,10 +80,10 @@ void testApp::draw(){
 
     if(loaded){
 		colorControl.begin();
-        colorControl.setUniform1f("brightness", timeline.getKeyframeValue("brightness"));
-        colorControl.setUniform1f("contrast", timeline.getKeyframeValue("contrast"));
-        colorControl.setUniform1f("saturation", timeline.getKeyframeValue("saturation"));
-        colorControl.setUniform1i("invert", (timeline.getSwitcherOn("invert") ? 1 : 0) );
+        colorControl.setUniform1f("brightness", timeline.getValue("brightness"));
+        colorControl.setUniform1f("contrast", timeline.getValue("contrast"));
+        colorControl.setUniform1f("saturation", timeline.getValue("saturation"));
+        colorControl.setUniform1i("invert", (timeline.isSwitchOn("invert") ? 1 : 0) );
     	timeline.getVideoPlayer("Video")->draw(outputRectangle);        
 		colorControl.end();
     }
@@ -165,10 +165,10 @@ void testApp::renderCurrentFrame(){
     frameBuffer.begin();
     ofClear(0,0,0);
     colorControl.begin();
-    colorControl.setUniform1f("brightness", timeline.getKeyframeValue("brightness"));
-    colorControl.setUniform1f("contrast", timeline.getKeyframeValue("contrast"));
-    colorControl.setUniform1f("saturation", timeline.getKeyframeValue("saturation"));
-    colorControl.setUniform1i("invert", (timeline.getSwitcherOn("invert") ? 1 : 0) );
+    colorControl.setUniform1f("brightness", timeline.getValue("brightness"));
+    colorControl.setUniform1f("contrast", timeline.getValue("contrast"));
+    colorControl.setUniform1f("saturation", timeline.getValue("saturation"));
+    colorControl.setUniform1i("invert", (timeline.isSwitchOn("invert") ? 1 : 0) );
     timeline.getVideoPlayer("Video")->draw(contentRectangle);//draw the frame buffer at full frame
     colorControl.end();
 	frameBuffer.end();
@@ -188,7 +188,6 @@ void testApp::renderCurrentFrame(){
 		timeline.setCurrentFrame(timeline.getInFrame());
     }
 }
-
 
 void testApp::keyPressed(int key){
 	if(key == ' ' && loaded){

@@ -1,5 +1,5 @@
 /*
- *  ofxTLAudioWaveform.cpp
+ *  ofxTLAudioTrack.cpp
  *  audiowaveformTimelineExample
  *
  *  Created by Jim on 12/28/11.
@@ -7,44 +7,47 @@
  *
  */
 
-#include "ofxTLAudioWaveform.h"
+#include "ofxTLAudioTrack.h"
 #include "ofxTimeline.h"
 
-ofxTLAudioWaveform::ofxTLAudioWaveform(){
+ofxTLAudioTrack::ofxTLAudioTrack(){
 	shouldRecomputePreview = false;
+    soundLoaded = false;
 //	preview.setClosed(false);
 }
 
-ofxTLAudioWaveform::~ofxTLAudioWaveform(){
+ofxTLAudioTrack::~ofxTLAudioTrack(){
 
 }
 
-void ofxTLAudioWaveform::enable(){
+void ofxTLAudioTrack::enable(){
 	if(!enabled){
         ofxTLTrack::enable();
-        ofAddListener(events().viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);        
+        ofAddListener(events().viewWasResized, this, &ofxTLAudioTrack::boundsChanged);        
     }    
 }
 
-void ofxTLAudioWaveform::disable(){
+void ofxTLAudioTrack::disable(){
 	if(enabled){
         ofxTLTrack::disable();
-        ofRemoveListener(events().viewWasResized, this, &ofxTLAudioWaveform::boundsChanged);        
+        ofRemoveListener(events().viewWasResized, this, &ofxTLAudioTrack::boundsChanged);        
     }
 }
 
-void ofxTLAudioWaveform::loadSoundfile(string filepath){
-	player.loadSound(filepath, false);
-//	cout << "duration is " << player.getDuration() << endl;
-//	cout << "num samples " << player.getBuffer().size() << endl;
-	shouldRecomputePreview = true;
+void ofxTLAudioTrack::loadSoundfile(string filepath){
+	if(player.loadSound(filepath, false)){
+    	soundLoaded = true;
+        //	cout << "duration is " << player.getDuration() << endl;
+        //	cout << "num samples " << player.getBuffer().size() << endl;
+		shouldRecomputePreview = true;
+    }
 }
-
-float ofxTLAudioWaveform::getDuration(){
+    
+float ofxTLAudioTrack::getDuration(){
 	return player.getDuration();
 }
 
-void ofxTLAudioWaveform::update(ofEventArgs& args){
+void ofxTLAudioTrack::update(ofEventArgs& args){
 	if(player.getPosition() < lastPercent){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackLooped, args);
@@ -55,18 +58,17 @@ void ofxTLAudioWaveform::update(ofEventArgs& args){
     timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 }
 
-void ofxTLAudioWaveform::draw(){
+void ofxTLAudioTrack::draw(){
 	
-	if(shouldRecomputePreview){
-		recomputePreview();
-	}
-	
-	if(player.getBuffer().size() == 0){
+	if(!soundLoaded || player.getBuffer().size() == 0){
 		ofSetColor(timeline->getColors().disabledColor);
 		ofRectangle(bounds);
 		return;
 	}
-	
+		
+	if(shouldRecomputePreview){
+		recomputePreview();
+	}
 
     ofPushStyle();
     ofSetColor(timeline->getColors().keyColor);
@@ -82,7 +84,7 @@ void ofxTLAudioWaveform::draw(){
     ofPopStyle();
 }
 
-void ofxTLAudioWaveform::recomputePreview(){
+void ofxTLAudioTrack::recomputePreview(){
 	
 	previews.clear();
 	
@@ -137,41 +139,41 @@ void ofxTLAudioWaveform::recomputePreview(){
 	shouldRecomputePreview = false;
 }
 
-void ofxTLAudioWaveform::mousePressed(ofMouseEventArgs& args, long millis){
+void ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseMoved(ofMouseEventArgs& args, long millis){
+void ofxTLAudioTrack::mouseMoved(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseDragged(ofMouseEventArgs& args, long millis){
+void ofxTLAudioTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::mouseReleased(ofMouseEventArgs& args, long millis){
+void ofxTLAudioTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
-void ofxTLAudioWaveform::keyPressed(ofKeyEventArgs& args){
+void ofxTLAudioTrack::keyPressed(ofKeyEventArgs& args){
 }
 
-void ofxTLAudioWaveform::zoomStarted(ofxTLZoomEventArgs& args){
+void ofxTLAudioTrack::zoomStarted(ofxTLZoomEventArgs& args){
 	ofxTLTrack::zoomStarted(args);
 //	shouldRecomputePreview = true;
 }
 
-void ofxTLAudioWaveform::zoomDragged(ofxTLZoomEventArgs& args){
+void ofxTLAudioTrack::zoomDragged(ofxTLZoomEventArgs& args){
 	ofxTLTrack::zoomDragged(args);
 	//shouldRecomputePreview = true;
 }
 
-void ofxTLAudioWaveform::zoomEnded(ofxTLZoomEventArgs& args){
+void ofxTLAudioTrack::zoomEnded(ofxTLZoomEventArgs& args){
 	ofxTLTrack::zoomEnded(args);
 	shouldRecomputePreview = true;
 }
 
-void ofxTLAudioWaveform::boundsChanged(ofEventArgs& args){
+void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
 	shouldRecomputePreview = true;
 }
 
-void ofxTLAudioWaveform::play(){
+void ofxTLAudioTrack::play(){
 	if(!player.getIsPlaying()){
 		
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
@@ -179,24 +181,24 @@ void ofxTLAudioWaveform::play(){
 
 		player.play();
 		player.setPosition(timeline->getPercentComplete());
-		ofAddListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
+		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);		
 	}	   
 }
 
-void ofxTLAudioWaveform::stop(){
+void ofxTLAudioTrack::stop(){
 	if(player.getIsPlaying()){
 		player.setPaused(true);
-		ofRemoveListener(ofEvents().update, this, &ofxTLAudioWaveform::update);
+		ofRemoveListener(ofEvents().update, this, &ofxTLAudioTrack::update);
 		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackEnded, args);
 	}
 }
 
-void ofxTLAudioWaveform::togglePlay(){
+void ofxTLAudioTrack::togglePlay(){
 	if(player.getIsPlaying()){
 		stop();
 	}
@@ -205,19 +207,19 @@ void ofxTLAudioWaveform::togglePlay(){
 	}
 }
 
-bool ofxTLAudioWaveform::getIsPlaying() {
+bool ofxTLAudioTrack::getIsPlaying() {
     return player.getIsPlaying();
 }
 
-void ofxTLAudioWaveform::setSpeed(float speed) {
+void ofxTLAudioTrack::setSpeed(float speed) {
     player.setSpeed(speed);
 }
 
-float ofxTLAudioWaveform::getSpeed() {
+float ofxTLAudioTrack::getSpeed() {
     return player.getSpeed();
 }
 
-string ofxTLAudioWaveform::getTrackType(){
+string ofxTLAudioTrack::getTrackType(){
     return "Track";    
 }
 

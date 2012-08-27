@@ -21,7 +21,7 @@ void testApp::setup(){
         ofxTimeline* t = new ofxTimeline();
 		t->setup();
         t->setDurationInFrames(400);
-        t->addKeyframes(ofToString(i));
+        t->addCurves(ofToString(i));
         t->setShowTicker(false);
         t->setShowZoomer(false);
         t->setLockWidthToWindow(false);

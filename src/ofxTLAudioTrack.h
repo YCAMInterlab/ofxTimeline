@@ -1,5 +1,5 @@
 /*
- *  ofxTLAudioWaveform.h
+ *  ofxTLAudioTrack.h
  *  audiowaveformTimelineExample
  *
  *  Created by Jim on 12/28/11.
@@ -12,11 +12,11 @@
 #include "ofxTLTrack.h"
 #include "ofOpenALSoundPlayer_TimelineAdditions.h"
 
-class ofxTLAudioWaveform : public ofxTLTrack
+class ofxTLAudioTrack : public ofxTLTrack
 {
   public:	
-	ofxTLAudioWaveform();
-	virtual ~ofxTLAudioWaveform();
+	ofxTLAudioTrack();
+	virtual ~ofxTLAudioTrack();
 	
 	virtual void enable();
     virtual void disable();
@@ -50,7 +50,7 @@ class ofxTLAudioWaveform : public ofxTLTrack
 	virtual string getTrackType();
 
   protected:	
-    
+    bool soundLoaded;
 	bool shouldRecomputePreview;
 	vector<ofPolyline> previews;
 	void recomputePreview();

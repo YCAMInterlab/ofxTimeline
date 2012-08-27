@@ -3,9 +3,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLKeyframer.h"
+#include "ofxTLKeyframes.h"
 
-class ofxTLBangs : public ofxTLKeyframer {
+class ofxTLBangs : public ofxTLKeyframes {
   public:
     ofxTLBangs();
 	virtual ~ofxTLBangs();

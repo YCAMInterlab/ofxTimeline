@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxTimeline.h"
-#include "ofxTLAudioWaveform.h"
+#include "ofxTLAudioTrack.h"
 
 class testApp : public ofBaseApp{
 
@@ -22,7 +22,7 @@ class testApp : public ofBaseApp{
 	void gotMessage(ofMessage msg);
 	
 	ofxTimeline timeline;
-	ofxTLAudioWaveform waveform;
+	ofxTLAudioTrack waveform;
 
     float lastBang;
 	void bangFired(ofxTLBangEventArgs& bang);

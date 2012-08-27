@@ -53,11 +53,11 @@ class ofxTLKeyframe {
 //    ofVec2f position;
 };
 
-class ofxTLKeyframer : public ofxTLTrack
+class ofxTLKeyframes : public ofxTLTrack
 {
   public:	
-	ofxTLKeyframer();
-	virtual ~ofxTLKeyframer();
+	ofxTLKeyframes();
+	virtual ~ofxTLKeyframes();
 
 	virtual void draw();
 	

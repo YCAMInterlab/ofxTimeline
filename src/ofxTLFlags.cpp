@@ -171,7 +171,7 @@ void ofxTLFlags::unselectAll(){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
         ((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
     }
-    ofxTLKeyframer::unselectAll();
+    ofxTLKeyframes::unselectAll();
 }
 
 void ofxTLFlags::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){

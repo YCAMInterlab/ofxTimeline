@@ -5,7 +5,6 @@ void testApp::setup(){
 	
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
-	ofSetEscapeQuitsApp(false);
     
 	glEnable(GL_DEPTH_TEST);
 	ofEnableLighting();
@@ -22,8 +21,8 @@ void testApp::setup(){
 	timeline.setLoopType(OF_LOOP_NORMAL);
     
 	//each call to "add keyframes" add's another track to the timeline
-	timeline.addKeyframes("Rotate X", ofRange(0, 360));
-	timeline.addKeyframes("Rotate Y", ofRange(0, 360));
+	timeline.addCurves("Rotate X", ofRange(0, 360));
+	timeline.addCurves("Rotate Y", ofRange(0, 360));
     
 	//Flags are little markers that you can attach text to
     //They are only useful when listening to bangFired() events
@@ -60,8 +59,8 @@ void testApp::draw(){
 	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5, 40);	
     
     //Read the values out of the timeline and use them to change the viewport rotation
-	ofRotate(timeline.getKeyframeValue("Rotate X"), 1, 0, 0);
-	ofRotate(timeline.getKeyframeValue("Rotate Y"), 0, 1, 0);
+	ofRotate(timeline.getValue("Rotate X"), 1, 0, 0);
+	ofRotate(timeline.getValue("Rotate Y"), 0, 1, 0);
 	
 	ofBox(0,0,0, 200);
 	

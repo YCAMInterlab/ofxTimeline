@@ -33,7 +33,7 @@
  */
 
 #pragma once 
-#include "ofxTLKeyframer.h"
+#include "ofxTLKeyframes.h"
 
 class ofxTLSwitch : public ofxTLKeyframe {
   public:
@@ -48,10 +48,10 @@ class ofxTLSwitch : public ofxTLKeyframe {
     ofRectangle display;
 };
 
-class ofxTLSwitcher : public ofxTLKeyframer {
+class ofxTLSwitches : public ofxTLKeyframes {
   public:
-	ofxTLSwitcher();
-	virtual ~ofxTLSwitcher();
+	ofxTLSwitches();
+	virtual ~ofxTLSwitches();
 
     virtual void draw();
 

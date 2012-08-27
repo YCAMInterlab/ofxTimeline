@@ -32,7 +32,7 @@ void ofxTLInOut::draw(){
         }
 
         if(outScreenX > bounds.x && outScreenX < bounds.x+bounds.width){
-            if(hoveringIn){
+            if(hoveringOut){
                 ofSetColor(timeline->getColors().highlightColor);
             }
             else{

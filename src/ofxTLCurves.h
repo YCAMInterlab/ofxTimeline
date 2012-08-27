@@ -3,7 +3,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLKeyframer.h"
+#include "ofxTLKeyframes.h"
 #include "ofxTween.h"
 
 typedef struct
@@ -28,9 +28,9 @@ class ofxTLTweenKeyframe : public ofxTLKeyframe{
 	EasingType* easeType;
 };
 
-class ofxTLTweener : public ofxTLKeyframer {
+class ofxTLCurves : public ofxTLKeyframes {
   public:
-    ofxTLTweener();
+    ofxTLCurves();
 
     virtual void draw();
     virtual void drawModalContent();
