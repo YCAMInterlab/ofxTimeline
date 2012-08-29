@@ -3,6 +3,7 @@
 
 ofxTLImageTrack::ofxTLImageTrack(){
     currentlyZooming = false;
+	thumbsEnabled = true;
 }
 
 ofxTLImageTrack::~ofxTLImageTrack(){

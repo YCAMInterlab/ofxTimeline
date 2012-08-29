@@ -13,11 +13,9 @@
 ofxTLVideoTrack::ofxTLVideoTrack() 
 	: ofxTLImageTrack()
 {
-	thumbsEnabled = true;
 	currentLoop = 0;
 	inFrame = -1;
 	outFrame = -1;
-    currentlyZooming = false;
     currentlyPlaying = false;
 }
 
@@ -32,16 +30,20 @@ void ofxTLVideoTrack::setup(){
 }
 
 void ofxTLVideoTrack::enable(){
-    ofxTLImageTrack::enable();
-    ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
-    ofAddListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
+	if(!enabled){
+		ofxTLImageTrack::enable();
+		ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+		ofAddListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
+	}
 }
 
 void ofxTLVideoTrack::disable(){
-    stop();
-    ofxTLImageTrack::disable();
-    ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
-    ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
+	if(enabled){
+		stop();
+		ofxTLImageTrack::disable();
+		ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+		ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
+	} 
 }
 
 bool ofxTLVideoTrack::togglePlay(){
@@ -146,6 +148,7 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 			timeline->setCurrentTime( player->getPosition() * player->getDuration());
 		}
         */
+
         player->update();
 	}
     else{
@@ -163,7 +166,6 @@ void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
     if(isLoaded() && !currentlyPlaying){
         selectFrame(args.currentFrame);
 
-//        player->update();
 //        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
 //        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;
     }
@@ -206,7 +208,7 @@ void ofxTLVideoTrack::threadedFunction(){
                         break;
                     }
                     backthreadedPlayer->setFrame(backThumbs[i].framenum);			
-//                    backthreadedPlayer->update();
+
                     if(currentlyZooming || ofGetMousePressed()){
                         break;
                     }
@@ -287,7 +289,6 @@ void ofxTLVideoTrack::draw(){
 		ofSetColor(255);        
         lock();
 		for(int i = 0; i < videoThumbs.size(); i++){
-
             if(videoThumbs[i].thumb != NULL){
                 if(videoThumbs[i].loaded &&!videoThumbs[i].thumb->isUsingTexture()){
                     videoThumbs[i].thumb->setUseTexture(true);
@@ -401,7 +402,6 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 int ofxTLVideoTrack::selectFrame(int frame){
-//	selectedFrame = frame % videoThumbs.size();
 	selectedFrame = inFrame + (frame % (outFrame - inFrame));
 
 	currentLoop = frame / (outFrame-inFrame);
@@ -422,6 +422,7 @@ int ofxTLVideoTrack::getCurrentFrame(){
 }
 
 float ofxTLVideoTrack::getCurrentTime(){
+	//TODO: account for in and out frame.
 	return player->getPosition() * player->getDuration();
 }
 
@@ -430,7 +431,8 @@ int ofxTLVideoTrack::getSelectedFrame(){
 }
 
 void ofxTLVideoTrack::exit(ofEventArgs& args){
-    stopThread();	
+    stopThread();
+//	waitForThread(true);
 }
 
 string ofxTLVideoTrack::getTrackType(){

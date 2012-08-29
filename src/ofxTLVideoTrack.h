@@ -42,10 +42,10 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
 		
 	int getSelectedFrame();
 	int getCurrentFrame();
+	float getCurrentTime();
+    
 
     bool isLoaded();
-    
-	float getCurrentTime();
 	int selectFrame(int frame); //returns the true selected frame in video
 	void toggleThumbs();
 	
@@ -64,7 +64,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
     
 	int selectedFrame;
 	int currentLoop;
-	bool thumbsEnabled;
+//	bool thumbsEnabled;
 		
 	int inFrame;
 	int outFrame;

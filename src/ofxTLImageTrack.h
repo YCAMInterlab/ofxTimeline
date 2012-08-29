@@ -24,6 +24,8 @@ class ofxTLImageTrack : public ofxTLTrack {
   protected:
     
     bool currentlyZooming;
+	bool thumbsEnabled;
+	
     vector<ofxTLVideoThumb> videoThumbs;
 	virtual void calculateFramePositions();
     

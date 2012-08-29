@@ -84,6 +84,10 @@ void ofxTLPageTabs::changeName(string oldName, string newName){
 }
 
 void ofxTLPageTabs::selectPage(int index){
+	if(index == selectedPageIndex){
+		return;
+	}
+	
 	if(index >= pages.size()){
 		ofLogError("ofxTLPageTabs -- Selecting page " + ofToString(index) + " out of range");
 		return;
@@ -101,6 +105,9 @@ void ofxTLPageTabs::selectPage(int index){
 }
 
 void ofxTLPageTabs::selectPage(string name){
+	if(name == pages[selectedPageIndex].name){
+		return;
+	}
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i].name == name){
 			selectPage(i);

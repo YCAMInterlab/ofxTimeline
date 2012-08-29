@@ -1441,7 +1441,6 @@ string ofxTimeline::confirmedUniqueName(string name){
 
 void ofxTimeline::setDragTimeOffset(long millisecondOffset){
 
-    cout << "setting drag time to " << millisecondOffset << endl;
 	dragMillsecondOffset = millisecondOffset;
 
     currentPage->setDragOffsetTime(dragMillsecondOffset);
@@ -1450,7 +1449,6 @@ void ofxTimeline::setDragTimeOffset(long millisecondOffset){
 
 //this can be called from track classes and will cancel snapping
 void ofxTimeline::cancelSnapping(){
-    cout << "snap cancel" << endl;
 	dragAnchorSet = false;
 }
 
