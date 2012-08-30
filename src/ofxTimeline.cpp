@@ -600,6 +600,8 @@ void ofxTimeline::reset(){ //gets rid of everything
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
+	
+	tabs->clear();
     setInOutRange(ofRange(0,1.0));
     pages.clear();
     trackNameToPage.clear();
@@ -725,7 +727,10 @@ void ofxTimeline::updatePagePositions(){
 		for(int i = 0; i < pages.size(); i++){
 			pages[i]->setContainer(pageOffset, width);
 		}
-		currentPage->recalculateHeight();
+		if(currentPage != NULL){
+			currentPage->recalculateHeight();
+		}
+		
 	}
 }
 

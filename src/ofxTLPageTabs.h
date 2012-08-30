@@ -55,6 +55,8 @@ class ofxTLPageTabs : public ofxTLTrack {
 	virtual void selectPage(int index);
 	virtual void changeName(string oldName, string newName);
 	
+	virtual void clear();
+	
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);

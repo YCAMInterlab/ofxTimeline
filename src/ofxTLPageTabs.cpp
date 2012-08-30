@@ -117,6 +117,11 @@ void ofxTLPageTabs::selectPage(string name){
 	ofLogError("ofxTLPageTabs -- Selecting page " + name + " not found");
 }
 
+void ofxTLPageTabs::clear(){
+	selectedPageIndex = -1;
+	pages.clear();
+}
+
 void ofxTLPageTabs::keyPressed(ofKeyEventArgs& args){
 
 }
