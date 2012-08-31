@@ -41,7 +41,8 @@ ofxTLZoomer::ofxTLZoomer()
 :	minSelected(false),
 	maxSelected(false),
 	midSelected(false),
-	currentViewRange(ofRange(0.0, 1.0))
+	currentViewRange(ofRange(0.0, 1.0)),
+	zoomExponent(2.0)
 {
 	//default constructor
 }
@@ -106,7 +107,7 @@ void ofxTLZoomer::load() {
 	
 	ofxXmlSettings settings;
 	if(!settings.loadFile(xmlFileName)){
-		ofLog(OF_LOG_ERROR, "ofxTLZoomer -- couldn't load zoom settings file " + xmlFileName);
+		ofLog(OF_LOG_NOTICE, "ofxTLZoomer -- couldn't load zoom settings file " + xmlFileName);
         currentViewRange = ofRange(0., 1.0);
 		return;
 	}
@@ -193,17 +194,25 @@ void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
 	if(!enabled) return;
 
     bool notify = false;
-	ofRange oldRange = currentViewRange;
+	ofRange oldRange = getViewRange();
 	if(minSelected || midSelected){
+		float originalMin = currentViewRange.min;
 		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset, ofRange(0, 1.0)), 0, currentViewRange.max-.0001);
+		if(minSelected){
+			currentViewRange.max = ofClamp( currentViewRange.max + (originalMin-currentViewRange.min), currentViewRange.min+.0001, 1.0);
+		}
 		notify = true;
 	}
 
 	if(maxSelected || midSelected){
+		float originalMax = currentViewRange.max;
 		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset, ofRange(0, 1.0)), currentViewRange.min+.0001, 1.0);
+		if(maxSelected){
+			currentViewRange.min = ofClamp( currentViewRange.min + (originalMax-currentViewRange.max), 0, currentViewRange.max-.0001);
+		}
         notify = true;
     }
-    
+	
     if(notify){
         notifyZoomDragged(oldRange);
     }
@@ -226,7 +235,7 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 void ofxTLZoomer::notifyZoomStarted(){
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.sender = timeline;
-	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
+	zoomEvent.currentZoom = zoomEvent.oldZoom = getViewRange();
 	ofNotifyEvent(events().zoomStarted, zoomEvent);		
 }
 
@@ -234,15 +243,17 @@ void ofxTLZoomer::notifyZoomDragged(ofRange oldRange){
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.sender = timeline;
 	zoomEvent.oldZoom = oldRange;
-	zoomEvent.currentZoom = currentViewRange;
+	//zoomEvent.currentZoom = currentViewRange;
+	zoomEvent.currentZoom = getViewRange();
 	ofNotifyEvent(events().zoomDragged, zoomEvent);
 }
 
 void ofxTLZoomer::notifyZoomEnded(){
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.sender = timeline;    
-	zoomEvent.currentZoom = zoomEvent.oldZoom = currentViewRange;
-	ofNotifyEvent(events().zoomEnded, zoomEvent);	
+	//zoomEvent.currentZoom = currentViewRange;
+	zoomEvent.currentZoom = getViewRange();
+	ofNotifyEvent(events().zoomEnded, zoomEvent);
 }
 
 void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
@@ -250,13 +261,20 @@ void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
 }
 
 ofRange ofxTLZoomer::getViewRange() {
-	return currentViewRange;
+	float logSpan = powf(currentViewRange.span(),2.0);
+	float centerPosition = currentViewRange.center();
+	return ofRange(centerPosition - logSpan/2, centerPosition + logSpan/2);
+	//return currentViewRange;
+//	return currentLogViewRange;
 }
 
 void ofxTLZoomer::setViewRange(ofRange newRange){
+
 	ofxTLZoomEventArgs zoomEvent;
-    zoomEvent.sender = timeline;    
-    zoomEvent.oldZoom = currentViewRange;
-	currentViewRange = zoomEvent.currentZoom = newRange;
+    zoomEvent.oldZoom = getViewRange();
+    zoomEvent.sender = timeline;
+
+	currentViewRange = newRange;
+	zoomEvent.currentZoom = getViewRange();
 	ofNotifyEvent(events().zoomEnded, zoomEvent); 
 }

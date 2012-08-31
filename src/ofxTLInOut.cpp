@@ -132,11 +132,11 @@ void ofxTLInOut::load(){
     
 	ofxXmlSettings settings;
 	if(!settings.loadFile(xmlFileName)){
-		ofLog(OF_LOG_ERROR, "ofxTLInOut -- couldn't load zoom settings file " + xmlFileName);
+		ofLog(OF_LOG_NOTICE, "ofxTLInOut -- couldn't load zoom settings file " + xmlFileName);
         timeline->setInOutRange(ofRange(0,1.0));
 		return;
 	}
-    	settings.pushTag("inout");
+	settings.pushTag("inout");
 	timeline->setInOutRange(ofRange(settings.getValue("in", 0.0),settings.getValue("out", 1.0)));
 	settings.popTag();
     

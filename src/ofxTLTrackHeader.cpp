@@ -48,7 +48,6 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 void ofxTLTrackHeader::enable(){
 	nameField.setup();    
     ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
-
 }
 
 void ofxTLTrackHeader::disable(){
@@ -79,7 +78,10 @@ void ofxTLTrackHeader::textFieldEnter(string& newText){
 void ofxTLTrackHeader::draw(){
 	ofRectangle trackRect = track->getDrawRect();
 	float footerStartY = trackRect.y + trackRect.height;
-	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);	
+	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, FOOTER_HEIGHT);
+	if(footerRect.width != footerStripeWidth){
+		recalculateFooterStripes();
+	}
 	
 	ofPushStyle();
 	
@@ -104,25 +106,41 @@ void ofxTLTrackHeader::draw(){
 	
 	//draw grippy lines on the footer draggable element
 	if(draggingSize){
-		ofSetColor(track->getTimeline()->getColors().highlightColor);
+//		ofSetColor(track->getTimeline()->getColors().highlightColor);
+		footerStripes.setStrokeColor(track->getTimeline()->getColors().highlightColor);
+		footerStripes.draw(footerRect.x, footerRect.y);
 	}
 	else if(hoveringFooter){
-		ofSetColor(track->getTimeline()->getColors().outlineColor);
+//		ofSetColor(track->getTimeline()->getColors().outlineColor);
+		footerStripes.setStrokeColor(track->getTimeline()->getColors().outlineColor);
+		footerStripes.draw(footerRect.x, footerRect.y);
 	}
-	else{
-		ofSetColor(track->getTimeline()->getColors().disabledColor);
-	}
+//	else{
+//		ofSetColor(track->getTimeline()->getColors().disabledColor);
+//		footerStripes.setStrokeColor(track->getTimeline()->getColors().disabledColor);
+//
+//	}
     
-	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
-//		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
-	}
+//	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
+		//ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
+//	}
 	
 	ofPopStyle();
 }
 
-//string ofxTLTrackHeader::getDisplayName() {
-//    return nameField.text;
-//}
+void ofxTLTrackHeader::recalculateFooterStripes(){
+	
+	footerStripes.clear();
+	footerStripes.setStrokeWidth(1.0);
+
+	for(float l = 0; l < bounds.width; l+=FOOTER_HEIGHT){
+		footerStripes.moveTo(l, FOOTER_HEIGHT);
+		//ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
+		footerStripes.lineTo(l+FOOTER_HEIGHT, 0);
+	}
+	
+	footerStripeWidth = footerRect.width;
+}
 
 void ofxTLTrackHeader::mousePressed(ofMouseEventArgs& args){
 	if(footerRect.inside(ofPoint(args.x,args.y))){

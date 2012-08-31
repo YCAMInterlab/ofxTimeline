@@ -39,7 +39,8 @@
 #include "ofxTween.h"
 #include "ofRange.h"
 #include "ofxTLEvents.h"
-
+#include <set>
+	
 class ofxTimeline; 
 class ofxTLTrack 
 {
@@ -142,7 +143,7 @@ class ofxTLTrack
     virtual bool isPlaying(){ return false; }
     
 	//add any points (in screenspace x) that should be snapped to
-	virtual void getSnappingPoints(vector<long>& points){};
+	virtual void getSnappingPoints(std::set<long>& points){};
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself

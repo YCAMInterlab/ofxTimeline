@@ -65,7 +65,7 @@ void ofxTLTicker::draw(){
         for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
             //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
             float x = screenXForTime(i);
-            //ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
         }
     
         //draw regular increments
@@ -83,7 +83,7 @@ void ofxTLTicker::draw(){
         heightMultiplier = .5;		
         for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
             float x = screenXForTime(i);
-            //ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
         }
     }
     
@@ -180,14 +180,14 @@ float ofxTLTicker::getBPM(){
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
-void ofxTLTicker::getSnappingPoints(vector<long>& points){
+void ofxTLTicker::getSnappingPoints(set<long>& points){
 
 	if(!drawBPMGrid){
 		updateBPMPoints();
 	}
     
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
-		points.push_back(bpmScreenPoints[i].millis);
+		points.insert(bpmScreenPoints[i].millis);
 	}
 }
 
@@ -195,61 +195,59 @@ void ofxTLTicker::getSnappingPoints(vector<long>& points){
 void ofxTLTicker::updateBPMPoints(){
 	
 	bpmScreenPoints.clear();
-	if(!timeline->getIsFrameBased()){
-		double currentPoint = 0;
-		double oneMeasure = 1.0/(bpm/60.);
-		double halfMeasure = oneMeasure/2;
-		double quarterMeasure = halfMeasure/2;
 
-        
-		bool showMeasure = false;
-		bool showHalfMeasure = false;
-		bool showQuarterMeasure = false;
-		showMeasure = screenXForTime(oneMeasure) - screenXForTime(0) > 20;
+	double currentPoint = 0;
+	double oneMeasure = 1.0/(bpm/60.);
+	double halfMeasure = oneMeasure/2;
+	double quarterMeasure = halfMeasure/2;
+
+	bool showMeasure = false;
+	bool showHalfMeasure = false;
+	bool showQuarterMeasure = false;
+	showMeasure = screenXForTime(oneMeasure) - screenXForTime(0) > 20;
+	if(showMeasure){
+		showHalfMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
+		if (showHalfMeasure) {
+			showQuarterMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
+		}
+	}
+
+	int currentMeasure = 0;        
+	while(currentPoint < timeline->getDurationInSeconds()){
+		ofxTLBPMPoint measures[4];
+		int numMeasures = 0;
 		if(showMeasure){
-			showHalfMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
-			if (showHalfMeasure) {
-				showQuarterMeasure = screenXForTime(halfMeasure) - screenXForTime(0) > 20;
+			measures[0].millis = currentPoint * 1000;
+			measures[0].screenX = millisToScreenX(measures[0].millis);
+			measures[0].weight = 4;
+			numMeasures = 1;
+		}
+		if(showHalfMeasure){
+			measures[1].millis = (currentPoint+halfMeasure) * 1000;
+			measures[1].screenX = millisToScreenX(measures[1].millis);
+			measures[1].weight = 2;
+			numMeasures = 2;
+		}
+		if(showQuarterMeasure){
+			measures[2].millis = (currentPoint+quarterMeasure) * 1000;
+			measures[2].screenX = millisToScreenX(measures[2].millis);
+			measures[2].weight = 1;
+			measures[3].millis = (currentPoint+halfMeasure+quarterMeasure) * 1000;
+			measures[3].screenX = millisToScreenX(measures[3].millis);
+			measures[3].weight = 1;
+			numMeasures = 4;
+		}
+		
+		for(int m = 0; m < numMeasures; m++){
+			if( isOnScreen(measures[m].screenX) ){
+				bpmScreenPoints.push_back( measures[m] );
 			}
 		}
 
-        int currentMeasure = 0;        
-		while(currentPoint < timeline->getDurationInSeconds()){
-			ofxTLBPMPoint measures[4];
-			int numMeasures = 0;
-			if(showMeasure){
-                measures[0].millis = currentPoint * 1000;
-				measures[0].screenX = millisToScreenX(measures[0].millis);
-				measures[0].weight = 4;
-				numMeasures = 1;
-			}
-			if(showHalfMeasure){
-                measures[1].millis = (currentPoint+halfMeasure) * 1000;
-				measures[1].screenX = millisToScreenX(measures[1].millis);
-				measures[1].weight = 2;
-				numMeasures = 2;
-			}
-			if(showQuarterMeasure){
-                measures[2].millis = (currentPoint+quarterMeasure) * 1000;
-				measures[2].screenX = millisToScreenX(measures[2].millis);
-				measures[2].weight = 1;
-                measures[3].millis = (currentPoint+halfMeasure+quarterMeasure) * 1000;
-				measures[3].screenX = millisToScreenX(measures[3].millis);
-				measures[3].weight = 1;
-				numMeasures = 4;
-			}
-			
-			for(int m = 0; m < numMeasures; m++){
-				if( isOnScreen(measures[m].screenX) ){
+		currentMeasure++;
+		currentPoint = currentMeasure*oneMeasure;
+	}
 
-					bpmScreenPoints.push_back( measures[m] );
-				}
-			}
-
-            currentMeasure++;
-			currentPoint = currentMeasure*oneMeasure;
-		}
-	}	
 }
 
 bool ofxTLTicker::getDrawBPMGrid(){

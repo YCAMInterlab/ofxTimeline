@@ -114,12 +114,15 @@ string ofxTLTrack::getName(){
 
 void ofxTLTrack::_draw(){
     //**** DRAW BORDER. TODO: move to super class
+	if(focused){
+		ofFill();
+		ofSetColor(timeline->getColors().highlightColor, 50);
+		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+	
 	ofNoFill();
 	if(hover){
-		ofSetColor(timeline->getColors().highlightColor);
-	}
-	else if(focused){
-		ofSetColor(timeline->getColors().highlightColor);
+		ofSetColor(timeline->getColors().textColor);
 	}
 	else{
 		ofSetColor(timeline->getColors().outlineColor);

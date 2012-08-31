@@ -57,7 +57,9 @@ class ofxTLZoomer : public ofxTLTrack
 	virtual void save();
 
 	bool isActive();
-	
+	//allows for exponential zooming in. Default is 2, no effect is 1
+	//not allowed to be less than one
+	void setViewExponent(float exponent);
 	ofRange getViewRange();
 	void setViewRange(ofRange newRange);
     
@@ -68,10 +70,12 @@ class ofxTLZoomer : public ofxTLTrack
 	void notifyZoomEnded();
 
 	ofRange currentViewRange;
-	
+//	ofRange currentLogViewRange;
+
 	float minGrabOffset;
 	float maxGrabOffset;
-	
+
+	float zoomExponent;
 	bool mouseIsDown;
 	bool minSelected;
 	bool maxSelected;

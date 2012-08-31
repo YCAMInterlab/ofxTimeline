@@ -70,7 +70,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void getSnappingPoints(vector<long>& points);
+	virtual void getSnappingPoints(set<long>& points);
 	
 	virtual void save();
 	virtual void load();

@@ -288,13 +288,13 @@ void ofxTLSwitches::regionSelected(ofLongRange timeRange, ofRange valueRange){
     }
 }
 
-void ofxTLSwitches::getSnappingPoints(vector<long>& points){
+void ofxTLSwitches::getSnappingPoints(set<long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
 		if (isKeyframeIsInBounds(switchKey) && !isKeyframeSelected(switchKey) &&
             !switchKey->startSelected && !switchKey->endSelected) {
-			points.push_back(switchKey->timeRange.min);
-            points.push_back(switchKey->timeRange.max);
+			points.insert(switchKey->timeRange.min);
+            points.insert(switchKey->timeRange.max);
 		}
 	}
 }

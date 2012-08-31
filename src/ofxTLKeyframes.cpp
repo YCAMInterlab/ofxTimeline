@@ -444,10 +444,11 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
     }
 }
 
-void ofxTLKeyframes::getSnappingPoints(vector<long>& points){
+void ofxTLKeyframes::getSnappingPoints(set<long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
-			points.push_back(keyframes[i]->time);
+//			points.push_back(keyframes[i]->time);
+			points.insert(keyframes[i]->time);
 		}
 	}
 }
@@ -501,7 +502,7 @@ void ofxTLKeyframes::addKeyframe(float value){
 void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long millis){
 	ofxTLKeyframe* key = newKeyframe();
 	key->time = millis;
-	key->value = value;
+	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
 	keyframes.push_back(key);
 	//smart sort, only sort if not added to end
 	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->time > keyframes[keyframes.size()-1]->time){

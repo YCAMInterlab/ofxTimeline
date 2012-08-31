@@ -111,9 +111,11 @@ void ofxTLPage::draw(){
 	if(draggingInside && snapPoints.size() > 0){
 		ofPushStyle();
 		ofSetColor(255,255,255,100);
-		for(int i = 0; i < snapPoints.size(); i++){
-			ofLine(timeline->millisToScreenX(snapPoints[i]), trackContainerRect.y, 
-                   timeline->millisToScreenX(snapPoints[i]), trackContainerRect.y+trackContainerRect.height);
+		set<long>::iterator it;
+//		for(int i = 0; i < snapPoints.size(); i++){
+		for(it = snapPoints.begin(); it != snapPoints.end(); it++){
+			ofLine(timeline->millisToScreenX(*it), trackContainerRect.y,
+                   timeline->millisToScreenX(*it), trackContainerRect.y+trackContainerRect.height);
 		}
 		ofPopStyle();
 	}
@@ -234,21 +236,27 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
     else {
 //        refreshSnapPoints();
         if(snappingEnabled && snapPoints.size() > 0){
-
-            long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0); //hack to find distance in millseconds
+			//hack to find snap distance in millseconds
+			set<long>::iterator it;
+            long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
             long closestSnapDistance = snappingToleranceMillis;
-            int closestSnapPoint;
-            for(int i = 0; i < snapPoints.size(); i++){
-                long distanceToPoint = abs(millis - snapPoints[i]);
+			long closestSnapPoint;
+            //int closestSnapPoint;
+//            for(int i = 0; i < snapPoints.size(); i++){
+			for(it = snapPoints.begin(); it != snapPoints.end(); it++){
+				long pointDifference = millis - *it;
+				long distanceToPoint = abs(pointDifference);
                 if(distanceToPoint < closestSnapDistance){
-                    closestSnapPoint = i;
-                    closestSnapDistance = distanceToPoint; 
+//                    closestSnapPoint = i;
+					closestSnapPoint = *it;
+                    closestSnapDistance = distanceToPoint;
                 }
             }
             
-            if(closestSnapDistance < snappingToleranceMillis){
+            if(abs(closestSnapDistance) < snappingToleranceMillis){
                 //if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
-                millis = snapPoints[closestSnapPoint] + millisecondDragOffset;
+                //millis = snapPoints[closestSnapPoint] + millisecondDragOffset;
+				millis = closestSnapPoint + millisecondDragOffset;
             }
         }
         
@@ -618,10 +626,12 @@ string ofxTLPage::getName(){
 }
 
 void ofxTLPage::setContainer(ofVec2f offset, float width){
-	trackContainerRect.x = offset.x;
-	trackContainerRect.y = offset.y;
-	trackContainerRect.width = width;
-	recalculateHeight();
+	if(offset != ofVec2f(trackContainerRect.x,trackContainerRect.y) || width != trackContainerRect.width){
+		trackContainerRect.x = offset.x;
+		trackContainerRect.y = offset.y;
+		trackContainerRect.width = width;
+	}
+//	recalculateHeight();
 }
 
 void ofxTLPage::setHeaderHeight(float newHeaderHeight){

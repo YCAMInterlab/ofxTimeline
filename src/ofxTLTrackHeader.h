@@ -77,6 +77,10 @@ class ofxTLTrackHeader : public ofxTLTrack
 	bool draggingSize;
 	float dragOffset;
 	float dragAnchor;
-
+	
+	void recalculateFooterStripes();
+	float footerStripeWidth;
+	ofPath footerStripes;
+	
 };
 

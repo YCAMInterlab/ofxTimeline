@@ -136,7 +136,7 @@ class ofxTLPage {
 	bool headerHasFocus;
 	bool snappingEnabled;
 	
-	vector<long> snapPoints; //in millis
+	set<long> snapPoints; //in millis
 	float snappingTolerance; //in pixels
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
