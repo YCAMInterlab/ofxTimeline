@@ -13,7 +13,7 @@
 ofxTLAudioTrack::ofxTLAudioTrack(){
 	shouldRecomputePreview = false;
     soundLoaded = false;
-//	preview.setClosed(false);
+
 }
 
 ofxTLAudioTrack::~ofxTLAudioTrack(){

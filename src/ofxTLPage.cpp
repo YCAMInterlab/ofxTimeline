@@ -96,6 +96,13 @@ void ofxTLPage::setTicker(ofxTLTicker* t){
 	ticker = t;
 }
 
+//used to poll events off the update cycle
+void ofxTLPage::update(){
+	for(int i = 0; i < headers.size(); i++){
+		tracks[headers[i]->name]->update();
+	}
+}
+
 void ofxTLPage::draw(){	
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->draw();

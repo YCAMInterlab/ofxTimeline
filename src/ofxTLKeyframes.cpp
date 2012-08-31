@@ -47,7 +47,10 @@ ofxTLKeyframes::ofxTLKeyframes()
 :	hoverKeyframe(NULL),
 	keysAreDraggable(false),
 	keysDidDrag(false),
-	keysDidNudge(false)
+	keysDidNudge(false),
+	lastKeyframeIndex(1),
+	lastSampleTime(0),
+	shouldRecomputePreviews(false)
 {
 	xmlFileName = "_keyframes.xml";	
 }
@@ -56,8 +59,166 @@ ofxTLKeyframes::~ofxTLKeyframes(){
 	clear();
 }
 
+void ofxTLKeyframes::recomputePreviews(){
+	preview.clear();
+	
+//	cout << "ofxTLKeyframes::recomputePreviews " << endl;
+	
+	if(keyframes.size() == 0 || keyframes.size() == 1){
+		//ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
+		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+//		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
+		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+	}
+	else{
+		for(int p = bounds.x; p <= bounds.width; p++){
+//			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+		}
+	}
+	int size =preview.getVertices().size();
+	preview.simplify();
+	//cout << "simplify pre " << size << " post: " << preview.getVertices().size() << " dif: " << (size - preview.getVertices().size()) << endl;
+	
+	shouldRecomputePreviews = false;
+	
+}
+
 void ofxTLKeyframes::draw(){
-	//TODO: simple keyframe draw
+	
+	if(bounds.width == 0 || bounds.height == 0){
+		return;
+	}
+	
+	if(shouldRecomputePreviews || viewIsDirty){
+		recomputePreviews();
+	}
+	
+	ofPushStyle();
+	ofPushMatrix();
+	ofEnableSmoothing();
+	
+	// DRAW KEYFRAME LINES
+	ofSetColor(timeline->getColors().keyColor);
+	ofNoFill();
+	/*
+	ofBeginShape();
+	if(keyframes.size() == 0 || keyframes.size() == 1){
+		ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
+		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
+	}
+	else{
+		for(int p = bounds.x; p <= bounds.width; p++){
+            //TODO: cache this into a poly line to avoid insane sampling.
+			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
+		}
+	}
+	ofEndShape(false);
+    */
+//	cout << "preview has " << preview.getVertices().size() << endl;
+	preview.draw();
+	
+	//**** DRAW KEYFRAME DOTS
+	//TODO: draw dots more judiciously
+	ofSetColor(timeline->getColors().keyColor);
+	int lastCircleX = 0;
+	for(int i = 0; i < keyframes.size(); i++){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		
+  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
+		
+		if(keyframes[i] == hoverKeyframe){
+			ofPushStyle();
+			ofFill();
+			ofSetColor(timeline->getColors().highlightColor);
+			ofCircle(screenpoint.x, screenpoint.y, 6);
+			ofPopStyle();
+		}
+        
+		
+		if(isKeyframeSelected( keyframes[i] )){
+            ofSetColor(timeline->getColors().textColor);
+			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			string frameString = timeline->formatTime(keyframes[i]->time);
+            if(keysAreDraggable){
+				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+            }
+			ofFill();
+            ofCircle(screenpoint.x, screenpoint.y, 4);
+		}
+		else if(abs(lastCircleX - screenpoint.x) > 5){ //respect personal space
+            ofSetColor(timeline->getColors().textColor);
+			ofNoFill();
+            ofCircle(screenpoint.x, screenpoint.y, 2);
+		}
+		lastCircleX = screenpoint.x;
+	}
+	
+	ofPopMatrix();
+	ofPopStyle();
+}
+
+//TODO: potentially scale internal values at this point
+void ofxTLKeyframes::setValueRange(ofRange range, float newDefaultValue){
+	valueRange = range;
+    defaultValue = newDefaultValue;
+}
+
+ofRange ofxTLKeyframes::getValueRange(){
+	return valueRange;
+}
+
+//main function to get values out of the timeline, operates on the given value range
+float ofxTLKeyframes::getValueAtPercent(float percent){
+	//	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
+    return getValueAtTimeInMillis(percent*timeline->getDurationInMilliseconds());
+}
+
+float ofxTLKeyframes::getValueAtTimeInMillis(long sampleTime){
+	return ofMap(sampleAtTime(sampleTime), 0.0, 1.0, valueRange.min, valueRange.max, false);
+}
+
+float ofxTLKeyframes::sampleAtPercent(float percent){
+	return sampleAtTime(percent * timeline->getDurationInMilliseconds());
+}
+
+float ofxTLKeyframes::sampleAtTime(long sampleTime){
+	sampleTime = ofClamp(sampleTime, 0, timeline->getDurationInMilliseconds());
+	
+	//edge cases
+	if(keyframes.size() == 0){
+		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
+	}
+	
+	if(sampleTime < keyframes[0]->time){
+		return keyframes[0]->value;
+	}
+	
+	if(sampleTime > keyframes[keyframes.size()-1]->time){
+		return keyframes[keyframes.size()-1]->value;
+	}
+	
+	//optimization for linear playback
+	int startKeyframeIndex = 1;
+	if(sampleTime >= lastSampleTime){
+		startKeyframeIndex = lastKeyframeIndex;
+	}
+	
+	for(int i = startKeyframeIndex; i < keyframes.size(); i++){
+		if(keyframes[i]->time >= sampleTime){
+			lastKeyframeIndex = i;
+			lastSampleTime = sampleTime;
+			return interpolateValueForKeys(keyframes[i-1], keyframes[i], sampleTime);
+		}
+	}
+	ofLog(OF_LOG_ERROR, "ofxTLKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
+	return defaultValue;
+}
+
+float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+	return ofMap(sampleTime, start->time, end->time, start->value, end->value);
 }
 
 void ofxTLKeyframes::load(){
@@ -121,8 +282,9 @@ void ofxTLKeyframes::clear(){
 	for(int i = 0; i < keyframes.size(); i++){
 		delete keyframes[i];
 	}
-	keyframes.clear();		
+	keyframes.clear();
     selectedKeyframes.clear();
+	updateKeyframeSort();
 }
 
 void ofxTLKeyframes::save(){
@@ -265,12 +427,19 @@ void ofxTLKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLKeyframes::updateKeyframeSort(){
+	//reset these caches because they may no longer be valid
+	shouldRecomputePreviews = true;
+	lastKeyframeIndex = 1;
+	lastSampleTime = 0;
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
 }
 
 void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 	keysAreDraggable = false;
     if(keysDidDrag){
+		//reset these caches because they may no longer be valid
+		lastKeyframeIndex = 1;
+		lastSampleTime = 0;
         timeline->flagTrackModified(this);
     }
 }
@@ -323,6 +492,24 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 			updateKeyframeSort();
 		}
 	}
+}
+
+void ofxTLKeyframes::addKeyframe(float value){
+	addKeyframeAtMillis(value, timeline->getCurrentTimeMillis());
+}
+
+void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long millis){
+	ofxTLKeyframe* key = newKeyframe();
+	key->time = millis;
+	key->value = value;
+	keyframes.push_back(key);
+	//smart sort, only sort if not added to end
+	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->time > keyframes[keyframes.size()-1]->time){
+		updateKeyframeSort();
+	}
+	lastKeyframeIndex = 1;
+	timeline->flagTrackModified(this);
+	shouldRecomputePreviews = true;
 }
 
 void ofxTLKeyframes::selectAll(){

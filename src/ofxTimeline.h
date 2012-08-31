@@ -65,14 +65,21 @@ typedef struct {
     string stateBuffer;
 } UndoItem;
 
-class ofxTimeline {
+class ofxTimeline : ofThread {
   public:
 	ofxTimeline();
 	virtual ~ofxTimeline();
 
 	virtual void setup();
-
-    bool toggleEnabled();
+	
+	//Optionally run ofxTimeline on the background thread
+	//this isn't necessary most of the time but
+	//for precise timing apps and input recording it'll greatly
+	//improve performance
+	virtual void moveToThread();
+//    virtual void removeFromThread(); //TODO
+	
+	bool toggleEnabled();
     virtual void enable();
 	virtual void disable();
     
@@ -363,6 +370,7 @@ class ofxTimeline {
     virtual ofxTLEvents& events();
     
   protected:
+
     ofxTimecode timecode;
 	ofxMSATimer timer;
     ofxTLEvents timelineEvents;
@@ -383,9 +391,10 @@ class ofxTimeline {
     //can be blank, default save to bin/data/
     string workingFolder; 
     
+	bool isOnThread;
 	bool isSetup;
 	bool usingEvents;
-    
+
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
@@ -416,7 +425,10 @@ class ofxTimeline {
 
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
-    
+    virtual void threadedFunction(); //only fired after moveToThread()
+	virtual void checkLoop();
+	virtual void checkEvents();
+	
 	virtual void enableEvents();
 	virtual void disableEvents();
 

@@ -15,130 +15,22 @@ ofxTLCurves::ofxTLCurves(){
 	drawingEasingWindow = false;
 }
 
-//TODO potentially scale internal values at this point
-void ofxTLCurves::setValueRange(ofRange range, float newDefaultValue){
-	valueRange = range;
-    defaultValue = newDefaultValue;
-}
-
-ofRange ofxTLCurves::getValueRange(){
-	return valueRange;    
-}
-
-//main function to get values out of the timeline, operates on the given value range
-float ofxTLCurves::getValueAtPercent(float percent){
-//	return ofMap(sampleAt(percent), 0.0, 1.0, valueRange.min, valueRange.max, false);
-    return getValueAtTimeInMillis(percent*timeline->getDurationInMilliseconds());
-}
-
-float ofxTLCurves::getValueAtTimeInMillis(long sampleTime){
-	return ofMap(sampleAtTime(sampleTime), 0.0, 1.0, valueRange.min, valueRange.max, false);
-}
-
-float ofxTLCurves::sampleAtPercent(float percent){
-	return sampleAtTime(percent * timeline->getDurationInMilliseconds());
-}
-
-float ofxTLCurves::sampleAtTime(long sampleTime){
-	sampleTime = ofClamp(sampleTime, 0, timeline->getDurationInMilliseconds());
-	
-	//edge cases
-	if(keyframes.size() == 0){
-		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
-	}
-	
-	if(sampleTime < keyframes[0]->time){
-		return keyframes[0]->value;
-	}
-	
-	if(sampleTime > keyframes[keyframes.size()-1]->time){
-		return keyframes[keyframes.size()-1]->value;
-	}
-	
-	for(int i = 1; i < keyframes.size(); i++){
-		if(keyframes[i]->time >= sampleTime){
-            ofxTLTweenKeyframe* tweenKey = (ofxTLTweenKeyframe*)keyframes[i-1];
-			float percentBetween = ofxTween::map(sampleTime, tweenKey->time, keyframes[i]->time, 0.0, 1.0, false, *tweenKey->easeFunc->easing, tweenKey->easeType->type);
-			return tweenKey->value * (1.-percentBetween) + keyframes[i]->value*percentBetween;
-		}
-	}
-	
-	ofLog(OF_LOG_ERROR, "ofxTLKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
-	return defaultValue;
+float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+	ofxTLTweenKeyframe* tweenKeyStart = (ofxTLTweenKeyframe*)start;
+	ofxTLTweenKeyframe* tweenKeyEnd = (ofxTLTweenKeyframe*)end;
+	return ofxTween::map(sampleTime, tweenKeyStart->time, tweenKeyEnd->time,
+						 			 tweenKeyStart->value, tweenKeyEnd->value,
+						 false, *tweenKeyStart->easeFunc->easing, tweenKeyEnd->easeType->type);
 }
 
 string ofxTLCurves::getTrackType(){
 	return "Curves";    
 }
 
-void ofxTLCurves::draw(){
-	
-	if(bounds.width == 0 || bounds.height == 0){
-		return;
-	}
-	
-	ofPushStyle();
-	ofPushMatrix();
-	ofEnableSmoothing();
-
-	// DRAW KEYFRAME LINES
-
-	ofSetColor(timeline->getColors().keyColor);
-	ofNoFill();
-	ofBeginShape();
-	if(keyframes.size() == 0 || keyframes.size() == 1){
-		ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
-		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
-	}
-	else{
-		for(int p = bounds.x; p <= bounds.width; p++){
-            //TODO: cache this into a poly line to avoid insane sampling.
-			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
-		}
-	}
-	ofEndShape(false);
-
-    
-	//**** DRAW KEYFRAME DOTS
-	ofSetColor(timeline->getColors().keyColor);
-	for(int i = 0; i < keyframes.size(); i++){
-		if(!isKeyframeIsInBounds(keyframes[i])){
-			continue;
-		}
-		
-  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);		
-		if(keyframes[i] == hoverKeyframe){
-			ofPushStyle();
-			ofFill();
-			ofSetColor(timeline->getColors().highlightColor);
-			ofCircle(screenpoint.x, screenpoint.y, 6);
-			ofPopStyle();
-		}
-        
-
-		if(isKeyframeSelected( keyframes[i] )){
-            ofSetColor(timeline->getColors().textColor);
-			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
-			string frameString = timeline->formatTime(keyframes[i]->time);
-            if(keysAreDraggable){
-				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
-            }
-			ofFill();
-            ofCircle(screenpoint.x, screenpoint.y, 4);
-		}
-		else{
-            ofSetColor(timeline->getColors().textColor);
-			ofNoFill();
-            ofCircle(screenpoint.x, screenpoint.y, 2);
-		}
-		
-
-	}
-	
-	ofPopMatrix();
-	ofPopStyle();
-}
-
+//void ofxTLCurves::draw(){
+//	
+//
+//}
 
 ofxTLKeyframe* ofxTLCurves::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
@@ -146,6 +38,18 @@ ofxTLKeyframe* ofxTLCurves::newKeyframe(){
 	k->easeType = easingTypes[0];
 	return k;
 }
+
+//void ofxTLCurves::playbackStarted(ofxTLPlaybackEventArgs& args){
+//	
+//}
+//
+//void ofxTLCurves::playbackLooped(ofxTLPlaybackEventArgs& args){
+//	
+//}
+//
+//void ofxTLCurves::playbackEnded(ofxTLPlaybackEventArgs& args){
+//	
+//}
 
 void ofxTLCurves::drawModalContent(){
 	
@@ -213,7 +117,8 @@ void ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
                 for(int k = 0; k < selectedKeyframes.size(); k++){                    
                     ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
                 }
-                timeline->flagTrackModified(this); 
+                timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
                 return;
             }
         }
@@ -224,6 +129,7 @@ void ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
                 	((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
                 }
                 timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
                 return;
             }
         }

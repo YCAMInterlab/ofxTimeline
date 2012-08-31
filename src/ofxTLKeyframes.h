@@ -76,7 +76,10 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void load();
 	
 	virtual void clear();
-		
+	
+	virtual void addKeyframeAtMillis(float value, unsigned long millis);
+	virtual void addKeyframe(float value);
+	
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
@@ -94,11 +97,33 @@ class ofxTLKeyframes : public ofxTLTrack
 	
     virtual string getTrackType();
     
+	//sampling
+	virtual float getValueAtPercent(float percent);
+	virtual float getValueAtTimeInMillis(long sampleTime);
+
+	virtual void setValueRange(ofRange range, float defaultValue = 0);
+    virtual ofRange getValueRange();
+
   protected:
 	virtual ofxTLKeyframe* newKeyframe();
-
 	vector<ofxTLKeyframe*> keyframes;
-
+	
+	ofPolyline preview;
+	vector<ofVec2f> keyPoints;
+	void recomputePreviews();
+	bool shouldRecomputePreviews;
+	
+	virtual float sampleAtPercent(float percent); //less accurate than millis
+    virtual float sampleAtTime(long sampleTime);
+	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
+	
+    ofRange valueRange;
+	float defaultValue;
+	
+	//keep these stored for efficient search through the keyframe array
+	int lastKeyframeIndex;
+	unsigned long lastSampleTime;
+	
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);

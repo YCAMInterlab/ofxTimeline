@@ -50,6 +50,7 @@ class ofxTLTrack
 	virtual void setup();
     void _draw(); //calls draw() internally plus some universal stuff
     //override this in your sublcass
+	virtual void update(){}; //events should be triggered from here
 	virtual void draw(){};
     
     //draw modal content is called after the main draw() call
@@ -67,7 +68,7 @@ class ofxTLTrack
 	
     //managed by the page object, do not set yourself
 	virtual void setDrawRect(ofRectangle bounds);
-	virtual void offsetDrawRect(ofVec2f offset);
+//	virtual void offsetDrawRect(ofVec2f offset);
 	float getBottomEdge();
     
     //returns the screenspace position of the elements bounds, not including header and footer
@@ -162,8 +163,10 @@ class ofxTLTrack
   protected:
 	
 	ofxTimeline* timeline;
-	bool enabled; 
-
+	bool enabled;
+	//responsability of subclass to react to this on draw, is cleared by super class each frame
+	bool viewIsDirty;
+	
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);

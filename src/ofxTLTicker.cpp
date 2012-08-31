@@ -50,37 +50,7 @@ void ofxTLTicker::draw(){
 	
 	int textH, textW;
 	string text;
-    /*
-	if(timeline->getIsFrameBased()){
-		
-		int curStartFrame = ofMap(zoomBounds.min, 0, 1.0, 0, timeline->getDurationInFrames());
-		int curEndFrame = ofMap(zoomBounds.max, 0, 1.0, 0, timeline->getDurationInFrames());
-		int framesInView = curEndFrame-curStartFrame;
-	
-		float framesPerPixel = framesInView / bounds.width;
-		int frameStepSize = 1;
-		
-		//TODO make adaptive if we are way zoomed in don't draw so many
-		//draw ticker marks
-		for(int i = curStartFrame; i <= curEndFrame; i++){
-			float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
-			ofSetColor(200, 180, 40);
-			float heightMultiplier = 0.0;
-			if(i % 10 == 0){
-				ofSetLineWidth(3);
-				heightMultiplier = .5;
-			}
-			else {
-				ofSetLineWidth(1);
-				heightMultiplier = .75;
-			}
-			
-			ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-		}
-	}
-	//Time based
-	else {
-        */
+
     //draw tickers with time
     float startTime = zoomBounds.min * timeline->getDurationInSeconds();
     float endTime = zoomBounds.max * timeline->getDurationInSeconds();
@@ -95,7 +65,7 @@ void ofxTLTicker::draw(){
         for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
             //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
             float x = screenXForTime(i);
-            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            //ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
         }
     
         //draw regular increments
@@ -113,7 +83,7 @@ void ofxTLTicker::draw(){
         heightMultiplier = .5;		
         for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
             float x = screenXForTime(i);
-            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+            //ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
         }
     }
     
@@ -127,7 +97,7 @@ void ofxTLTicker::draw(){
         }
         ofPopStyle();
     }
-	//}
+
 
 	//highlite current mouse position
 	if(hover){
@@ -182,6 +152,7 @@ void ofxTLTicker::draw(){
     else{
         ofSetColor(timeline->getColors().outlineColor);
     }
+	
 	//draw playhead line
 	ofSetLineWidth(1);
 	ofLine(currentFrameX, totalDrawRect.y, currentFrameX, totalDrawRect.y+totalDrawRect.height);

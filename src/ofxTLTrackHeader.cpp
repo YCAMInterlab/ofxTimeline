@@ -114,7 +114,7 @@ void ofxTLTrackHeader::draw(){
 	}
     
 	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
-		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
+//		ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
 	}
 	
 	ofPopStyle();

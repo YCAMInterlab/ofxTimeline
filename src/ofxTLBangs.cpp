@@ -21,7 +21,7 @@ void ofxTLBangs::enable(){
 void ofxTLBangs::disable(){
     if(isEnabled()){
         if (isPlayingBack) {
-        	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
+//        	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
         }
 	    ofxTLKeyframes::disable();
     	events().removePlaybackEvents(this);
@@ -86,15 +86,21 @@ ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
 	return NULL;    
 }
 
-void ofxTLBangs::update(ofEventArgs& args){
-	long thisTimelinePoint = timeline->getCurrentTimeMillis();
-	for(int i = 0; i < keyframes.size(); i++){
-		if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
-//            ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
-			bangFired(keyframes[i]);
-        }
+void ofxTLBangs::update(){
+	if(isPlayingBack){
+		long thisTimelinePoint = timeline->getCurrentTimeMillis();
+		for(int i = 0; i < keyframes.size(); i++){
+			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
+				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
+				bangFired(keyframes[i]);
+			}
+		}
+		lastTimelinePoint = thisTimelinePoint;
 	}
-	lastTimelinePoint = thisTimelinePoint;
+}
+
+void ofxTLBangs::update(ofEventArgs& args){
+	update();
 }
 
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
@@ -110,12 +116,12 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = timeline->getCurrentTimeMillis();
-	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
+//	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
     isPlayingBack = true;
 }
 
 void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
-	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
+//	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
     isPlayingBack = true;
 }
 

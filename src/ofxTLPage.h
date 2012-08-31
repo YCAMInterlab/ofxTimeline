@@ -53,6 +53,7 @@ class ofxTLPage {
 	virtual ~ofxTLPage();
 	
 	virtual void setup();
+	virtual void update();
 	virtual void draw();
 
 	virtual void setName(string name);

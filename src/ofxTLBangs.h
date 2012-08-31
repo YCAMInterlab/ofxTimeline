@@ -29,6 +29,8 @@ class ofxTLBangs : public ofxTLKeyframes {
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
     bool isPlayingBack;
     void update(ofEventArgs& args);
+	virtual void update();
+	
     long lastTimelinePoint;
 
     virtual void bangFired(ofxTLKeyframe* key);

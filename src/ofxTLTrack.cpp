@@ -76,14 +76,11 @@ void ofxTLTrack::disable(){
 }
 
 void ofxTLTrack::setDrawRect(ofRectangle drawRect){
-	bounds = drawRect;
-	drawRectChanged();
-}
-
-void ofxTLTrack::offsetDrawRect(ofVec2f offset){
-	bounds.x += offset.x;
-	bounds.y += offset.y;
-	drawRectChanged();
+	if(drawRect != bounds){
+		bounds = drawRect;
+		viewIsDirty = true;
+		drawRectChanged();
+	}
 }
 
 ofxTimeline* ofxTLTrack::getTimeline(){
@@ -130,6 +127,7 @@ void ofxTLTrack::_draw(){
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     draw();
+	viewIsDirty = false;
 }
 
 void ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
@@ -197,6 +195,7 @@ void ofxTLTrack::zoomEnded(ofxTLZoomEventArgs& args){
 
 void ofxTLTrack::setZoomBounds(ofRange zoomBoundsPercent){
 	zoomBounds = zoomBoundsPercent;
+	viewIsDirty = true;
 }
 
 void ofxTLTrack::setXMLFileName(string filename){

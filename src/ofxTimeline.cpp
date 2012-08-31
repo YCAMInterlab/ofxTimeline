@@ -75,7 +75,8 @@ ofxTimeline::ofxTimeline()
 	lockWidthToWindow(true),
 	currentTime(0.0),
 	undoPointer(0),
-	undoEnabled(true)
+	undoEnabled(true),
+	isOnThread(false)
 {
 }
 
@@ -133,6 +134,16 @@ void ofxTimeline::setup(){
     setName("timeline" + ofToString(timelineNumber++));
 
 }
+
+void ofxTimeline::moveToThread(){
+	if(!isOnThread){
+		isOnThread = true;
+		stop();
+		startThread();
+		
+	}
+}
+
 
 void ofxTimeline::setName(string newName){
     if(newName != name){
@@ -1042,12 +1053,35 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
     else {
         currentTime = timer.getAppTimeSeconds() - playbackStartTime;
     }
-    
-    if(currentTime < durationInSeconds*inoutRange.min){
-//        cout << "BELOW MIN " << endl;
+	
+    checkLoop();
+	checkEvents();
+}
+
+void ofxTimeline::threadedFunction(){
+	while(isThreadRunning()){
+		if(isPlaying){
+			currentTime = timer.getAppTimeSeconds() - playbackStartTime;
+			
+			checkLoop();
+			checkEvents();
+		}
+		ofSleepMillis(1);
+	}
+}
+
+void ofxTimeline::checkEvents(){
+	for(int i = 0; i < pages.size(); i++){
+		pages[i]->update();
+	}
+}
+
+void ofxTimeline::checkLoop(){
+	if(currentTime < durationInSeconds*inoutRange.min){
+		//        cout << "BELOW MIN " << endl;
         currentTime = durationInSeconds*inoutRange.min;
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
-        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);       
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
     }
     
     if(currentTime >= durationInSeconds*inoutRange.max){
@@ -1056,11 +1090,9 @@ void ofxTimeline::update(ofEventArgs& updateArgs){
             stop();
         }
         else if(loopType == OF_LOOP_NORMAL) {
-//        	cout << "before loop at max. currentTime " << currentTime << " startTime " << playbackStartTime << " timer " << timer.getAppTimeSeconds() << " range " <<  durationInSeconds*inoutRange.span() << endl;
             currentTime = durationInSeconds*inoutRange.min + (currentTime - durationInSeconds*inoutRange.max);
             playbackStartFrame += getDurationInFrames()  * inoutRange.span();
             playbackStartTime  += getDurationInSeconds() * inoutRange.span();
-//        	cout << "after loop at max. currentTime " << currentTime << " startTime " << playbackStartTime << " timer " << timer.getAppTimeSeconds() << " range " <<  durationInSeconds*inoutRange.span() << endl;
             ofxTLPlaybackEventArgs args = createPlaybackEvent();
             ofNotifyEvent(events().playbackLooped, args);
         }
