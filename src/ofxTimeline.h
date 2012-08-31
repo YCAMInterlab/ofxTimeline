@@ -1,9 +1,9 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ *
+ * Copyright (c) 2011-2012 James George
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -28,12 +28,12 @@
  *
  * ----------------------
  *
- * ofxTimeline 
+ * ofxTimeline
  * Lightweight SDK for creating graphic timeline tools in openFrameworks
+ *
+ * Developed with support of YCAM InterLab
  */
 
-//TODO: Add global undo
-//TODO: Account for image sequences and movies with different durations than the timeline
 
 #pragma once
 

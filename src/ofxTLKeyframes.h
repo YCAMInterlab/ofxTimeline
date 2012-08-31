@@ -47,10 +47,6 @@ class ofxTLKeyframe {
     float value; //normalized
     long grabTimeOffset;
     float grabValueOffset;
-    
-//	//ui interaction vars -- only set when dragging
-//	ofVec2f grabOffset; 
-//    ofVec2f position;
 };
 
 class ofxTLKeyframes : public ofxTLTrack

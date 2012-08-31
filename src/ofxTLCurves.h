@@ -46,10 +46,8 @@ class ofxTLCurves : public ofxTLKeyframes {
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
     
-    void selectedKeySecondaryClick(ofMouseEventArgs& args);
-	
-	float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	
+    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	
+	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
 	
 	//easing dialog stuff
     void initializeEasings();

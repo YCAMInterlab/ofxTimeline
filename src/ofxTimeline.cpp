@@ -741,7 +741,6 @@ void ofxTimeline::updatePagePositions(){
 		if(currentPage != NULL){
 			currentPage->recalculateHeight();
 		}
-		
 	}
 }
 

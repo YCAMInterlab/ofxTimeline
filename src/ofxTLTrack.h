@@ -1,7 +1,7 @@
 /**
  * ofxTimeline
  *	
- * Copyright (c) 2011 James George
+ * Copyright (c) 2011-2012 James George
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
@@ -30,6 +30,8 @@
  *
  * ofxTimeline 
  * Lightweight SDK for creating graphic timeline tools in openFrameworks
+ *
+ * Developed with support of YCAM InterLab
  */
 
 #pragma once
