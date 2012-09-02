@@ -154,25 +154,26 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 	draggingInside = trackContainerRect.inside(args.x, args.y);
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
-        if(ofGetModifierShiftPressed()){
-            draggingSelectionRectangle = true;
-            selectionRectangleAnchor = ofVec2f(args.x,args.y);
-            selectionRectangle = ofRectangle(args.x,args.y,0,0);
-        }
 		headerHasFocus = false;
 		for(int i = 0; i < headers.size(); i++){
-			headers[i]->mousePressed(args);
             bool clickIsInHeader = headers[i]->getDrawRect().inside(args.x,args.y);
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
             bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
-            headerHasFocus |= (clickIsInFooter || clickIsInHeader);
-            tracks[headers[i]->name]->_mousePressed(args, millis);
-            if(clickIsInTrack || clickIsInHeader){
+            bool justMadeSelection = tracks[headers[i]->name]->_mousePressed(args, millis);
+            headerHasFocus |= (clickIsInFooter || clickIsInHeader) && !justMadeSelection;
+			if(headerHasFocus){
+				headers[i]->mousePressed(args);
+			}
+            if(clickIsInTrack || clickIsInHeader || justMadeSelection){
                 newFocus = tracks[headers[i]->name];
             }
 		}
         refreshSnapPoints();
-
+		if(!headerHasFocus && (timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
+            draggingSelectionRectangle = true;
+            selectionRectangleAnchor = ofVec2f(args.x,args.y);
+            selectionRectangle = ofRectangle(args.x,args.y,0,0);
+		}
 	}
     
     //TODO: explore multi-focus tracks for pasting into many tracks at once
@@ -234,8 +235,8 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
             selectionRectangle.height = (trackContainerRect.y+trackContainerRect.height - selectionRectangle.y);
         }
     }
-    else {
-//        refreshSnapPoints();
+//    else {
+
         if(snappingEnabled && snapPoints.size() > 0){
 			//hack to find snap distance in millseconds
 			set<long>::iterator it;
@@ -268,7 +269,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
                 tracks[headers[i]->name]->_mouseDragged(args, millis);
             }
         }
-    }        
+//    }
 }
 
 void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){

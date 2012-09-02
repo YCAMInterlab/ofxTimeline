@@ -113,7 +113,6 @@ string ofxTLTrack::getName(){
 }
 
 void ofxTLTrack::_draw(){
-    //**** DRAW BORDER. TODO: move to super class
 	if(focused){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
@@ -133,11 +132,12 @@ void ofxTLTrack::_draw(){
 	viewIsDirty = false;
 }
 
-void ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
     if(enabled){
 	    active = bounds.inside(args.x, args.y);
-    	mousePressed(args, millis);
+    	return mousePressed(args, millis);
     }
+	return false;
 }
 
 void ofxTLTrack::_mouseMoved(ofMouseEventArgs& args, long millis){

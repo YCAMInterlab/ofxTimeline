@@ -35,8 +35,9 @@ class ofxTLCurves : public ofxTLKeyframes {
     
 	//For selecting keyframe type only,
     //the superclass controls keyframe placement
-	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 	
     virtual string getTrackType();
     

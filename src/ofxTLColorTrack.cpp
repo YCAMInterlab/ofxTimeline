@@ -81,12 +81,12 @@ ofColor ofxTLColorTrack::getDefaultColor(){
 
 //For selecting keyframe type only,
 //the superclass controls keyframe placement
-void ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
-		//
+		return true;
 	}
 	else{
-		ofxTLTrack::mousePressed(args, millis);
+		return ofxTLTrack::mousePressed(args, millis);
 	}
 }
 

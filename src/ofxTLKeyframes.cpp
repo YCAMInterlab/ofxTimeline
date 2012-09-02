@@ -321,42 +321,41 @@ string ofxTLKeyframes::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 	return str;
 }
 
-void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
     
     keysAreDraggable = !ofGetModifierShiftPressed();
     keysDidDrag = false;
 
-	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
+	selectedKeyframe = keyframeAtScreenpoint(screenpoint);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
-    if(isActive() && !ofGetModifierSelection()){
-        bool didJustDeselectMulti = false;
-	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
-           	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
+    if(!ofGetModifierSelection() && (isActive() || selectedKeyframe != NULL) ){
+        bool didJustDeselect = false;
+	    if( selectedKeyframe == NULL || !isKeyframeSelected(selectedKeyframe)){
             //settings this to true causes the first click off of the timeline to deselct rather than create a new keyframe
-            didJustDeselectMulti = timeline->getTotalSelectedItems() > 1;
+            didJustDeselect = timeline->getTotalSelectedItems() > 1;
     	    timeline->unselectAll();
         }
         
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
-        if(selectedKeyframe == NULL && !didJustDeselectMulti){
-            timeline->unselectAll();
+        if(selectedKeyframe == NULL && !didJustDeselect){
+			//timeline->unselectAll();
 			createNewOnMouseup = true;
 			
-            //add a new one
-            selectedKeyframe = newKeyframe();
-            selectedKeyframe->time = millis;
-            selectedKeyframe->value = screenYToValue(screenpoint.y);
-            keyframes.push_back(selectedKeyframe);
-            //selectedKeyframe->grabOffset = ofVec2f(0,0);
-            updateKeyframeSort();
-            keysDidDrag = true; //triggers a save after mouseup
-            for(int i = 0; i < keyframes.size(); i++){
-                if(keyframes[i] == selectedKeyframe){
-                    selectedKeyframeIndex = i;
-                }
-            }
+//            //add a new one
+//            selectedKeyframe = newKeyframe();
+//            selectedKeyframe->time = millis;
+//            selectedKeyframe->value = screenYToValue(screenpoint.y);
+//            keyframes.push_back(selectedKeyframe);
+//            //selectedKeyframe->grabOffset = ofVec2f(0,0);
+//            updateKeyframeSort();
+//            keysDidDrag = true; //triggers a save after mouseup
+//            for(int i = 0; i < keyframes.size(); i++){
+//                if(keyframes[i] == selectedKeyframe){
+//                    selectedKeyframeIndex = i;
+//                }
+//            }
         }
     }
 
@@ -367,7 +366,7 @@ void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 			selectedKeyframes.push_back(selectedKeyframe);
         }
         //unselect it if it's selected and we clicked the key with shift pressed
-        else if(ofGetModifierShiftPressed()){
+        else if(ofGetModifierSelection()){
         	deselectKeyframe(selectedKeyframe);
         }
 	}
@@ -386,6 +385,7 @@ void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
             selectedKeySecondaryClick(args);
 		}
 	}
+	return selectedKeyframe != NULL;
 }
 
 void ofxTLKeyframes::regionSelected(ofLongRange timeRange, ofRange valueRange){
@@ -406,11 +406,11 @@ void ofxTLKeyframes::updateDragOffsets(ofVec2f screenpoint, long grabMillis){
 
 void ofxTLKeyframes::mouseMoved(ofMouseEventArgs& args, long millis){
 	ofxTLTrack::mouseMoved(args, millis);
-	int unused;
-	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y), unused );
+	hoverKeyframe = keyframeAtScreenpoint( ofVec2f(args.x, args.y));
 }
 
 void ofxTLKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
+
     if(keysAreDraggable && selectedKeyframes.size() != 0){
         ofVec2f screenpoint(args.x,args.y);
         for(int k = 0; k < selectedKeyframes.size(); k++){
@@ -426,6 +426,7 @@ void ofxTLKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
         keysDidDrag = true;
         updateKeyframeSort();
     }
+	createNewOnMouseup = false;
 }
 
 void ofxTLKeyframes::updateKeyframeSort(){
@@ -444,6 +445,19 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		lastSampleTime = 0;
         timeline->flagTrackModified(this);
     }
+	
+	if(createNewOnMouseup){
+		//add a new one
+		ofxTLKeyframe* newKey = newKeyframe();
+		newKey->time = millis;
+		newKey->value = screenYToValue(args.y);
+		keyframes.push_back(newKey);
+		selectedKeyframes.push_back(newKey);
+		updateKeyframeSort();
+
+		timeline->flagTrackModified(this);
+	}
+	createNewOnMouseup = false;
 }
 
 void ofxTLKeyframes::getSnappingPoints(set<long>& points){
@@ -570,16 +584,14 @@ void ofxTLKeyframes::deleteSelectedKeyframes(){
     timeline->flagTrackModified(this);
 }
 
-ofxTLKeyframe* ofxTLKeyframes::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
+ofxTLKeyframe* ofxTLKeyframes::keyframeAtScreenpoint(ofVec2f p){
 	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
 		ofVec2f keyonscreen = screenPositionForKeyframe(keyframes[i]);
 		if(keyonscreen.squareDistance( p ) < minDistanceSquared){
-			selectedIndex = i;
 			return keyframes[i];
 		}
 	}
-    selectedIndex = -1;
 	return NULL;
 }
 

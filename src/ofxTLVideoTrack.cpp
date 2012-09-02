@@ -357,9 +357,10 @@ void ofxTLVideoTrack::setOutFrame(int out){
 	outFrame = out;
 }
 
-void ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	ofxTLTrack::mousePressed(args, millis);
-	if(getDrawRect().inside(args.x, args.y)){
+	//if(getDrawRect().inside(args.x, args.y)){
+	if(isActive()){
 		timeline->unselectAll();
 		selectFrame( indexForScreenX(args.x) );
 
@@ -374,7 +375,7 @@ void ofxTLVideoTrack::mouseMoved(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, long millis){
-	if(bounds.inside(args.x, args.y)){
+	if(isActive()){
 		selectFrame( indexForScreenX(args.x) );
 		if(timeline->getMovePlayheadOnDrag()){
 			timeline->setPercentComplete(screenXtoNormalizedX(args.x));

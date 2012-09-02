@@ -85,12 +85,11 @@ void ofxTLFlags::draw(){
 }
 
 //main function to get values out of the timeline, operates on the given value range
-void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 	
     //if we aren't entering text and someone has the shift key held down don't let us go into modal
     if(!enteringText && ofGetModifierShiftPressed()){
-        ofxTLBangs::mousePressed(args, millis);
-        return;
+        return ofxTLBangs::mousePressed(args, millis);
     }
         
     ofxTLFlag* clickedTextField = NULL;    
@@ -116,7 +115,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
         enteringText = true;
         //make sure this 
         selectKeyframe(clickedTextField);
-        return;
+        return false;
     }    
     //if we didn't click on a text field and we are entering txt
     //take off the typing mode. Hitting enter will also do this
@@ -124,13 +123,13 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
         enteringText = false;
         timeline->dismissedModalContent();
         timeline->flagTrackModified(this); //TODO move this to mouse-released to cooperate with undo
-        return;
+        return false;
     }
     
     
     //if we get all the way here we didn't click on a text field and we aren't
     //currently entering text so proceed as normal
-    ofxTLBangs::mousePressed(args, millis);
+    return ofxTLBangs::mousePressed(args, millis);
 }
 
 void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, long millis){

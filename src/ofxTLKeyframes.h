@@ -57,7 +57,7 @@ class ofxTLKeyframes : public ofxTLTrack
 
 	virtual void draw();
 	
-	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
@@ -120,7 +120,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	int lastKeyframeIndex;
 	unsigned long lastSampleTime;
 	
-    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
 	bool isKeyframeSelected(ofxTLKeyframe* k);
     void selectKeyframe(ofxTLKeyframe* k);

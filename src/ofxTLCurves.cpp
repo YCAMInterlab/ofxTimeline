@@ -104,45 +104,53 @@ void ofxTLCurves::drawModalContent(){
     }
 }
 
-void ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
-
-    //TODO: move this to mouse-released to cooperate with UNDO
-    if(drawingEasingWindow){
-        //see if we clicked on an
-        drawingEasingWindow = false;
-        timeline->dismissedModalContent();
-        ofVec2f screenpoint(args.x,args.y);
-        for(int i = 0; i < easingFunctions.size(); i++){
-            if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
-                for(int k = 0; k < selectedKeyframes.size(); k++){                    
-                    ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
-                }
-                timeline->flagTrackModified(this);
-				shouldRecomputePreviews = true;
-                return;
-            }
-        }
-        
-        for(int i = 0; i < easingTypes.size(); i++){
-            if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
-                for(int k = 0; k < selectedKeyframes.size(); k++){
-                	((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
-                }
-                timeline->flagTrackModified(this);
-				shouldRecomputePreviews = true;
-                return;
-            }
-        }
-    }
-    else{
-        ofxTLKeyframes::mousePressed(args, millis);
-    }
+bool ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
+	if(drawingEasingWindow){
+		return true;
+	}
+	else {
+		return ofxTLKeyframes::mousePressed(args,millis);
+	}
 }
 
 void ofxTLCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!drawingEasingWindow){
         ofxTLKeyframes::mouseDragged(args, millis);
     }
+}
+
+void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
+	//TODO: move this to mouse-released to cooperate with UNDO
+	if(drawingEasingWindow){
+		//see if we clicked on an
+		drawingEasingWindow = false;
+		timeline->dismissedModalContent();
+		ofVec2f screenpoint(args.x,args.y);
+		for(int i = 0; i < easingFunctions.size(); i++){
+			if(easingFunctions[i]->bounds.inside(screenpoint-easingWindowPosition)){
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[i];
+				}
+				timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
+				return;
+			}
+		}
+		
+		for(int i = 0; i < easingTypes.size(); i++){
+			if(easingTypes[i]->bounds.inside(screenpoint-easingWindowPosition)){
+				for(int k = 0; k < selectedKeyframes.size(); k++){
+					((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[i];
+				}
+				timeline->flagTrackModified(this);
+				shouldRecomputePreviews = true;
+				return;
+			}
+		}
+	}
+	else{
+		ofxTLKeyframes::mouseReleased(args, millis);
+	}
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){

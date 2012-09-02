@@ -25,7 +25,7 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual void loadSoundfile(string filepath);
 	virtual float getDuration(); //in seconds
 	
-	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);

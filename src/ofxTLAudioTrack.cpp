@@ -139,7 +139,8 @@ void ofxTLAudioTrack::recomputePreview(){
 	shouldRecomputePreview = false;
 }
 
-void ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
+bool ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
+	return false;
 }
 
 void ofxTLAudioTrack::mouseMoved(ofMouseEventArgs& args, long millis){

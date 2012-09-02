@@ -110,7 +110,7 @@ bool ofxTLSwitches::isOnAtPercent(float percent){
     return isOnAtMillis(millis);
 }
 
-void ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){    
+bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
     
     //check to see if we are close to any edges, if so select them
     bool startSelected = false;
@@ -182,6 +182,7 @@ void ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
             deselectKeyframe(switchKey);
         }
     }
+	return false;
 }
 
 void ofxTLSwitches::unselectAll(){

@@ -85,13 +85,15 @@ class ofxTLTrack
 	virtual void setXMLFileName(string filename);
 	
     //parent wrappers that call virtual versions implemented by subclasses
-    void _mousePressed(ofMouseEventArgs& args, long millis);
+    bool _mousePressed(ofMouseEventArgs& args, long millis);
     void _mouseMoved(ofMouseEventArgs& args, long millis);
     void _mouseDragged(ofMouseEventArgs& args, long millis);
     void _mouseReleased(ofMouseEventArgs& args, long millis);
     
 	//standard events to be implement in subclasses
-    virtual void mousePressed(ofMouseEventArgs& args, long millis){}
+	//mousePressed returns true if the click activated the track in a way that should maintain attention
+	//for instance, selecting a keyframe
+    virtual bool mousePressed(ofMouseEventArgs& args, long millis){return false;}
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis){}
     virtual void mouseDragged(ofMouseEventArgs& args, long millis){}; 
 	virtual void mouseReleased(ofMouseEventArgs& args, long mllis){};

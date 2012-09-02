@@ -53,7 +53,7 @@ class ofxTLFlags : public ofxTLBangs {
 	
 	virtual void draw();
 	
-	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 
 	virtual void keyPressed(ofKeyEventArgs& args);
