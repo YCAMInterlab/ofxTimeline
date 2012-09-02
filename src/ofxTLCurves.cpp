@@ -20,7 +20,7 @@ float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* e
 	ofxTLTweenKeyframe* tweenKeyEnd = (ofxTLTweenKeyframe*)end;
 	return ofxTween::map(sampleTime, tweenKeyStart->time, tweenKeyEnd->time,
 						 			 tweenKeyStart->value, tweenKeyEnd->value,
-						 false, *tweenKeyStart->easeFunc->easing, tweenKeyEnd->easeType->type);
+						 false, *tweenKeyStart->easeFunc->easing, tweenKeyStart->easeType->type);
 }
 
 string ofxTLCurves::getTrackType(){

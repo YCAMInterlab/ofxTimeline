@@ -33,7 +33,8 @@
  */
 
 #include "ofxTimeline.h"
-#include "ofxTLUtils.h"
+//#include "ofxTLUtils.h"
+#include "ofxHotKeys.h"
 
 //increments to keep auto generated names unique
 static int timelineNumber = 0;
@@ -923,36 +924,36 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     
 //    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
-	if(ofGetModifierKeyControl() && args.key == 3){ //copy
+	if(ofGetModifierControlPressed() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierKeyControl() && args.key == 24){ //cut
+	else if(ofGetModifierControlPressed() && args.key == 24){ //cut
 		string copyattempt = currentPage->cutRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierKeyControl() && args.key == 22){ //paste
+	else if(ofGetModifierControlPressed() && args.key == 22){ //paste
 		if (pasteboard != "") {
 			currentPage->pasteSent(pasteboard);
 		}				
 	}
-	else if(ofGetModifierKeyControl() && args.key == 1){ //select all
+	else if(ofGetModifierControlPressed() && args.key == 1){ //select all
 		currentPage->selectAll();						
 	}
-    else if(ofGetModifierKeyControl() && ofGetModifierKeyShift() && args.key == 26 && undoEnabled){
+    else if(ofGetModifierControlPressed() && ofGetModifierShiftPressed() && args.key == 26 && undoEnabled){
 //        cout << "redoing" << endl;
         redo();
     }
-    else if(ofGetModifierKeyControl() && args.key == 26 && undoEnabled){
+    else if(ofGetModifierControlPressed() && args.key == 26 && undoEnabled){
         undo();
     }
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
-			ofVec2f nudgeAmount = ofGetModifierKeyShift() ? getBigNudgePercent() : getNudgePercent();
+			ofVec2f nudgeAmount = ofGetModifierShiftPressed() ? getBigNudgePercent() : getNudgePercent();
 			if(args.key == OF_KEY_UP){
 				nudgeAmount.x = 0;
 			}

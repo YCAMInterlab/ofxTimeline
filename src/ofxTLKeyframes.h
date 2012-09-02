@@ -154,4 +154,5 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	bool keysDidDrag;
 	bool keysDidNudge;
+	bool createNewOnMouseup;
 };

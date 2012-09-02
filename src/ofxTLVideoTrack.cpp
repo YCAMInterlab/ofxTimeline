@@ -47,6 +47,7 @@ void ofxTLVideoTrack::disable(){
 }
 
 bool ofxTLVideoTrack::togglePlay(){
+	
     if(!isLoaded()) return false;
     
     if(isPlaying()){
@@ -313,9 +314,9 @@ void ofxTLVideoTrack::draw(){
                 ofSetColor(0);
                 ofRect(videoThumbs[i].displayRect);
             }
-            
+					
             ofNoFill();
-            ofSetColor(255, 150, 0);
+            ofSetColor(timeline->getColors().textColor);
             ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
             ofRect(videoThumbs[i].displayRect);
 		}		
@@ -323,10 +324,15 @@ void ofxTLVideoTrack::draw(){
 	
     //TODO: draw prettier
 	int selectedFrameX = screenXForIndex(selectedFrame);
-	ofSetColor(0, 125, 255);
+	ofPushStyle();
+	ofFill();
+	ofSetColor(timeline->getColors().backgroundColor, 250);
+	ofRect(selectedFrameX, bounds.y, 150, bounds.height);
+	ofPopStyle();
+	ofSetColor(timeline->getColors().textColor);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	ofDrawBitmapString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+30);
-	ofDrawBitmapString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+48);
+	ofDrawBitmapString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
+	ofDrawBitmapString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);

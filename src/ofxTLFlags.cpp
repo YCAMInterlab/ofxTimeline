@@ -35,7 +35,8 @@
 
 #include "ofxTLFlags.h"
 #include "ofxTimeline.h"
-#include "ofxTLUtils.h"
+//#include "ofxTLUtils.h"
+#include "ofxHotKeys.h"
 
 ofxTLFlags::ofxTLFlags()
 {
@@ -87,7 +88,7 @@ void ofxTLFlags::draw(){
 void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 	
     //if we aren't entering text and someone has the shift key held down don't let us go into modal
-    if(!enteringText && ofGetModifierKeyShift()){
+    if(!enteringText && ofGetModifierShiftPressed()){
         ofxTLBangs::mousePressed(args, millis);
         return;
     }
@@ -108,7 +109,7 @@ void ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
     //mulitple fields at once
     if(clickedTextField != NULL){
         timeline->presentedModalContent(this);
-        if(!ofGetModifierKeyShift() /*&& !isKeyframeSelected(clickedTextField)*/){
+        if(!ofGetModifierShiftPressed() /*&& !isKeyframeSelected(clickedTextField)*/){
             timeline->unselectAll();
         }
         clickedTextField->textField.enable();

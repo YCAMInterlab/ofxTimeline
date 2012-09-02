@@ -1,7 +1,8 @@
 
 #include "ofxTLSwitches.h"
 #include "ofxTimeline.h"
-#include "ofxTLUtils.h"
+//#include "ofxTLUtils.h"
+#include "ofxHotKeys.h"
 
 ofxTLSwitches::ofxTLSwitches(){
     edgeSelected = false;
@@ -121,11 +122,11 @@ void ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
             ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
             //unselect everything else if we just clicked this edge without shift held down
             startSelected = abs(switchKey->display.x - args.x) < 10.0;
-            if (startSelected && !switchKey->startSelected && !ofGetModifierKeyShift()) {
+            if (startSelected && !switchKey->startSelected && !ofGetModifierShiftPressed()) {
                 timeline->unselectAll();
             }
             //Deselect the key if we clicked it already selected with shift held down
-            if(ofGetModifierKeyShift() && ((startSelected && switchKey->startSelected) || isKeyframeSelected(switchKey))){
+            if(ofGetModifierShiftPressed() && ((startSelected && switchKey->startSelected) || isKeyframeSelected(switchKey))){
                 switchKey->startSelected = false;    
             }
             else {
@@ -134,11 +135,11 @@ void ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
             float endEdge = switchKey->display.x+switchKey->display.width;
             endSelected = abs(endEdge - args.x) < 10.0;
             //don't let them both be selected in one click!
-            if(!startSelected && endSelected && !switchKey->endSelected && !ofGetModifierKeyShift()){
+            if(!startSelected && endSelected && !switchKey->endSelected && !ofGetModifierShiftPressed()){
                 timeline->unselectAll();
             }
             //Deselect the key if we clicked it already selected with shift held down
-            if(ofGetModifierKeyShift() && ((endSelected && switchKey->endSelected) || isKeyframeSelected(switchKey))){
+            if(ofGetModifierShiftPressed() && ((endSelected && switchKey->endSelected) || isKeyframeSelected(switchKey))){
                 switchKey->endSelected = false;    
             }
             else{

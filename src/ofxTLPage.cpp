@@ -37,8 +37,9 @@
 
 #include "ofxTLPage.h"
 #include "ofxTLTicker.h"
-#include "ofxTLUtils.h"
 #include "ofxTimeline.h"
+//#include "ofxTLUtils.h"
+#include "ofxHotKeys.h"
 
 ofxTLPage::ofxTLPage()
 :	trackContainerRect(ofRectangle(0,0,0,0)),
@@ -153,7 +154,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 	draggingInside = trackContainerRect.inside(args.x, args.y);
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
-        if(ofGetModifierKeyShift()){
+        if(ofGetModifierShiftPressed()){
             draggingSelectionRectangle = true;
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
             selectionRectangle = ofRectangle(args.x,args.y,0,0);

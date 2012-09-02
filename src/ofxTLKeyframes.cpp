@@ -37,7 +37,8 @@
 
 #include "ofxTLKeyframes.h"
 #include "ofxTimeline.h"
-#include "ofxTLUtils.h"
+//#include "ofxTLUtils.h"
+#include "ofxHotKeys.h"
 
 bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
 	return a->time < b->time;
@@ -50,7 +51,8 @@ ofxTLKeyframes::ofxTLKeyframes()
 	keysDidNudge(false),
 	lastKeyframeIndex(1),
 	lastSampleTime(0),
-	shouldRecomputePreviews(false)
+	shouldRecomputePreviews(false),
+	createNewOnMouseup(false)
 {
 	xmlFileName = "_keyframes.xml";	
 }
@@ -322,13 +324,13 @@ string ofxTLKeyframes::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
     
-    keysAreDraggable = !ofGetModifierKeyShift();
+    keysAreDraggable = !ofGetModifierShiftPressed();
     keysDidDrag = false;
 
 	selectedKeyframe = keyframeAtScreenpoint(screenpoint, selectedKeyframeIndex);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
-    if(isActive() && !ofGetModifierKeyShift()){
+    if(isActive() && !ofGetModifierSelection()){
         bool didJustDeselectMulti = false;
 	    if( (selectedKeyframe == NULL && selectedKeyframes.size() != 0) || 
            	(selectedKeyframe != NULL && !isKeyframeSelected(selectedKeyframe)) ){
@@ -340,9 +342,9 @@ void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
         if(selectedKeyframe == NULL && !didJustDeselectMulti){
             timeline->unselectAll();
-
+			createNewOnMouseup = true;
+			
             //add a new one
-            //TODO creating keyframes here breaks undo...
             selectedKeyframe = newKeyframe();
             selectedKeyframe->time = millis;
             selectedKeyframe->value = screenYToValue(screenpoint.y);
@@ -365,7 +367,7 @@ void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 			selectedKeyframes.push_back(selectedKeyframe);
         }
         //unselect it if it's selected and we clicked the key with shift pressed
-        else if(ofGetModifierKeyShift()){
+        else if(ofGetModifierShiftPressed()){
         	deselectKeyframe(selectedKeyframe);
         }
 	}
@@ -373,14 +375,14 @@ void ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
         updateDragOffsets(screenpoint, millis);				
-		if(selectedKeyframe != NULL && args.button == 0 && !ofGetModifierKeyControl()){
+		if(selectedKeyframe != NULL && args.button == 0 && !ofGetModifierSelection()){
             timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 			//move the playhead
 			if(timeline->getMovePlayheadOnDrag()){
 				timeline->setCurrentTimeMillis(selectedKeyframe->time);
 			}
 		}
-		else if(args.button == 2 || ofGetModifierKeyControl()){
+		else if(args.button == 2 || ofGetModifierControlPressed()){
             selectedKeySecondaryClick(args);
 		}
 	}
