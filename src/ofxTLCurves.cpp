@@ -27,29 +27,12 @@ string ofxTLCurves::getTrackType(){
 	return "Curves";    
 }
 
-//void ofxTLCurves::draw(){
-//	
-//
-//}
-
 ofxTLKeyframe* ofxTLCurves::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
 	k->easeFunc = easingFunctions[0];
 	k->easeType = easingTypes[0];
 	return k;
 }
-
-//void ofxTLCurves::playbackStarted(ofxTLPlaybackEventArgs& args){
-//	
-//}
-//
-//void ofxTLCurves::playbackLooped(ofxTLPlaybackEventArgs& args){
-//	
-//}
-//
-//void ofxTLCurves::playbackEnded(ofxTLPlaybackEventArgs& args){
-//	
-//}
 
 void ofxTLCurves::drawModalContent(){
 	
@@ -121,7 +104,7 @@ void ofxTLCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 
 void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 	//TODO: move this to mouse-released to cooperate with UNDO
-	if(drawingEasingWindow){
+	if(drawingEasingWindow && args.button == 0){
 		//see if we clicked on an
 		drawingEasingWindow = false;
 		timeline->dismissedModalContent();
@@ -155,7 +138,7 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
-                                   MIN(args.y, (timeline->getDrawRect().y + timeline->getDrawRect().height) - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+                                   MIN(args.y, ofGetHeight() - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
     
     drawingEasingWindow = true;
     timeline->presentedModalContent(this);

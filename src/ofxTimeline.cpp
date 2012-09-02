@@ -244,7 +244,6 @@ void ofxTimeline::enableUndo(bool enabled){
 }
 
 void ofxTimeline::undo(){
-
     if(undoPointer > 0){
     	undoPointer--;
         restoreToState(undoStack[undoPointer]);
@@ -258,9 +257,10 @@ void ofxTimeline::redo(){
     }
 }
 
-
 void ofxTimeline::restoreToState(vector<UndoItem>& state){
     for(int i = 0; i < state.size(); i++){
+		cout << "restoring state for track " << state[i].track->getDisplayName() << endl;
+		cout << state[i].stateBuffer << endl;
         state[i].track->loadFromXMLRepresentation(state[i].stateBuffer);
     }
 }
@@ -279,10 +279,15 @@ void ofxTimeline::collectStateBuffers(){
     for(int i = 0; i < tracks.size(); i++){
         ofxTLTrack* track = tracks[i];
         if(track->getSelectedItemCount() > 0 || track->isActive() ){
+
             UndoItem ui;
             ui.track = track;
             ui.stateBuffer = track->getXMLRepresentation();
+//			cout << "state buffer is: " << track->getXMLRepresentation() << endl;
             stateBuffers.push_back(ui);
+			cout << "collecting state for " << track->getDisplayName() << endl;
+			cout << ui.stateBuffer << endl;
+	
         }
     }
 }
@@ -354,7 +359,7 @@ bool ofxTimeline::getUserChangedValue(){
 }
 
 void ofxTimeline::flagTrackModified(ofxTLTrack* track){
-
+	cout << "modified track " << track->getDisplayName() << endl;
 	flagUserChangedValue();
     
     if(undoEnabled){
@@ -838,32 +843,29 @@ void ofxTimeline::disableEvents() {
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
-
-//    cout << "mouse button? " << args.button << endl;
-//    cout << "control pressed? " << ofGetModifierKeyControl() << endl;
     
     if(modalTrack != NULL){
     	modalTrack->mousePressed(args,millis);
-        return;
     }
-    
-    bool focus = getDrawRect().inside(args.x, args.y);
-	if(focus && !timelineHasFocus){
-    	currentPage->timelineGainedFocus();    
-    }
-    else if(!focus && timelineHasFocus){
-        currentPage->timelineLostFocus();
-    }
-    focus = timelineHasFocus;
-    inoutTrack->mousePressed(args);
-	ticker->mousePressed(args);
-	currentPage->mousePressed(args,millis);
-	zoomer->mousePressed(args);
-
-    //collect state buffers after items are selected
+    else{
+		bool focus = getDrawRect().inside(args.x, args.y);
+		if(focus && !timelineHasFocus){
+			currentPage->timelineGainedFocus();    
+		}
+		else if(!focus && timelineHasFocus){
+			currentPage->timelineLostFocus();
+		}
+		focus = timelineHasFocus;
+		inoutTrack->mousePressed(args);
+		ticker->mousePressed(args);
+		currentPage->mousePressed(args,millis);
+		zoomer->mousePressed(args);
+		currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
+	}
+	
+    //collect state buffers after items are selected and focus is set
     collectStateBuffers();
 
-	currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
@@ -901,22 +903,33 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 
     if(modalTrack != NULL){
     	modalTrack->mouseReleased(args, millis);
-        return;
-    }
-    
-    inoutTrack->mouseReleased(args);
-	ticker->mouseReleased(args);
-	tabs->mouseReleased(args);
-	currentPage->mouseReleased(args, millis);
-	zoomer->mouseReleased(args);
+	}
+    else{
+		inoutTrack->mouseReleased(args);
+		ticker->mouseReleased(args);
+		tabs->mouseReleased(args);
+		currentPage->mouseReleased(args, millis);
+		zoomer->mouseReleased(args);
+	}
     
     pushUndoStack();
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	
-    //collect the buffers before the command is sent becasue it's what modifies
+	if(ofGetModifierShortcutKeyPressed() && ofGetModifierShiftPressed() && args.key == 'z' && undoEnabled){
+        redo();
+		return;
+    }
+    else if(ofGetModifierShortcutKeyPressed() && args.key == 'z' && undoEnabled){
+		cout << "UNDOING" << endl;
+        undo();
+		return;
+    }
+
+	//collect the buffers before the command is sent becasue it's what modifies
     collectStateBuffers();
+
     
     if(modalTrack != NULL){
         modalTrack->keyPressed(args);
@@ -925,33 +938,26 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     
 //    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
-	if(ofGetModifierControlPressed() && args.key == 3){ //copy
+	if(ofGetModifierShortcutKeyPressed() && args.key == 3){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierControlPressed() && args.key == 24){ //cut
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 24){ //cut
 		string copyattempt = currentPage->cutRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierControlPressed() && args.key == 22){ //paste
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 22){ //paste
 		if (pasteboard != "") {
 			currentPage->pasteSent(pasteboard);
 		}				
 	}
-	else if(ofGetModifierControlPressed() && args.key == 1){ //select all
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 1){ //select all
 		currentPage->selectAll();						
 	}
-    else if(ofGetModifierControlPressed() && ofGetModifierShiftPressed() && args.key == 26 && undoEnabled){
-//        cout << "redoing" << endl;
-        redo();
-    }
-    else if(ofGetModifierControlPressed() && args.key == 26 && undoEnabled){
-        undo();
-    }
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
 			ofVec2f nudgeAmount = ofGetModifierShiftPressed() ? getBigNudgePercent() : getNudgePercent();

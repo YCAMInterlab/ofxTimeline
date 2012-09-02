@@ -44,6 +44,11 @@ bool ofGetModifierPressed(ofxModifierKey key);
 //COMMAND or SHIFT for OSX, just CTRL on windows
 bool ofGetModifierSelection();
 
+
+//COMMAND on OS X, CTRL on Windows
+//----------------------------------------
+bool ofGetModifierShortcutKeyPressed();
+
 //----------------------------------------
 bool ofGetModifierAltPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_ALT);

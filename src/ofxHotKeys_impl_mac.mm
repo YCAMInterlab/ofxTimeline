@@ -9,6 +9,10 @@ bool ofGetModifierSelection(){
 	return ofGetModifierShiftPressed() || ofGetModifierSpecialPressed();
 }
 
+bool ofGetModifierShortcutKeyPressed(){
+	return ofGetModifierSpecialPressed();
+}
+
 bool ofGetModifierPressed(ofxModifierKey mod) {
 	unsigned int t = 0;
 
