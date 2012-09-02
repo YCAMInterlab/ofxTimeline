@@ -341,7 +341,7 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
         if(selectedKeyframe == NULL && !didJustDeselect){
 			//timeline->unselectAll();
-			createNewOnMouseup = true;
+			createNewOnMouseup = args.button == 0 && !ofGetModifierControlPressed();
 			
 //            //add a new one
 //            selectedKeyframe = newKeyframe();

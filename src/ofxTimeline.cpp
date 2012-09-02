@@ -244,6 +244,7 @@ void ofxTimeline::enableUndo(bool enabled){
 }
 
 void ofxTimeline::undo(){
+
     if(undoPointer > 0){
     	undoPointer--;
         restoreToState(undoStack[undoPointer]);
@@ -277,7 +278,7 @@ void ofxTimeline::collectStateBuffers(){
     modifiedTracks.clear();
     for(int i = 0; i < tracks.size(); i++){
         ofxTLTrack* track = tracks[i];
-        if(track->getSelectedItemCount() > 0){
+        if(track->getSelectedItemCount() > 0 || track->isActive() ){
             UndoItem ui;
             ui.track = track;
             ui.stateBuffer = track->getXMLRepresentation();
@@ -954,22 +955,42 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
 			ofVec2f nudgeAmount = ofGetModifierShiftPressed() ? getBigNudgePercent() : getNudgePercent();
-			if(args.key == OF_KEY_UP){
-				nudgeAmount.x = 0;
-			}
-			if(args.key == OF_KEY_DOWN){
-				nudgeAmount.x = 0;
-				nudgeAmount.y = -nudgeAmount.y;
-			}
-			if(args.key == OF_KEY_RIGHT){
-				nudgeAmount.y = 0;
-			}
-			if(args.key == OF_KEY_LEFT){
-				nudgeAmount.x = -nudgeAmount.x;
-				nudgeAmount.y = 0;
-			}
-			currentPage->nudgeBy(nudgeAmount);
 
+			if(getTotalSelectedItems() == 0){
+				if(args.key == OF_KEY_LEFT){
+					if(getIsFrameBased()){
+						currentTime -= timecode.secondsForFrame(1);
+					}
+					else{
+						currentTime -= nudgeAmount.x*getDurationInSeconds();
+					}
+				}
+				if(args.key == OF_KEY_RIGHT){
+					if(getIsFrameBased()){
+						currentTime += timecode.secondsForFrame(1);
+					}
+					else{
+						currentTime += nudgeAmount.x*getDurationInSeconds();
+					}
+				}
+			}
+			else{
+				if(args.key == OF_KEY_UP){
+					nudgeAmount.x = 0;
+				}
+				if(args.key == OF_KEY_DOWN){
+					nudgeAmount.x = 0;
+					nudgeAmount.y = -nudgeAmount.y;
+				}
+				if(args.key == OF_KEY_RIGHT){
+					nudgeAmount.y = 0;
+				}
+				if(args.key == OF_KEY_LEFT){
+					nudgeAmount.x = -nudgeAmount.x;
+					nudgeAmount.y = 0;
+				}
+				currentPage->nudgeBy(nudgeAmount);
+			}
 		}
 		
 		ticker->keyPressed(args);
@@ -984,7 +1005,6 @@ void ofxTimeline::keyReleased(ofKeyEventArgs& args){
 
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
-    
     ofNotifyEvent(events().viewWasResized, args, this);
 }
 
