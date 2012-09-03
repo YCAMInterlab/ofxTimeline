@@ -297,6 +297,7 @@ class ofxTimeline : ofThread {
 	virtual ofColor getColorAtSecond(string name, float second);
 	virtual ofColor getColorAtMillis(string name, unsigned long millis);
 	
+	string getDefaultColorPalettePath();
     //TODO: remove image sequence from the core? ... or fix it up.
 	//*IMAGE SEQUENCE DOES NOT WORK*
 	virtual ofxTLImageSequence* addImageSequence(string name);

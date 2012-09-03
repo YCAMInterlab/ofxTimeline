@@ -221,7 +221,7 @@ float ofxTLAudioTrack::getSpeed() {
 }
 
 string ofxTLAudioTrack::getTrackType(){
-    return "Track";    
+    return "Sound";    
 }
 
    

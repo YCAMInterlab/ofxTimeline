@@ -1411,6 +1411,9 @@ ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long millis){
 	return colors->getColorAtMillis(millis);
 }
 
+string ofxTimeline::getDefaultColorPalettePath(){
+	return defaultPalettePath;
+}
 
 //*** IMAGE SEQUENCE DOESN'T WORK **///
 ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName){
