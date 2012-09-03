@@ -119,7 +119,7 @@ bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
 			deleteKeyframe(placingSwitch);
 		}
 		placingSwitch = NULL;
-		return;
+		return false;
 	}
 	
 	keysAreDraggable = !ofGetModifierSelection();
