@@ -71,18 +71,15 @@ void ofxTLBangs::regionSelected(ofLongRange timeRange, ofRange valueRange){
 	}
 }
 
-ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p, int& selectedIndex){
+ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p){
     if(bounds.inside(p.x,p.y)){
         for(int i = 0; i < keyframes.size(); i++){
-//            float offset = p.x - normalizedXtoScreenX(keyframes[i]->position.x, zoomBounds);
             float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);            
             if (abs(offset) < 5) {
-                selectedIndex = i;
                 return keyframes[i];
             }
         }
     }
-    selectedIndex = -1;
 	return NULL;    
 }
 

@@ -74,10 +74,14 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
     virtual void updateEdgeDragOffsets(long clickMillis);
+	virtual int getSelectedItemCount();
+	virtual void nudgeBy(ofVec2f nudgePercent);
 
-
+	//pushes any edits from keyframes superclass into the switches system
+	virtual void updateTimeRanges();
+	
     bool startHover;
     bool endHover;
     

@@ -26,7 +26,7 @@ class ofxTLBangs : public ofxTLKeyframes {
     
  protected:
 
-    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
     bool isPlayingBack;
     void update(ofEventArgs& args);
 	virtual void update();

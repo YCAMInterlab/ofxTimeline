@@ -135,20 +135,7 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
         }
         
         timeline->setPercentComplete(player->getPosition());
-        selectedFrame = player->getCurrentFrame();
-        
-        /*
-        //cout << " is playing player frame " << player->getCurrentFrame() << " current frame " << getCurrentFrame() << endl;
-		if(timeline->getIsFrameBased()){
-            
-		}
-		else{
-			if(timeline->getOutTime() < player->getPosition()*player->getDuration() || timeline->getInTime() > player->getPosition()*player->getDuration() ){
-				player->setFrame(timeline->getInOutRange().min * player->getTotalNumFrames());
-			}
-			timeline->setCurrentTime( player->getPosition() * player->getDuration());
-		}
-        */
+	
 
         player->update();
 	}
@@ -160,6 +147,7 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
             stop();
         }
     }
+	selectedFrame = player->getCurrentFrame();
 }
 
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){

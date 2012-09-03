@@ -53,7 +53,7 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	ofMesh colorMesh;
 	void updateColorMesh();
 	
-    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p, int& selectedIndex);
+    virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
 	bool drawingColorWindow;
 	
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);

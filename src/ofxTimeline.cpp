@@ -259,8 +259,8 @@ void ofxTimeline::redo(){
 
 void ofxTimeline::restoreToState(vector<UndoItem>& state){
     for(int i = 0; i < state.size(); i++){
-		cout << "restoring state for track " << state[i].track->getDisplayName() << endl;
-		cout << state[i].stateBuffer << endl;
+//		cout << "restoring state for track " << state[i].track->getDisplayName() << endl;
+//		cout << state[i].stateBuffer << endl;
         state[i].track->loadFromXMLRepresentation(state[i].stateBuffer);
     }
 }
@@ -283,10 +283,9 @@ void ofxTimeline::collectStateBuffers(){
             UndoItem ui;
             ui.track = track;
             ui.stateBuffer = track->getXMLRepresentation();
-//			cout << "state buffer is: " << track->getXMLRepresentation() << endl;
             stateBuffers.push_back(ui);
-			cout << "collecting state for " << track->getDisplayName() << endl;
-			cout << ui.stateBuffer << endl;
+//			cout << "collecting state for " << track->getDisplayName() << endl;
+//			cout << ui.stateBuffer << endl;
 	
         }
     }
@@ -359,7 +358,7 @@ bool ofxTimeline::getUserChangedValue(){
 }
 
 void ofxTimeline::flagTrackModified(ofxTLTrack* track){
-	cout << "modified track " << track->getDisplayName() << endl;
+//	cout << "modified track " << track->getDisplayName() << endl;
 	flagUserChangedValue();
     
     if(undoEnabled){
@@ -910,7 +909,7 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 		tabs->mouseReleased(args);
 		currentPage->mouseReleased(args, millis);
 		zoomer->mouseReleased(args);
-	}
+	}	
     
     pushUndoStack();
 }
@@ -922,7 +921,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		return;
     }
     else if(ofGetModifierShortcutKeyPressed() && args.key == 'z' && undoEnabled){
-		cout << "UNDOING" << endl;
         undo();
 		return;
     }

@@ -126,8 +126,7 @@ class ofxTLKeyframes : public ofxTLTrack
     void selectKeyframe(ofxTLKeyframe* k);
     void deselectKeyframe(ofxTLKeyframe* k);
     
-	void nudgeSelectedKeyframes(ofVec2f nudge);
-	void deleteSelectedKeyframes();
+	virtual void deleteSelectedKeyframes();
 	
 	vector<ofxTLKeyframe*> selectedKeyframes;
     ofxTLKeyframe* selectedKeyframe;
