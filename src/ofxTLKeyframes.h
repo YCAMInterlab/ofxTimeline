@@ -127,7 +127,8 @@ class ofxTLKeyframes : public ofxTLTrack
     void deselectKeyframe(ofxTLKeyframe* k);
     
 	virtual void deleteSelectedKeyframes();
-	
+	virtual void deleteKeyframe(ofxTLKeyframe* keyframe);
+
 	vector<ofxTLKeyframe*> selectedKeyframes;
     ofxTLKeyframe* selectedKeyframe;
 	ofxTLKeyframe* hoverKeyframe;

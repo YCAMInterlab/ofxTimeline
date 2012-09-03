@@ -7,7 +7,7 @@
 // not tested yet
 
 bool ofGetModifierSelection(){
-	return ofGetModifierControlPressed();
+	return ofGetModifierShiftPressed();
 }
 
 bool ofGetModifierPressed(ofxModifierKey mod)

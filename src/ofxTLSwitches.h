@@ -84,7 +84,6 @@ class ofxTLSwitches : public ofxTLKeyframes {
 	
     bool startHover;
     bool endHover;
+    ofxTLSwitch* placingSwitch;
     
-    
-    bool edgeSelected;
 };

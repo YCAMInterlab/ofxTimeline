@@ -1,11 +1,10 @@
 
 #include "ofxTLSwitches.h"
 #include "ofxTimeline.h"
-//#include "ofxTLUtils.h"
 #include "ofxHotKeys.h"
 
 ofxTLSwitches::ofxTLSwitches(){
-    edgeSelected = false;
+	placingSwitch = NULL;
 }
 
 ofxTLSwitches::~ofxTLSwitches(){
@@ -82,7 +81,6 @@ void ofxTLSwitches::draw(){
                 }else {
 	                ofSetColor(timeline->getColors().keyColor);    
                 }
-                
             }
         }
 
@@ -112,6 +110,20 @@ bool ofxTLSwitches::isOnAtPercent(float percent){
 
 bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
     
+	if(placingSwitch != NULL){
+		if(isActive() && args.button == 0){
+			placingSwitch->timeRange.max = millis;
+			updateTimeRanges();
+		}
+		else {
+			deleteKeyframe(placingSwitch);
+		}
+		placingSwitch = NULL;
+		return;
+	}
+	
+	keysAreDraggable = !ofGetModifierSelection();
+	
     //check to see if we are close to any edges, if so select them
     bool startSelected = false;
     bool endSelected = false;
@@ -180,8 +192,13 @@ bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
         }
         //make sure that if just one of the edges is clicked that the keyframe is *not* selected
 		//also make sure it wasn't *just* selected in the last click by checking that it's not 'the' selected key
-        else if( (switchKey->startSelected || switchKey->endSelected) && isKeyframeSelected(switchKey) && selectedKeyframe != switchKey){
-            deselectKeyframe(switchKey);
+        else if( (switchKey->startSelected || switchKey->endSelected) && isKeyframeSelected(switchKey)){
+			if(selectedKeyframe == switchKey){
+				switchKey->startSelected = switchKey->endSelected = false;
+			}
+			else{
+	            deselectKeyframe(switchKey);
+			}
         }
     }
 	return false;
@@ -212,32 +229,34 @@ void ofxTLSwitches::mouseDragged(ofMouseEventArgs& args, long millis){
     //do the normal dragging behavior for selected keyframes
     ofxTLKeyframes::mouseDragged(args, millis);
 	
-    //look for any keys with just beginning and ends selected
-    //becaues of the logical in the mousePressed, there will never
-    //be a selected keyframe with an end selected
-	for(int i = 0; i < keyframes.size(); i++){
-        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        if(switchKey->startSelected){
-            switchKey->timeRange.min = millis - switchKey->edgeDragOffset;
-            switchKey->time = switchKey->timeRange.min;
-        }
-        else if(switchKey->endSelected){
-            switchKey->timeRange.max = millis - switchKey->edgeDragOffset;
-        }
-    }
-	
-	
-	updateTimeRanges();
+	if(keysAreDraggable){
+		//look for any keys with just beginning and ends selected
+		//becaues of the logical in the mousePressed, there will never
+		//be a selected keyframe with an end selected
+		for(int i = 0; i < keyframes.size(); i++){
+			ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+			if(switchKey->startSelected){
+				switchKey->timeRange.min = millis - switchKey->edgeDragOffset;
+				switchKey->time = switchKey->timeRange.min;
+			}
+			else if(switchKey->endSelected){
+				switchKey->timeRange.max = millis - switchKey->edgeDragOffset;
+			}
+		}
+		
+		updateTimeRanges();
+	}
 }
 
 void ofxTLSwitches::mouseMoved(ofMouseEventArgs& args, long millis){
-    
     endHover = startHover = false;
+    if(hover && placingSwitch != NULL){
+		placingSwitch->timeRange.max = millis;
+		return;
+	}
+	
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-//        if(switchKey->display.x > args.x){
-//            break;
-//        }
         if(abs(switchKey->display.x - args.x) < 10.0 && bounds.inside(args.x,args.y)){
             hoverKeyframe = switchKey;
             startHover = true;
@@ -270,7 +289,6 @@ void ofxTLSwitches::nudgeBy(ofVec2f nudgePercent){
 	
 	updateTimeRanges();
 }
-
 
 //This is called after dragging or nudging, and let's us make sure
 void ofxTLSwitches::updateTimeRanges(){
@@ -338,7 +356,6 @@ int ofxTLSwitches::getSelectedItemCount(){
 	return ofxTLKeyframes::getSelectedItemCount() + numEdgesSelected;
 }
 
-
 ofxTLKeyframe* ofxTLSwitches::newKeyframe(){
     ofxTLSwitch* switchKey = new ofxTLSwitch();
     //in the case of a click, start at the mouse positiion
@@ -346,6 +363,10 @@ ofxTLKeyframe* ofxTLSwitches::newKeyframe(){
     switchKey->timeRange.min = switchKey->timeRange.max = screenXToMillis(ofGetMouseX());
     switchKey->startSelected = false;
     switchKey->endSelected   = true; //true so you can drag the range to start with
+	
+	//for just placing a switch we'll be able to decide the end position
+	placingSwitch = switchKey;
+	
     return switchKey;
 }
 
@@ -362,7 +383,10 @@ void ofxTLSwitches::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 		switchKey->timeRange.max = timeline->getTimecode().millisForTimecode(timecode);
     }
     //this is so freshly restored keys won't have ends selected but click keys will
-    switchKey->startSelected = switchKey->endSelected = false; 
+    switchKey->startSelected = switchKey->endSelected = false;
+	
+	//a bit of a hack, but if 
+	placingSwitch = NULL;
 }
 
 void ofxTLSwitches::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){

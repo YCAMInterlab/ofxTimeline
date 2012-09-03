@@ -584,6 +584,20 @@ void ofxTLKeyframes::deleteSelectedKeyframes(){
     timeline->flagTrackModified(this);
 }
 
+void ofxTLKeyframes::deleteKeyframe(ofxTLKeyframe* keyframe){
+	
+	if(keyframe == NULL) return;
+	
+	for(int i = keyframes.size() - 1; i >= 0; i--){
+		if(keyframe == keyframes[i]){
+			deselectKeyframe(keyframe);
+			delete keyframes[i];
+			keyframes.erase(keyframes.begin()+i);
+			return;
+		}
+	}
+}
+
 ofxTLKeyframe* ofxTLKeyframes::keyframeAtScreenpoint(ofVec2f p){
 	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
@@ -605,6 +619,7 @@ void ofxTLKeyframes::deselectKeyframe(ofxTLKeyframe* k){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
         if(selectedKeyframes[i] == k){
             selectedKeyframes.erase(selectedKeyframes.begin() + i);
+			return;
         }
     }
 }
