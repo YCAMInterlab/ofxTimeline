@@ -113,6 +113,8 @@ string ofxTLTrack::getName(){
 }
 
 void ofxTLTrack::_draw(){
+	ofPushStyle();
+	
 	if(focused){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
@@ -127,6 +129,7 @@ void ofxTLTrack::_draw(){
 		ofSetColor(timeline->getColors().outlineColor);
 	}	
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	ofPopStyle();
 
     draw();
 	viewIsDirty = false;

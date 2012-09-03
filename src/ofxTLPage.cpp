@@ -121,9 +121,9 @@ void ofxTLPage::draw(){
 		ofPopStyle();
 	}
 	
-	for(int i = 0; i < headers.size(); i++){
-		tracks[headers[i]->name]->drawModalContent();
-	}
+//	for(int i = 0; i < headers.size(); i++){
+//		tracks[headers[i]->name]->drawModalContent();
+//	}
     
     if(draggingSelectionRectangle){
 		ofFill();

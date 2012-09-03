@@ -55,6 +55,7 @@
 #include "ofxTLBangs.h"
 #include "ofxTLFlags.h"
 #include "ofxTLSwitches.h"
+#include "ofxTLColorTrack.h"
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
@@ -284,13 +285,26 @@ class ofxTimeline : ofThread {
     ofxTLFlags* addFlags(string name);
     ofxTLFlags* addFlags(string name, string xmlFileName);
 
-    //TODO: remove image sequence from the core?
-    //or fix it up.
+	ofxTLColorTrack* addColors(string name); //adds with the default palette
+	ofxTLColorTrack* addColors(string name, string xmlFileName); //adds with the default palette
+	ofxTLColorTrack* addColorsWithPalette(string name, ofImage& palette);
+	ofxTLColorTrack* addColorsWithPalette(string name, string palettePath);
+	ofxTLColorTrack* addColorsWithPalette(string name, string xmlFileName, ofImage& palette);
+	ofxTLColorTrack* addColorsWithPalette(string name, string xmlFileName, string palettePath);
+	
+	virtual ofColor getColor(string name);
+	virtual ofColor getColorAtPercent(string name, float percent);
+	virtual ofColor getColorAtSecond(string name, float second);
+	virtual ofColor getColorAtMillis(string name, unsigned long millis);
+	
+    //TODO: remove image sequence from the core? ... or fix it up.
+	//*IMAGE SEQUENCE DOES NOT WORK*
 	virtual ofxTLImageSequence* addImageSequence(string name);
 	virtual ofxTLImageSequence* addImageSequence(string name, string directory);
 	virtual ofImage* getImage(string name);
 	virtual ofImage* getImage(string name, float atTime);
 	virtual ofImage* getImage(string name, int atFrame);
+	//*IMAGE SEQUENCE DOES NOT WORK*
 	
 	virtual ofxTLVideoTrack* addVideoTrack(string trackName);
     virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
@@ -438,6 +452,8 @@ class ofxTimeline : ofThread {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
     
+	string defaultPalettePath;
+	
     //TODO convert to long
 	ofRange inoutRange;
 	

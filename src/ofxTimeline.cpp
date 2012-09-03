@@ -77,7 +77,8 @@ ofxTimeline::ofxTimeline()
 	currentTime(0.0),
 	undoPointer(0),
 	undoEnabled(true),
-	isOnThread(false)
+	isOnThread(false),
+	defaultPalettePath("defaultColorPalette.png") //copy from ofxTimeline/assets into bin/data/
 {
 }
 
@@ -604,7 +605,7 @@ void ofxTimeline::disable(){
 }
 
 //clears every element
-//TODO how should this work with UNdo??
+//TODO how should this work with Undo??
 void ofxTimeline::clear(){
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->clear();
@@ -1143,6 +1144,10 @@ void ofxTimeline::draw(){
         ticker->_draw();
 		inoutTrack->_draw();
         
+		if(modalTrack != NULL){
+			modalTrack->drawModalContent();
+		}
+			
 		glPopAttrib();
 		ofPopStyle();
 	}
@@ -1343,6 +1348,71 @@ ofxTLFlags* ofxTimeline::addFlags(string trackName, string xmlFileName){
 	return newFlags;
 }
 
+ofxTLColorTrack* ofxTimeline::addColors(string trackName){
+	string uniqueName = confirmedUniqueName(trackName);
+	return addColorsWithPalette(uniqueName, nameToXMLName(uniqueName), defaultPalettePath);
+}
+
+ofxTLColorTrack* ofxTimeline::addColors(string name, string xmlFileName){
+	return addColorsWithPalette(confirmedUniqueName(name), xmlFileName, defaultPalettePath);
+}
+
+ofxTLColorTrack* ofxTimeline::addColorsWithPalette(string trackName, ofImage& palette){
+	string uniqueName = confirmedUniqueName(trackName);
+	return addColorsWithPalette(uniqueName, nameToXMLName(uniqueName), palette);
+}
+
+ofxTLColorTrack* ofxTimeline::addColorsWithPalette(string trackName, string palettePath){
+	string uniqueName = confirmedUniqueName(trackName);
+	return addColorsWithPalette(uniqueName, nameToXMLName(uniqueName), palettePath);
+}
+
+ofxTLColorTrack* ofxTimeline::addColorsWithPalette(string trackName, string xmlFileName, ofImage& palette){
+	ofxTLColorTrack* newColors = new ofxTLColorTrack();
+	newColors->setCreatedByTimeline(true);
+	newColors->setXMLFileName(xmlFileName);
+	newColors->loadColorPalette(palette);
+	addTrack(confirmedUniqueName(trackName), newColors);
+	return newColors;
+}
+
+ofxTLColorTrack* ofxTimeline::addColorsWithPalette(string trackName, string xmlFileName, string palettePath){
+	ofxTLColorTrack* newColors = new ofxTLColorTrack();
+	newColors->setCreatedByTimeline(true);
+	newColors->setXMLFileName(xmlFileName);
+	newColors->loadColorPalette(palettePath);
+	addTrack(confirmedUniqueName(trackName), newColors);
+	return newColors;
+}
+
+ofColor ofxTimeline::getColor(string trackName){
+	return getColorAtMillis(trackName, getCurrentTimeMillis());
+}
+
+ofColor ofxTimeline::getColorAtPercent(string trackName, float percent){
+	return getColorAtMillis(trackName, percent*getDurationInMilliseconds());
+}
+
+ofColor ofxTimeline::getColorAtSecond(string trackName, float second){
+	return getColorAtMillis(trackName, second*1000);
+}
+
+ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long millis){
+	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
+		ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
+		return ofColor(0,0,0);
+	}
+	
+	ofxTLColorTrack* colors = (ofxTLColorTrack*)trackNameToPage[trackName]->getTrack(trackName);
+	if(colors == NULL){
+		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
+		return ofColor(0,0,0);
+	}
+	return colors->getColorAtMillis(millis);
+}
+
+
+//*** IMAGE SEQUENCE DOESN'T WORK **///
 ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName){
 	ofFileDialogResult result = ofSystemLoadDialog("Load Sequence", true);
 	if(result.bSuccess && ofDirectory::doesDirectoryExist(result.filePath, false)){
@@ -1359,7 +1429,7 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName, string direc
 	return newImageSequence;	
 }
 
-//TODO:
+
 ofImage* ofxTimeline::getImage(string trackName){
 	return NULL;
 }
@@ -1375,6 +1445,7 @@ ofImage* ofxTimeline::getImage(string trackName, int atFrame){
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
+
 
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();

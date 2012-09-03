@@ -14,7 +14,7 @@
 class ofxTLColorSample : public ofxTLKeyframe {
   public:
 	ofVec2f samplePoint; //normalized to image space
-	ofColor sample; //cached sample
+	ofColor color; //cached sample
 };
 
 class ofxTLColorTrack : public ofxTLKeyframes {
@@ -28,11 +28,12 @@ class ofxTLColorTrack : public ofxTLKeyframes {
     //the superclass controls keyframe placement
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
-	
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
     virtual string getTrackType();
 	
 	virtual void loadColorPalette(ofBaseHasPixels& image);
 	virtual void loadColorPalette(string imagePath);
+	virtual string getPalettePath(); //only valid when it's been loaded from an image path
 	
     ofColor getColor();
 	ofColor getColorAtSecond(float second);
@@ -42,23 +43,31 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	virtual void setDefaultColor(ofColor color);
 	virtual ofColor getDefaultColor();
 	
-	virtual ofxTLKeyframe* newKeyframe();
-	
-	virtual void load();
-	virtual void save();
+//	virtual void load();
+//	virtual void save();
 	
   protected:
 	
 	ofImage colorPallete;
-	ofMesh colorMesh;
-	void updateColorMesh();
+	ofImage previewPalette;
+	string palettePath;
+	
+	bool shouldRecalculatePreview;
+	
+	virtual void updatePreviewPalette();
+	virtual ofxTLKeyframe* newKeyframe();
 	
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
+	bool clickedInColorRect;
 	bool drawingColorWindow;
+	ofRectangle colorWindow;
 	
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);
+	
+	void refreshSample(ofxTLColorSample* sample);
+	ofColor samplePaletteAtPosition(ofVec2f position);
 	
 	ofColor defaultColor;
 	

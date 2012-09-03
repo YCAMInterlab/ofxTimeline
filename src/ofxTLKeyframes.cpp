@@ -324,9 +324,9 @@ string ofxTLKeyframes::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
     
+	
     keysAreDraggable = !ofGetModifierShiftPressed();
     keysDidDrag = false;
-
 	selectedKeyframe = keyframeAtScreenpoint(screenpoint);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
@@ -337,12 +337,11 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
             didJustDeselect = timeline->getTotalSelectedItems() > 1;
     	    timeline->unselectAll();
         }
-        
+
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
         if(selectedKeyframe == NULL && !didJustDeselect){
 			//timeline->unselectAll();
 			createNewOnMouseup = args.button == 0 && !ofGetModifierControlPressed();
-			
 //            //add a new one
 //            selectedKeyframe = newKeyframe();
 //            selectedKeyframe->time = millis;
@@ -448,11 +447,11 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 	
 	if(createNewOnMouseup){
 		//add a new one
-		ofxTLKeyframe* newKey = newKeyframe();
-		newKey->time = millis;
-		newKey->value = screenYToValue(args.y);
-		keyframes.push_back(newKey);
-		selectedKeyframes.push_back(newKey);
+		selectedKeyframe = newKeyframe();
+		selectedKeyframe->time = millis;
+		selectedKeyframe->value = screenYToValue(args.y);
+		keyframes.push_back(selectedKeyframe);
+		selectedKeyframes.push_back(selectedKeyframe);
 		updateKeyframeSort();
 
 		timeline->flagTrackModified(this);
