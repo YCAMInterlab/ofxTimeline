@@ -106,6 +106,7 @@ class ofxTimeline : ofThread {
     virtual void show();
 	virtual void hide();
 	virtual void draw();
+//	virtual void draw(ofEventArgs& args);
 
     //show/hide ticker,zoomer,inout all at once
     virtual void setShowTimeControls(bool shouldShowTimeControls);

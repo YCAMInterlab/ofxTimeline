@@ -817,7 +817,8 @@ void ofxTimeline::enableEvents() {
 		ofAddListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
-		
+//		ofAddListener(ofEvents().draw, this, &ofxTimeline::draw);
+
 		ofAddListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
 		ofAddListener(ofEvents().keyReleased, this, &ofxTimeline::keyReleased);
 		ofAddListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
@@ -937,24 +938,24 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     
 //    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
-	if(ofGetModifierShortcutKeyPressed() && args.key == 3){ //copy
+	if(ofGetModifierShortcutKeyPressed() && args.key == 'c'){ //copy
 		string copyattempt = currentPage->copyRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 24){ //cut
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 'x'){ //cut
 		string copyattempt = currentPage->cutRequest();
 		if(copyattempt != ""){
 			pasteboard = copyattempt;
 		}
 	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 22){ //paste
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 'v'){ //paste
 		if (pasteboard != "") {
 			currentPage->pasteSent(pasteboard);
 		}				
 	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 1){ //select all
+	else if(ofGetModifierShortcutKeyPressed() && args.key == 'a'){ //select all
 		currentPage->selectAll();						
 	}
 	else{
@@ -1007,7 +1008,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 void ofxTimeline::keyReleased(ofKeyEventArgs& args){
     pushUndoStack();
 }
-
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
     ofNotifyEvent(events().viewWasResized, args, this);
@@ -1124,10 +1124,11 @@ void ofxTimeline::checkLoop(){
     }
 }
 
-void ofxTimeline::draw(){	
+//void ofxTimeline::draw(ofEventArgs& args){
+void ofxTimeline::draw(){
 	if(isShowing){
 		ofPushStyle();
-		
+//		cout << "timeline draw" << endl;
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
         ofDisableLighting();

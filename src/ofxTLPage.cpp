@@ -316,7 +316,13 @@ void ofxTLPage::refreshSnapPoints(){
     
 	if(ticker != NULL && timeline->getSnapToBPM()){
 		ticker->getSnappingPoints(snapPoints);
-	}	
+	}
+	
+	//double check to make sure snap points are all on screen
+	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
+		snapPoints.clear();
+	}
+	
 }
 
 //copy paste

@@ -98,26 +98,17 @@ void ofxTLKeyframes::draw(){
 	
 	ofPushStyle();
 	ofPushMatrix();
-	ofEnableSmoothing();
+	
+	//draw current value indicator
+	ofSetColor(timeline->getColors().disabledColor, 30);
+	float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
+	ofFill();
+	ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 	
 	// DRAW KEYFRAME LINES
 	ofSetColor(timeline->getColors().keyColor);
 	ofNoFill();
-	/*
-	ofBeginShape();
-	if(keyframes.size() == 0 || keyframes.size() == 1){
-		ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
-		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
-	}
-	else{
-		for(int p = bounds.x; p <= bounds.width; p++){
-            //TODO: cache this into a poly line to avoid insane sampling.
-			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
-		}
-	}
-	ofEndShape(false);
-    */
-//	cout << "preview has " << preview.getVertices().size() << endl;
+	
 	preview.draw();
 	
 	//**** DRAW KEYFRAME DOTS
@@ -598,6 +589,9 @@ void ofxTLKeyframes::deleteKeyframe(ofxTLKeyframe* keyframe){
 }
 
 ofxTLKeyframe* ofxTLKeyframes::keyframeAtScreenpoint(ofVec2f p){
+	if(!bounds.inside(p)){
+		return NULL;	
+	}
 	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
 		ofVec2f keyonscreen = screenPositionForKeyframe(keyframes[i]);

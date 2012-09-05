@@ -5,6 +5,7 @@
 ofxTLBangs::ofxTLBangs(){
     lastTimelinePoint = 0;
     isPlayingBack = false;
+	lastBangTime = 0;
 }
 
 ofxTLBangs::~ofxTLBangs(){
@@ -36,6 +37,15 @@ void ofxTLBangs::draw(){
     
     ofPushStyle();
     ofFill();
+	
+	//float currentPercent = powf(MIN(ofGetElapsedTimef() - lastBangTime, .5), 2);
+	float currentPercent = powf(ofMap(ofGetElapsedTimef() - lastBangTime, 0, .5, 1.0, 0,true), 2);
+	if(currentPercent > 0){
+		ofSetColor(timeline->getColors().disabledColor, 100*(currentPercent));
+		ofFill();
+		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+	
     for(int i = keyframes.size()-1; i >= 0; i--){
         //int screenX = normalizedXtoScreenX(keyframes[i]->position.x);
         int screenX = millisToScreenX(keyframes[i]->time);
@@ -88,8 +98,9 @@ void ofxTLBangs::update(){
 		long thisTimelinePoint = timeline->getCurrentTimeMillis();
 		for(int i = 0; i < keyframes.size(); i++){
 			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
-				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
+//				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 				bangFired(keyframes[i]);
+				lastBangTime = ofGetElapsedTimef();
 			}
 		}
 		lastTimelinePoint = thisTimelinePoint;

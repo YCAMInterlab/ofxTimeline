@@ -197,18 +197,18 @@ void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
 	ofRange oldRange = getViewRange();
 	if(minSelected || midSelected){
 		float originalMin = currentViewRange.min;
-		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset, ofRange(0, 1.0)), 0, currentViewRange.max-.0001);
+		currentViewRange.min = ofClamp( screenXtoNormalizedX(args.x-minGrabOffset, ofRange(0, 1.0)), 0, currentViewRange.max-.01);
 		if(minSelected){
-			currentViewRange.max = ofClamp( currentViewRange.max + (originalMin-currentViewRange.min), currentViewRange.min+.0001, 1.0);
+			currentViewRange.max = ofClamp( currentViewRange.max + (originalMin-currentViewRange.min), currentViewRange.min+.01, 1.0);
 		}
 		notify = true;
 	}
 
 	if(maxSelected || midSelected){
 		float originalMax = currentViewRange.max;
-		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset, ofRange(0, 1.0)), currentViewRange.min+.0001, 1.0);
+		currentViewRange.max = ofClamp( screenXtoNormalizedX(args.x-maxGrabOffset, ofRange(0, 1.0)), currentViewRange.min+.01, 1.0);
 		if(maxSelected){
-			currentViewRange.min = ofClamp( currentViewRange.min + (originalMax-currentViewRange.max), 0, currentViewRange.max-.0001);
+			currentViewRange.min = ofClamp( currentViewRange.min + (originalMax-currentViewRange.max), 0, currentViewRange.max-.01);
 		}
         notify = true;
     }

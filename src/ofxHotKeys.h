@@ -9,7 +9,8 @@
  *  taken from https://github.com/openframeworks/openFrameworks/pull/807/commits
  */
 
-#pragma once
+#ifndef OFX_MODIFIER_KEYS
+#define OFX_MODIFIER_KEYS
 
 //#include "ofxModifierKeys.h"
 #include "ofMain.h"
@@ -65,7 +66,7 @@ bool ofGetModifierControlPressed(){
 }
 
 //----------------------------------------
-bool ofGetModifierSpecialPressed(){
+static bool ofGetModifierSpecialPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL);
 }
 
@@ -75,3 +76,5 @@ class ofxHotKeys {
   public:
 	
 };
+
+#endif

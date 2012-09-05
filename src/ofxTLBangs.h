@@ -32,6 +32,7 @@ class ofxTLBangs : public ofxTLKeyframes {
 	virtual void update();
 	
     long lastTimelinePoint;
-
+	float lastBangTime; //just for display
+	
     virtual void bangFired(ofxTLKeyframe* key);
 };
