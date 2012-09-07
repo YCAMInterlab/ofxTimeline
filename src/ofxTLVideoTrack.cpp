@@ -106,9 +106,9 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
         }
         
         if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
-            //cout << "reset in frame from " << player->getCurrentFrame() << endl;
+//            cout << "reset in frame from " << player->getCurrentFrame() << endl;
             player->setFrame(inFrame);
-            //cout << "	to: " << player->getCurrentFrame() << endl;
+//            cout << "	to: " << player->getCurrentFrame() << endl;
         }
         
         if(selectedFrame > player->getCurrentFrame()){
@@ -130,13 +130,13 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
         }
         //else if(timeline->getInOutRange().min > player->getPosition()){
         if(timeline->getInFrame() > player->getCurrentFrame()){
+			//cout << "looping frame " << timeline->getInFrame()  << endl;
             int loopFrame = timeline->getInFrame();
             selectFrame(loopFrame);
         }
         
         timeline->setPercentComplete(player->getPosition());
 	
-
         player->update();
 	}
     else{
@@ -398,12 +398,17 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 
 int ofxTLVideoTrack::selectFrame(int frame){
 	selectedFrame = inFrame + (frame % (outFrame - inFrame));
-
+//	cout << "setting frame to " << selectedFrame << " with requested frame " << frame << endl;
 	currentLoop = frame / (outFrame-inFrame);
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
-	player->update();
 	timeline->flagUserChangedValue();
+	if(player->getCurrentFrame() == frame-1){
+		player->nextFrame();
+	}
+	player->update();
+//	cout << "selectFrame: player reports frame " << player->getCurrentFrame() << " with requested frame " << frame << endl;
+
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
 	return selectedFrame;
 }

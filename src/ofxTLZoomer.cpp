@@ -52,18 +52,18 @@ ofxTLZoomer::~ofxTLZoomer(){
 }
 
 void ofxTLZoomer::draw(){
-	ofPushStyle();
-	ofEnableSmoothing();
-
-	ofNoFill();
-	if(focused){
-		ofSetColor(255, 200, 0); //focused outline color
-	}
-	else{
-		ofSetColor(150, 150, 0); //unfocused outline color
-	}
 	
-	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	ofPushStyle();
+//	ofEnableSmoothing();
+//	ofNoFill();
+//	if(focused){
+//		ofSetColor(255, 200, 0); //focused outline color
+//	}
+//	else{
+//		ofSetColor(150, 150, 0); //unfocused outline color
+//	}
+//	
+//	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
 	//draw min
 	float screenY = bounds.y + bounds.height/2.0;
@@ -98,7 +98,17 @@ void ofxTLZoomer::draw(){
 
 	//draw playhead reference
 	ofSetColor(timeline->getColors().keyColor);
-	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y, bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
+	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y,
+		   bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
+	//draw zoom region reference
+	ofNoFill();
+	ofRange actualZoom = getViewRange();
+	ofRectangle zoomRegion = ofRectangle(bounds.width*actualZoom.min, bounds.y,
+										bounds.width*actualZoom.span(),bounds.height);
+	ofRect(zoomRegion);
+	ofFill();
+	ofSetColor(timeline->getColors().keyColor, 50);
+	ofRect(zoomRegion);
 	ofPopStyle();
 }
 
@@ -257,15 +267,17 @@ void ofxTLZoomer::notifyZoomEnded(){
 }
 
 void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
-	//TODO: nudge
+	
 }
 
 ofRange ofxTLZoomer::getViewRange() {
-	float logSpan = powf(currentViewRange.span(),2.0);
+	float logSpan = powf(currentViewRange.span(),zoomExponent);
 	float centerPosition = currentViewRange.center();
+	//recompute view range
+	if(centerPosition != .5){
+		centerPosition = ofMap(centerPosition, currentViewRange.span()/2, 1.0 - currentViewRange.span()/2, logSpan/2, 1.0-logSpan/2);
+	}
 	return ofRange(centerPosition - logSpan/2, centerPosition + logSpan/2);
-	//return currentViewRange;
-//	return currentLogViewRange;
 }
 
 void ofxTLZoomer::setViewRange(ofRange newRange){

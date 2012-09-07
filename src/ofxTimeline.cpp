@@ -1128,7 +1128,7 @@ void ofxTimeline::checkLoop(){
 void ofxTimeline::draw(){
 	if(isShowing){
 		ofPushStyle();
-//		cout << "timeline draw" << endl;
+
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
         ofDisableLighting();
@@ -1139,7 +1139,7 @@ void ofxTimeline::draw(){
 		}
         
 		currentPage->draw();
-		if(showZoomer)zoomer->draw();
+		if(showZoomer)zoomer->_draw();
         
 		//draw these because they overlay the rest of the timeline with info
         ticker->_draw();
