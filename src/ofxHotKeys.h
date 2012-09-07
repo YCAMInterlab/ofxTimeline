@@ -51,17 +51,17 @@ bool ofGetModifierSelection();
 bool ofGetModifierShortcutKeyPressed();
 
 //----------------------------------------
-bool ofGetModifierAltPressed(){
+static bool ofGetModifierAltPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_ALT);
 }
 
 //----------------------------------------
-bool ofGetModifierShiftPressed(){
+static bool ofGetModifierShiftPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_SHIFT);
 }
 
 //----------------------------------------
-bool ofGetModifierControlPressed(){
+static bool ofGetModifierControlPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_CTRL);
 }
 

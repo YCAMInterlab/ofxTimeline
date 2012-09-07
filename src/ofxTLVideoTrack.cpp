@@ -1,3 +1,4 @@
+
 /*
  *  ofxTLVideoTrack.cpp
  *  timelineExampleVideoPlayer
@@ -355,6 +356,7 @@ bool ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
 			timeline->setPercentComplete(screenXtoNormalizedX(args.x));
 		}
 	}
+	return false;
 }
 
 void ofxTLVideoTrack::mouseMoved(ofMouseEventArgs& args, long millis){
@@ -402,7 +404,7 @@ int ofxTLVideoTrack::selectFrame(int frame){
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
 	timeline->flagUserChangedValue();
-	if(player->getCurrentFrame() == frame-1){
+	if(player->getCurrentFrame() == selectedFrame-1){
 		player->nextFrame();
 	}
 	player->update();
