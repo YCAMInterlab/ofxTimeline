@@ -356,6 +356,7 @@ bool ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
 			timeline->setPercentComplete(screenXtoNormalizedX(args.x));
 		}
 	}
+	return false;
 }
 
 void ofxTLVideoTrack::mouseMoved(ofMouseEventArgs& args, long millis){
