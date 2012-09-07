@@ -347,7 +347,6 @@ void ofxTLVideoTrack::setOutFrame(int out){
 
 bool ofxTLVideoTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	ofxTLTrack::mousePressed(args, millis);
-	//if(getDrawRect().inside(args.x, args.y)){
 	if(isActive()){
 		timeline->unselectAll();
 		selectFrame( indexForScreenX(args.x) );
