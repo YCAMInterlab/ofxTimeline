@@ -90,9 +90,7 @@ void ofxTLSwitches::draw(){
                 }
             }
         }
-
         ofRect(switchKey->display);
-
     }
     ofPopStyle();
 }
@@ -294,6 +292,11 @@ void ofxTLSwitches::nudgeBy(ofVec2f nudgePercent){
 		}
 	}
 	
+	updateTimeRanges();
+}
+
+void ofxTLSwitches::pasteSent(string pasteboard){
+	ofxTLKeyframes::pasteSent(pasteboard);
 	updateTimeRanges();
 }
 

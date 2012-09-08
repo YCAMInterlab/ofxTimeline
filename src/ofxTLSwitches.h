@@ -69,7 +69,8 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual void unselectAll();
     
     virtual string getTrackType();
-    
+    virtual void pasteSent(string pasteboard);
+	
   protected:
     virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
