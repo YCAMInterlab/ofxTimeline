@@ -19,13 +19,13 @@ bool ofGetModifierPressed(ofxModifierKey mod)
 {
 	unsigned int t = 0;
 	
-	if ((OF_KEY_CTRL & mod) == OF_MODIFIER_KEY_CTRL)
+	if ((OF_MODIFIER_KEY_CTRL & mod) == OF_MODIFIER_KEY_CTRL)
 		return (GetKeyState( VK_CONTROL ) & 0x80) > 0;
 	
 	else if ((OF_MODIFIER_KEY_ALT & mod) == OF_MODIFIER_KEY_ALT)
 		return (GetKeyState( VK_MENU ) & 0x80) > 0;
 	
-	else if ((OF_MODIFIER_KEY_SPECIAL & mod) == OF_MODIFIER_KEY_SPECIAL)
+	else if ((OF_MODIFIER_KEY_SHIFT & mod) == OF_MODIFIER_KEY_SHIFT)
 		return (GetKeyState( VK_SHIFT ) & 0x80) > 0;
 	
 	else if ((OF_MODIFIER_KEY_SPECIAL & mod) == OF_MODIFIER_KEY_SPECIAL)

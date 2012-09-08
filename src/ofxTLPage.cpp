@@ -357,11 +357,8 @@ void ofxTLPage::pasteSent(string pasteboard){
 }
 		
 void ofxTLPage::selectAll(){
-	for(int i = 0; i < headers.size(); i++){
-		//only paste into where we are hovering
-		if(tracks[headers[i]->name]->getDrawRect().inside( ofVec2f(ofGetMouseX(), ofGetMouseY()) )){ //TODO: replace with hasFocus()
-			tracks[headers[i]->name]->selectAll();
-		}
+	if(focusedTrack != NULL){
+		focusedTrack->selectAll();
 	}
 }
 

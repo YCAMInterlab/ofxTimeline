@@ -39,6 +39,7 @@ ofxTLTicker::ofxTLTicker() {
 	dragging = false;
     hasBPM = false;
 	drawBPMGrid = false;
+	hoverTime = 0;
 }
 
 ofxTLTicker::~ofxTLTicker(){
@@ -58,6 +59,8 @@ void ofxTLTicker::draw(){
     float secondsPerPixel = durationInview / bounds.width;
     
     if(bounds.height > 2){
+		//TODO: Tick caching!!
+
         //draw ticker marks
         ofSetLineWidth(1);
         ofSetColor(200, 180, 40);

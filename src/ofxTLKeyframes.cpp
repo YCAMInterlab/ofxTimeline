@@ -419,6 +419,9 @@ void ofxTLKeyframes::updateKeyframeSort(){
 	lastKeyframeIndex = 1;
 	lastSampleTime = 0;
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
+	if(selectedKeyframes.size() > 1){
+		sort(selectedKeyframes.begin(), selectedKeyframes.end(), keyframesort);
+	}
 }
 
 void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
@@ -467,17 +470,15 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 	vector<ofxTLKeyframe*> keyContainer;
 	ofxXmlSettings pastedKeys;
 	if(pastedKeys.loadFromBuffer(pasteboard)){
-		timeline->unselectAll();
 		createKeyframesFromXML(pastedKeys, keyContainer);
 		if(keyContainer.size() != 0){
-			selectedKeyframes.clear();
+			timeline->unselectAll();
 			int numKeyframesPasted = 0;
 			//normalize and add at playhead
-			for(int i = 0; i < keyContainer.size(); i++){
-				if(i != 0){
-					keyContainer[i]->time -= keyContainer[0]->time;
-					keyContainer[i]->time += timeline->getCurrentTimeMillis();
-				}
+			//for(int i = 0; i < keyContainer.size(); i++){
+			for(int i = keyContainer.size()-1; i >= 0; i--){
+				keyContainer[i]->time -= keyContainer[0]->time;
+				keyContainer[i]->time += timeline->getCurrentTimeMillis();
 				if(keyContainer[i]->time <= timeline->getDurationInMilliseconds()){
 					selectedKeyframes.push_back(keyContainer[i]);
 					keyframes.push_back(keyContainer[i]);
@@ -487,13 +488,12 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 					delete keyContainer[i];
 				}
 			}
-			
+
 			if(numKeyframesPasted > 0){
 				updateKeyframeSort();
 				timeline->flagTrackModified(this);
 			}
 			
-			keyContainer[0]->time = timeline->getCurrentTimeMillis();
 			if(timeline->getMovePlayheadOnPaste()){
 				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
 			}

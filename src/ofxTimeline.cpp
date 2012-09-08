@@ -855,12 +855,15 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 		else if(!focus && timelineHasFocus){
 			currentPage->timelineLostFocus();
 		}
-		focus = timelineHasFocus;
+		timelineHasFocus = focus;
 		inoutTrack->mousePressed(args);
 		ticker->mousePressed(args);
 		currentPage->mousePressed(args,millis);
 		zoomer->mousePressed(args);
 		currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
+		if(!focus){
+			unselectAll();
+		}
 	}
 	
     //collect state buffers after items are selected and focus is set
@@ -917,45 +920,52 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 
+    //cout << "key event " << args.key << " z? " << int('z') << " ctrl? " << ofGetModifierControlPressed() << " " << ofGetModifierShiftPressed() << " short cut? " << ofGetModifierShortcutKeyPressed() << endl;
 
-	if(ofGetModifierShortcutKeyPressed() && ofGetModifierShiftPressed() && args.key == 'z' && undoEnabled){
-        redo();
+	if(undoEnabled && ofGetModifierShortcutKeyPressed() && (args.key == 'z' || args.key == 'z'-96)){
+		if(ofGetModifierShiftPressed()){
+			redo();
+		}
+		else{
+			undo();
+		}
 		return;
-    }
-    else if(ofGetModifierShortcutKeyPressed() && args.key == 'z' && undoEnabled){
-        undo();
-		return;
-    }
+	}
 
 	//collect the buffers before the command is sent becasue it's what modifies
     collectStateBuffers();
 
-	//    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
     if(modalTrack != NULL){
         modalTrack->keyPressed(args);
+		pushUndoStack();
 		return;
     }
     
-	if(ofGetModifierShortcutKeyPressed() && args.key == 'c'){ //copy
-		string copyattempt = currentPage->copyRequest();
-		if(copyattempt != ""){
-			pasteboard = copyattempt;
+	if(ofGetModifierShortcutKeyPressed()){
+		if(args.key == 'c' || args.key == 'c'-96){ //copy
+			string copyattempt = currentPage->copyRequest();
+			if(copyattempt != ""){
+				pasteboard = copyattempt;
+			}
 		}
-	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 'x'){ //cut
-		string copyattempt = currentPage->cutRequest();
-		if(copyattempt != ""){
-			pasteboard = copyattempt;
+		else if(args.key == 'x' || args.key == 'x'-96){ //cut
+			string copyattempt = currentPage->cutRequest();
+			if(copyattempt != ""){
+				pasteboard = copyattempt;
+			}
 		}
-	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 'v'){ //paste
-		if (pasteboard != "") {
-			currentPage->pasteSent(pasteboard);
-		}				
-	}
-	else if(ofGetModifierShortcutKeyPressed() && args.key == 'a'){ //select all
-		currentPage->selectAll();						
+		else if(args.key == 'v' || args.key == 'v'-96){ //paste
+			if (pasteboard != "") {
+				currentPage->pasteSent(pasteboard);
+			}				
+		}
+		else if(args.key == 'a' || args.key == 'a'-96){ //select all
+			if(!ofGetModifierShiftPressed()){
+				unselectAll();
+			}
+			currentPage->selectAll();						
+		}
 	}
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
