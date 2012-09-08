@@ -78,9 +78,23 @@ void ofxTLKeyframes::recomputePreviews(){
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
 	}
-	int size =preview.getVertices().size();
+//	int size = preview.getVertices().size();
 	preview.simplify();
 	//cout << "simplify pre " << size << " post: " << preview.getVertices().size() << " dif: " << (size - preview.getVertices().size()) << endl;
+
+	ofVec2f lastPoint;
+	keyPoints.clear();
+	for(int i = 0; i < keyframes.size(); i++){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
+		if(lastPoint.squareDistance(screenpoint) > 5*5){
+			keyPoints.push_back(screenpoint);
+		}
+		
+		lastPoint = screenpoint;
+	}
 	
 	shouldRecomputePreviews = false;
 	
@@ -97,59 +111,53 @@ void ofxTLKeyframes::draw(){
 	}
 	
 	ofPushStyle();
-	ofPushMatrix();
 	
-	//draw current value indicator
+	//draw current value indicator as a big transparent rectangle
 	ofSetColor(timeline->getColors().disabledColor, 30);
 	float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
 	ofFill();
 	ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 	
-	// DRAW KEYFRAME LINES
+	//***** DRAW KEYFRAME LINES
 	ofSetColor(timeline->getColors().keyColor);
 	ofNoFill();
 	
 	preview.draw();
 	
 	//**** DRAW KEYFRAME DOTS
-	//TODO: draw dots more judiciously
-	ofSetColor(timeline->getColors().keyColor);
-	int lastCircleX = 0;
-	for(int i = 0; i < keyframes.size(); i++){
-		if(!isKeyframeIsInBounds(keyframes[i])){
-			continue;
-		}
-		
-  		ofVec2f screenpoint = screenPositionForKeyframe(keyframes[i]);
-		
-		if(keyframes[i] == hoverKeyframe){
-			ofPushStyle();
-			ofFill();
-			ofSetColor(timeline->getColors().highlightColor);
-			ofCircle(screenpoint.x, screenpoint.y, 6);
-			ofPopStyle();
-		}
-        
-		
-		if(isKeyframeSelected( keyframes[i] )){
-            ofSetColor(timeline->getColors().textColor);
-			float keysValue = ofMap(keyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
-			string frameString = timeline->formatTime(keyframes[i]->time);
-            if(keysAreDraggable){
-				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
-            }
-			ofFill();
-            ofCircle(screenpoint.x, screenpoint.y, 4);
-		}
-		else if(abs(lastCircleX - screenpoint.x) > 5){ //respect personal space
-            ofSetColor(timeline->getColors().textColor);
-			ofNoFill();
-            ofCircle(screenpoint.x, screenpoint.y, 2);
-		}
-		lastCircleX = screenpoint.x;
+	
+	//**** HOVER FRAME
+	if(hoverKeyframe != NULL){
+		ofPushStyle();
+		ofFill();
+		ofSetColor(timeline->getColors().highlightColor);
+		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
+		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
+		ofPopStyle();
+	}
+
+	//**** ALL CACHED VISIBLE KEYS
+	ofSetColor(timeline->getColors().textColor);
+	ofNoFill();
+	for(int i = 0; i < keyPoints.size(); i++){
+		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
 	}
 	
-	ofPopMatrix();
+	//**** SELECTED KEYS
+	ofSetColor(timeline->getColors().textColor);
+	ofFill();
+	for(int i = 0; i < selectedKeyframes.size(); i++){
+		if(isKeyframeIsInBounds(selectedKeyframes[i])){
+			ofVec2f screenpoint = screenPositionForKeyframe(selectedKeyframes[i]);
+			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
+			if(keysAreDraggable){
+				string frameString = timeline->formatTime(selectedKeyframes[i]->time);
+				ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
+			}
+			ofCircle(screenpoint.x, screenpoint.y, 4);
+		}
+	}
+
 	ofPopStyle();
 }
 
@@ -331,21 +339,7 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 
         //if we didn't just deselect everything and clicked in an empty space add a new keyframe there
         if(selectedKeyframe == NULL && !didJustDeselect){
-			//timeline->unselectAll();
 			createNewOnMouseup = args.button == 0 && !ofGetModifierControlPressed();
-//            //add a new one
-//            selectedKeyframe = newKeyframe();
-//            selectedKeyframe->time = millis;
-//            selectedKeyframe->value = screenYToValue(screenpoint.y);
-//            keyframes.push_back(selectedKeyframe);
-//            //selectedKeyframe->grabOffset = ofVec2f(0,0);
-//            updateKeyframeSort();
-//            keysDidDrag = true; //triggers a save after mouseup
-//            for(int i = 0; i < keyframes.size(); i++){
-//                if(keyframes[i] == selectedKeyframe){
-//                    selectedKeyframeIndex = i;
-//                }
-//            }
         }
     }
 
@@ -444,7 +438,7 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		keyframes.push_back(selectedKeyframe);
 		selectedKeyframes.push_back(selectedKeyframe);
 		updateKeyframeSort();
-
+//		cout << "creating new and  flagging" << endl;
 		timeline->flagTrackModified(this);
 	}
 	createNewOnMouseup = false;
@@ -477,7 +471,7 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 		createKeyframesFromXML(pastedKeys, keyContainer);
 		if(keyContainer.size() != 0){
 			selectedKeyframes.clear();
-			
+			int numKeyframesPasted = 0;
 			//normalize and add at playhead
 			for(int i = 0; i < keyContainer.size(); i++){
 				if(i != 0){
@@ -487,16 +481,22 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 				if(keyContainer[i]->time <= timeline->getDurationInMilliseconds()){
 					selectedKeyframes.push_back(keyContainer[i]);
 					keyframes.push_back(keyContainer[i]);
+					numKeyframesPasted++;
 				}
 				else{
 					delete keyContainer[i];
 				}
 			}
+			
+			if(numKeyframesPasted > 0){
+				updateKeyframeSort();
+				timeline->flagTrackModified(this);
+			}
+			
 			keyContainer[0]->time = timeline->getCurrentTimeMillis();
 			if(timeline->getMovePlayheadOnPaste()){
 				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
 			}
-			updateKeyframeSort();
 		}
 	}
 }

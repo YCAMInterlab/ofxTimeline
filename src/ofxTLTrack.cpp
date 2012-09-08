@@ -232,6 +232,10 @@ bool ofxTLTrack::isEnabled(){
 	return enabled;
 }
 
+bool ofxTLTrack::isHovering(){
+	return hover;
+}
+
 bool ofxTLTrack::pointInScreenBounds(ofVec2f screenpoint){
 	return bounds.inside(screenpoint);
 }

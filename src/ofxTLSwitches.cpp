@@ -15,6 +15,13 @@ void ofxTLSwitches::draw(){
     
     ofPushStyle();
 	ofFill();
+	
+	//draw a little wobble if its on
+	if(isOnAtMillis(timeline->getCurrentTimeMillis())){
+		ofSetColor(timeline->getColors().disabledColor, 20+(1-powf(sin(ofGetElapsedTimef()*5)*.5+.5,2))*20);
+		ofRect(bounds);
+	}
+
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
         float startScreenX = millisToScreenX(switchKey->timeRange.min);

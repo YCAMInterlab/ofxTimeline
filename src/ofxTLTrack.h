@@ -68,6 +68,7 @@ class ofxTLTrack
     
     virtual bool isActive();
 	virtual bool hasFocus();
+	virtual bool isHovering();
 	
     //managed by the page object, do not set yourself
 	virtual void setDrawRect(ofRectangle bounds);

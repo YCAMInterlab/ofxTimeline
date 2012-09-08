@@ -279,8 +279,8 @@ void ofxTimeline::collectStateBuffers(){
     modifiedTracks.clear();
     for(int i = 0; i < tracks.size(); i++){
         ofxTLTrack* track = tracks[i];
-        if(track->getSelectedItemCount() > 0 || track->isActive() ){
-
+        if(track->getSelectedItemCount() > 0 || track->isHovering() || track->hasFocus()){
+			
             UndoItem ui;
             ui.track = track;
             ui.stateBuffer = track->getXMLRepresentation();
@@ -295,7 +295,7 @@ void ofxTimeline::collectStateBuffers(){
 //go through the state buffers and see which tracks were actually modified
 //push the collection of them onto the stack if there were any
 void ofxTimeline::pushUndoStack(){
-    
+//    cout << "pushing undo stack" << endl;
     if(!undoEnabled) return;
     
     vector<UndoItem> undoCollection;
@@ -303,6 +303,7 @@ void ofxTimeline::pushUndoStack(){
         for(int buf = 0; buf < stateBuffers.size(); buf++){
             //this m
             if(modifiedTracks[i] == stateBuffers[buf].track){
+//				cout << "modified state buffer for " << modifiedTracks[i]->getDisplayName() << endl;
                 undoCollection.push_back(stateBuffers[buf]);
             }
         }
@@ -637,29 +638,27 @@ void ofxTimeline::save(){
 }
 
 void ofxTimeline::setDurationInFrames(int frames){
-    if(frames < 1){
-    	ofLogError("ofxTimeline -- Must set a positive number of frames");
-        return;
-    }
-    durationInSeconds = timecode.secondsForFrame(frames);
+    setDurationInSeconds(timecode.secondsForFrame(frames));
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
+	//TODO verify no elements are being truncated
     if(seconds <= 0.){
-    	ofLogError("ofxTimeline::setDurationInSeconds") << " must set a positive duration";
+    	ofLogError("ofxTimeline::setDurationInSeconds") << " duraiton must set a positive number";
         return;
     }
 	durationInSeconds = seconds;
+	
 }
 
 void ofxTimeline::setDurationInMillis(long millis){
-    durationInSeconds = millis/1000.;
+    setDurationInSeconds(millis/1000.);
 }
 
 void ofxTimeline::setDurationInTimecode(string timecodeString){
     float newDuration = timecode.secondsForTimecode(timecodeString);
     if(newDuration > 0){
-	    durationInSeconds = newDuration;
+	    setDurationInSeconds(newDuration);
     }
     else{
         ofLogError() << "ofxTimeline::setDurationInTimecode -- " << timecodeString << " is invalid, please use the format HH:MM:SS:MLS";
@@ -911,13 +910,14 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 		tabs->mouseReleased(args);
 		currentPage->mouseReleased(args, millis);
 		zoomer->mouseReleased(args);
-	}	
+	}
     
-    pushUndoStack();
+	pushUndoStack();
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	
+
+
 	if(ofGetModifierShortcutKeyPressed() && ofGetModifierShiftPressed() && args.key == 'z' && undoEnabled){
         redo();
 		return;
@@ -930,13 +930,12 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	//collect the buffers before the command is sent becasue it's what modifies
     collectStateBuffers();
 
+	//    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
     if(modalTrack != NULL){
         modalTrack->keyPressed(args);
-        return;
+		return;
     }
-    
-//    cout << "key event " << args.key << " ctrl? " << ofGetModifierKeyControl() << " " << ofGetModifierKeyShift() << endl;
     
 	if(ofGetModifierShortcutKeyPressed() && args.key == 'c'){ //copy
 		string copyattempt = currentPage->copyRequest();
@@ -1003,10 +1002,13 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		currentPage->keyPressed(args);
 		zoomer->keyPressed(args);
 	}
+	
+	pushUndoStack();
+
 }
 
 void ofxTimeline::keyReleased(ofKeyEventArgs& args){
-    pushUndoStack();
+	//Not reliably called when COMMAND is pressed on OS X
 }
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){

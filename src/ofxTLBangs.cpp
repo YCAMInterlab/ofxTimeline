@@ -82,7 +82,7 @@ void ofxTLBangs::regionSelected(ofLongRange timeRange, ofRange valueRange){
 }
 
 ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p){
-    if(isActive()){
+    if(bounds.inside(p.x, p.y)){
         for(int i = 0; i < keyframes.size(); i++){
             float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);            
             if (abs(offset) < 5) {
