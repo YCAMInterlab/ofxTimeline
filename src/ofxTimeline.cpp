@@ -169,7 +169,10 @@ string ofxTimeline::getName(){
 void ofxTimeline::setWorkingFolder(string folderPath){
 	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
     inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
+	inoutTrack->load();
     zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
+	zoomer->load();
+	
 }
 
 string ofxTimeline::getWorkingFolder(){
@@ -1242,6 +1245,10 @@ void ofxTimeline::setTimecontrolTrack(ofxTLTimeController* track){
 
 ofxTLTimeController* ofxTimeline::getTimecontrolTrack(){
     return timeControl;
+}
+
+ofxTLZoomer* ofxTimeline::getZoomer(){
+	return zoomer;
 }
 
 //can be used to add custom elements

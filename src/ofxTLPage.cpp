@@ -69,6 +69,7 @@ ofxTLPage::~ofxTLPage(){
 			delete headers[i];
 		}
 		headers.clear();
+		trackList.clear();
 		tracks.clear();
 	}
 }
@@ -403,15 +404,17 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 	track->setZoomBounds(currentZoomBounds);
 
 	tracks[trackName] = track;
+	trackList.push_back(track);
 }
 
-//computed on the fly so please use sparingly if you have a lot of track
-vector<ofxTLTrack*> ofxTLPage::getTracks(){
-    vector<ofxTLTrack*> tracks;
-    for(int i = 0; i < headers.size(); i++){
-        tracks.push_back( headers[i]->getTrack() );
-    }
-    return tracks;
+//computed on the fly so please use sparingly if you have a lot of tracks
+vector<ofxTLTrack*>& ofxTLPage::getTracks(){
+	return trackList;
+//    vector<ofxTLTrack*> tracks;
+//    for(int i = 0; i < headers.size(); i++){
+//        tracks.push_back( headers[i]->getTrack() );
+//    }
+//    return tracks;
 }
 
 ofxTLTrack* ofxTLPage::getTrack(string trackName){
@@ -481,6 +484,13 @@ void ofxTLPage::removeTrack(ofxTLTrack* track){
         return;
     }
     
+	for(int i = 0; i < trackList.size(); i++){
+		if(trackList[i] == track){
+			trackList.erase(trackList.begin() + i);
+			break;
+		}
+	}
+	
 	for(int i = 0; i < headers.size(); i++){
         if(headers[i]->getTrack() == track){
             delete headers[i];

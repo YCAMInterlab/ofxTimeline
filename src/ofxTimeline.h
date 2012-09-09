@@ -344,6 +344,8 @@ class ofxTimeline : ofThread {
 
 	ofxTLColors& getColors();
 	ofxTimecode& getTimecode();
+	ofxTLZoomer* getZoomer();
+	
 	vector<ofxTLPage*>& getPages();
     
 	ofVec2f getNudgePercent();

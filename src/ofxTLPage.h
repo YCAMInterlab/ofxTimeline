@@ -83,7 +83,7 @@ class ofxTLPage {
 
     
     //computed on the fly so please use sparingly if you have to call it a lot
-    vector<ofxTLTrack*> getTracks();
+    vector<ofxTLTrack*>& getTracks();
 
     //given a folder the page will look for xml files to load within that
 	virtual void loadTracksFromFolder(string folderPath);
@@ -126,6 +126,8 @@ class ofxTLPage {
 	//used for getting BPM snaps
 	vector<ofxTLTrackHeader*> headers;
 	map<string, ofxTLTrack*> tracks;
+	vector<ofxTLTrack*> trackList;
+	
     ofxTLTicker* ticker;
     ofxTLTrack* focusedTrack;
 

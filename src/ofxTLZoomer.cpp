@@ -54,17 +54,6 @@ ofxTLZoomer::~ofxTLZoomer(){
 void ofxTLZoomer::draw(){
 	
 	ofPushStyle();
-//	ofEnableSmoothing();
-//	ofNoFill();
-//	if(focused){
-//		ofSetColor(255, 200, 0); //focused outline color
-//	}
-//	else{
-//		ofSetColor(150, 150, 0); //unfocused outline color
-//	}
-//	
-//	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
 	//draw min
 	float screenY = bounds.y + bounds.height/2.0;
 	float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
@@ -101,11 +90,10 @@ void ofxTLZoomer::draw(){
 	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y,
 		   bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
 	//draw zoom region reference
-	ofNoFill();
+	ofSetColor(timeline->getColors().backgroundColor);
 	ofRange actualZoom = getViewRange();
 	ofRectangle zoomRegion = ofRectangle(bounds.width*actualZoom.min, bounds.y,
 										bounds.width*actualZoom.span(),bounds.height);
-	ofRect(zoomRegion);
 	ofFill();
 	ofSetColor(timeline->getColors().keyColor, 50);
 	ofRect(zoomRegion);
@@ -281,7 +269,7 @@ ofRange ofxTLZoomer::getViewRange() {
 }
 
 void ofxTLZoomer::setViewRange(ofRange newRange){
-
+	cout << "setting view range to " << newRange << endl;
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.oldZoom = getViewRange();
     zoomEvent.sender = timeline;
@@ -290,3 +278,8 @@ void ofxTLZoomer::setViewRange(ofRange newRange){
 	zoomEvent.currentZoom = getViewRange();
 	ofNotifyEvent(events().zoomEnded, zoomEvent); 
 }
+
+ofRange ofxTLZoomer::getSelectedRange(){
+	return currentViewRange;
+}
+
