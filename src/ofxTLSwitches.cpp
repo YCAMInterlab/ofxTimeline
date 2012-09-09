@@ -295,6 +295,7 @@ void ofxTLSwitches::nudgeBy(ofVec2f nudgePercent){
 	updateTimeRanges();
 }
 
+//needed to sync the time ranges from pasted keys
 void ofxTLSwitches::pasteSent(string pasteboard){
 	ofxTLKeyframes::pasteSent(pasteboard);
 	updateTimeRanges();

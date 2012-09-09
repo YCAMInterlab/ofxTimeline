@@ -99,7 +99,7 @@ class ofxTLKeyframes : public ofxTLTrack
 
 	virtual void setValueRange(ofRange range, float defaultValue = 0);
     virtual ofRange getValueRange();
-
+	
   protected:
 	virtual ofxTLKeyframe* newKeyframe();
 	vector<ofxTLKeyframe*> keyframes;

@@ -58,40 +58,25 @@ void ofxTLTicker::draw(){
     float durationInview = endTime-startTime;
     float secondsPerPixel = durationInview / bounds.width;
     
+	if(viewIsDirty){
+		refreshTickMarks();
+	}
+	
+	tickerMarks.setStrokeColor( ofColor(200, 180, 40) );
+	tickerMarks.setStrokeWidth(1);
+	tickerMarks.draw(bounds.x, bounds.y);
+	
+	/*
     if(bounds.height > 2){
 		//TODO: Tick caching!!
 
-        //draw ticker marks
-        ofSetLineWidth(1);
-        ofSetColor(200, 180, 40);
-        float heightMultiplier = .75;
-        for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
-            //float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
-            float x = screenXForTime(i);
-            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-        }
-    
-        //draw regular increments
-        int bigTickStep;
-        if(durationInview < 1){ //draw big tick every 100 millis
-            bigTickStep = .1;
-        }
-        else if(durationInview < 60){ // draw big tick every second
-            bigTickStep = 1;
-        }
-        else {
-            bigTickStep = 60;
-        }
-        ofSetLineWidth(3);
-        heightMultiplier = .5;		
-        for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
-            float x = screenXForTime(i);
-            ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-        }
     }
-    
+    */
+	
     if(drawBPMGrid){
-        updateBPMPoints(); //wow... don't do this every frame
+		if(viewIsDirty){
+	        updateBPMPoints();
+		}
         ofPushStyle();
         ofSetColor(255, 255, 255, 50);
         for(int i = 0; i < bpmScreenPoints.size(); i++){
@@ -138,7 +123,6 @@ void ofxTLTicker::draw(){
     }
     
     if(bounds.height > 2){
-
         textH = 10;
         textW = (text.size()+1)*7;
         int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
@@ -192,6 +176,111 @@ void ofxTLTicker::getSnappingPoints(set<long>& points){
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
 		points.insert(bpmScreenPoints[i].millis);
 	}
+}
+
+void ofxTLTicker::refreshTickMarks(){
+	tickerMarks.clear();
+
+    unsigned long startMillis = zoomBounds.min * timeline->getDurationInMilliseconds();
+    unsigned long endMillis = zoomBounds.max * timeline->getDurationInMilliseconds();
+    unsigned long durationInview = endMillis-startMillis;
+    float millisPerPixel = durationInview / bounds.width;
+	
+	//expand to days
+	bool showMillis;
+	bool showSeconds;
+	bool showMinutes;
+
+	//find the scale of time being shown
+	if(millisPerPixel > 1000*60 * 4){ //each pixel is more than a minute
+		showMillis = false;
+		showSeconds = false;
+		showMinutes = false;
+//		cout << "only show hours" << endl;
+	}
+	else if(millisPerPixel > 1000 * 4){ //each pixel is more than a second
+		showMillis = false;
+		showSeconds = false;
+		showMinutes = true;
+//		cout << "only show minutes" << endl;
+	}
+	else if(millisPerPixel > 4){ //each pixel is more than a millisecond
+		showMillis = false;
+		showSeconds = true;
+		showMinutes = true;
+//		cout << "only show millis" << endl;
+	}
+	else{ //each pixel is less than a millsecond
+		showMillis = true;
+		showSeconds = true;
+		showMinutes = true;
+//		cout << "show all" << endl;
+	}
+	
+	unsigned long lastMillis = screenXToMillis(bounds.x);
+	int lastSecond = lastMillis/1000;
+	int lastMinute = lastSecond/60;
+	int lastHour = lastMinute/60;
+	for(int i = bounds.getMinX()+4; i < bounds.getMaxX(); i+=4){
+		int height = 0;
+		unsigned long currentMillis = screenXToMillis(i);
+		int currentSecond = currentMillis/1000;
+		int currentMinute = currentSecond/60;
+		int currentHour = currentMinute/60;
+
+		if(showMillis && currentMillis > lastMillis){
+			height = bounds.height*.25;
+			lastMillis = currentMillis;
+		}
+
+		if(showSeconds && currentSecond > lastSecond){
+			height = bounds.height*.5;
+			lastSecond = currentSecond;
+		}
+				
+		if(showMinutes && currentMinute > lastMinute){
+			height = bounds.height*.75;
+			lastMinute = currentMinute;
+		}
+		
+		if(currentHour > lastHour){
+			height = bounds.height;
+			lastHour = currentHour;
+		}
+		
+		if(height != 0){
+			tickerMarks.moveTo(i, bounds.height - height);
+			tickerMarks.lineTo(i, bounds.height);
+		}
+	}
+	
+//	//draw ticker marks
+//	ofSetLineWidth(1);
+//	float heightMultiplier = .75;
+//	for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
+//		//float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
+//		float x = screenXForTime(i);
+//		ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+//	}
+//    
+//	//draw regular increments
+//	int bigTickStep;
+//	if(durationInview < 1){ //draw big tick every 100 millis
+//		bigTickStep = .1;
+//	}
+//	else if(durationInview < 60){ // draw big tick every second
+//		bigTickStep = 1;
+//	}
+//	else {
+//		bigTickStep = 60;
+//	}
+//	ofSetLineWidth(3);
+//	heightMultiplier = .5;
+//	for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
+//		float x = screenXForTime(i);
+//		ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
+//	}
+//	
 }
 
 //TODO: find a way to make this not happen every frame

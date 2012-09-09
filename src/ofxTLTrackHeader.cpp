@@ -106,24 +106,13 @@ void ofxTLTrackHeader::draw(){
 	
 	//draw grippy lines on the footer draggable element
 	if(draggingSize){
-//		ofSetColor(track->getTimeline()->getColors().highlightColor);
 		footerStripes.setStrokeColor(track->getTimeline()->getColors().highlightColor);
 		footerStripes.draw(footerRect.x, footerRect.y);
 	}
 	else if(hoveringFooter){
-//		ofSetColor(track->getTimeline()->getColors().outlineColor);
 		footerStripes.setStrokeColor(track->getTimeline()->getColors().outlineColor);
 		footerStripes.draw(footerRect.x, footerRect.y);
 	}
-//	else{
-//		ofSetColor(track->getTimeline()->getColors().disabledColor);
-//		footerStripes.setStrokeColor(track->getTimeline()->getColors().disabledColor);
-//
-//	}
-    
-//	for(float l = bounds.x; l < bounds.x+bounds.width; l+=FOOTER_HEIGHT){
-		//ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
-//	}
 	
 	ofPopStyle();
 }
@@ -135,7 +124,6 @@ void ofxTLTrackHeader::recalculateFooterStripes(){
 
 	for(float l = 0; l < bounds.width; l+=FOOTER_HEIGHT){
 		footerStripes.moveTo(l, FOOTER_HEIGHT);
-		//ofLine(l+FOOTER_HEIGHT, footerStartY, l, footerStartY+footerRect.height);
 		footerStripes.lineTo(l+FOOTER_HEIGHT, 0);
 	}
 	
