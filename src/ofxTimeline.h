@@ -78,14 +78,14 @@ class ofxTimeline : ofThread {
 	//for precise timing apps and input recording it'll greatly
 	//improve performance
 	virtual void moveToThread();
-//    virtual void removeFromThread(); //TODO
+//    virtual void removeFromThread(); //TODO: implement this
 	
 	bool toggleEnabled();
     virtual void enable();
 	virtual void disable();
     
     virtual void clear(); //clears every track
-    virtual void reset(); //gets rid of everything
+    virtual void reset(); //gets rid of everything, sets back to one page
 
     //used mostly for generating unique XML
     //for custom names, call setup() before calling name
@@ -116,7 +116,6 @@ class ofxTimeline : ofThread {
 
     //sets where to save all timeline-related meta data xml files
     virtual void setWorkingFolder(string folderPath);
-    //sets where to save all timeline-related meta data xml files
     virtual string getWorkingFolder();
     
     //loads calls load on all tracks from the given folder
@@ -144,7 +143,10 @@ class ofxTimeline : ofThread {
     //otherwise call save manually to write the files
     void setAutosave(bool autosave);
 	virtual void save();
-
+	//if there have been changes without a save.
+	//if autosave is on this will always return false
+	bool hasUnsavedChanges();
+	
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTimeSeconds(float time);
     virtual void setCurrentTimeMillis(long millis);
@@ -387,6 +389,9 @@ class ofxTimeline : ofThread {
     
     virtual ofxTLEvents& events();
     
+	//binary test hack
+	bool curvesUseBinary;
+	
   protected:
 
     ofxTimecode timecode;
@@ -428,7 +433,7 @@ class ofxTimeline : ofThread {
     //this is populated on mouse-down or key-down with all items that could potentially be modified
 	vector<UndoItem> stateBuffers; 
     //then after the events are propagated all the modified tracks are collected here 
-    vector<ofxTLTrack*> modifiedTracks;
+    set<ofxTLTrack*> modifiedTracks;
     //finally, the state buffers for the tracks that were modified are pushed onto the stack say that state may be returned
     deque< vector<UndoItem> > undoStack;
     //the undo pointer points into the array and lets the user move through undo/redo actions
@@ -483,6 +488,7 @@ class ofxTimeline : ofThread {
 	double playbackStartTime;	
 
 	bool autosave;
+	bool unsavedChanges;
 	
 	bool isFrameBased;
 	float durationInSeconds;

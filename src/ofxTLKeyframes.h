@@ -100,6 +100,11 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void setValueRange(ofRange range, float defaultValue = 0);
     virtual ofRange getValueRange();
 	
+	//experimental binary saving. does not work with subclasses yet
+	void saveToBinaryFile();
+	void loadFromBinaryFile();
+	bool useBinarySave;
+	
   protected:
 	virtual ofxTLKeyframe* newKeyframe();
 	vector<ofxTLKeyframe*> keyframes;
@@ -157,4 +162,5 @@ class ofxTLKeyframes : public ofxTLTrack
 	bool keysDidDrag;
 	bool keysDidNudge;
 	bool createNewOnMouseup;
+
 };

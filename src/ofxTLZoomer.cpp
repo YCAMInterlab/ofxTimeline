@@ -54,6 +54,7 @@ ofxTLZoomer::~ofxTLZoomer(){
 void ofxTLZoomer::draw(){
 	
 	ofPushStyle();
+	ofSetColor(timeline->getColors().textColor);
 	//draw min
 	float screenY = bounds.y + bounds.height/2.0;
 	float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
@@ -86,7 +87,6 @@ void ofxTLZoomer::draw(){
 	ofCircle(maxScreenX, screenY, 5);
 
 	//draw playhead reference
-	ofSetColor(timeline->getColors().keyColor);
 	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y,
 		   bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
 	//draw zoom region reference

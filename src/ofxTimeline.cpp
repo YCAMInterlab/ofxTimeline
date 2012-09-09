@@ -78,6 +78,8 @@ ofxTimeline::ofxTimeline()
 	undoPointer(0),
 	undoEnabled(true),
 	isOnThread(false),
+	unsavedChanges(false),
+	curvesUseBinary(false),
 	defaultPalettePath("defaultColorPalette.png") //copy from ofxTimeline/assets into bin/data/
 {
 }
@@ -115,7 +117,8 @@ void ofxTimeline::setup(){
     
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
-    //todo save ticker positin
+	
+    //TODO: save ticker playhead position
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
 	
@@ -139,10 +142,9 @@ void ofxTimeline::setup(){
 
 void ofxTimeline::moveToThread(){
 	if(!isOnThread){
-		isOnThread = true;
 		stop();
+		isOnThread = true;
 		startThread();
-		
 	}
 }
 
@@ -299,18 +301,24 @@ void ofxTimeline::collectStateBuffers(){
 //push the collection of them onto the stack if there were any
 void ofxTimeline::pushUndoStack(){
 //    cout << "pushing undo stack" << endl;
+
     if(!undoEnabled) return;
     
     vector<UndoItem> undoCollection;
-    for(int i = 0; i < modifiedTracks.size(); i++){
+	set<ofxTLTrack*>::iterator trackit;
+//    for(int i = 0; i < modifiedTracks.size(); i++){
+	for(trackit = modifiedTracks.begin(); trackit != modifiedTracks.end(); trackit++){
         for(int buf = 0; buf < stateBuffers.size(); buf++){
             //this m
-            if(modifiedTracks[i] == stateBuffers[buf].track){
+            if(*trackit == stateBuffers[buf].track){
 //				cout << "modified state buffer for " << modifiedTracks[i]->getDisplayName() << endl;
                 undoCollection.push_back(stateBuffers[buf]);
             }
         }
     }
+	
+	
+	
     if(undoCollection.size() > 0){
         //remove any history that we've undone
         while(undoPointer < undoStack.size()){
@@ -321,14 +329,15 @@ void ofxTimeline::pushUndoStack(){
         
         //store the most recent state at the top of the queue
         vector<UndoItem> currentState;
-        for(int i = 0; i < modifiedTracks.size(); i++){
+		for(trackit = modifiedTracks.begin(); trackit != modifiedTracks.end(); trackit++){
             UndoItem ui;
-            ui.track = modifiedTracks[i];
-            ui.stateBuffer = modifiedTracks[i]->getXMLRepresentation();
+            ui.track = *trackit;//modifiedTracks[i];
+            ui.stateBuffer = (*trackit)->getXMLRepresentation();
             currentState.push_back(ui);
         }
         undoStack.push_back(currentState);
     }
+	
 }
 
 void ofxTimeline::setMovePlayheadOnDrag(bool movePlayhead){
@@ -350,7 +359,8 @@ ofxTLPlaybackEventArgs ofxTimeline::createPlaybackEvent(){
 	return args;
 }
 
-//internal elements call this when the value has changed, can call repeated
+//internal elements call this when the value has changed,
+//can call repeatedly without incurring saves
 void ofxTimeline::flagUserChangedValue(){
 	userChangedValue = true;
 }
@@ -367,12 +377,24 @@ void ofxTimeline::flagTrackModified(ofxTLTrack* track){
 	flagUserChangedValue();
     
     if(undoEnabled){
-        modifiedTracks.push_back(track);
+        modifiedTracks.insert(track);
     }
-    
+	
+    unsavedChanges = true;
     if(autosave){
         track->save();
     }
+}
+
+bool ofxTimeline::hasUnsavedChanges(){
+	return unsavedChanges;
+}
+
+void ofxTimeline::save(){
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->save();
+    }
+	unsavedChanges = false;
 }
 
 void ofxTimeline::play(){
@@ -389,7 +411,9 @@ void ofxTimeline::play(){
         if(isDone()){
             setPercentComplete(0.0);
         }
-		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
+		if(!isOnThread){
+			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
+		}
 		isPlaying = true;
         currentTime = ofClamp(currentTime, getInTimeInSeconds(), getOutTimeInSeconds());
         
@@ -413,7 +437,10 @@ void ofxTimeline::stop(){
 
 	if(getIsPlaying()){
         isPlaying = false;
-        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+		if(!isOnThread){
+	        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+		}
+
         ofxTLPlaybackEventArgs args = createPlaybackEvent();
         ofNotifyEvent(timelineEvents.playbackEnded, args);
 	}
@@ -634,11 +661,6 @@ void ofxTimeline::reset(){ //gets rid of everything
 
 }
 
-void ofxTimeline::save(){
-	for(int i = 0; i < pages.size(); i++){
-        pages[i]->save();
-    }	
-}
 
 void ofxTimeline::setDurationInFrames(int frames){
     setDurationInSeconds(timecode.secondsForFrame(frames));
@@ -922,7 +944,7 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-
+	
     //cout << "key event " << args.key << " z? " << int('z') << " ctrl? " << ofGetModifierControlPressed() << " " << ofGetModifierShiftPressed() << " short cut? " << ofGetModifierShortcutKeyPressed() << endl;
 
 	if(undoEnabled && ofGetModifierShortcutKeyPressed() && (args.key == 'z' || args.key == 'z'-96)){
@@ -1271,6 +1293,7 @@ ofxTLCurves* ofxTimeline::addCurves(string trackName, ofRange valueRange, float 
 
 ofxTLCurves* ofxTimeline::addCurves(string trackName, string xmlFileName, ofRange valueRange, float defaultValue){
 	ofxTLCurves* newCurves = new ofxTLCurves();
+	newCurves->useBinarySave = curvesUseBinary;
 	newCurves->setCreatedByTimeline(true);
 	newCurves->setValueRange(valueRange, defaultValue);
 	newCurves->setXMLFileName(xmlFileName);

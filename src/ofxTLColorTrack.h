@@ -43,9 +43,6 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	virtual void setDefaultColor(ofColor color);
 	virtual ofColor getDefaultColor();
 	
-//	virtual void load();
-//	virtual void save();
-	
   protected:
 	
 	ofImage colorPallete;

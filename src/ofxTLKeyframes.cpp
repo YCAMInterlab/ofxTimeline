@@ -52,7 +52,8 @@ ofxTLKeyframes::ofxTLKeyframes()
 	lastKeyframeIndex(1),
 	lastSampleTime(0),
 	shouldRecomputePreviews(false),
-	createNewOnMouseup(false)
+	createNewOnMouseup(false),
+	useBinarySave(false)
 {
 	xmlFileName = "_keyframes.xml";	
 }
@@ -67,14 +68,11 @@ void ofxTLKeyframes::recomputePreviews(){
 //	cout << "ofxTLKeyframes::recomputePreviews " << endl;
 	
 	if(keyframes.size() == 0 || keyframes.size() == 1){
-		//ofVertex(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
 		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
-//		ofVertex(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height);
 		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
 	}
 	else{
 		for(int p = bounds.x; p <= bounds.width; p++){
-//			ofVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
 	}
@@ -223,15 +221,19 @@ float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe
 }
 
 void ofxTLKeyframes::load(){
-	ofxXmlSettings savedkeyframes;
     clear();
-	
-	if(!savedkeyframes.loadFile(xmlFileName)){
-		ofLog(OF_LOG_NOTICE, "ofxTLKeyframes --- couldn't load xml file " + xmlFileName);
-		return;
+	if(useBinarySave){
+		loadFromBinaryFile();
 	}
-	
-	createKeyframesFromXML(savedkeyframes, keyframes);
+	else{
+		ofxXmlSettings savedkeyframes;
+		if(!savedkeyframes.loadFile(xmlFileName)){
+			ofLog(OF_LOG_NOTICE, "ofxTLKeyframes --- couldn't load xml file " + xmlFileName);
+			return;
+		}
+		
+		createKeyframesFromXML(savedkeyframes, keyframes);
+	}
 	timeline->flagTrackModified(this);
 	updateKeyframeSort();
 }
@@ -289,31 +291,35 @@ void ofxTLKeyframes::clear(){
 }
 
 void ofxTLKeyframes::save(){
-	string xmlRep = getXMLStringForKeyframes(keyframes);
-	ofxXmlSettings savedkeyframes;
-	savedkeyframes.loadFromBuffer(xmlRep);
-	savedkeyframes.saveFile(xmlFileName);
+	if(useBinarySave){
+		saveToBinaryFile();
+	}
+	else{
+		string xmlRep = getXMLStringForKeyframes(keyframes);
+		ofxXmlSettings savedkeyframes;
+		savedkeyframes.loadFromBuffer(xmlRep);
+		savedkeyframes.saveFile(xmlFileName);
+	}
 }
 
 string ofxTLKeyframes::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
+//	return "";
 	ofxXmlSettings savedkeyframes;
 	savedkeyframes.addTag("keyframes");
 	savedkeyframes.pushTag("keyframes");
-	
+
 	for(int i = 0; i < keys.size(); i++){
 		savedkeyframes.addTag("key");
 		savedkeyframes.pushTag("key", i);
         
         //calling store before saving the default values gives the subclass a chance to modify them
-        storeKeyframe(keys[i], savedkeyframes); 
-		//savedkeyframes.addValue("x", keys[i]->position.x);
-        //savedkeyframes.addValue("x", keys[i]->time);
-        savedkeyframes.addValue("time", timeline->getTimecode().timecodeForMillis(keys[i]->time));
+        storeKeyframe(keys[i], savedkeyframes);
+        savedkeyframes.addValue("time", ofxTimecode::timecodeForMillis(keys[i]->time));
 		savedkeyframes.addValue("value", keys[i]->value);
         
 		savedkeyframes.popTag(); //key
 	}
-	
+
 	savedkeyframes.popTag();//keyframes
 	string str;
 	savedkeyframes.copyXmlToString(str);
@@ -326,7 +332,7 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 	
     keysAreDraggable = !ofGetModifierShiftPressed();
     keysDidDrag = false;
-	selectedKeyframe = keyframeAtScreenpoint(screenpoint);
+	selectedKeyframe =  keyframeAtScreenpoint(screenpoint);
     //if we clicked OFF of a keyframe OR...
     //if we clicked on a keyframe outside of the current selection and we aren't holding down shift, clear all
     if(!ofGetModifierSelection() && (isActive() || selectedKeyframe != NULL) ){
@@ -418,6 +424,7 @@ void ofxTLKeyframes::updateKeyframeSort(){
 	shouldRecomputePreviews = true;
 	lastKeyframeIndex = 1;
 	lastSampleTime = 0;
+
 	sort(keyframes.begin(), keyframes.end(), keyframesort);
 	if(selectedKeyframes.size() > 1){
 		sort(selectedKeyframes.begin(), selectedKeyframes.end(), keyframesort);
@@ -441,7 +448,6 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 		keyframes.push_back(selectedKeyframe);
 		selectedKeyframes.push_back(selectedKeyframe);
 		updateKeyframeSort();
-//		cout << "creating new and  flagging" << endl;
 		timeline->flagTrackModified(this);
 	}
 	createNewOnMouseup = false;
@@ -542,6 +548,51 @@ void ofxTLKeyframes::loadFromXMLRepresentation(string rep){
     createKeyframesFromXML(buffer, keyframes);
     updateKeyframeSort();
     timeline->flagUserChangedValue();    //because this is only called in Undo we don't flag track modified
+}
+
+//experimental binary saving. does not work with subclasses yet
+void ofxTLKeyframes::saveToBinaryFile(){
+	//write header
+	//# keyframes (int),
+	//size per keyframe (int)
+	//keyframe chain
+	string filePath = ofFilePath::removeExt(xmlFileName) + ".bin";
+	
+	int numKeys = keyframes.size();
+	int keyBytes = sizeof(long) + sizeof(float); //time + value
+	cout << "saving binary file " << filePath << " with # keys " << numKeys << endl;
+	ofFile outfile(ofToDataPath(filePath), ofFile::WriteOnly, true);
+	outfile.write((char*)&numKeys,sizeof(int));
+	outfile.write((char*)&keyBytes, sizeof(int));
+	for(int i = 0; i < keyframes.size(); i++){
+		outfile.write( (char*)&keyframes[i]->time, sizeof(long));
+		outfile.write( (char*)&keyframes[i]->value, sizeof(float));
+	}
+	outfile.close();
+}
+
+void ofxTLKeyframes::loadFromBinaryFile(){
+	
+	string filePath = ofFilePath::removeExt(xmlFileName) + ".bin";
+	
+	if(!ofFile(filePath).exists()){
+		cout << "binary file doesn't exist " << filePath << endl;
+		return;
+	}
+	cout << " found file " << filePath << endl;
+	keyframes.clear();
+	ofFile infile(ofToDataPath(filePath), ofFile::ReadOnly, true);
+	int numKeys, keyBytes;
+	infile.read( (char*)&numKeys, sizeof(int) );
+	infile.read( (char*)&keyBytes, sizeof(int) );
+	cout << "# keys " << numKeys << " of size " << keyBytes << endl;
+	for(int i = 0; i < numKeys; i++){
+		ofxTLKeyframe* k = newKeyframe();
+		infile.read( (char*)&k->time, sizeof(long) );
+		infile.read( (char*)&k->value, sizeof(float) );
+		keyframes.push_back(k);
+	}
+	shouldRecomputePreviews = true;
 }
 
 void ofxTLKeyframes::keyPressed(ofKeyEventArgs& args){
