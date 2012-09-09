@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLKeyframes.h"
+#include "ofxTLBangs.h"
 
 class ofxTLColorSample : public ofxTLKeyframe {
   public:
@@ -17,7 +17,7 @@ class ofxTLColorSample : public ofxTLKeyframe {
 	ofColor color; //cached sample
 };
 
-class ofxTLColorTrack : public ofxTLKeyframes {
+class ofxTLColorTrack : public ofxTLBangs {
   public:
     ofxTLColorTrack();
 	
@@ -53,9 +53,7 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	string palettePath;
 	ofColor colorAtClickTime;
 	
-	
-	bool shouldRecalculatePreview;
-	
+		
 	virtual void updatePreviewPalette();
 	virtual ofxTLKeyframe* newKeyframe();
 	

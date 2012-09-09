@@ -11,7 +11,6 @@
 
 ofxTLColorTrack::ofxTLColorTrack()
  :	drawingColorWindow(false),
-	shouldRecalculatePreview(false),
 	clickedInColorRect(false),
 	defaultColor(ofColor(0,0,0))
 {
@@ -20,7 +19,7 @@ ofxTLColorTrack::ofxTLColorTrack()
 
 void ofxTLColorTrack::draw(){
 	
-	if(viewIsDirty || shouldRecalculatePreview){
+	if(viewIsDirty || shouldRecomputePreviews){
 		updatePreviewPalette();
 	}
 	
@@ -95,9 +94,6 @@ void ofxTLColorTrack::drawModalContent(){
 		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
 		colorPallete.draw(colorWindow);
-		
-		
-		
 		
 		ofVec2f selectionPoint = colorWindow.getMin() + selectedSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
 		ofSetColor(selectedSample->color.getInverted());
@@ -186,7 +182,7 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 		return true;
 	}
 	else{
-		return ofxTLKeyframes::mousePressed(args, millis);
+		return ofxTLBangs::mousePressed(args, millis);
 	}
 }
 
@@ -197,28 +193,27 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
 												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
 			refreshSample(selectedSample);
-			shouldRecalculatePreview = true;
+			shouldRecomputePreviews = true;
 		}
 	}
 	else{
-		ofxTLKeyframes::mouseDragged(args, millis);
+		ofxTLBangs::mouseDragged(args, millis);
 		if(keysDidDrag){
-			shouldRecalculatePreview = true;
+			shouldRecomputePreviews = true;
 		}
 	}
 }
-
 
 void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
 			timeline->dismissedModalContent();
 			drawingColorWindow = false;
-			shouldRecalculatePreview = true;
+			shouldRecomputePreviews = true;
 		}
 	}
 	else{
-		ofxTLKeyframes::mouseReleased(args, millis);
+		ofxTLBangs::mouseReleased(args, millis);
 	}
 }
 
@@ -230,7 +225,7 @@ void ofxTLColorTrack::keyPressed(ofKeyEventArgs& args){
 		}
 	}
 	else{
-		ofxTLKeyframes::keyPressed(args);
+		ofxTLBangs::keyPressed(args);
 	}
 }
 
@@ -252,7 +247,7 @@ void ofxTLColorTrack::updatePreviewPalette(){
 	previewPalette.update();
 
 	
-	shouldRecalculatePreview = false;
+	shouldRecomputePreviews = false;
 }
 
 ofxTLKeyframe* ofxTLColorTrack::newKeyframe(){
@@ -262,6 +257,7 @@ ofxTLKeyframe* ofxTLColorTrack::newKeyframe(){
 	//when creating a new keyframe select it and draw a color window
 	colorAtClickTime = defaultColor;
 	drawingColorWindow = true;
+	clickedInColorRect = true;
 	timeline->presentedModalContent(this);
 	return sample;
 }
