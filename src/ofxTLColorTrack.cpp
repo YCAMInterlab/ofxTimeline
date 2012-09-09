@@ -24,7 +24,6 @@ void ofxTLColorTrack::draw(){
 		updatePreviewPalette();
 	}
 	
-	
 	if(keyframes.size() == 0){
 		ofPushStyle();
 		ofSetColor(defaultColor);
@@ -56,8 +55,22 @@ void ofxTLColorTrack::draw(){
 		ofSetColor(s->color);
 		ofTriangle(a,b,c);
 		ofNoFill();
-		ofSetColor(timeline->getColors().keyColor);
+		ofSetColor(s->color.getInverted());
+		ofSetLineWidth(1);
 		ofTriangle(a,b,c);
+
+		if(keyframes[i] == hoverKeyframe){
+			ofSetColor(timeline->getColors().highlightColor);
+			ofSetLineWidth(3);
+		}
+		else if(isKeyframeSelected(keyframes[i])){
+			ofSetColor(timeline->getColors().textColor);
+			ofSetLineWidth(2);
+		}
+		else{
+			ofSetColor(s->color.getInverted());
+		}
+		ofLine(c, ofVec2f(screenX, bounds.getMaxY()));
 		ofPopStyle();
 	}
 }
@@ -77,9 +90,29 @@ void ofxTLColorTrack::drawModalContent(){
 			timeline->dismissedModalContent();
 			drawingColorWindow = false;
 		}
-			
-		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y, 150, 150);
+		ofPushStyle();
+		
+		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
 		colorPallete.draw(colorWindow);
+		
+		
+		
+		
+		ofVec2f selectionPoint = colorWindow.getMin() + selectedSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
+		ofSetColor(selectedSample->color.getInverted());
+		ofLine(selectionPoint - ofVec2f(8,0), selectionPoint + ofVec2f(8,0));
+		ofLine(selectionPoint - ofVec2f(0,8), selectionPoint + ofVec2f(0,8));
+		
+		ofSetColor(colorAtClickTime);
+		ofRect(colorWindow.x, colorWindow.getMaxY(), colorWindow.width/2, 25);
+		ofSetColor(selectedSample->color);
+		ofRect(colorWindow.x+colorWindow.width/2, colorWindow.getMaxY(), colorWindow.width/2, 25);
+		ofSetColor(timeline->getColors().keyColor);
+		ofNoFill();
+		ofSetLineWidth(2);
+		ofRect(colorWindow);
+		ofPopStyle();
 	}	
 }
 
@@ -126,6 +159,8 @@ ofColor ofxTLColorTrack::getColorAtMillis(unsigned long millis){
 			return samplePaletteAtPosition(startSample->samplePoint.getInterpolated(endSample->samplePoint, interpolationPosition));
 		}
 	}
+	ofLogError("ofxTLColorTrack::getColorAtMillis") << "Could not find color for millis " << millis << endl;
+	return defaultColor;
 }
 
 void ofxTLColorTrack::setDefaultColor(ofColor color){
@@ -147,7 +182,7 @@ string ofxTLColorTrack::getPalettePath(){
 //the superclass controls keyframe placement
 bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
-		clickedInColorRect = colorWindow.inside(args.x, args.y);
+		clickedInColorRect = args.button == 0 && colorWindow.inside(args.x, args.y);
 		return true;
 	}
 	else{
@@ -158,7 +193,11 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		if(clickedInColorRect){
-			
+			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
+												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
+			refreshSample(selectedSample);
+			shouldRecalculatePreview = true;
 		}
 	}
 	else{
@@ -169,22 +208,29 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 	}
 }
 
+
 void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
-		if(colorWindow.inside(args.x, args.y)){
-			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
-			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
-												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
-			refreshSample(selectedSample);
+		if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
+			timeline->dismissedModalContent();
+			drawingColorWindow = false;
 			shouldRecalculatePreview = true;
 		}
-		cout << "dissmissing modal content" << endl;
-		timeline->dismissedModalContent();
-		drawingColorWindow = false;
-		shouldRecalculatePreview = true;
 	}
 	else{
 		ofxTLKeyframes::mouseReleased(args, millis);
+	}
+}
+
+void ofxTLColorTrack::keyPressed(ofKeyEventArgs& args){
+	if(drawingColorWindow){
+		if(args.key == OF_KEY_RETURN){
+			timeline->dismissedModalContent();
+			drawingColorWindow = false;			
+		}
+	}
+	else{
+		ofxTLKeyframes::keyPressed(args);
 	}
 }
 
@@ -204,40 +250,7 @@ void ofxTLColorTrack::updatePreviewPalette(){
 	}
 	previewPalette.setUseTexture(true);
 	previewPalette.update();
-	
-	/*
-	ofColor startColor = getColorAtMillis(screenXToMillis(0));
-	colorMesh.addVertex(bounds.getMin());
-	colorMesh.addColor(startColor);
-	colorMesh.addVertex(ofVec2f(bounds.getMinX(),bounds.getMaxY()));
-	colorMesh.addColor(startColor);
-	for(int i = 0; i < keyframes.size(); i++){
-		ofxTLColorSample* sample = (ofxTLColorSample*)keyframes[i];
-		int screenX = millisToScreenX(sample->time);
-		colorMesh.addVertex(ofVec2f(screenX, bounds.getMinY()));
-		colorMesh.addColor(sample->color);
-		colorMesh.addVertex(ofVec2f(screenX, bounds.getMaxY()));
-	}
-	
-	ofColor endColor = getColorAtMillis(screenXToMillis(bounds.getMaxX()));
-	colorMesh.addVertex(ofVec2f(bounds.getMaxX(),bounds.getMinY()));
-	colorMesh.addColor(endColor);
-	colorMesh.addVertex(bounds.getMax());
-	colorMesh.addColor(endColor);
-	
-	//index it!
-	for(int i = 4; i <= colorMesh.getVertices().size(); i+=2){
-		cout << "adding two triangles" << endl;
-		//top left
-		colorMesh.addIndex(i-4);
-		colorMesh.addIndex(i-2);
-		colorMesh.addIndex(i-3);
 
-		colorMesh.addIndex(i-2);
-		colorMesh.addIndex(i-1);
-		colorMesh.addIndex(i-3);
-	}
-	*/
 	
 	shouldRecalculatePreview = false;
 }
@@ -247,9 +260,9 @@ ofxTLKeyframe* ofxTLColorTrack::newKeyframe(){
 	sample->samplePoint = ofVec2f(0,0);
 	sample->color = defaultColor;
 	//when creating a new keyframe select it and draw a color window
+	colorAtClickTime = defaultColor;
 	drawingColorWindow = true;
 	timeline->presentedModalContent(this);
-	
 	return sample;
 }
 
@@ -272,18 +285,22 @@ void ofxTLColorTrack::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 }
 
 void ofxTLColorTrack::selectedKeySecondaryClick(ofMouseEventArgs& args){
-	//TODO show sample window
+	if(selectedKeyframe != NULL){
+		drawingColorWindow = true;
+		colorAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->color;
+		timeline->presentedModalContent(this);
+	}
 }
 
 ofxTLKeyframe* ofxTLColorTrack::keyframeAtScreenpoint(ofVec2f p){
-    if(isActive()){
-        for(int i = 0; i < keyframes.size(); i++){
-            float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);
-            if (abs(offset) < 5) {
-                return keyframes[i];
-            }
-        }
-    }
+	if(isHovering()){
+		for(int i = 0; i < keyframes.size(); i++){
+			float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);
+			if (abs(offset) < 5) {
+				return keyframes[i];
+			}
+		}
+	}
 	return NULL;
 }
 
@@ -294,6 +311,7 @@ void ofxTLColorTrack::refreshSample(ofxTLColorSample* sample){
 //assumes normalized position
 ofColor ofxTLColorTrack::samplePaletteAtPosition(ofVec2f position){
 	if(colorPallete.bAllocated()){
+		//TODO: make this interpolated based on float values to eliminate striping
 		return colorPallete.getColor(position.x*colorPallete.getWidth(),position.y*colorPallete.getHeight());
 	}
 	else{

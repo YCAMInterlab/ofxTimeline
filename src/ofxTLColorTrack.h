@@ -29,6 +29,8 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+	virtual void keyPressed(ofKeyEventArgs& args);
+
     virtual string getTrackType();
 	
 	virtual void loadColorPalette(ofBaseHasPixels& image);
@@ -43,11 +45,14 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	virtual void setDefaultColor(ofColor color);
 	virtual ofColor getDefaultColor();
 	
+
   protected:
 	
 	ofImage colorPallete;
 	ofImage previewPalette;
 	string palettePath;
+	ofColor colorAtClickTime;
+	
 	
 	bool shouldRecalculatePreview;
 	
