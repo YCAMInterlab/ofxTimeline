@@ -34,7 +34,7 @@ class ofxTLColorTrack : public ofxTLBangs {
     virtual string getTrackType();
 	
 	virtual void loadColorPalette(ofBaseHasPixels& image);
-	virtual void loadColorPalette(string imagePath);
+	virtual bool loadColorPalette(string imagePath);
 	virtual string getPalettePath(); //only valid when it's been loaded from an image path
 	
     ofColor getColor();
@@ -45,9 +45,7 @@ class ofxTLColorTrack : public ofxTLBangs {
 	virtual void setDefaultColor(ofColor color);
 	virtual ofColor getDefaultColor();
 	
-
   protected:
-	
 	ofImage colorPallete;
 	ofImage previewPalette;
 	string palettePath;
@@ -66,6 +64,10 @@ class ofxTLColorTrack : public ofxTLBangs {
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);
 	
+	void refreshAllSamples();
+	//set when selecting
+	ofxTLColorSample* previousSample;
+	ofxTLColorSample* nextSample;
 	void refreshSample(ofxTLColorSample* sample);
 	ofColor samplePaletteAtPosition(ofVec2f position);
 	

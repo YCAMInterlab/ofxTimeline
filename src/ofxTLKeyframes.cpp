@@ -100,7 +100,7 @@ void ofxTLKeyframes::recomputePreviews(){
 
 void ofxTLKeyframes::draw(){
 	
-	if(bounds.width == 0 || bounds.height == 0){
+	if(bounds.width == 0 || bounds.height < 2){
 		return;
 	}
 	

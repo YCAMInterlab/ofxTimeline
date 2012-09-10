@@ -12,7 +12,10 @@
 ofxTLColorTrack::ofxTLColorTrack()
  :	drawingColorWindow(false),
 	clickedInColorRect(false),
-	defaultColor(ofColor(0,0,0))
+	defaultColor(ofColor(0,0,0)),
+	previousSample(NULL),
+	nextSample(NULL)
+
 {
 	//
 }
@@ -114,12 +117,16 @@ void ofxTLColorTrack::drawModalContent(){
 
 void ofxTLColorTrack::loadColorPalette(ofBaseHasPixels& image){
 	colorPallete.setFromPixels(image.getPixelsRef());
+	refreshAllSamples();
 }
 
-void ofxTLColorTrack::loadColorPalette(string imagePath){
+bool ofxTLColorTrack::loadColorPalette(string imagePath){
 	if(colorPallete.loadImage(imagePath)){
 		palettePath = imagePath;
+		refreshAllSamples();
+		return true;
 	}
+	return false;
 }
 
 ofColor ofxTLColorTrack::getColor(){
@@ -179,6 +186,12 @@ string ofxTLColorTrack::getPalettePath(){
 bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		clickedInColorRect = args.button == 0 && colorWindow.inside(args.x, args.y);
+		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+		selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
+											  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
+		refreshSample(selectedSample);
+		shouldRecomputePreviews = true;
+		
 		return true;
 	}
 	else{
@@ -298,6 +311,13 @@ ofxTLKeyframe* ofxTLColorTrack::keyframeAtScreenpoint(ofVec2f p){
 		}
 	}
 	return NULL;
+}
+
+void ofxTLColorTrack::refreshAllSamples(){
+	for(int i = 0; i < keyframes.size(); i++){
+		refreshSample((ofxTLColorSample*)keyframes[i]);
+	}
+	shouldRecomputePreviews = true;
 }
 
 void ofxTLColorTrack::refreshSample(ofxTLColorSample* sample){
