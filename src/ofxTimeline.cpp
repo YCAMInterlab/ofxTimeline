@@ -966,6 +966,13 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	
     //cout << "key event " << args.key << " z? " << int('z') << " ctrl? " << ofGetModifierControlPressed() << " " << ofGetModifierShiftPressed() << " short cut? " << ofGetModifierShortcutKeyPressed() << endl;
 
+	if(modalTrack != NULL){
+		collectStateBuffers();
+        modalTrack->keyPressed(args);
+		pushUndoStack();
+		return;
+    }
+
 	if(undoEnabled && ofGetModifierShortcutKeyPressed() && (args.key == 'z' || args.key == 'z'-96)){
 		if(ofGetModifierShiftPressed()){
 			redo();
@@ -980,11 +987,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     collectStateBuffers();
 
     
-    if(modalTrack != NULL){
-        modalTrack->keyPressed(args);
-		pushUndoStack();
-		return;
-    }
     
 	if(ofGetModifierShortcutKeyPressed()){
 		if(args.key == 'c' || args.key == 'c'-96){ //copy
