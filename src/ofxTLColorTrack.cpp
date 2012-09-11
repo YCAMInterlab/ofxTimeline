@@ -186,11 +186,13 @@ string ofxTLColorTrack::getPalettePath(){
 bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		clickedInColorRect = args.button == 0 && colorWindow.inside(args.x, args.y);
-		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
-		selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
-											  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
-		refreshSample(selectedSample);
-		shouldRecomputePreviews = true;
+		if(clickedInColorRect){
+			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
+												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
+			refreshSample(selectedSample);
+			shouldRecomputePreviews = true;
+		}
 		
 		return true;
 	}
