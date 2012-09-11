@@ -1533,6 +1533,8 @@ void ofxTimeline::bringTrackToTop(string trackName){
 void ofxTimeline::bringTrackToTop(ofxTLTrack* track){
     if(track != NULL){
 		trackNameToPage[track->getName()]->bringTrackToTop(track);
+		ofEventArgs args;
+		ofNotifyEvent(events().viewWasResized, args);
     }
 }
 
@@ -1542,7 +1544,9 @@ void ofxTimeline::bringTrackToBottom(string trackName){
 
 void ofxTimeline::bringTrackToBottom(ofxTLTrack* track){
     if(track != NULL){
-		trackNameToPage[track->getName()]->bringTrackToBottom(track);        
+		trackNameToPage[track->getName()]->bringTrackToBottom(track);
+		ofEventArgs args;
+		ofNotifyEvent(events().viewWasResized, args);		
     }
 }
 
@@ -1555,7 +1559,9 @@ void ofxTimeline::removeTrack(string name){
     if(track == modalTrack){
         modalTrack = NULL;
     }
-
+	if(track == (ofxTLTrack*)timeControl){
+		timeControl =  NULL;
+	}
     //quick fix for now -- we need to have Undo and Delete track work together
     //but to prevent crashes, let's just go through the undo queue and remove any items that have to do with this track
     for(int i = 0; i < undoStack.size(); i++){

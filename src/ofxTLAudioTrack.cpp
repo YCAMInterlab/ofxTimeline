@@ -20,29 +20,26 @@ ofxTLAudioTrack::~ofxTLAudioTrack(){
 
 }
 
-void ofxTLAudioTrack::enable(){
-	if(!enabled){
-        ofxTLTrack::enable();
-        ofAddListener(events().viewWasResized, this, &ofxTLAudioTrack::boundsChanged);        
-    }    
-}
-
-void ofxTLAudioTrack::disable(){
-	if(enabled){
-        ofxTLTrack::disable();
-        ofRemoveListener(events().viewWasResized, this, &ofxTLAudioTrack::boundsChanged);        
-    }
-}
-
-void ofxTLAudioTrack::loadSoundfile(string filepath){
+bool ofxTLAudioTrack::loadSoundfile(string filepath){
+	soundLoaded = false;
 	if(player.loadSound(filepath, false)){
     	soundLoaded = true;
+		soundFilePath = filepath;
         //	cout << "duration is " << player.getDuration() << endl;
         //	cout << "num samples " << player.getBuffer().size() << endl;
 		shouldRecomputePreview = true;
     }
+	return soundLoaded;
 }
-    
+ 
+string ofxTLAudioTrack::getSoundfilePath(){
+	return soundFilePath;
+}
+
+bool ofxTLAudioTrack::isSoundLoaded(){
+	return soundLoaded;
+}
+
 float ofxTLAudioTrack::getDuration(){
 	return player.getDuration();
 }
@@ -66,7 +63,7 @@ void ofxTLAudioTrack::draw(){
 		return;
 	}
 		
-	if(shouldRecomputePreview){
+	if(shouldRecomputePreview || viewIsDirty){
 		recomputePreview();
 	}
 
@@ -133,6 +130,7 @@ void ofxTLAudioTrack::recomputePreview(){
 				preview.addVertex(i,trackCenter);
 			}
 		}
+		preview.simplify();
 		previews.push_back(preview);
 	}
 	computedZoomBounds = zoomBounds;
@@ -199,29 +197,30 @@ void ofxTLAudioTrack::stop(){
 	}
 }
 
-void ofxTLAudioTrack::togglePlay(){
-	if(player.getIsPlaying()){
+bool ofxTLAudioTrack::togglePlay(){
+	if(isPlaying()){
 		stop();
 	}
 	else {
 		play();
 	}
+	return isPlaying();
 }
 
-bool ofxTLAudioTrack::getIsPlaying() {
+bool ofxTLAudioTrack::isPlaying(){
     return player.getIsPlaying();
 }
 
-void ofxTLAudioTrack::setSpeed(float speed) {
+void ofxTLAudioTrack::setSpeed(float speed){
     player.setSpeed(speed);
 }
 
-float ofxTLAudioTrack::getSpeed() {
+float ofxTLAudioTrack::getSpeed(){
     return player.getSpeed();
 }
 
 string ofxTLAudioTrack::getTrackType(){
-    return "Sound";    
+    return "Audio";    
 }
 
    

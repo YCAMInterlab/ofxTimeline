@@ -42,16 +42,22 @@ ofxTLTrackHeader::ofxTLTrackHeader(){
 }
 
 ofxTLTrackHeader::~ofxTLTrackHeader(){
-
+	
 }
 
 void ofxTLTrackHeader::enable(){
-	nameField.setup();    
-    ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+	if(isEnabled()){
+		ofxTLTrack::enable();
+		nameField.setup();
+    	ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+	}
 }
 
 void ofxTLTrackHeader::disable(){
-    ofRemoveListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+	if(!isEnabled()){
+		ofxTLTrack::disable();
+	    ofRemoveListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
+	}
 }
 
 void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){

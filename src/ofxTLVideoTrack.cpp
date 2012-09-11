@@ -437,5 +437,5 @@ void ofxTLVideoTrack::exit(ofEventArgs& args){
 }
 
 string ofxTLVideoTrack::getTrackType(){
-    return "VideoTrack";
+    return "Video";
 }
