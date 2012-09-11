@@ -101,7 +101,7 @@ void ofxTLTicker::draw(){
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
             //draw playhead line
             ofSetColor(timeline->getColors().textColor);
-            ofDrawBitmapString(text, previewTimecodeX, bounds.y+textH*2);
+            timeline->getFont().drawString(text, previewTimecodeX, bounds.y+textH*2);
         }
 		
 		ofSetColor(timeline->getColors().highlightColor);
@@ -130,7 +130,7 @@ void ofxTLTicker::draw(){
         ofFill();
         ofRect(timeCodeX-5, bounds.y, textW, textH);
         ofSetColor(timeline->getColors().textColor);
-        ofDrawBitmapString(text, timeCodeX, bounds.y+textH);
+        timeline->getFont().drawString(text, timeCodeX, bounds.y+textH);
     }
 	
     if(timeline->getIsPlaying()){

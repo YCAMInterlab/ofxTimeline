@@ -65,6 +65,5 @@ class ofxTLPageTabs : public ofxTLTrack {
 	virtual void drawRectChanged();
 	int selectedPageIndex;
 	vector<Tab> pages;
-
 	
 };

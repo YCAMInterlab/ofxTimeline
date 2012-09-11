@@ -33,6 +33,7 @@
  */
 
 #include "ofxTLPageTabs.h"
+#include "ofxTimeline.h"
 
 void ofxTLPageTabs::setup(){
 	selectedPageIndex = -1;
@@ -50,7 +51,7 @@ void ofxTLPageTabs::draw(){
 		ofSetColor(255, 100, 0);		
 		ofRect(pages[i].bounds);
 		
-		ofDrawBitmapString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + 10 );
+		timeline->getFont().drawString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + 10);
 	}
 	ofPopStyle();
 }

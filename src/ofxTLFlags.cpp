@@ -68,7 +68,6 @@ void ofxTLFlags::draw(){
 	ofSetLineWidth(5);
 	for(int i = keyframes.size()-1; i >= 0; i--){
         ofxTLFlag* key = (ofxTLFlag*)keyframes[i];
-//		int screenX = normalizedXtoScreenX(key->position.x);
 		int screenX = millisToScreenX(key->time);
 		ofSetColor(timeline->getColors().backgroundColor);		
 		int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
@@ -76,15 +75,9 @@ void ofxTLFlags::draw(){
 		ofRect(key->display);
         
 		ofSetColor(timeline->getColors().textColor);		
-//		if(enteringText && isKeyframeSelected(key)){
         key->textField.bounds.x = screenX;
         key->textField.bounds.y = key->display.y;//-10 accounts for textfield's offset
         key->textField.draw(); 
-//		}
-//		else {
-//			string timeString = timeline->formatTime(key->position.x);
-//			ofDrawBitmapString(key->textField.text, screenX+5, textHeight);
-//		}
 	}
 	ofPopStyle();
 }

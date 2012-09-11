@@ -39,6 +39,20 @@
 
 #include "ofMain.h"
 
+//For lack of a type abstraction, this let's you #define a font renderer before including ofxTimeline
+//(like ofxFTGL or ofxFont)
+//to use ofxFTGL use somethinglike this:
+//#define OFX_TIMELINE_FONT_RENDERER ofxFTGLFont
+//#define OFX_TIMELINE_FONT_INCLUDE "ofxFTGLFont.h"
+
+#ifndef OFX_TIMELINE_FONT_RENDERER
+#define OFX_TIMELINE_FONT_RENDERER ofTrueTypeFont
+#endif
+
+#ifdef OFX_TIMELINE_FONT_INCLUDE
+#include OFX_TIMELINE_FONT_INCLUDE
+#endif
+
 //external addons
 #include "ofRange.h"
 #include "ofxMSATimer.h"
@@ -107,7 +121,15 @@ class ofxTimeline : ofThread {
 	virtual void hide();
 	virtual void draw();
 //	virtual void draw(ofEventArgs& args);
-
+    
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void keyPressed(ofKeyEventArgs& args);
+	virtual void keyReleased(ofKeyEventArgs& args);
+	virtual void windowResized(ofResizeEventArgs& args);
+	
     //show/hide ticker,zoomer,inout all at once
     virtual void setShowTimeControls(bool shouldShowTimeControls);
     virtual void setShowTicker(bool shouldShowTicker);
@@ -199,6 +221,7 @@ class ofxTimeline : ofThread {
 	float getOutTimeInSeconds();
 	long getOutTimeInMillis();
     string getOutPointTimecode();
+
 
 	virtual void setOffset(ofVec2f offset);
     virtual void setLockWidthToWindow(bool lockWidth);
@@ -335,15 +358,11 @@ class ofxTimeline : ofThread {
     virtual void bringTrackToTop(ofxTLTrack* track);
     virtual void bringTrackToBottom(string name);
     virtual void bringTrackToBottom(ofxTLTrack* track);
-    
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args);
-	virtual void mouseReleased(ofMouseEventArgs& args);
-	virtual void keyPressed(ofKeyEventArgs& args);
-	virtual void keyReleased(ofKeyEventArgs& args);
-	virtual void windowResized(ofResizeEventArgs& args);
-
+	
+	void setupFont();
+	void setupFont(string newFontPath, int newFontSize);
+	OFX_TIMELINE_FONT_RENDERER & getFont();
+	
 	ofxTLColors& getColors();
 	ofxTimecode& getTimecode();
 	ofxTLZoomer* getZoomer();
@@ -446,6 +465,10 @@ class ofxTimeline : ofThread {
 	float width;
 	ofVec2f offset;
 
+	int fontSize;
+	string fontPath;
+	OFX_TIMELINE_FONT_RENDERER font;
+	
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
     virtual void threadedFunction(); //only fired after moveToThread()

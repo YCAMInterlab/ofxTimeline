@@ -306,7 +306,7 @@ void ofxTLVideoTrack::draw(){
 					
             ofNoFill();
             ofSetColor(timeline->getColors().textColor);
-            ofDrawBitmapString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
+            timeline->getFont().drawString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
             ofRect(videoThumbs[i].displayRect);
 		}		
 	}
@@ -320,8 +320,8 @@ void ofxTLVideoTrack::draw(){
 	ofPopStyle();
 	ofSetColor(timeline->getColors().textColor);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	ofDrawBitmapString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
-	ofDrawBitmapString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
+	timeline->getFont().drawString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
+	timeline->getFont().drawString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);
@@ -331,8 +331,8 @@ void ofxTLVideoTrack::draw(){
 		ofLine(inFrameX, bounds.y, inFrameX, bounds.y+bounds.height);
 		ofLine(outFrameX, bounds.y, outFrameX, bounds.y+bounds.height);
 		ofSetColor(timeline->getColors().keyColor);
-		ofDrawBitmapString("IN:  " + ofToString(inFrameX),  inFrameX  + 5, bounds.y + 10);
-		ofDrawBitmapString("OUT: " + ofToString(outFrameX), outFrameX + 5, bounds.y + bounds.height - 20);
+		timeline->getFont().drawString("IN:  " + ofToString(inFrameX),  inFrameX  + 5, bounds.y + 10);
+		timeline->getFont().drawString("OUT: " + ofToString(outFrameX), outFrameX + 5, bounds.y + bounds.height - 20);
 	}
 	
 	ofPopStyle();

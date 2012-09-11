@@ -53,7 +53,7 @@ void ofxTLCurves::drawModalContent(){
         ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
                easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
         ofSetColor(200, 200, 200);
-        ofDrawBitmapString(easingFunctions[i]->name, 
+        timeline->getFont().drawString(easingFunctions[i]->name,
                            easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
                            easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
         
@@ -76,7 +76,7 @@ void ofxTLCurves::drawModalContent(){
         ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y, 
                easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
         ofSetColor(200, 200, 200);
-        ofDrawBitmapString(easingTypes[i]->name, 
+        timeline->getFont().drawString(easingTypes[i]->name, 
                            easingWindowPosition.x + easingTypes[i]->bounds.x+10, 
                            easingWindowPosition.y + easingTypes[i]->bounds.y+15);			
         ofNoFill();

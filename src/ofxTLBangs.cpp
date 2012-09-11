@@ -63,10 +63,6 @@ void ofxTLBangs::draw(){
         }
         
         ofLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
-        //debug text system
-//        ofSetColor(timeline->getColors().keyColor);                
-//        int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
-//        ofDrawBitmapString(timeline->formatTime(keyframes[i]->time), screenX, textHeight);
     }
     ofPopStyle();
 

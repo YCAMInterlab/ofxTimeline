@@ -80,7 +80,10 @@ ofxTimeline::ofxTimeline()
 	isOnThread(false),
 	unsavedChanges(false),
 	curvesUseBinary(false),
-	defaultPalettePath("defaultColorPalette.png") //copy from ofxTimeline/assets into bin/data/
+	//copy from ofxTimeline/assets into bin/data/
+	defaultPalettePath("defaultColorPalette.png"),
+	fontPath("GUI/NewMedia Fett.ttf"),
+	fontSize(9)
 {
 }
 
@@ -226,6 +229,23 @@ void ofxTimeline::setShowZoomer(bool shouldShowZoomer){
         zoomer->setViewRange(ofRange(0,1.0));
     }
     recalculateBoundingRects();
+}
+
+void ofxTimeline::setupFont(){
+	font.loadFont(fontPath, fontSize);
+}
+
+void ofxTimeline::setupFont(string newFontPath, int newFontSize){
+	fontPath = newFontPath;
+	fontSize = newFontSize;
+	setupFont();
+}
+
+OFX_TIMELINE_FONT_RENDERER & ofxTimeline::getFont(){
+	if(!font.isLoaded()){
+		setupFont();
+	}
+	return font;
 }
 
 ofxTLColors& ofxTimeline::getColors(){
