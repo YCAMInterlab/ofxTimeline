@@ -65,14 +65,7 @@ void ofxTLTicker::draw(){
 	tickerMarks.setStrokeColor( ofColor(200, 180, 40) );
 	tickerMarks.setStrokeWidth(1);
 	tickerMarks.draw(bounds.x, bounds.y);
-	
-	/*
-    if(bounds.height > 2){
-		//TODO: Tick caching!!
-
-    }
-    */
-	
+		
     if(drawBPMGrid){
 		if(viewIsDirty){
 	        updateBPMPoints();
@@ -86,6 +79,8 @@ void ofxTLTicker::draw(){
         ofPopStyle();
     }
 
+	textH = timeline->getFont().getLineHeight();
+	textW = 3;
 
 	//highlite current mouse position
 	if(hover){
@@ -93,9 +88,8 @@ void ofxTLTicker::draw(){
 		ofSetColor(timeline->getColors().backgroundColor);
         float screenX = millisToScreenX(hoverTime);
 		text = timeline->formatTime(hoverTime);
+		textW = timeline->getFont().stringWidth(text)+3;
         if(bounds.height > 2){
-            textH = 10;
-            textW = (text.size()+1)*7;
             int previewTimecodeX = ofClamp(screenX+5, bounds.x, bounds.x+bounds.width-textW-5);
             ofFill();
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
@@ -123,8 +117,6 @@ void ofxTLTicker::draw(){
     }
     
     if(bounds.height > 2){
-        textH = 10;
-        textW = (text.size()+1)*7;
         int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
         ofSetColor(timeline->getColors().backgroundColor);
         ofFill();

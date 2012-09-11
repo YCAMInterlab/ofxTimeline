@@ -150,7 +150,6 @@ void ofxTLKeyframes::draw(){
 			float keysValue = ofMap(selectedKeyframes[i]->value, 0, 1.0, valueRange.min, valueRange.max, true);
 			if(keysAreDraggable){
 				string frameString = timeline->formatTime(selectedKeyframes[i]->time);
-				//ofDrawBitmapString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
 				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
 			}
 			ofCircle(screenpoint.x, screenpoint.y, 4);

@@ -33,7 +33,6 @@
  */
 
 #include "ofxTimeline.h"
-//#include "ofxTLUtils.h"
 #include "ofxHotKeys.h"
 
 //increments to keep auto generated names unique
@@ -43,7 +42,7 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 	return a->getDrawRect().y < b->getDrawRect().y;
 }
 
-#define TICKER_HEIGHT 20
+#define TICKER_HEIGHT 27
 #define ZOOMER_HEIGHT 14
 #define INOUT_HEIGHT 7
 

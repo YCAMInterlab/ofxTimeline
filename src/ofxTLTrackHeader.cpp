@@ -46,7 +46,8 @@ ofxTLTrackHeader::~ofxTLTrackHeader(){
 }
 
 void ofxTLTrackHeader::enable(){
-	if(isEnabled()){
+	if(!isEnabled()){
+		nameField.setFont(timeline->getFont());
 		ofxTLTrack::enable();
 		nameField.setup();
     	ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
@@ -54,7 +55,7 @@ void ofxTLTrackHeader::enable(){
 }
 
 void ofxTLTrackHeader::disable(){
-	if(!isEnabled()){
+	if(isEnabled()){
 		ofxTLTrack::disable();
 	    ofRemoveListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
 	}
@@ -69,7 +70,7 @@ ofxTLTrack* ofxTLTrackHeader::getTrack(){
 }
 
 void ofxTLTrackHeader::textFieldEnter(string& newText){
-    cout << "text field entered to " << newText << endl;
+
     if(newText == ""){
         nameField.text = name;
     }

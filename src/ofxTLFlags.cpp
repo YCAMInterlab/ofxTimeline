@@ -192,6 +192,7 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
 
 ofxTLKeyframe* ofxTLFlags::newKeyframe(){
 	ofxTLFlag* key = new ofxTLFlag();
+	key->textField.setFont(timeline->getFont());
 	return key;
 }
 
