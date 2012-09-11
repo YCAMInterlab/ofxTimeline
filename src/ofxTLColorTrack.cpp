@@ -174,7 +174,7 @@ ofColor ofxTLColorTrack::getDefaultColor(){
 	return defaultColor;	
 }
 
-string ofxTLColorTrack::getPalettePath(){
+string ofxTLColorTrack::getPalettePath(){	
 	if(palettePath == ""){
 		ofLogWarning("ofxTLColorTrack::getPalettePath -- Palette is not loaded from path");
 	}
@@ -192,7 +192,7 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
 			refreshSample(selectedSample);
 			shouldRecomputePreviews = true;
-		}
+		}	
 		
 		return true;
 	}

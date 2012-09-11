@@ -133,9 +133,13 @@ class ofxTLKeyframes : public ofxTLTrack
     void selectKeyframe(ofxTLKeyframe* k);
     void deselectKeyframe(ofxTLKeyframe* k);
     
-	virtual void deleteSelectedKeyframes();
-	virtual void deleteKeyframe(ofxTLKeyframe* keyframe);
-
+	//don't override these in subclasses
+	void deleteSelectedKeyframes();
+	void deleteKeyframe(ofxTLKeyframe* keyframe);
+	//instead implement special behavior here:
+	//this is called before the keyframe is deleted and removed from the keyframes vector
+	virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe){};
+	
 	vector<ofxTLKeyframe*> selectedKeyframes;
     ofxTLKeyframe* selectedKeyframe;
 	ofxTLKeyframe* hoverKeyframe;

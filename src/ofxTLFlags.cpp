@@ -35,8 +35,14 @@
 
 #include "ofxTLFlags.h"
 #include "ofxTimeline.h"
-//#include "ofxTLUtils.h"
 #include "ofxHotKeys.h"
+
+ofxTLFlag::~ofxTLFlag(){
+	if(textField.getIsEnabled()){
+		textField.disable();
+	}
+}
+
 
 ofxTLFlags::ofxTLFlags()
 {
@@ -45,8 +51,7 @@ ofxTLFlags::ofxTLFlags()
 
 ofxTLFlags::~ofxTLFlags()
 {
-        
-
+	
 }
 
 void ofxTLFlags::draw(){
@@ -88,11 +93,11 @@ void ofxTLFlags::draw(){
 bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 	
     //if we aren't entering text and someone has the shift key held down don't let us go into modal
-    if(!enteringText && ofGetModifierShiftPressed()){
-        return ofxTLBangs::mousePressed(args, millis);
-    }
+//    if(!enteringText && ofGetModifierSelection()){
+//        return ofxTLBangs::mousePressed(args, millis);
+//    }
         
-    ofxTLFlag* clickedTextField = NULL;    
+    clickedTextField = NULL;    
     //look at each element to see if a text field was clicked
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLFlag* key = (ofxTLFlag*)keyframes[i];
@@ -108,28 +113,27 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
     //mulitple fields at once
     if(clickedTextField != NULL){
         timeline->presentedModalContent(this);
-        if(!ofGetModifierShiftPressed() /*&& !isKeyframeSelected(clickedTextField)*/){
+        if(!ofGetModifierSelection()){
             timeline->unselectAll();
         }
-        clickedTextField->textField.enable();
-        enteringText = true;
-        //make sure this 
-        selectKeyframe(clickedTextField);
-        return false;
-    }    
-    //if we didn't click on a text field and we are entering txt
-    //take off the typing mode. Hitting enter will also do this
-    else if(enteringText){
-        enteringText = false;
-        timeline->dismissedModalContent();
-        timeline->flagTrackModified(this); //TODO move this to mouse-released to cooperate with undo
+		if(ofGetModifierSelection() && clickedTextField->textField.getIsEnabled()){
+			clickedTextField->textField.disable();
+		}
+		else{
+			clickedTextField->textField.enable();
+			enteringText = true;
+			//make sure this 
+			selectKeyframe(clickedTextField);
+		}
         return false;
     }
-    
-    
-    //if we get all the way here we didn't click on a text field and we aren't
-    //currently entering text so proceed as normal
-    return ofxTLBangs::mousePressed(args, millis);
+	
+	if(!enteringText){
+		//if we get all the way here we didn't click on a text field and we aren't
+		//currently entering text so proceed as normal
+		return ofxTLBangs::mousePressed(args, millis);
+	}
+	return false;
 }
 
 void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, long millis){
@@ -137,6 +141,37 @@ void ofxTLFlags::mouseDragged(ofMouseEventArgs& args, long millis){
         ofxTLBangs::mouseDragged(args, millis);
     }
 }
+
+//if we didn't click on a text field and we are entering txt
+//take off the typing mode. Hitting enter will also do this
+void ofxTLFlags::mouseReleased(ofMouseEventArgs& args, long millis){
+	if(enteringText){
+		//if we clicked outside of the rect, definitely deslect everything
+		if(clickedTextField == NULL && !ofGetModifierSelection()){
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
+			}
+			enteringText = false;
+		}
+		//otherwise check if still have a selection
+		else{
+			enteringText = false;
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				enteringText = enteringText || ((ofxTLFlag*)selectedKeyframes[i])->textField.getIsEnabled();
+			}
+		}
+
+		if(!enteringText){
+			timeline->dismissedModalContent();
+			timeline->flagTrackModified(this);
+		}
+	}
+	else {
+		ofxTLBangs::mouseReleased(args, millis);
+	}
+}
+
+
 
 void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
 	
@@ -182,6 +217,15 @@ void ofxTLFlags::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 void ofxTLFlags::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     ofxTLFlag* triggerKey = (ofxTLFlag*)key;
     xmlStore.addValue("flag", triggerKey->textField.text);
+}
+
+void ofxTLFlags::willDeleteKeyframe(ofxTLKeyframe* keyframe){
+	ofxTLFlag* flag = (ofxTLFlag*)keyframe;
+	if(flag->textField.getIsEnabled()){
+		timeline->dismissedModalContent();
+		timeline->flagTrackModified(this);
+	}
+	flag->textField.disable();
 }
 
 void ofxTLFlags::bangFired(ofxTLKeyframe* key){

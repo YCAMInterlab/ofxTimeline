@@ -44,6 +44,7 @@ class ofxTLFlag : public ofxTLKeyframe {
   public:
     ofxTextInputField textField;
     ofRectangle display;
+	virtual ~ofxTLFlag();
 };
 
 class ofxTLFlags : public ofxTLBangs {
@@ -55,7 +56,8 @@ class ofxTLFlags : public ofxTLBangs {
 	
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
-
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void unselectAll();
     
@@ -67,7 +69,10 @@ protected:
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
     virtual void bangFired(ofxTLKeyframe* key);
-    
+	virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe);
+
+	//only set per mousedown/mouseup cycle
+	ofxTLFlag* clickedTextField;
 	bool enteringText;
 
 };

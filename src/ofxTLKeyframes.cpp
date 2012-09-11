@@ -283,6 +283,7 @@ void ofxTLKeyframes::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 
 void ofxTLKeyframes::clear(){
 	for(int i = 0; i < keyframes.size(); i++){
+		willDeleteKeyframe(keyframes[i]);
 		delete keyframes[i];
 	}
 	keyframes.clear();
@@ -614,6 +615,7 @@ void ofxTLKeyframes::nudgeBy(ofVec2f nudgePercent){
 void ofxTLKeyframes::deleteSelectedKeyframes(){
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(isKeyframeSelected(keyframes[i])){
+			willDeleteKeyframe(keyframes[i]);
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 		}
@@ -632,6 +634,7 @@ void ofxTLKeyframes::deleteKeyframe(ofxTLKeyframe* keyframe){
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(keyframe == keyframes[i]){
 			deselectKeyframe(keyframe);
+			willDeleteKeyframe(keyframes[i]);
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 			return;
