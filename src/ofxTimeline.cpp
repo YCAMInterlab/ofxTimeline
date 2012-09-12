@@ -985,7 +985,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 
 	//collect the buffers before the command is sent becasue it's what modifies
     collectStateBuffers();
-
     
     
 	if(ofGetModifierShortcutKeyPressed()){

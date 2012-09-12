@@ -182,67 +182,67 @@ void ofxTLTicker::refreshTickMarks(){
 	bool showMillis;
 	bool showSeconds;
 	bool showMinutes;
-
+	int step = 4;
 	//find the scale of time being shown
-	if(millisPerPixel > 1000*60 * 4){ //each pixel is more than a minute
+	if(millisPerPixel > 1000*60 * step){ //each pixel is more than a minute
 		showMillis = false;
 		showSeconds = false;
 		showMinutes = false;
-//		cout << "only show hours" << endl;
 	}
-	else if(millisPerPixel > 1000 * 4){ //each pixel is more than a second
+	else if(millisPerPixel > 1000 * step){ //each pixel is more than a second
 		showMillis = false;
 		showSeconds = false;
 		showMinutes = true;
-//		cout << "only show minutes" << endl;
 	}
-	else if(millisPerPixel > 4){ //each pixel is more than a millisecond
+	else if(millisPerPixel > step){ //each pixel is more than a millisecond
 		showMillis = false;
 		showSeconds = true;
 		showMinutes = true;
-//		cout << "only show millis" << endl;
 	}
 	else{ //each pixel is less than a millsecond
 		showMillis = true;
 		showSeconds = true;
 		showMinutes = true;
-//		cout << "show all" << endl;
 	}
 	
 	unsigned long lastMillis = screenXToMillis(bounds.x);
 	int lastSecond = lastMillis/1000;
 	int lastMinute = lastSecond/60;
 	int lastHour = lastMinute/60;
-	for(int i = bounds.getMinX()+4; i < bounds.getMaxX(); i+=4){
+	for(int i = bounds.getMinX()+step; i < bounds.getMaxX(); i+=step){
 		int height = 0;
 		unsigned long currentMillis = screenXToMillis(i);
 		int currentSecond = currentMillis/1000;
 		int currentMinute = currentSecond/60;
 		int currentHour = currentMinute/60;
-
+		float x;
 		if(showMillis && currentMillis > lastMillis){
 			height = bounds.height*.25;
 			lastMillis = currentMillis;
+			x = millisToScreenX(currentMillis);
 		}
 
 		if(showSeconds && currentSecond > lastSecond){
 			height = bounds.height*.5;
 			lastSecond = currentSecond;
+			x = millisToScreenX(lastSecond*1000);
 		}
 				
 		if(showMinutes && currentMinute > lastMinute){
 			height = bounds.height*.75;
 			lastMinute = currentMinute;
+			x = millisToScreenX(lastMinute*1000*60);
 		}
 		
 		if(currentHour > lastHour){
 			height = bounds.height;
 			lastHour = currentHour;
+			x = millisToScreenX(lastMinute*1000*60*60);
 		}
 		
 		if(height != 0){
-			tickerMarks.moveTo(i, bounds.height - height);
-			tickerMarks.lineTo(i, bounds.height);
+			tickerMarks.moveTo(x, bounds.height - height);
+			tickerMarks.lineTo(x, bounds.height);
 		}
 	}
 	
