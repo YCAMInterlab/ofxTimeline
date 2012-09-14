@@ -151,8 +151,8 @@ void ofxTLPage::timelineLostFocus(){
 
 #pragma mark events
 void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
-    
 	draggingInside = trackContainerRect.inside(args.x, args.y);
+    draggingSelectionRectangle = false;
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
 		headerHasFocus = false;
@@ -170,8 +170,9 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
                 newFocus = tracks[ headers[i]->name ];
             }
 		}
+		
         refreshSnapPoints();
-//		if(!headerHasFocus && (timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
+
 		if(!clickIsInFooter && (headerHasFocus || timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
             draggingSelectionRectangle = true;
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
@@ -205,6 +206,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(!draggingInside){
     	return;
     }
+	
     if(draggingSelectionRectangle){
         selectionRectangle = ofRectangle(selectionRectangleAnchor.x, selectionRectangleAnchor.y, 
                                  args.x-selectionRectangleAnchor.x, args.y-selectionRectangleAnchor.y);
@@ -238,41 +240,41 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
             selectionRectangle.height = (trackContainerRect.y+trackContainerRect.height - selectionRectangle.y);
         }
     }
-//    else {
+	else {
 
-        if(snappingEnabled && snapPoints.size() > 0){
+		if(snappingEnabled && snapPoints.size() > 0){
 			//hack to find snap distance in millseconds
 			set<long>::iterator it;
-            long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
-            long closestSnapDistance = snappingToleranceMillis;
+			long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
+			long closestSnapDistance = snappingToleranceMillis;
 			long closestSnapPoint;
-            //int closestSnapPoint;
-//            for(int i = 0; i < snapPoints.size(); i++){
+			//int closestSnapPoint;
+	//            for(int i = 0; i < snapPoints.size(); i++){
 			for(it = snapPoints.begin(); it != snapPoints.end(); it++){
 				long pointDifference = millis - *it;
 				long distanceToPoint = abs(pointDifference);
-                if(distanceToPoint < closestSnapDistance){
-//                    closestSnapPoint = i;
+				if(distanceToPoint < closestSnapDistance){
+	//                    closestSnapPoint = i;
 					closestSnapPoint = *it;
-                    closestSnapDistance = distanceToPoint;
-                }
-            }
-            
-            if(abs(closestSnapDistance) < snappingToleranceMillis){
-                //if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
-                //millis = snapPoints[closestSnapPoint] + millisecondDragOffset;
+					closestSnapDistance = distanceToPoint;
+				}
+			}
+			
+			if(abs(closestSnapDistance) < snappingToleranceMillis){
+				//if we snapped, add the global drag offset to compensate for it being subtracted inside of the track
+				//millis = snapPoints[closestSnapPoint] + millisecondDragOffset;
 				millis = closestSnapPoint + millisecondDragOffset;
-            }
-        }
-        
-        timeline->setHoverTime(millis - millisecondDragOffset);
-        for(int i = 0; i < headers.size(); i++){
-            headers[i]->mouseDragged(args);
-            if(!headerHasFocus){
-                tracks[headers[i]->name]->_mouseDragged(args, millis);
-            }
-        }
-//    }
+			}
+		}
+	}
+	
+	timeline->setHoverTime(millis - millisecondDragOffset);
+	for(int i = 0; i < headers.size(); i++){
+		headers[i]->mouseDragged(args);
+		if(!headerHasFocus){
+			tracks[headers[i]->name]->_mouseDragged(args, millis);
+		}
+	}
 }
 
 void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
@@ -285,8 +287,8 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
         timeline->setHoverTime(millis);
 	}
 
-	if(draggingSelectionRectangle){
-		if(!ofGetModifierSelection()){
+	if(draggingSelectionRectangle && selectionRectangle.getArea() != 0){
+		if(!ofGetModifierSelection() ){
 			timeline->unselectAll();
 		}
 
@@ -328,8 +330,7 @@ void ofxTLPage::refreshSnapPoints(){
 	//double check to make sure snap points are all on screen
 	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
 		snapPoints.clear();
-	}
-	
+	}	
 }
 
 //copy paste

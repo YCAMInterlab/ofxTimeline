@@ -273,6 +273,7 @@ void ofxTimeline::undo(){
     if(undoPointer > 0){
     	undoPointer--;
         restoreToState(undoStack[undoPointer]);
+		unsavedChanges = true;		
     }
 }
 
@@ -280,6 +281,7 @@ void ofxTimeline::redo(){
     if(undoPointer < undoStack.size()-1){
         undoPointer++;
 		restoreToState(undoStack[undoPointer]);
+		unsavedChanges = true;
     }
 }
 
@@ -336,8 +338,6 @@ void ofxTimeline::pushUndoStack(){
             }
         }
     }
-	
-	
 	
     if(undoCollection.size() > 0){
         //remove any history that we've undone
@@ -1018,6 +1018,9 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 			}
 			currentPage->selectAll();						
 		}
+		else if(!autosave && unsavedChanges && (args.key == 's' || args.key == 's'-96) ){ //save
+			save();
+		}
 	}
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
@@ -1088,7 +1091,6 @@ void ofxTimeline::viewWasResized(ofEventArgs& args){
 }
 
 void ofxTimeline::recalculateBoundingRects(){
-	
     if(lockWidthToWindow){
         width = ofGetWidth();
     }
@@ -1626,7 +1628,6 @@ ofxTimecode& ofxTimeline::getTimecode(){
 vector<ofxTLPage*>& ofxTimeline::getPages(){
     return pages;
 }
-
 
 string ofxTimeline::formatTime(float seconds){
     return timecode.timecodeForSeconds(seconds);
