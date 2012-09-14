@@ -40,30 +40,16 @@ void ofxTLCurves::drawModalContent(){
 	if(!drawingEasingWindow){
     	return;
     }
-    
-    for(int i = 0; i < easingFunctions.size(); i++){
-        //TODO turn into something like selectionContainsEaseFunc();
-        if(easingFunctions[i] == ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeFunc){
-            ofSetColor(150, 100, 10);
-        }
-        else{
-            ofSetColor(80, 80, 80);
-        }
-        ofFill();
-        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
-        ofSetColor(200, 200, 200);
-        timeline->getFont().drawString(easingFunctions[i]->name,
-                           easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
-                           easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
-        
-        ofNoFill();
-        ofSetColor(40, 40, 40);
-        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
-               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
-    }
-    
-    for(int i = 0; i < easingTypes.size(); i++){
+	
+    ofxTLTweenKeyframe* tweenFrame = (ofxTLTweenKeyframe*) selectedKeyframe;
+	if(tweenFrame == NULL){
+		if(selectedKeyframes.size() == 0){
+			return;
+		}
+		tweenFrame = (ofxTLTweenKeyframe*)selectedKeyframes[0];
+	}
+	
+	for(int i = 0; i < easingTypes.size(); i++){
         //TODO turn into something like selectionContainsEaseType();
         //so that we can show the multi-selected easies
         if(easingTypes[i] ==  ((ofxTLTweenKeyframe*)selectedKeyframes[0])->easeType){
@@ -73,18 +59,54 @@ void ofxTLCurves::drawModalContent(){
             ofSetColor(80, 80, 80);
         }
         ofFill();
-        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y, 
+        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, easingWindowPosition.y + easingTypes[i]->bounds.y,
                easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
         ofSetColor(200, 200, 200);
-        timeline->getFont().drawString(easingTypes[i]->name, 
-                           easingWindowPosition.x + easingTypes[i]->bounds.x+10, 
-                           easingWindowPosition.y + easingTypes[i]->bounds.y+15);			
+        timeline->getFont().drawString(easingTypes[i]->name,
+									   easingWindowPosition.x + easingTypes[i]->bounds.x+11,
+									   easingWindowPosition.y + easingTypes[i]->bounds.y+10);
         ofNoFill();
         ofSetColor(40, 40, 40);
-        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x, 
-               easingWindowPosition.y + easingTypes[i]->bounds.y, 
+        ofRect(easingWindowPosition.x + easingTypes[i]->bounds.x,
+               easingWindowPosition.y + easingTypes[i]->bounds.y,
                easingTypes[i]->bounds.width, easingTypes[i]->bounds.height);
     }
+
+    for(int i = 0; i < easingFunctions.size(); i++){
+        //TODO: turn into something like selectionContainsEaseFunc();
+        if(easingFunctions[i] == tweenFrame->easeFunc){
+            ofSetColor(150, 100, 10);
+        }
+        else{
+            ofSetColor(80, 80, 80);
+        }
+        ofFill();
+        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);
+        ofSetColor(200, 200, 200);
+//        timeline->getFont().drawString(easingFunctions[i]->name,
+//                           easingWindowPosition.x + easingFunctions[i]->bounds.x+10, 
+//                           easingWindowPosition.y + easingFunctions[i]->bounds.y+15);			
+		ofPushMatrix();
+		ofTranslate(easingWindowPosition.x + easingFunctions[i]->bounds.x,
+					easingWindowPosition.y + easingFunctions[i]->bounds.y);
+		if(tweenFrame->easeType->type == ofxTween::easeIn){
+			easingFunctions[i]->easeInPreview.draw();
+		}
+		else if(tweenFrame->easeType->type == ofxTween::easeOut){
+			easingFunctions[i]->easeOutPreview.draw();
+		}
+		else {
+			easingFunctions[i]->easeInOutPreview.draw();
+		}
+		
+		ofPopMatrix();
+        ofNoFill();
+        ofSetColor(40, 40, 40);
+        ofRect(easingWindowPosition.x + easingFunctions[i]->bounds.x, easingWindowPosition.y +easingFunctions[i]->bounds.y, 
+               easingFunctions[i]->bounds.width, easingFunctions[i]->bounds.height);	
+    }
+    
 }
 
 bool ofxTLCurves::mousePressed(ofMouseEventArgs& args, long millis){
@@ -137,6 +159,7 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
+	//FIX ON SCREEN
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
                                    MIN(args.y, ofGetHeight() - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
     
@@ -232,19 +255,38 @@ void ofxTLCurves::initializeEasings(){
 	et->name = "ease in-out";
 	easingTypes.push_back(et);
 	
-	//TODO: make configurable
-	easingBoxWidth  = 120;
-	easingBoxHeight = 20;
-	easingWindowSeperatorHeight = 4;
-	
-	for(int i = 0; i < easingFunctions.size(); i++){
-		easingFunctions[i]->bounds = ofRectangle(0, i*easingBoxHeight, easingBoxWidth, easingBoxHeight);
-		easingFunctions[i]->id = i;
-	}
-	
+
+	tweenBoxWidth = 40;
+	tweenBoxHeight = 30;
+	easingBoxWidth  = 80;
+	easingBoxHeight = 15;
+
+//	easingWindowSeperatorHeight = 4;
+
 	for(int i = 0; i < easingTypes.size(); i++){
-		easingTypes[i]->bounds = ofRectangle(0, (i+easingFunctions.size())*easingBoxHeight + easingWindowSeperatorHeight, easingBoxWidth, easingBoxHeight);
+		easingTypes[i]->bounds = ofRectangle(0, i*easingBoxHeight, easingBoxWidth, easingBoxHeight);
 		easingTypes[i]->id = i;
 	}
+
+	for(int i = 0; i < easingFunctions.size(); i++){
+		easingFunctions[i]->bounds = ofRectangle(easingBoxWidth, i*tweenBoxHeight, tweenBoxWidth, tweenBoxHeight);
+		easingFunctions[i]->id = i;
+		//build preview
+		for(int p = 1; p < tweenBoxWidth-1; p++){
+			float percent;
+			percent = ofxTween::map(1.0*p/tweenBoxWidth, 0, 1.0, tweenBoxHeight-5, 5, false, *easingFunctions[i]->easing, ofxTween::easeIn);
+			easingFunctions[i]->easeInPreview.addVertex(ofPoint(p, percent));
+			percent = ofxTween::map(1.0*p/tweenBoxWidth, 0, 1.0, tweenBoxHeight-5, 5, false, *easingFunctions[i]->easing, ofxTween::easeOut);
+			easingFunctions[i]->easeOutPreview.addVertex(ofPoint(p, percent));
+			percent = ofxTween::map(1.0*p/tweenBoxWidth, 0, 1.0, tweenBoxHeight-5, 5, false, *easingFunctions[i]->easing, ofxTween::easeInOut);
+			easingFunctions[i]->easeInOutPreview.addVertex(ofPoint(p, percent));
+		}
+		
+		easingFunctions[i]->easeInPreview.simplify();
+		easingFunctions[i]->easeOutPreview.simplify();
+		easingFunctions[i]->easeInOutPreview.simplify();
+		
+	}
+	
 }
 

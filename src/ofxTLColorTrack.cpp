@@ -222,6 +222,10 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
+			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+			if(selectedSample->color != colorAtClickTime){
+				timeline->flagTrackModified(this);
+			}			
 			timeline->dismissedModalContent();
 			drawingColorWindow = false;
 			shouldRecomputePreviews = true;
@@ -235,8 +239,13 @@ void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 void ofxTLColorTrack::keyPressed(ofKeyEventArgs& args){
 	if(drawingColorWindow){
 		if(args.key == OF_KEY_RETURN){
+			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+			if(selectedSample->color != colorAtClickTime){
+				timeline->flagTrackModified(this);
+			}
 			timeline->dismissedModalContent();
-			drawingColorWindow = false;			
+			drawingColorWindow = false;
+			shouldRecomputePreviews = true;
 		}
 	}
 	else{

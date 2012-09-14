@@ -10,6 +10,10 @@ typedef struct {
 	int id;
 	ofRectangle bounds;
 	string name;
+	ofPolyline easeInPreview;
+	ofPolyline easeOutPreview;
+	ofPolyline easeInOutPreview;
+	
 	ofxEasing* easing;
 } EasingFunction;
 
@@ -56,8 +60,12 @@ class ofxTLCurves : public ofxTLKeyframes {
 	bool drawingEasingWindow;
 	vector<EasingFunction*> easingFunctions;
 	vector<EasingType*> easingTypes;
+	
 	float easingBoxWidth;
 	float easingBoxHeight;
-	float easingWindowSeperatorHeight;
+	float tweenBoxWidth;
+	float tweenBoxHeight;
+	
+//	float easingWindowSeperatorHeight;
 
 };
