@@ -44,13 +44,12 @@ class ofxTLFlag : public ofxTLKeyframe {
   public:
     ofxTextInputField textField;
     ofRectangle display;
-	virtual ~ofxTLFlag();
+//	virtual ~ofxTLFlag();
 };
 
 class ofxTLFlags : public ofxTLBangs {
   public:
 	ofxTLFlags();
-	virtual ~ofxTLFlags();
 	
 	virtual void draw();
 	

@@ -282,6 +282,7 @@ void ofxTLKeyframes::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxT
 }
 
 void ofxTLKeyframes::clear(){
+
 	for(int i = 0; i < keyframes.size(); i++){
 		willDeleteKeyframe(keyframes[i]);
 		delete keyframes[i];

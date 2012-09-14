@@ -269,7 +269,7 @@ ofRange ofxTLZoomer::getViewRange() {
 }
 
 void ofxTLZoomer::setViewRange(ofRange newRange){
-	cout << "setting view range to " << newRange << endl;
+
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.oldZoom = getViewRange();
     zoomEvent.sender = timeline;

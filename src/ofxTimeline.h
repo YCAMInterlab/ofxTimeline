@@ -129,6 +129,7 @@ class ofxTimeline : ofThread {
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void keyReleased(ofKeyEventArgs& args);
 	virtual void windowResized(ofResizeEventArgs& args);
+	virtual void exit(ofEventArgs& args);
 	
     //show/hide ticker,zoomer,inout all at once
     virtual void setShowTimeControls(bool shouldShowTimeControls);
@@ -433,9 +434,9 @@ class ofxTimeline : ofThread {
     //can be blank, default save to bin/data/
     string workingFolder; 
     
-	bool isOnThread;
 	bool isSetup;
 	bool usingEvents;
+	bool isOnThread;
 
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;

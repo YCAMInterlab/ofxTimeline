@@ -20,10 +20,7 @@ void ofxTLBangs::enable(){
 }
 
 void ofxTLBangs::disable(){
-    if(isEnabled()){
-        if (isPlayingBack) {
-//        	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
-        }
+    if(isEnabled()){		
 	    ofxTLKeyframes::disable();
     	events().removePlaybackEvents(this);
     }

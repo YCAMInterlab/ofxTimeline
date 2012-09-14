@@ -156,21 +156,23 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
 		headerHasFocus = false;
+		bool clickIsInFooter = false;
 		for(int i = 0; i < headers.size(); i++){
             bool clickIsInHeader = headers[i]->getDrawRect().inside(args.x,args.y);
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
-            bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
+            clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
             bool justMadeSelection = tracks[headers[i]->name]->_mousePressed(args, millis);
             headerHasFocus |= (clickIsInFooter || clickIsInHeader) && !justMadeSelection;
 			if(headerHasFocus){
 				headers[i]->mousePressed(args);
 			}
             if(clickIsInTrack || clickIsInHeader || justMadeSelection){
-                newFocus = tracks[headers[i]->name];
+                newFocus = tracks[ headers[i]->name ];
             }
 		}
         refreshSnapPoints();
-		if(!headerHasFocus && (timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
+//		if(!headerHasFocus && (timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
+		if(!clickIsInFooter && (headerHasFocus || timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
             draggingSelectionRectangle = true;
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
             selectionRectangle = ofRectangle(args.x,args.y,0,0);
@@ -185,7 +187,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
         }
         newFocus->gainedFocus();
         focusedTrack = newFocus; //is set to NULL when the whole timeline loses focus
-    }    
+    }
 }
 
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args, long millis){
@@ -284,6 +286,10 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 	}
 
 	if(draggingSelectionRectangle){
+		if(!ofGetModifierSelection()){
+			timeline->unselectAll();
+		}
+
 		draggingSelectionRectangle = false;
         ofLongRange timeRange = ofLongRange(timeline->screenXToMillis(selectionRectangle.x),
                                             timeline->screenXToMillis(selectionRectangle.x+selectionRectangle.width));
@@ -410,11 +416,6 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 //computed on the fly so please use sparingly if you have a lot of tracks
 vector<ofxTLTrack*>& ofxTLPage::getTracks(){
 	return trackList;
-//    vector<ofxTLTrack*> tracks;
-//    for(int i = 0; i < headers.size(); i++){
-//        tracks.push_back( headers[i]->getTrack() );
-//    }
-//    return tracks;
 }
 
 ofxTLTrack* ofxTLPage::getTrack(string trackName){

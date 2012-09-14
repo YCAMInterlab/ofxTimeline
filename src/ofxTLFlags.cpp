@@ -37,22 +37,19 @@
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-ofxTLFlag::~ofxTLFlag(){
-	if(textField.getIsEnabled()){
-		textField.disable();
-	}
-}
+//flag!!
+//ofxTLFlag::~ofxTLFlag(){
+//	if(textField.getIsEnabled()){
+//		textField.disable();
+//	}
+//}
 
-
-ofxTLFlags::ofxTLFlags()
-{
+//flagssss
+ofxTLFlags::ofxTLFlags() {
 	enteringText = false;
+	clickedTextField = NULL;
 }
 
-ofxTLFlags::~ofxTLFlags()
-{
-	
-}
 
 void ofxTLFlags::draw(){
 	
@@ -100,6 +97,7 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
         }
     }
 
+//	cout << "text field? " << (clickedTextField == NULL ? "NULL" : clickedTextField->textField.text) << endl;
     //if so, select that text field and key and present modally
     //so that keyboard input all goes to the text field.
     //selection model is designed so that you can type into
@@ -120,6 +118,15 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 		}
         return false;
     }
+	else{
+		if(enteringText && !isHovering()){
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
+			}
+			enteringText = false;
+			timeline->dismissedModalContent();
+		}
+	}
 	
 	if(!enteringText){
 		//if we get all the way here we didn't click on a text field and we aren't
@@ -164,8 +171,6 @@ void ofxTLFlags::mouseReleased(ofMouseEventArgs& args, long millis){
 	}
 }
 
-
-
 void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
 	
 	if(enteringText){
@@ -176,13 +181,6 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
             timeline->dismissedModalContent();
             timeline->flagTrackModified(this);
         }
-        //otherwise pipe the keypress into all the selected textfields
-//        else {
-//	        for(int i = 0; i < selectedKeyframes.size(); i++){
-//                ofxTLFlag* key = (ofxTLFlag*)selectedKeyframes[i];
-//				key->textField.keyPressed(args);
-//            }
-//        }
     }
     //normal behavior for nudging and deleting and stuff
 	else{

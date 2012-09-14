@@ -147,6 +147,7 @@ void ofxTimeline::moveToThread(){
 		stop();
 		isOnThread = true;
 		startThread();
+		ofAddListener(ofEvents().exit, this, &ofxTimeline::exit);
 	}
 }
 
@@ -663,6 +664,9 @@ void ofxTimeline::clear(){
 }
 
 void ofxTimeline::reset(){ //gets rid of everything
+	if(isOnThread){
+		waitForThread(true);
+	}
     stop();
     undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
@@ -677,6 +681,9 @@ void ofxTimeline::reset(){ //gets rid of everything
     modalTrack = NULL;
     timeControl = NULL;
 	addPage("Page One", true);
+	if(isOnThread){
+		startThread();
+	}
 
 }
 
@@ -919,7 +926,7 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
-    	modalTrack->mouseMoved(args, millis);
+    	modalTrack->_mouseMoved(args, millis);
         return;
     }
     
@@ -1059,7 +1066,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 	}
 	
 	pushUndoStack();
-
 }
 
 void ofxTimeline::keyReleased(ofKeyEventArgs& args){
@@ -1068,6 +1074,12 @@ void ofxTimeline::keyReleased(ofKeyEventArgs& args){
 
 void ofxTimeline::windowResized(ofResizeEventArgs& args){
     ofNotifyEvent(events().viewWasResized, args, this);
+}
+
+void ofxTimeline::exit(ofEventArgs& args){
+	if(isOnThread){
+		waitForThread(true);
+	}
 }
 
 #pragma mark DRAWING
