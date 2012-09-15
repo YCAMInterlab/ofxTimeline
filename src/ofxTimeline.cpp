@@ -151,6 +151,14 @@ void ofxTimeline::moveToThread(){
 	}
 }
 
+void ofxTimeline::removeFromThread(){
+	if(isOnThread){
+		stop();
+		isOnThread = false;
+		waitForThread(true);
+		ofRemoveListener(ofEvents().exit, this, &ofxTimeline::exit);
+	}
+}
 
 void ofxTimeline::setName(string newName){
     if(newName != name){
