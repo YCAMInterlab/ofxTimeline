@@ -131,7 +131,9 @@ void ofxTLTrack::_draw(){
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	ofPopStyle();
 
+	ofPopStyle();
     draw();
+	ofPushStyle();
 	viewIsDirty = false;
 }
 
