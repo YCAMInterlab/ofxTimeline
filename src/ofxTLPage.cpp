@@ -109,8 +109,9 @@ void ofxTLPage::draw(){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->draw();
 		tracks[headers[i]->name]->_draw();
-	}	
-	if(draggingInside && snapPoints.size() > 0){
+	}
+	
+	if(!headerHasFocus && !footerIsDragging && draggingInside && snapPoints.size() > 0){
 		ofPushStyle();
 		ofSetColor(255,255,255,100);
 		set<long>::iterator it;
@@ -156,13 +157,15 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 	ofxTLTrack* newFocus = NULL;
 	if(draggingInside){
 		headerHasFocus = false;
-		bool clickIsInFooter = false;
+		footerIsDragging = false;
+		
 		for(int i = 0; i < headers.size(); i++){
             bool clickIsInHeader = headers[i]->getDrawRect().inside(args.x,args.y);
             bool clickIsInTrack = tracks[headers[i]->name]->getDrawRect().inside(args.x,args.y);
-            clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
+            bool clickIsInFooter = headers[i]->getFooterRect().inside(args.x,args.y);
             bool justMadeSelection = tracks[headers[i]->name]->_mousePressed(args, millis);
             headerHasFocus |= (clickIsInFooter || clickIsInHeader) && !justMadeSelection;
+			footerIsDragging |= clickIsInFooter;
 			if(headerHasFocus){
 				headers[i]->mousePressed(args);
 			}
@@ -173,7 +176,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 		
         refreshSnapPoints();
 
-		if(!clickIsInFooter && (headerHasFocus || timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
+		if(!footerIsDragging && (headerHasFocus || timeline->getTotalSelectedItems() == 0 || ofGetModifierShiftPressed()) ){
             draggingSelectionRectangle = true;
             selectionRectangleAnchor = ofVec2f(args.x,args.y);
             selectionRectangle = ofRectangle(args.x,args.y,0,0);

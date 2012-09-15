@@ -14,7 +14,8 @@ ofxTLColorTrack::ofxTLColorTrack()
 	clickedInColorRect(false),
 	defaultColor(ofColor(0,0,0)),
 	previousSample(NULL),
-	nextSample(NULL)
+	nextSample(NULL),
+	setNextAndPreviousOnUpdate(false)
 
 {
 	//
@@ -79,7 +80,16 @@ void ofxTLColorTrack::draw(){
 
 void ofxTLColorTrack::drawModalContent(){
 	if(drawingColorWindow){
-
+		
+		//this happens when a new keyframe is added
+		//we need to wait until the draw cycle for the new
+		//key to be in the array so we can determine it's
+		//surrounding samples
+		if(setNextAndPreviousOnUpdate){
+			setNextAndPreviousSamples();
+			setNextAndPreviousOnUpdate = false;
+		}
+		
 		if(selectedKeyframe == NULL){
 			ofLogError("ofxTLColorTrack::drawModalContent") << "The selected keyframe is null" << endl;
 			drawingColorWindow = false;
@@ -93,9 +103,17 @@ void ofxTLColorTrack::drawModalContent(){
 			drawingColorWindow = false;
 		}
 		ofPushStyle();
+		ofFill();
+		ofSetColor(255);
 		
 		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
+		if(colorWindow.getMaxY()+25 > ofGetHeight()){
+			colorWindow.y = bounds.y - 25 - colorWindow.height;
+		}
+		if(colorWindow.getMaxX() > ofGetWidth()){
+			colorWindow.x -= colorWindow.width;
+		}
 		colorPallete.draw(colorWindow);
 		
 		ofVec2f selectionPoint = colorWindow.getMin() + selectedSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
@@ -103,10 +121,35 @@ void ofxTLColorTrack::drawModalContent(){
 		ofLine(selectionPoint - ofVec2f(8,0), selectionPoint + ofVec2f(8,0));
 		ofLine(selectionPoint - ofVec2f(0,8), selectionPoint + ofVec2f(0,8));
 		
+		ofPushStyle();
+		ofNoFill();
+		if(previousSample != NULL){
+			ofVec2f previousSamplePoint = colorWindow.getMin() + previousSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
+			ofSetColor(previousSample->color.getInverted(), 150);
+			ofCircle(previousSamplePoint, 3);
+			ofLine(previousSamplePoint,selectionPoint);
+		}
+		if(nextSample != NULL){
+			ofVec2f nextSamplePoint = colorWindow.getMin() + nextSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
+			ofSetColor(nextSample->color.getInverted(), 150);
+
+			//draw a little triangle pointer
+			ofVec2f direction = (nextSamplePoint - selectionPoint).normalized();
+			ofVec2f backStep = nextSamplePoint-direction*5;
+			ofTriangle(nextSamplePoint, 
+					   backStep + direction.getRotated(90)*3,
+					   backStep - direction.getRotated(90)*3);
+			ofLine(nextSamplePoint,selectionPoint);
+		}
+		ofPopStyle();
+		
+		previousColorRect = ofRectangle(colorWindow.x, colorWindow.getMaxY(), colorWindow.width/2, 25);
+		newColorRect = ofRectangle(colorWindow.x+colorWindow.width/2, colorWindow.getMaxY(), colorWindow.width/2, 25);
+
 		ofSetColor(colorAtClickTime);
-		ofRect(colorWindow.x, colorWindow.getMaxY(), colorWindow.width/2, 25);
+		ofRect(previousColorRect);
 		ofSetColor(selectedSample->color);
-		ofRect(colorWindow.x+colorWindow.width/2, colorWindow.getMaxY(), colorWindow.width/2, 25);
+		ofRect(newColorRect);
 		ofSetColor(timeline->getColors().keyColor);
 		ofNoFill();
 		ofSetLineWidth(2);
@@ -188,11 +231,18 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 		clickedInColorRect = args.button == 0 && colorWindow.inside(args.x, args.y);
 		if(clickedInColorRect){
 			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
-			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
-												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
+			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0-FLT_EPSILON, true),
+												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0-FLT_EPSILON, true));
 			refreshSample(selectedSample);
 			shouldRecomputePreviews = true;
-		}	
+		}
+		else if(args.button == 0 && previousColorRect.inside(args.x, args.y)){
+			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
+			selectedSample->samplePoint = samplePositionAtClickTime;
+			refreshSample(selectedSample);
+			clickedInColorRect = true; //keep the window open
+			shouldRecomputePreviews = true;			
+		}
 		
 		return true;
 	}
@@ -205,8 +255,8 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		if(clickedInColorRect){
 			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
-			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0),
-												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0));
+			selectedSample->samplePoint = ofVec2f(ofMap(args.x, colorWindow.getX(), colorWindow.getMaxX(), 0, 1.0-FLT_EPSILON,true),
+												  ofMap(args.y, colorWindow.getY(), colorWindow.getMaxY(), 0, 1.0-FLT_EPSILON,true));
 			refreshSample(selectedSample);
 			shouldRecomputePreviews = true;
 		}
@@ -221,7 +271,8 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 
 void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
-		if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
+		//if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
+		if(args.button == 0 && !clickedInColorRect){
 			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 			if(selectedSample->color != colorAtClickTime){
 				timeline->flagTrackModified(this);
@@ -270,18 +321,20 @@ void ofxTLColorTrack::updatePreviewPalette(){
 	previewPalette.setUseTexture(true);
 	previewPalette.update();
 
-	
 	shouldRecomputePreviews = false;
 }
 
 ofxTLKeyframe* ofxTLColorTrack::newKeyframe(){
 	ofxTLColorSample* sample = new ofxTLColorSample();
-	sample->samplePoint = ofVec2f(0,0);
+	sample->samplePoint = ofVec2f(.5,.5);
 	sample->color = defaultColor;
 	//when creating a new keyframe select it and draw a color window
 	colorAtClickTime = defaultColor;
+	samplePositionAtClickTime = sample->samplePoint;
 	drawingColorWindow = true;
 	clickedInColorRect = true;
+	//find surrounding points next drawModal cycle
+	setNextAndPreviousOnUpdate = true;
 	timeline->presentedModalContent(this);
 	return sample;
 }
@@ -307,8 +360,29 @@ void ofxTLColorTrack::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 void ofxTLColorTrack::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	if(selectedKeyframe != NULL){
 		drawingColorWindow = true;
+		previousSample = NULL;
+		nextSample = NULL;
+
 		colorAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->color;
+		samplePositionAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->samplePoint;
+		
 		timeline->presentedModalContent(this);
+		setNextAndPreviousSamples();
+	}
+}
+
+void ofxTLColorTrack::setNextAndPreviousSamples(){
+	previousSample = nextSample = NULL;
+	for(int i = 0; i < keyframes.size(); i++){
+		if(keyframes[i] == selectedKeyframe){
+			if(i > 0){
+				previousSample = (ofxTLColorSample*)keyframes[i-1];
+			}
+			if(i < keyframes.size()-1){
+				nextSample = (ofxTLColorSample*)keyframes[i+1];
+			}
+			break;
+		}
 	}
 }
 

@@ -49,16 +49,20 @@ class ofxTLColorTrack : public ofxTLBangs {
 	ofImage colorPallete;
 	ofImage previewPalette;
 	string palettePath;
-	ofColor colorAtClickTime;
 	
 		
 	virtual void updatePreviewPalette();
 	virtual ofxTLKeyframe* newKeyframe();
-	
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
+	
+	ofColor colorAtClickTime;
+	ofVec2f samplePositionAtClickTime;
 	bool clickedInColorRect;
 	bool drawingColorWindow;
+	bool setNextAndPreviousOnUpdate;
 	ofRectangle colorWindow;
+	ofRectangle previousColorRect;
+	ofRectangle newColorRect;
 	
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
@@ -66,6 +70,7 @@ class ofxTLColorTrack : public ofxTLBangs {
 	
 	void refreshAllSamples();
 	//set when selecting
+	void setNextAndPreviousSamples();
 	ofxTLColorSample* previousSample;
 	ofxTLColorSample* nextSample;
 	void refreshSample(ofxTLColorSample* sample);

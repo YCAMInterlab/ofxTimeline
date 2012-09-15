@@ -136,6 +136,7 @@ class ofxTLPage {
     bool isSetup;
     bool draggingInside;
 	bool headerHasFocus;
+	bool footerIsDragging;
 	bool snappingEnabled;
 	
 	set<long> snapPoints; //in millis

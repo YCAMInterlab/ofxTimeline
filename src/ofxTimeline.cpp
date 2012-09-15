@@ -1081,6 +1081,7 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 
 void ofxTimeline::exit(ofEventArgs& args){
 	if(isOnThread){
+		ofLogNotice("ofxTimeline::exit") << "waiting for thread" << endl;
 		waitForThread(true);
 	}
 }
@@ -1209,13 +1210,15 @@ void ofxTimeline::draw(){
 			tabs->draw();			
 		}
         
+		ofPushStyle();
 		currentPage->draw();
 		if(showZoomer)zoomer->_draw();
         
 		//draw these because they overlay the rest of the timeline with info
         ticker->_draw();
 		inoutTrack->_draw();
-        
+        ofPopStyle();
+		
 		if(modalTrack != NULL){
 			modalTrack->drawModalContent();
 		}
