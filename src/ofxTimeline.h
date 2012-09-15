@@ -92,7 +92,7 @@ class ofxTimeline : ofThread {
 	//for precise timing apps and input recording it'll greatly
 	//improve performance
 	virtual void moveToThread();
-//    virtual void removeFromThread(); //TODO: implement this
+    virtual void removeFromThread();
 	
 	bool toggleEnabled();
     virtual void enable();
