@@ -234,8 +234,8 @@ void ofxTLKeyframes::load(){
 		
 		createKeyframesFromXML(savedkeyframes, keyframes);
 	}
-	timeline->flagTrackModified(this);
 	updateKeyframeSort();
+	timeline->flagTrackModified(this);
 }
 
 void ofxTLKeyframes::createKeyframesFromXML(ofxXmlSettings xmlStore, vector<ofxTLKeyframe*>& keyContainer){
@@ -329,8 +329,9 @@ string ofxTLKeyframes::getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys){
 }
 
 bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
+	
+	
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
-    
 	
     keysAreDraggable = !ofGetModifierShiftPressed();
     keysDidDrag = false;
@@ -386,6 +387,7 @@ void ofxTLKeyframes::regionSelected(ofLongRange timeRange, ofRange valueRange){
             selectKeyframe(keyframes[i]);
         }
 	}
+	updateKeyframeSort();
 }
 
 void ofxTLKeyframes::updateDragOffsets(ofVec2f screenpoint, long grabMillis){
@@ -458,7 +460,6 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 void ofxTLKeyframes::getSnappingPoints(set<long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
-//			points.push_back(keyframes[i]->time);
 			points.insert(keyframes[i]->time);
 		}
 	}
@@ -607,18 +608,22 @@ void ofxTLKeyframes::nudgeBy(ofVec2f nudgePercent){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
 		selectedKeyframes[i]->time  = ofClamp(selectedKeyframes[i]->time + timeline->getDurationInMilliseconds()*nudgePercent.x, 0, timeline->getDurationInMilliseconds());
 		selectedKeyframes[i]->value = ofClamp(selectedKeyframes[i]->value + nudgePercent.y, 0, 1.0);
-	}
-	
+	}	
+	updateKeyframeSort();
     timeline->flagTrackModified(this);
-	updateKeyframeSort();	
 }
 
 void ofxTLKeyframes::deleteSelectedKeyframes(){
+	vector<ofxTLKeyframe*>::iterator selectedIt = selectedKeyframes.end();
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(isKeyframeSelected(keyframes[i])){
+			if(keyframes[i] != selectedKeyframes[selectedKeyframes.size()-1]){
+				ofLogError("ofxTLKeyframes::deleteSelectedKeyframes") << "keyframe delete inconsistency";
+			}
 			willDeleteKeyframe(keyframes[i]);
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
+			selectedKeyframes.erase(--selectedIt);
 		}
 	}
 	
@@ -649,8 +654,9 @@ ofxTLKeyframe* ofxTLKeyframes::keyframeAtScreenpoint(ofVec2f p){
 	}
 	float minDistanceSquared = 15*15;
 	for(int i = 0; i < keyframes.size(); i++){
-		ofVec2f keyonscreen = screenPositionForKeyframe(keyframes[i]);
-		if(keyonscreen.squareDistance( p ) < minDistanceSquared){
+		if(isKeyframeIsInBounds(keyframes[i]) &&
+		   p.squareDistance(screenPositionForKeyframe(keyframes[i])) < minDistanceSquared)
+		{
 			return keyframes[i];
 		}
 	}
@@ -675,13 +681,14 @@ void ofxTLKeyframes::deselectKeyframe(ofxTLKeyframe* k){
 bool ofxTLKeyframes::isKeyframeSelected(ofxTLKeyframe* k){
 	
 	if(k == NULL) return false;
-	
-	for(int i = 0; i < selectedKeyframes.size(); i++){
-		if(selectedKeyframes[i] == k){
-			return true;
-		}
-	}
-	return false;
+
+	return binary_search(selectedKeyframes.begin(), selectedKeyframes.end(), k, keyframesort);
+//	for(int i = 0; i < selectedKeyframes.size(); i++){
+//		if(selectedKeyframes[i] == k){
+//			return true;
+//		}
+//	}
+//	return false;
 }
 
 bool ofxTLKeyframes::isKeyframeIsInBounds(ofxTLKeyframe* key){

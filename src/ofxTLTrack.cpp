@@ -166,7 +166,7 @@ void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLTrack::gainedFocus(){
-	focused = true;    
+	focused = true;
 }
 
 void ofxTLTrack::lostFocus(){
@@ -178,7 +178,7 @@ ofRectangle ofxTLTrack::getDrawRect(){
 }
 
 float ofxTLTrack::getBottomEdge(){
-	return bounds.y+bounds.height;    
+	return bounds.getMaxY();
 }
 
 bool ofxTLTrack::getCreatedByTimeline(){

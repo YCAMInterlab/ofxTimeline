@@ -60,6 +60,5 @@ class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
 	float lastPercent;
 	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer_TimelineAdditions player;
-	
 	ofRange computedZoomBounds;
 };

@@ -183,6 +183,7 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
 		}
 	}
     
+	
     //TODO: explore multi-focus tracks for pasting into many tracks at once
     //paste events get sent to the focus track
     if(newFocus != NULL && newFocus != focusedTrack){

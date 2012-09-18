@@ -1661,8 +1661,9 @@ string ofxTimeline::nameToXMLName(string trackName){
 string ofxTimeline::confirmedUniqueName(string name){
     string uniqueName = name;
     int attempts = 0;
-    while(trackNameToPage[uniqueName] != NULL){
-        uniqueName = name + "_" + ofToString(attempts++);
+//    while(trackNameToPage[uniqueName] != NULL){
+	while(trackNameToPage.find(uniqueName) != trackNameToPage.end()){
+		uniqueName = name + "_" + ofToString(attempts++);
     }
     return uniqueName;
 }
