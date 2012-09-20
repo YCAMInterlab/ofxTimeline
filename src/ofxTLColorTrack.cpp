@@ -247,7 +247,7 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 		return true;
 	}
 	else{
-		return ofxTLBangs::mousePressed(args, millis);
+		return ofxTLKeyframes::mousePressed(args, millis);
 	}
 }
 
@@ -262,7 +262,7 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 		}
 	}
 	else{
-		ofxTLBangs::mouseDragged(args, millis);
+		ofxTLKeyframes::mouseDragged(args, millis);
 		if(keysDidDrag){
 			shouldRecomputePreviews = true;
 		}
@@ -283,7 +283,7 @@ void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 		}
 	}
 	else{
-		ofxTLBangs::mouseReleased(args, millis);
+		ofxTLKeyframes::mouseReleased(args, millis);
 	}
 }
 
@@ -300,7 +300,7 @@ void ofxTLColorTrack::keyPressed(ofKeyEventArgs& args){
 		}
 	}
 	else{
-		ofxTLBangs::keyPressed(args);
+		ofxTLKeyframes::keyPressed(args);
 	}
 }
 
@@ -355,6 +355,14 @@ void ofxTLColorTrack::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 	ofxTLColorSample* sample = (ofxTLColorSample*)key;
 	xmlStore.setValue("sampleX", sample->samplePoint.x);
 	xmlStore.setValue("sampleY", sample->samplePoint.y);
+}
+
+void ofxTLColorTrack::regionSelected(ofLongRange timeRange, ofRange valueRange){
+    for(int i = 0; i < keyframes.size(); i++){
+    	if(timeRange.contains( keyframes[i]->time )){
+            selectKeyframe(keyframes[i]);
+        }
+	}
 }
 
 void ofxTLColorTrack::selectedKeySecondaryClick(ofMouseEventArgs& args){

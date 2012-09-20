@@ -17,7 +17,7 @@ class ofxTLColorSample : public ofxTLKeyframe {
 	ofColor color; //cached sample
 };
 
-class ofxTLColorTrack : public ofxTLBangs {
+class ofxTLColorTrack : public ofxTLKeyframes {
   public:
     ofxTLColorTrack();
 	
@@ -44,13 +44,13 @@ class ofxTLColorTrack : public ofxTLBangs {
 
 	virtual void setDefaultColor(ofColor color);
 	virtual ofColor getDefaultColor();
+	virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 	
   protected:
 	ofImage colorPallete;
 	ofImage previewPalette;
 	string palettePath;
 	
-		
 	virtual void updatePreviewPalette();
 	virtual ofxTLKeyframe* newKeyframe();
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);

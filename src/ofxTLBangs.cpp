@@ -67,7 +67,6 @@ void ofxTLBangs::draw(){
 
 void ofxTLBangs::regionSelected(ofLongRange timeRange, ofRange valueRange){
     for(int i = 0; i < keyframes.size(); i++){
-//        if(timeRange.contains( keyframes[i]->position.x)){
     	if(timeRange.contains( keyframes[i]->time )){
             selectKeyframe(keyframes[i]);
         }
