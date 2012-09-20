@@ -418,9 +418,9 @@ ofColor ofxTLColorTrack::samplePaletteAtPosition(ofVec2f position){
 		int y0 = int(positionPixelSpace.y);
 		float dx = positionPixelSpace.x-x0, dy = positionPixelSpace.y-y0, omdx = 1-dx, omdy = 1-dy;
 		return colorPallete.getPixelsRef().getColor(x0,y0)*omdx*omdy +
-	           colorPallete.getPixelsRef().getColor(x0,y0+1)*omdx*dy +
-               colorPallete.getPixelsRef().getColor(x0+1,y0)*dx*omdy +
-			   colorPallete.getPixelsRef().getColor(x0+1,y0+1)*dx*dy;
+	           colorPallete.getPixelsRef().getColor(x0,MIN(y0+1, colorPallete.getHeight()-1))*omdx*dy +
+               colorPallete.getPixelsRef().getColor(MIN(x0+1,colorPallete.getWidth()-1),y0)*dx*omdy +
+			   colorPallete.getPixelsRef().getColor(MIN(x0+1,colorPallete.getWidth()-1),MIN(y0+1, colorPallete.getHeight()-1))*dx*dy;
 	}
 	else{
 		ofLogError("ofxTLColorTrack::refreshSample -- sampling palette is null");
