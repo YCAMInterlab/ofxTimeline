@@ -98,6 +98,10 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual float getValueAtTimeInMillis(long sampleTime);
 
 	virtual void setValueRange(ofRange range, float defaultValue = 0);
+	virtual void setValueRangeMin(float min);
+	virtual void setValueRangeMax(float max);
+	virtual void setDefaultValue(float defaultValue);
+	
     virtual ofRange getValueRange();
 	
 	//experimental binary saving. does not work with subclasses yet

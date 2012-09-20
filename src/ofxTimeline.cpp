@@ -1537,7 +1537,6 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
 
-
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();
 	videoTrack->setCreatedByTimeline(true);
@@ -1661,7 +1660,6 @@ string ofxTimeline::nameToXMLName(string trackName){
 string ofxTimeline::confirmedUniqueName(string name){
     string uniqueName = name;
     int attempts = 0;
-//    while(trackNameToPage[uniqueName] != NULL){
 	while(trackNameToPage.find(uniqueName) != trackNameToPage.end()){
 		uniqueName = name + "_" + ofToString(attempts++);
     }

@@ -165,6 +165,18 @@ void ofxTLKeyframes::setValueRange(ofRange range, float newDefaultValue){
     defaultValue = newDefaultValue;
 }
 
+void ofxTLKeyframes::setValueRangeMin(float min){
+	valueRange.min = min;
+}
+
+void ofxTLKeyframes::setValueRangeMax(float max){
+	valueRange.max = max;
+}
+
+void ofxTLKeyframes::setDefaultValue(float newDefaultValue){
+	defaultValue = newDefaultValue;
+}
+
 ofRange ofxTLKeyframes::getValueRange(){
 	return valueRange;
 }

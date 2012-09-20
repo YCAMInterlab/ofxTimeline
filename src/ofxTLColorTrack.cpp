@@ -412,8 +412,15 @@ void ofxTLColorTrack::refreshSample(ofxTLColorSample* sample){
 //assumes normalized position
 ofColor ofxTLColorTrack::samplePaletteAtPosition(ofVec2f position){
 	if(colorPallete.bAllocated()){
-		//TODO: make this interpolated based on float values to eliminate striping
-		return colorPallete.getColor(position.x*colorPallete.getWidth(),position.y*colorPallete.getHeight());
+		ofVec2f positionPixelSpace = position * ofVec2f(colorPallete.getWidth(),colorPallete.getHeight());
+		//bilinear interpolation from http://www.gamedev.net/page/resources/_/technical/graphics-programming-and-theory/bilinear-interpolation-of-texture-maps-r810
+		int x0 = int(positionPixelSpace.x);
+		int y0 = int(positionPixelSpace.y);
+		float dx = positionPixelSpace.x-x0, dy = positionPixelSpace.y-y0, omdx = 1-dx, omdy = 1-dy;
+		return colorPallete.getPixelsRef().getColor(x0,y0)*omdx*omdy +
+	           colorPallete.getPixelsRef().getColor(x0,y0+1)*omdx*dy +
+               colorPallete.getPixelsRef().getColor(x0+1,y0)*dx*omdy +
+			   colorPallete.getPixelsRef().getColor(x0+1,y0+1)*dx*dy;
 	}
 	else{
 		ofLogError("ofxTLColorTrack::refreshSample -- sampling palette is null");
