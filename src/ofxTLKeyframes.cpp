@@ -379,15 +379,17 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
         updateDragOffsets(screenpoint, millis);				
-		if(selectedKeyframe != NULL && args.button == 0 && !ofGetModifierSelection()){
-            timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
-			//move the playhead
-			if(timeline->getMovePlayheadOnDrag()){
-				timeline->setCurrentTimeMillis(selectedKeyframe->time);
+		if(selectedKeyframe != NULL){
+			if(args.button == 0 && !ofGetModifierSelection() && !ofGetModifierControlPressed()){
+	            timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
+				//move the playhead
+				if(timeline->getMovePlayheadOnDrag()){
+					timeline->setCurrentTimeMillis(selectedKeyframe->time);
+				}
 			}
-		}
-		else if(args.button == 2 || ofGetModifierControlPressed()){
-            selectedKeySecondaryClick(args);
+			else if(args.button == 2 || ofGetModifierControlPressed()){
+				selectedKeySecondaryClick(args);
+			}
 		}
 	}
 	return selectedKeyframe != NULL;
