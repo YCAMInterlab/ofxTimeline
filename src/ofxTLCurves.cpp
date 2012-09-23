@@ -125,9 +125,7 @@ void ofxTLCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
-	//TODO: move this to mouse-released to cooperate with UNDO
 	if(drawingEasingWindow && args.button == 0){
-		//see if we clicked on an
 		drawingEasingWindow = false;
 		timeline->dismissedModalContent();
 		ofVec2f screenpoint(args.x,args.y);
@@ -159,7 +157,6 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
-	//FIX ON SCREEN
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
                                    MIN(args.y, ofGetHeight() - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
     

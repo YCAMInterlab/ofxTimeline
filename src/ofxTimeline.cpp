@@ -81,6 +81,7 @@ ofxTimeline::ofxTimeline()
 	curvesUseBinary(false),
 	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("defaultColorPalette.png"),
+	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
 	fontSize(9)
 {
@@ -148,6 +149,7 @@ void ofxTimeline::moveToThread(){
 		isOnThread = true;
 		startThread();
 		ofAddListener(ofEvents().exit, this, &ofxTimeline::exit);
+
 	}
 }
 
@@ -692,7 +694,6 @@ void ofxTimeline::reset(){ //gets rid of everything
 	if(isOnThread){
 		startThread();
 	}
-
 }
 
 
@@ -701,13 +702,13 @@ void ofxTimeline::setDurationInFrames(int frames){
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
-	//TODO verify no elements are being truncated
+	//TODO: verify no elements are being truncated
     if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " duraiton must set a positive number";
         return;
     }
 	durationInSeconds = seconds;
-	
+	zoomer->setViewRange(ofRange(0,1.0));
 }
 
 void ofxTimeline::setDurationInMillis(long millis){
@@ -1088,10 +1089,23 @@ void ofxTimeline::windowResized(ofResizeEventArgs& args){
 }
 
 void ofxTimeline::exit(ofEventArgs& args){
+//	stop();
+//    undoStack.clear();
+//    for(int i = 0; i < pages.size(); i++){
+//        delete pages[i];
+//    }
+//	tabs->clear();
+//    pages.clear();
+//    trackNameToPage.clear();
+//    currentPage = NULL;
+//    modalTrack = NULL;
+//    timeControl = NULL;
+//
 	if(isOnThread){
 		ofLogNotice("ofxTimeline::exit") << "waiting for thread" << endl;
 		waitForThread(true);
 	}
+	
 }
 
 #pragma mark DRAWING

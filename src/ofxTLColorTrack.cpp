@@ -190,6 +190,7 @@ ofColor ofxTLColorTrack::getColorAtMillis(unsigned long millis){
 	}
 	
 	if(millis < keyframes[0]->time){
+		//cout << "getting color before first key " << ((ofxTLColorSample*)keyframes[0])->color << endl;
 		return ((ofxTLColorSample*)keyframes[0])->color;
 	}
 	
@@ -366,17 +367,16 @@ void ofxTLColorTrack::regionSelected(ofLongRange timeRange, ofRange valueRange){
 }
 
 void ofxTLColorTrack::selectedKeySecondaryClick(ofMouseEventArgs& args){
-	if(selectedKeyframe != NULL){
-		drawingColorWindow = true;
-		previousSample = NULL;
-		nextSample = NULL;
 
-		colorAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->color;
-		samplePositionAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->samplePoint;
-		
-		timeline->presentedModalContent(this);
-		setNextAndPreviousSamples();
-	}
+	drawingColorWindow = true;
+	previousSample = NULL;
+	nextSample = NULL;
+
+	colorAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->color;
+	samplePositionAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->samplePoint;
+	
+	timeline->presentedModalContent(this);
+	setNextAndPreviousSamples();
 }
 
 void ofxTLColorTrack::setNextAndPreviousSamples(){

@@ -373,13 +373,17 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
         //unselect it if it's selected and we clicked the key with shift pressed
         else if(ofGetModifierSelection()){
         	deselectKeyframe(selectedKeyframe);
+			selectedKeyframe = NULL;
         }
 	}
-	
+//	if(isActive()){
+//		cout << "MOUSE PRESSED args button " << args.button << " control pressed? " << (ofGetModifierControlPressed() ? "YES":"NO") << " shift/cmd pressed? " << (ofGetModifierSelection() ? "YES":"NO") << endl;
+//		}
     //if we have any keyframes selected update the grab offsets and check for showing the modal window
 	if(selectedKeyframes.size() != 0){
-        updateDragOffsets(screenpoint, millis);				
+        updateDragOffsets(screenpoint, millis);
 		if(selectedKeyframe != NULL){
+
 			if(args.button == 0 && !ofGetModifierSelection() && !ofGetModifierControlPressed()){
 	            timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 				//move the playhead
@@ -387,7 +391,7 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 					timeline->setCurrentTimeMillis(selectedKeyframe->time);
 				}
 			}
-			else if(args.button == 2 || ofGetModifierControlPressed()){
+			if(args.button == 2 || ofGetModifierControlPressed()){
 				selectedKeySecondaryClick(args);
 			}
 		}

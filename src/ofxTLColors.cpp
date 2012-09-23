@@ -35,7 +35,7 @@
 #include "ofxTLColors.h"
 
 void ofxTLColors::load() {
-	load("../../../../../addons/ofxTimeline/assets/defaultColors.xml");
+//	load("../../../../../addons/ofxTimeline/assets/defaultColors.xml");
 }
 
 //TODO add reasonable default colors

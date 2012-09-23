@@ -82,6 +82,13 @@ void ofxTLTrackHeader::textFieldEnter(string& newText){
 	track->getTimeline()->dismissedModalContent();
 }
 
+string ofxTLTrackHeader::getDisplayName(){
+	if(track != NULL){
+		return track->getDisplayName();
+	}
+	return "";
+}
+
 void ofxTLTrackHeader::draw(){
 	ofRectangle trackRect = track->getDrawRect();
 	float footerStartY = trackRect.y + trackRect.height;
@@ -92,6 +99,12 @@ void ofxTLTrackHeader::draw(){
 	
 	ofPushStyle();
 	
+	if(track->hasFocus()){
+		ofFill();
+		ofSetColor(timeline->getColors().highlightColor, 50);
+		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+
 	ofNoFill();
 	ofSetColor(getTimeline()->getColors().textColor);
 	// TODO: set these somewhere else instead of setting it every frame here

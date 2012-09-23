@@ -6,9 +6,6 @@ ofxTLImageTrack::ofxTLImageTrack(){
 	thumbsEnabled = true;
 }
 
-ofxTLImageTrack::~ofxTLImageTrack(){
-
-}
 
 void ofxTLImageTrack::drawRectChanged(){
 	calculateFramePositions();
@@ -60,8 +57,9 @@ void ofxTLImageTrack::calculateFramePositions(){
         ofxTLVideoThumb thumb;
         thumb.displayRect = ofRectangle(pixelOffset + thumbWidth * i, bounds.y, thumbWidth, bounds.height);
         //TODO: account for offsets at some point
-        thumb.framenum = screenXtoNormalizedX(thumb.displayRect.x, zoomBounds) * timeline->getDurationInFrames();
-        thumb.timestamp = timeline->getTimecode().millisForFrame(thumb.framenum);
+        thumb.timestamp = timeline->screenXToMillis(thumb.displayRect.x);
+ 		thumb.framenum = timeline->getTimecode().frameForMillis(thumb.timestamp);
+//        thumb.framenum = screenXtoNormalizedX(thumb.displayRect.x, zoomBounds) * timeline->getDurationInFrames();
         thumb.loaded = false;
         newThumbs.push_back(thumb);
     }

@@ -255,7 +255,7 @@ void ofxTLZoomer::notifyZoomEnded(){
 }
 
 void ofxTLZoomer::keyPressed(ofKeyEventArgs& args){
-	
+	//TODO: Nudging?
 }
 
 ofRange ofxTLZoomer::getViewRange() {

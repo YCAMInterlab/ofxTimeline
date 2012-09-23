@@ -64,7 +64,10 @@ class ofxTLTrackHeader : public ofxTLTrack
     
 	virtual ofRectangle getFooterRect();
 	virtual void textFieldEnter(string& newText);
-    
+	
+	//for the header, this returns the track's display name
+    virtual string getDisplayName();
+	
   protected:
 	ofxTLTrack* track;
 	ofxTextInputField nameField;
