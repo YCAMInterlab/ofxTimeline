@@ -6,8 +6,8 @@ void testApp::setup(){
 	
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
-	ofSetEscapeQuitsApp(false);
-    
+    ofEnableSmoothing();
+	
     //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);
@@ -20,15 +20,13 @@ void testApp::setup(){
     timeline.addCurves("saturation", ofRange(0.0, 1.5), 1.0);
     timeline.addSwitches("invert");
 	
-    //set the color palette
-	timeline.getColors().load("defaultColors.xml");
 	
     loaded = false;
 	rendering = false;
     renderFolder = "renders/"; //this is where rendered frames will be saved to
     
     //initialize the shader
-    colorControl.load("colorcontrol");
+    colorControl.load("shaders/colorcontrol");
     colorControl.begin();
     colorControl.setUniform1i("tex", 0);
     colorControl.end();
@@ -42,9 +40,9 @@ void testApp::setup(){
     }
     
     //load our display font
-    verdana.loadFont("verdana.ttf", 15, true, true);
-	verdana.setLineHeight(34.0f);
-	verdana.setLetterSpacing(1.035);
+    font.loadFont("GUI/NewMedia Fett.ttf", 15, true, true);
+	font.setLineHeight(34.0f);
+	font.setLetterSpacing(1.035);
 
 }
 
@@ -93,8 +91,8 @@ void testApp::draw(){
         ofSetColor(timeline.getColors().keyColor);
         ofRect(outputRectangle);
         string instructions = "Drag & Drop a Video file";
-        float width = verdana.getStringBoundingBox("Drag & Drop a Video file or press load video", 0, 0).width;
-        verdana.drawString(instructions, outputRectangle.x+outputRectangle.width/2 - width/2, outputRectangle.y + outputRectangle.height/2);
+        float width = font.getStringBoundingBox("Drag & Drop a Video file or press load video", 0, 0).width;
+        font.drawString(instructions, outputRectangle.x+outputRectangle.width/2 - width/2, outputRectangle.y + outputRectangle.height/2);
         ofPopStyle();
     }
     
@@ -107,9 +105,9 @@ void testApp::draw(){
     ofRect(loadVideoButton);
     if(loaded){
 	    string renderString = rendering ? ("Cancel Render : " + ofToString(currentRenderFrame - timeline.getInFrame()) + "/" + ofToString(timeline.getOutFrame()-timeline.getInFrame()))  : "Start Render";
-	    verdana.drawString(renderString, renderButton.x + 10, renderButton.y + renderButton.height*.75);
+	    font.drawString(renderString, renderButton.x + 10, renderButton.y + renderButton.height*.75);
     }else{
-    	verdana.drawString("load video", renderButton.x + 10, renderButton.y + renderButton.height*.75);
+    	font.drawString("load video", renderButton.x + 10, renderButton.y + renderButton.height*.75);
     }
     ofRect(renderButton);
     ofPopStyle();

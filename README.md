@@ -1,13 +1,8 @@
-# WORK IN PROGRESS - DO NOT PUBLICIZE #
-This project is part of a three month research residency at YCAM. I'm prototyping the code and philosophy in public, inviting many of you who have found your way here to share and contribute ideas. I hope that after the residency I can publish a developed theory and practice together. For the moment however it's important that this project stay under the radar as the ideas are still in formation.
-
-Thanks! 
-
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 Cover of the timeline sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
 
-ofxTimeline is a simple to use openFrameworks addon for graphically editing values over time.
+ofxTimeline is a simple to use openFrameworks add on for graphically editing values over time.
 
 It's a lot like other openFrameworks GUIs that connect your parameters in code to an editable graphical interface. However ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific moments. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls with just a few lines of code.
 

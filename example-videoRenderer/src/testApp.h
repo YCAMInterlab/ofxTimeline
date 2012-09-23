@@ -40,7 +40,7 @@ class testApp : public ofBaseApp{
     string renderFolder;
     
     
-    ofTrueTypeFont verdana;
+    ofTrueTypeFont font;
     
     //saves between loads
     ofxXmlSettings settings;

@@ -1,5 +1,4 @@
 #include "testApp.h"
-#include "ofxTLUtils.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -7,21 +6,23 @@ void testApp::setup(){
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetEscapeQuitsApp(false);
+	ofEnableSmoothing();
+	ofEnableAlphaBlending();
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
-    timeline.getColors().load("defaultColors.xml");
-	
     timeline.setBPM(120.f);
 	timeline.enableSnapToBPM(true);
 	timeline.setShowBPMGrid(true);
 	
 	timeline.addTrack("Track", &waveform);
+	
+	//this means that calls to play/stop etc will be  routed to the waveform
+	timeline.setTimecontrolTrack(&waveform);
     waveform.loadSoundfile("4chan.wav");
 	timeline.setDurationInSeconds(waveform.getDuration());
-    
-    timeline.addBangs("clickbangs");
-    
+    timeline.addBangs("clickbangs"); //just for fun
+
 	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
     lastBang = 0;
 }
@@ -49,8 +50,7 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	if(key == ' '){
-		//timeline.togglePlay();
-		waveform.togglePlay();
+		timeline.togglePlay();
 	}
 	if(key == 'h'){
 		timeline.toggleShow();

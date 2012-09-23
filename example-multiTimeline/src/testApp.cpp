@@ -3,16 +3,17 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-//	ofSetFrameRate(60);
-//	ofSetVerticalSync(true);
+	ofSetFrameRate(60);
+	ofSetVerticalSync(true);
 //	ofSetEscapeQuitsApp(false);
-    
+    ofEnableSmoothing();
+	
 	ofSetLogLevel(OF_LOG_VERBOSE);
     
 	timeline.setup();
     timeline.setFrameRate(24);
 	timeline.setDurationInSeconds(100);
-        
+
     timeline.addFlags("StartStop");
     
     ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
@@ -25,7 +26,7 @@ void testApp::setup(){
         t->setShowTicker(false);
         t->setShowZoomer(false);
         t->setLockWidthToWindow(false);
-        t->setWidth(ofGetWidth()/2);
+        t->setWidth(ofGetWidth());
         t->setLoopType(OF_LOOP_NORMAL);
         sublines.push_back(t);	
     }
@@ -53,8 +54,6 @@ void testApp::draw(){
         }
         sublines[i]->draw();
     }
-    
-
 }
 
 //--------------------------------------------------------------
