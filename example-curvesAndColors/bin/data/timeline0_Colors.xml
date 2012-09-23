@@ -1,26 +1,26 @@
 <keyframes>
     <key>
-        <sampleX>0.755506575</sampleX>
-        <sampleY>0.529999912</sampleY>
+        <sampleX>0.755507</sampleX>
+        <sampleY>0.53</sampleY>
         <time>00:00:00:029</time>
-        <value>0.675000012</value>
+        <value>0.675</value>
     </key>
     <key>
-        <sampleX>0.330959946</sampleX>
-        <sampleY>0.239999965</sampleY>
+        <sampleX>0.33096</sampleX>
+        <sampleY>0.24</sampleY>
         <time>00:00:01:368</time>
-        <value>0.475000024</value>
+        <value>0.475</value>
     </key>
     <key>
-        <sampleX>0.385320067</sampleX>
-        <sampleY>0.689999938</sampleY>
+        <sampleX>0.38532</sampleX>
+        <sampleY>0.69</sampleY>
         <time>00:00:01:655</time>
-        <value>0.699999988</value>
+        <value>0.7</value>
     </key>
     <key>
-        <sampleX>0.731533170</sampleX>
-        <sampleY>0.494999945</sampleY>
+        <sampleX>0.731533</sampleX>
+        <sampleY>0.495</sampleY>
         <time>00:00:02:920</time>
-        <value>0.449999988</value>
+        <value>0.45</value>
     </key>
 </keyframes>

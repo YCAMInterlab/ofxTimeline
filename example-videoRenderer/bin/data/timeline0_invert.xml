@@ -2,66 +2,66 @@
     <key>
         <max>00:00:01:113</max>
         <time>00:00:00:707</time>
-        <value>0.206896961</value>
+        <value>0.206897</value>
     </key>
     <key>
         <max>00:00:01:675</max>
         <time>00:00:01:582</time>
-        <value>0.551724017</value>
+        <value>0.551724</value>
     </key>
     <key>
         <max>00:00:01:846</max>
         <time>00:00:01:766</time>
-        <value>0.448276013</value>
+        <value>0.448276</value>
     </key>
     <key>
         <max>00:00:01:943</max>
         <time>00:00:01:880</time>
-        <value>0.513409972</value>
+        <value>0.51341</value>
     </key>
     <key>
         <max>00:00:02:055</max>
         <time>00:00:02:038</time>
-        <value>0.482758999</value>
+        <value>0.482759</value>
     </key>
     <key>
         <max>00:00:02:133</max>
         <time>00:00:02:083</time>
-        <value>0.375479013</value>
+        <value>0.375479</value>
     </key>
     <key>
         <max>00:00:02:183</max>
         <time>00:00:02:165</time>
-        <value>0.444444001</value>
+        <value>0.444444</value>
     </key>
     <key>
         <max>00:00:02:192</max>
         <time>00:00:02:188</time>
-        <value>0.444444001</value>
+        <value>0.444444</value>
     </key>
     <key>
         <max>00:00:02:201</max>
         <time>00:00:02:196</time>
-        <value>0.444444001</value>
+        <value>0.444444</value>
     </key>
     <key>
         <max>00:00:02:213</max>
         <time>00:00:02:210</time>
-        <value>0.333332986</value>
+        <value>0.333333</value>
     </key>
     <key>
         <max>00:00:02:222</max>
         <time>00:00:02:216</time>
-        <value>0.296296000</value>
+        <value>0.296296</value>
     </key>
     <key>
         <max>00:00:02:233</max>
         <time>00:00:02:227</time>
-        <value>0.407406986</value>
+        <value>0.407407</value>
     </key>
     <key>
         <max>00:00:02:242</max>
         <time>00:00:02:237</time>
-        <value>0.407406986</value>
+        <value>0.407407</value>
     </key>
 </keyframes>

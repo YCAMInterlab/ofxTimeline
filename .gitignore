@@ -20,6 +20,12 @@ apps/*/*/bin/clickToLaunch*
 apps/*/*/bin/libs
 apps/*/*/obj
 
+*.dll
+*.lib
+*.exe
+*.sdf
+*.opensdf
+*.exp
 #mac files
 .DS_Store
 
