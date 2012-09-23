@@ -20,12 +20,16 @@ apps/*/*/bin/clickToLaunch*
 apps/*/*/bin/libs
 apps/*/*/obj
 
+#VCPP files
+
 *.dll
 *.lib
 *.exe
 *.sdf
 *.opensdf
 *.exp
+*.suo
+
 #mac files
 .DS_Store
 
