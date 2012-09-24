@@ -315,13 +315,13 @@ void ofxTLVideoTrack::draw(){
 	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofPushStyle();
 	ofFill();
-	ofSetColor(timeline->getColors().backgroundColor, 250);
-	ofRect(selectedFrameX, bounds.y, 150, bounds.height);
+	ofSetColor(timeline->getColors().backgroundColor, 150);
+	ofRect(selectedFrameX, bounds.y, 120, bounds.height);
 	ofPopStyle();
 	ofSetColor(timeline->getColors().textColor);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	timeline->getFont().drawString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
-	timeline->getFont().drawString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
+	timeline->getFont().drawString("F# " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
+	timeline->getFont().drawString(ofxTimecode::timecodeForSeconds(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);
