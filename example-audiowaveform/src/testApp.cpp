@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	ofBackground(255*.15);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetEscapeQuitsApp(false);
@@ -29,7 +30,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::bangFired(ofxTLBangEventArgs& bang){
-    lastBang = timeline.getCurrentTime();
+//    lastBang = timeline.getCurrentTime();
 }
 
 //--------------------------------------------------------------
@@ -41,7 +42,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     float curtime = timeline.getCurrentTime();
-	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
+//	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
     
 	timeline.draw();
 }

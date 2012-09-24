@@ -565,7 +565,10 @@ float ofxTLPage::getBottomEdge(){
 #pragma mark saving/restoring state
 void ofxTLPage::loadTrackPositions(){
 	ofxXmlSettings trackPositions;
-	if(trackPositions.loadFile(ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml"))){
+	string xmlPageName = name;
+	ofStringReplace(xmlPageName," ", "_");
+	string positionFileName = ofToDataPath(timeline->getWorkingFolder() + timeline->getName() + "_" + xmlPageName + "_trackPositions.xml");
+	if(trackPositions.loadFile(positionFileName)){
 		
 		//cout << "loading element position " << name << "_trackPositions.xml" << endl;
 		
@@ -582,6 +585,9 @@ void ofxTLPage::loadTrackPositions(){
 			trackPositions.popTag();
 		}
 		trackPositions.popTag();
+	}
+	else{
+		 ofLogNotice("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
 	}
 }
 
@@ -607,9 +613,11 @@ void ofxTLPage::saveTrackPositions(){
 		curElement++;
 	}
 	trackPositions.popTag();
-	trackPositions.saveFile( ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml") );
+	string xmlPageName = name;
+	ofStringReplace(xmlPageName," ", "_");
+	string trackPositionsFile = ofToDataPath(timeline->getWorkingFolder() + timeline->getName() + "_" +  xmlPageName + "_trackPositions.xml");
+	trackPositions.saveFile( trackPositionsFile );
 }
-
 
 #pragma mark getters/setters
 void ofxTLPage::setZoomBounds(ofRange zoomBounds){

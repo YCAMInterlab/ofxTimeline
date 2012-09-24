@@ -90,17 +90,13 @@ void ofxTLBangs::update(){
 		long thisTimelinePoint = timeline->getCurrentTimeMillis();
 		for(int i = 0; i < keyframes.size(); i++){
 			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
-//				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
+				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 				bangFired(keyframes[i]);
 				lastBangTime = ofGetElapsedTimef();
 			}
 		}
 		lastTimelinePoint = thisTimelinePoint;
 	}
-}
-
-void ofxTLBangs::update(ofEventArgs& args){
-	update();
 }
 
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
@@ -116,13 +112,11 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
 	lastTimelinePoint = timeline->getCurrentTimeMillis();
-//	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
     isPlayingBack = true;
 }
 
 void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
-//	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
-    isPlayingBack = true;
+    isPlayingBack = false;
 }
 
 void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){

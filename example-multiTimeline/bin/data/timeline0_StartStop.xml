@@ -2,36 +2,36 @@
     <key>
         <flag>start&gt;0</flag>
         <time>00:00:08:984</time>
-        <value>0.85</value>
+        <value>0.850000024</value>
     </key>
     <key>
         <flag>stop&gt;0</flag>
         <time>00:00:10:840</time>
-        <value>0.05</value>
+        <value>0.050000001</value>
     </key>
     <key>
         <flag>start&gt;7</flag>
         <time>00:00:25:000</time>
-        <value>0.7</value>
+        <value>0.699999988</value>
     </key>
     <key>
         <flag>start&gt;8</flag>
         <time>00:00:27:148</time>
-        <value>0.45</value>
+        <value>0.449999988</value>
     </key>
     <key>
         <flag>start&gt;3</flag>
         <time>00:00:38:867</time>
-        <value>0.725</value>
+        <value>0.725000024</value>
     </key>
     <key>
         <flag>stop&gt;7</flag>
         <time>00:00:41:796</time>
-        <value>0.45</value>
+        <value>0.449999988</value>
     </key>
     <key>
         <flag>stop&gt;8</flag>
         <time>00:00:57:031</time>
-        <value>0.675</value>
+        <value>0.675000012</value>
     </key>
 </keyframes>

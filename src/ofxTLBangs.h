@@ -16,8 +16,7 @@ class ofxTLBangs : public ofxTLKeyframes {
     virtual void draw();
 
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
-    //All keyframers could send events...so
-    //Potentially this event stuff could be put up in Keyframer, but it's a good distinguisher right now
+	
     virtual void playbackStarted(ofxTLPlaybackEventArgs& args);
 	virtual void playbackLooped(ofxTLPlaybackEventArgs& args);
 	virtual void playbackEnded(ofxTLPlaybackEventArgs& args);
@@ -28,7 +27,6 @@ class ofxTLBangs : public ofxTLKeyframes {
 
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
     bool isPlayingBack;
-    void update(ofEventArgs& args);
 	virtual void update();
 	
     long lastTimelinePoint;

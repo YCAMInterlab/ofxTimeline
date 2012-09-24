@@ -183,7 +183,6 @@ void ofxTLAudioTrack::play(){
 		player.play();
 		player.setPosition(timeline->getPercentComplete());
 		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
-		
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);		
 	}	   

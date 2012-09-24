@@ -432,18 +432,23 @@ void ofxTimeline::play(){
     if(!isEnabled){
         return;
     }
-
-    if(timeControl != NULL){
-        timeControl->play();
-        return;
-    }
+	
 	if(!getIsPlaying()){
-        if(isDone()){
-            setPercentComplete(0.0);
-        }
+		
 		if(!isOnThread){
 			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		}
+
+		if(timeControl != NULL){
+			timeControl->play();
+			return;
+		}
+		
+		//if we are at the end and not looping, reset to the beginning
+        if(isDone()){
+            setPercentComplete(0.0);
+        }
+		
 		isPlaying = true;
         currentTime = ofClamp(currentTime, getInTimeInSeconds(), getOutTimeInSeconds());
         
@@ -460,16 +465,18 @@ void ofxTimeline::stop(){
         return;
     }
 
-    if(timeControl != NULL){
-        timeControl->stop();
-        return;
-    }
-
 	if(getIsPlaying()){
-        isPlaying = false;
+		
 		if(!isOnThread){
 	        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 		}
+		
+		if(timeControl != NULL){
+			timeControl->stop();
+			return;
+		}
+		
+        isPlaying = false;
 
         ofxTLPlaybackEventArgs args = createPlaybackEvent();
         ofNotifyEvent(timelineEvents.playbackEnded, args);
@@ -477,13 +484,14 @@ void ofxTimeline::stop(){
 }
 
 bool ofxTimeline::togglePlay(){
+	
     if(!isEnabled){
         return false;
     }
     
-    if(timeControl != NULL){
-        return timeControl->togglePlay();
-    }
+//    if(timeControl != NULL){
+//        return timeControl->togglePlay();
+//    }
 
 	if(getIsPlaying()){
 		stop();
@@ -1166,12 +1174,15 @@ bool ofxTimeline::isDone(){
 }
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
-	if(isFrameBased){
-		currentTime = timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
-    }
-    else {
-        currentTime = timer.getAppTimeSeconds() - playbackStartTime;
-    }
+	
+	if(timeControl == NULL){
+		if(isFrameBased){
+			currentTime = timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
+		}
+		else {
+			currentTime = timer.getAppTimeSeconds() - playbackStartTime;
+		}
+	}
 	
     checkLoop();
 	checkEvents();
