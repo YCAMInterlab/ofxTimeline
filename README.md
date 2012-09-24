@@ -52,7 +52,6 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 
 ## Controls ##
 
-
 ### Editing ###
 
 ### Zooming ###
