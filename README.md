@@ -1,3 +1,7 @@
+# This fork will not always be up to date
+
+Please watch https://github.com/YCAMInterlab/ofxTimeline for latest developments
+
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 Cover of the timeline sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
