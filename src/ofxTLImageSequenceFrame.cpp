@@ -171,7 +171,6 @@ void ofxTLImageSequenceFrame::setDesiredThumbnailWidth(int width)
 	desiredThumbWidth = width;
 }
 
-
 bool ofxTLImageSequenceFrame::loadThumb()
 {
     if(thumbLoaded){

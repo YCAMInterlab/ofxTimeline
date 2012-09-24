@@ -20,6 +20,16 @@ apps/*/*/bin/clickToLaunch*
 apps/*/*/bin/libs
 apps/*/*/obj
 
+#VCPP files
+
+*.dll
+*.lib
+*.exe
+*.sdf
+*.opensdf
+*.exp
+*.suo
+
 #mac files
 .DS_Store
 
@@ -29,4 +39,5 @@ apps/*/*/obj
 */*/*.tags
 */bin/timelineExample
 
-example-videoplayer/bin/data/video_thumbs/
+example-videoRenderer/bin/data/renders/
+oldExamples/

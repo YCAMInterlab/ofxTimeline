@@ -35,19 +35,20 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
+
 typedef struct{
 	float screenX;
+    long millis;
 	int weight;
 } ofxTLBPMPoint;
 
-class ofxTLTicker : public ofxTLElement
+class ofxTLTicker : public ofxTLTrack
 {
   public:
 	ofxTLTicker();
 	~ofxTLTicker();
 	
-	virtual void setup();
 	virtual void draw();
 	
 	//set the draw rect for the whole keyframer interface
@@ -58,11 +59,13 @@ class ofxTLTicker : public ofxTLElement
 	virtual void mouseDragged(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 
+	virtual float getBPM();
 	virtual void setBPM(float bpm);
-	virtual void getSnappingPoints(vector<float>& points);
+    
+	virtual void getSnappingPoints(set<long>& points);
 	virtual bool getDrawBPMGrid();
 	virtual void setDrawBPMGrid(bool drawGrid);
-	
+	virtual void setHoverTime(long millis);
 	
   protected:
 	void updateTimelinePosition();
@@ -70,10 +73,12 @@ class ofxTLTicker : public ofxTLElement
 
 	ofRectangle totalDrawRect;
 	vector<ofxTLBPMPoint> bpmScreenPoints;
-	
+    long hoverTime;
 	bool hasBPM;
 	float bpm;
 	bool drawBPMGrid;
-	
 	bool dragging;
+	
+	ofPath tickerMarks;
+	void refreshTickMarks();
 };

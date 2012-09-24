@@ -35,7 +35,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofxTLEvents.h"
 
 typedef struct{
@@ -43,7 +43,7 @@ typedef struct{
 	ofRectangle bounds;
 } Tab;
 
-class ofxTLPageTabs : public ofxTLElement {
+class ofxTLPageTabs : public ofxTLTrack {
 
   public:
 	
@@ -55,6 +55,8 @@ class ofxTLPageTabs : public ofxTLElement {
 	virtual void selectPage(int index);
 	virtual void changeName(string oldName, string newName);
 	
+	virtual void clear();
+	
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
@@ -63,6 +65,5 @@ class ofxTLPageTabs : public ofxTLElement {
 	virtual void drawRectChanged();
 	int selectedPageIndex;
 	vector<Tab> pages;
-
 	
 };

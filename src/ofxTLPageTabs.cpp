@@ -33,6 +33,7 @@
  */
 
 #include "ofxTLPageTabs.h"
+#include "ofxTimeline.h"
 
 void ofxTLPageTabs::setup(){
 	selectedPageIndex = -1;
@@ -50,7 +51,7 @@ void ofxTLPageTabs::draw(){
 		ofSetColor(255, 100, 0);		
 		ofRect(pages[i].bounds);
 		
-		ofDrawBitmapString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + 10 );
+		timeline->getFont().drawString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + 10);
 	}
 	ofPopStyle();
 }
@@ -84,22 +85,30 @@ void ofxTLPageTabs::changeName(string oldName, string newName){
 }
 
 void ofxTLPageTabs::selectPage(int index){
+	if(index == selectedPageIndex){
+		return;
+	}
+	
 	if(index >= pages.size()){
 		ofLogError("ofxTLPageTabs -- Selecting page " + ofToString(index) + " out of range");
 		return;
 	}
 	
 	ofxTLPageEventArgs pageEvent;
+    pageEvent.sender = timeline;
 	if(selectedPageIndex != -1){
 		pageEvent.oldPageName = pages[selectedPageIndex].name;
 	}
 	pageEvent.currentPageName = pages[index].name;
 	selectedPageIndex = index;
 	
-	ofNotifyEvent(ofxTLEvents.pageChanged, pageEvent);
+	ofNotifyEvent(events().pageChanged, pageEvent);
 }
 
 void ofxTLPageTabs::selectPage(string name){
+	if(name == pages[selectedPageIndex].name){
+		return;
+	}
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i].name == name){
 			selectPage(i);
@@ -107,6 +116,11 @@ void ofxTLPageTabs::selectPage(string name){
 		}
 	}
 	ofLogError("ofxTLPageTabs -- Selecting page " + name + " not found");
+}
+
+void ofxTLPageTabs::clear(){
+	selectedPageIndex = -1;
+	pages.clear();
 }
 
 void ofxTLPageTabs::keyPressed(ofKeyEventArgs& args){

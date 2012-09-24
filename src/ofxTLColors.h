@@ -41,8 +41,8 @@ class ofxTLColors
 {
   public:
 	
-	void loadColors(); //defaults
-	void loadColors(string colorFile);
+	void load(); //defaults
+	void load(string colorFile);
 	
 	ofColor backgroundColor;
 	ofColor keyColor;

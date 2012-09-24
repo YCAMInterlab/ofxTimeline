@@ -1,28 +1,36 @@
 #include "testApp.h"
-#include "ofxTLUtils.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	ofBackground(255*.15);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
+	ofSetEscapeQuitsApp(false);
+	ofEnableSmoothing();
+	ofEnableAlphaBlending();
 	
-	currentColor = ofColor(255);
-	
-	light.setPosition(ofGetWidth()*.5, ofGetHeight()*.25, 0);
-	light.enable();
-			
 	timeline.setup();
-	timeline.setDurationInSeconds(waveform.getDuration());
 	timeline.setLoopType(OF_LOOP_NORMAL);
-		
-	timeline.setSnapping(true);
-	timeline.enableSnapToBPM(120.f);
-	timeline.enableDrawBPMGrid(true);
+    timeline.setBPM(120.f);
+	timeline.enableSnapToBPM(true);
+	timeline.setShowBPMGrid(true);
 	
-	waveform.setup();
-	waveform.loadSoundfile("4chan.wav");
-	timeline.addElement("Track", &waveform);	
+	timeline.addTrack("Track", &waveform);
+	
+	//this means that calls to play/stop etc will be  routed to the waveform
+	timeline.setTimecontrolTrack(&waveform);
+    waveform.loadSoundfile("4chan.wav");
+	timeline.setDurationInSeconds(waveform.getDuration());
+    timeline.addBangs("clickbangs"); //just for fun
+
+	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
+    lastBang = 0;
+}
+
+//--------------------------------------------------------------
+void testApp::bangFired(ofxTLBangEventArgs& bang){
+//    lastBang = timeline.getCurrentTime();
 }
 
 //--------------------------------------------------------------
@@ -33,15 +41,17 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	ofBackground(.15*255);
-
+    float curtime = timeline.getCurrentTime();
+//	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
+    
 	timeline.draw();
 }
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 	if(key == ' '){
-		waveform.togglePlay();
+		timeline.togglePlay();
 	}
 	if(key == 'h'){
 		timeline.toggleShow();

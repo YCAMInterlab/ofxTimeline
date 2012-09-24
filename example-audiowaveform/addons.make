@@ -1,4 +1,7 @@
-ofxTimeline
-ofxXmlSettings
-ofxTween
+ofxMSATimer
 ofxRange
+ofxTextInputField
+ofxTimecode
+ofxTimeline
+ofxTween
+ofxXmlSettings

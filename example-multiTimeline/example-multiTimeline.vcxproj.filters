@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\testApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\testApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp">
+      <Filter>addons\ofxMSATimer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.cpp">
+      <Filter>addons\ofxTextInputField\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.cpp">
+      <Filter>addons\ofxTimecode\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_win.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequenceFrame.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLTicker.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLTrack.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLTrackHeader.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoThumb.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoTrack.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasing.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBack.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBounce.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingCirc.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingCubic.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingElastic.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingExpo.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingLinear.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuad.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuart.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuint.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingSine.cpp">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTween\src\ofxTween.cpp">
+      <Filter>addons\ofxTween\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{71834f65-f3a9-211e-73b8-dc8563776aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMSATimer">
+      <UniqueIdentifier>{fa2c7f81-95ad-913a-95ee-6d674205f1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxMSATimer\src">
+      <UniqueIdentifier>{21227b69-34ba-dc94-65c0-e08097e60473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxRange">
+      <UniqueIdentifier>{c5cf358f-f6d6-0f61-5433-25f14c446730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxRange\src">
+      <UniqueIdentifier>{afee1af4-3be7-35e2-f89c-feb8f18a60fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTextInputField">
+      <UniqueIdentifier>{a4b02712-30e4-b504-c110-2c93e13629d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTextInputField\src">
+      <UniqueIdentifier>{b67afc83-af32-6fe3-281f-ac212c044641}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimecode">
+      <UniqueIdentifier>{1b5cd1f2-714c-1a5f-97d0-2f9712f8476a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimecode\src">
+      <UniqueIdentifier>{1e8626d6-b6a0-d240-f534-c5e88dad08e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline">
+      <UniqueIdentifier>{b6cb78c7-bc44-ad08-8e43-896c4501b36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\src">
+      <UniqueIdentifier>{ac132e01-0f0d-5ff9-8d64-8dada9b5aa38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTween">
+      <UniqueIdentifier>{8a8810e8-a79d-7a1d-2f0a-7203302f4656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTween\src">
+      <UniqueIdentifier>{40ac4b42-6a5a-9537-eb82-d1b80d647dfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTween\src\Easings">
+      <UniqueIdentifier>{ef0f6a8b-b04f-e782-21ef-d4ba278d3ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings">
+      <UniqueIdentifier>{877f005d-13e6-0592-1d97-f2e39d804d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\src">
+      <UniqueIdentifier>{ccb2ac63-49d2-977c-cfe8-aeadb8be6a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\libs">
+      <UniqueIdentifier>{687714a8-1662-fa1c-261f-50f068335398}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\testApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.h">
+      <Filter>addons\ofxMSATimer\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxRange\src\ofRange.h">
+      <Filter>addons\ofxRange\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.h">
+      <Filter>addons\ofxTextInputField\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.h">
+      <Filter>addons\ofxTimecode\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEvents.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequenceFrame.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTicker.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTimeController.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrack.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrackHeader.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoThumb.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoTrack.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\easing_terms_of_use.html">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasing.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBack.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBounce.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingCirc.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingCubic.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingElastic.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingExpo.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingLinear.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuad.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuart.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingQuint.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingSine.h">
+      <Filter>addons\ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTween\src\ofxTween.h">
+      <Filter>addons\ofxTween\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
