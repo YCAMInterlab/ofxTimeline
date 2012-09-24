@@ -1,0 +1,17 @@
+<keyframes>
+    <key>
+        <max>00:00:00:859</max>
+        <time>00:00:00:220</time>
+        <value>0.625000000</value>
+    </key>
+    <key>
+        <max>00:00:05:037</max>
+        <time>00:00:03:275</time>
+        <value>0.625000000</value>
+    </key>
+    <key>
+        <max>00:00:06:937</max>
+        <time>00:00:05:904</time>
+        <value>0.750000000</value>
+    </key>
+</keyframes>

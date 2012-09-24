@@ -36,21 +36,20 @@
 
 #include "ofMain.h"
 #include "ofRange.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 
-class ofxTLZoomer : public ofxTLElement
+class ofxTLZoomer : public ofxTLTrack
 {
   public:
 	ofxTLZoomer();
-	~ofxTLZoomer();
+	virtual ~ofxTLZoomer();
 	
-	void setup();
-	void draw();
+	virtual void draw();
 		
-	void mousePressed(ofMouseEventArgs& args);
-	void mouseMoved(ofMouseEventArgs& args);
-	void mouseDragged(ofMouseEventArgs& args);
-	void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args);
+	virtual void mouseMoved(ofMouseEventArgs& args);
+	virtual void mouseDragged(ofMouseEventArgs& args);
+	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	void keyPressed(ofKeyEventArgs& args);
 	
@@ -59,8 +58,14 @@ class ofxTLZoomer : public ofxTLElement
 
 	bool isActive();
 	
-	ofRange getViewRange();
+	//allows for exponential zooming in. Default is 2, no effect is 1
+	//not allowed to be less than one
+	void setViewExponent(float exponent);
+	ofRange getViewRange(); //exponential viewport
 	
+	//this set is NON exponential, but normalized 0-1
+	void setViewRange(ofRange newRange);
+    ofRange getSelectedRange(); //non exponential
   private:
 
 	void notifyZoomStarted();
@@ -68,10 +73,12 @@ class ofxTLZoomer : public ofxTLElement
 	void notifyZoomEnded();
 
 	ofRange currentViewRange;
-	
+//	ofRange currentLogViewRange;
+
 	float minGrabOffset;
 	float maxGrabOffset;
-	
+
+	float zoomExponent;
 	bool mouseIsDown;
 	bool minSelected;
 	bool maxSelected;

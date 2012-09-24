@@ -63,8 +63,7 @@ void ofxTLImageSequence::draw() {
 	for(int i = 0; i < previewTextures.size(); i++){
 		ofRectangle b = previewTextures[i].bounds;
 		previewTextures[i].texture->draw(bounds.x + b.x, bounds.y + b.y, b.width, b.height);
-	}
-	
+	}	
 }
 
 
@@ -167,7 +166,7 @@ void ofxTLImageSequence::drawRectChanged(){
 }
 
 void ofxTLImageSequence::setZoomBounds(ofRange zoomBoundsPercent){
-	ofxTLElement::setZoomBounds(zoomBoundsPercent);
+	ofxTLTrack::setZoomBounds(zoomBoundsPercent);
 	recomputePreview();
 }
 
@@ -282,28 +281,31 @@ void ofxTLImageSequence::purgeFrames()
     }
 }
 
-void ofxTLImageSequence::purgeThumbs()
-{
-	vector<ofxTLImageSequenceFrame*> sortableFrames;
-	for(int i = 0; i < frames.size(); i++){
-        if(frames[i]->isThumbLoaded()){
-			sortableFrames.push_back( frames[i] );
-		}
-	}
-	
-    if(sortableFrames.size() > maxThumbsLoaded){
-		
-		//cout << "total loaded " << totalLoaded << " use count is " << maxUseCount << " total this frame " << usedThisFrame << " " << thisframefilename <<  endl;
-		
-		sort(sortableFrames.begin(), sortableFrames.end(), framesort);
-		
-        int numToClear = sortableFrames.size() - maxThumbsLoaded;
-		cout << "purging " << numToClear << " thumbs.  Oldest: " << sortableFrames[0]->lastUsedTime << endl;
-		for(int i = 0; i < numToClear; i++){
-			sortableFrames[i]->clear();
-		}
-    }
+string ofxTLImageSequence::getTrackType(){
+    return "ImageSequence";
 }
+//void ofxTLImageSequence::purgeThumbs()
+//{
+//	vector<ofxTLImageSequenceFrame*> sortableFrames;
+//	for(int i = 0; i < frames.size(); i++){
+//        if(frames[i]->isThumbLoaded()){
+//			sortableFrames.push_back( frames[i] );
+//		}
+//	}
+//	
+//    if(sortableFrames.size() > maxThumbsLoaded){
+//		
+//		//cout << "total loaded " << totalLoaded << " use count is " << maxUseCount << " total this frame " << usedThisFrame << " " << thisframefilename <<  endl;
+//		
+//		sort(sortableFrames.begin(), sortableFrames.end(), framesort);
+//		
+//        int numToClear = sortableFrames.size() - maxThumbsLoaded;
+//		cout << "purging " << numToClear << " thumbs.  Oldest: " << sortableFrames[0]->lastUsedTime << endl;
+//		for(int i = 0; i < numToClear; i++){
+//			sortableFrames[i]->clear();
+//		}
+//    }
+//}
 
 void ofxTLImageSequence::clearPreviewTextures()
 {
