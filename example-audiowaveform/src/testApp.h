@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxTimeline.h"
-#include "ofxTLAudioWaveform.h"
+#include "ofxTLAudioTrack.h"
 
 class testApp : public ofBaseApp{
 
@@ -21,10 +21,9 @@ class testApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
-	ofLight light;
-	ofColor currentColor;
-	
 	ofxTimeline timeline;
-	ofxTLAudioWaveform waveform;
+	ofxTLAudioTrack waveform;
 
+    float lastBang;
+	void bangFired(ofxTLBangEventArgs& bang);
 };

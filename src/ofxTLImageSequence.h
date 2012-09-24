@@ -1,7 +1,7 @@
 /**
  * ofxTimeline
  *	
- * Copyright (c) 2011 James George
+ * Copyright (c) 2011-2012 James George
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
@@ -35,7 +35,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
+#include "ofxTLTrack.h"
 #include "ofxTLImageSequenceFrame.h"
 
 static GLint glTypeForImageType(int imageType){
@@ -51,10 +51,10 @@ typedef struct
 	int frameIndex;
 } PreviewTexture;
 
-class ofxTLImageSequence : public ofxTLElement {
+class ofxTLImageSequence : public ofxTLTrack {
   public:
 	ofxTLImageSequence();
-	~ofxTLImageSequence();
+	virtual ~ofxTLImageSequence();
 	
 	virtual void setup();
 	virtual void draw();
@@ -90,9 +90,13 @@ class ofxTLImageSequence : public ofxTLElement {
 	virtual void setZoomBounds(ofRange zoomBoundsPercent);
 		
 	void purgeFrames();
-	void purgeThumbs();
 	
+    virtual string getTrackType();
+    
   protected:
+    
+    int historySize; //how many images to keep in the history queue
+    
 	void recomputePreview();
 	void clearPreviewTextures();
 	void clearFrames();

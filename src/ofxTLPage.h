@@ -35,102 +35,128 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLElement.h"
-#include "ofxTLElementHeader.h"
+#include "ofxTLTrack.h"
+#include "ofxTLTrackHeader.h"
 #include "ofxTLEvents.h"
 
+//typedef struct {
+//	long millis;
+//    float screenX;
+//} ofxTLSnapPoint;
+
+class ofxTimeline;
 class ofxTLTicker;
 class ofxTLPage {
   public:
 	
 	ofxTLPage();
-	~ofxTLPage();
+	virtual ~ofxTLPage();
 	
 	virtual void setup();
+	virtual void update();
 	virtual void draw();
 
 	virtual void setName(string name);
 	virtual string getName();
-	virtual void setAutosave(bool doAutosave);
 	
 	virtual void setContainer(ofVec2f offset, float width);
 	virtual void setHeaderHeight(float newHeaderHeight);
-	virtual void setDefaultElementHeight(float newDefaultElementHeight);
+	virtual void setDefaultTrackHeight(float newDefaultTrackHeight);
 	
-	virtual void collapseAllElements(); //collapses all element heights to 0;
+	virtual void collapseAllTracks(); //collapses all track heights to 0;
 	
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual void unselectAll();
-    virtual void reset();
+    virtual void clear();
     virtual void save();
     
 	virtual float getComputedHeight();	
-	
-	virtual void addElement(string name, ofxTLElement* element);
-	virtual ofxTLElement* getElement(string name);
-	virtual void removeElement(string name);
+	virtual float getBottomEdge();
+    virtual ofRectangle getDrawRect();
     
+	virtual void addTrack(string name, ofxTLTrack* track);
+	virtual ofxTLTrack* getTrack(string name);
+    virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
+    
+	virtual void removeTrack(ofxTLTrack* track);
+
+    
+    //computed on the fly so please use sparingly if you have to call it a lot
+    vector<ofxTLTrack*>& getTracks();
+
     //given a folder the page will look for xml files to load within that
-	virtual void loadElementsFromFolder(string folderPath);
+	virtual void loadTracksFromFolder(string folderPath);
     
-	virtual void setSnapping(bool snapping);
-	virtual void enableSnapToOtherElements(bool snapToOthes);
-	virtual void mousePressed(ofMouseEventArgs& args);
-	virtual void mouseMoved(ofMouseEventArgs& args);
-	virtual void mouseDragged(ofMouseEventArgs& args);
-	virtual void mouseReleased(ofMouseEventArgs& args);
+	virtual void mousePressed(ofMouseEventArgs& args, long millis);
+	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
+	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
+	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 		
 	virtual void nudgeBy(ofVec2f nudgePercent);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
-	virtual void saveElementPositions();
-	virtual void loadElementPositions();
+	virtual void saveTrackPositions();
+	virtual void loadTrackPositions();
 	
 	virtual void recalculateHeight();
 	
 	virtual void setTicker(ofxTLTicker* ticker);
 	
+    virtual void timelineGainedFocus();
+    virtual void timelineLostFocus();
+    
+    void bringTrackToTop(ofxTLTrack* track);
+    void bringTrackToBottom(ofxTLTrack* track);
+
 	//copy paste
 	virtual string copyRequest();
 	virtual string cutRequest();
 	virtual void pasteSent(string pasteboard);
 	virtual void selectAll();
 	
-	virtual void setDragAnchor(float anchor);
-	
+	virtual void setDragOffsetTime(long offsetMillis);
+    virtual void setSnappingEnabled(bool enabled);
+    
+    ofxTimeline* timeline;
+    
   protected:
-	//used for getting BPM snaps
-	ofxTLTicker* ticker;
-	
-	bool draggingInside;
-	vector<ofxTLElementHeader*> headers;
-	map<string, ofxTLElement*> elements;
 
-	bool snappingEnabled;
-	bool snapToOtherElementsEnabled;
+	//used for getting BPM snaps
+	vector<ofxTLTrackHeader*> headers;
+	map<string, ofxTLTrack*> tracks;
+	vector<ofxTLTrack*> trackList;
 	
+    ofxTLTicker* ticker;
+    ofxTLTrack* focusedTrack;
+
+	string name;
+
+    bool isSetup;
+    bool draggingInside;
 	bool headerHasFocus;
+	bool footerIsDragging;
+	bool snappingEnabled;
 	
-	vector<float> snapPoints;
-	//in pixels. TODO: make variable through API
-	float snappingTolerance;
+	set<long> snapPoints; //in millis
+	float snappingTolerance; //in pixels
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
 	void refreshSnapPoints();
 	
-	float dragAnchor;
+	long millisecondDragOffset;
 	
-	bool isSetup;
-	bool autosave;
-	string name;
+    bool draggingSelectionRectangle;
+    ofVec2f selectionRectangleAnchor;
+    ofRectangle selectionRectangle;
+    
 	
-	ofRectangle elementContainerRect;
+	ofRectangle trackContainerRect;
 	float headerHeight;
-	float defaultElementHeight;
+	float defaultTrackHeight;
 	ofRange currentZoomBounds;
 
-	map<string, ofRectangle> savedElementPositions;	
+	map<string, ofRectangle> savedTrackPositions;	
 	
 };

@@ -37,10 +37,12 @@
 #include "ofMain.h"
 #include "ofRange.h"
 
+class ofxTimeline; //forward declare for sender pointer
+class ofxTLTrack;
 class ofxTLPlaybackEventArgs : public ofEventArgs {
   public: 	
-	float currentPercent; //always valid
-	bool frameBased; //use this to decide whether to look at frames or seconds
+    ofxTimeline* sender;
+	float currentPercent;
 	float currentTime;
 	int currentFrame;
 	float durationInSeconds;
@@ -49,73 +51,81 @@ class ofxTLPlaybackEventArgs : public ofEventArgs {
 
 class ofxTLZoomEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;
 	ofRange currentZoom;
 	ofRange oldZoom;
 };
 
 class ofxTLPageEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;
 	string currentPageName;
 	string oldPageName;
 };
 
-class ofxTLTriggerEventArgs : public ofEventArgs {
+class ofxTLBangEventArgs : public ofEventArgs {
   public:
-	string triggerGroupName;
-	string triggerName;
+    ofxTimeline* sender;
+	ofxTLTrack* track;
+	float currentPercent;
+	float currentTime;
+	int currentFrame;
+    long currentMillis;
+	string flag;
 };
 
 class ofxTLSwitchEventArgs : public ofEventArgs {
   public:
+    ofxTimeline* sender;    
 	string switchName;
 	bool on;
 };
 
-class ofxTLCoreEvents {
+class ofxTLEvents {
   public:
 	ofEvent<ofxTLPlaybackEventArgs> playbackStarted;
 	ofEvent<ofxTLPlaybackEventArgs> playbackEnded;
 	ofEvent<ofxTLPlaybackEventArgs> playbackLooped;
-	
+	ofEvent<ofxTLPlaybackEventArgs> playheadScrubbed;
+    
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
 
-	ofEvent<ofxTLTriggerEventArgs> trigger;
+	ofEvent<ofxTLBangEventArgs> bangFired;
 
 	ofEvent<ofxTLSwitchEventArgs> switched;
 	
 	ofEvent<ofxTLPageEventArgs> pageChanged;
 		
 	ofEvent<ofEventArgs> viewWasResized;
+
+
+    template<class ListenerClass>
+    void registerPlaybackEvents(ListenerClass * listener){
+        ofAddListener(playbackStarted, listener, &ListenerClass::playbackStarted);
+        ofAddListener(playbackEnded, listener, &ListenerClass::playbackEnded);
+        ofAddListener(playbackLooped, listener, &ListenerClass::playbackLooped);
+    }
+
+    template<class ListenerClass>
+    void removePlaybackEvents(ListenerClass * listener){
+        ofRemoveListener(playbackStarted, listener, &ListenerClass::playbackStarted);
+        ofRemoveListener(playbackEnded, listener, &ListenerClass::playbackEnded);
+        ofRemoveListener(playbackLooped, listener, &ListenerClass::playbackLooped);
+    }
+
+    template<class ListenerClass>
+    void registerZoomEvents(ListenerClass * listener){
+        ofAddListener(zoomStarted, listener, &ListenerClass::zoomStarted);
+        ofAddListener(zoomDragged, listener, &ListenerClass::zoomDragged);
+        ofAddListener(zoomEnded, listener, &ListenerClass::zoomEnded);
+	}
+
+    template<class ListenerClass>
+    void removeZoomEvents(ListenerClass * listener){
+        ofRemoveListener(zoomStarted, listener, &ListenerClass::zoomStarted);
+        ofRemoveListener(zoomDragged, listener, &ListenerClass::zoomDragged);
+        ofRemoveListener(zoomEnded, listener, &ListenerClass::zoomEnded);
+    }
 };
-
-extern ofxTLCoreEvents ofxTLEvents;
-
-template<class ListenerClass>
-void ofxTLRegisterPlaybackEvents(ListenerClass * listener){
-    ofAddListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackStarted);
-    ofAddListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
-    ofAddListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
-}
-
-template<class ListenerClass>
-void ofxTLRemovePlaybackEvents(ListenerClass * listener){
-    ofRemoveListener(ofxTLEvents.playbackStarted, listener, &ListenerClass::playbackStarted);
-    ofRemoveListener(ofxTLEvents.playbackEnded, listener, &ListenerClass::playbackEnded);
-    ofRemoveListener(ofxTLEvents.playbackLooped, listener, &ListenerClass::playbackLooped);
-}
-
-template<class ListenerClass>
-void ofxTLRegisterZoomEvents(ListenerClass * listener){
-    ofAddListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::zoomStarted);
-    ofAddListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::zoomDragged);
-    ofAddListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::zoomEnded);
-}
-
-template<class ListenerClass>
-void ofxTLRemoveZoomEvents(ListenerClass * listener){
-    ofRemoveListener(ofxTLEvents.zoomStarted, listener, &ListenerClass::zoomStarted);
-    ofRemoveListener(ofxTLEvents.zoomDragged, listener, &ListenerClass::zoomDragged);
-    ofRemoveListener(ofxTLEvents.zoomEnded, listener, &ListenerClass::zoomEnded);
-}
