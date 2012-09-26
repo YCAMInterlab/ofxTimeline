@@ -79,6 +79,7 @@ ofxTimeline::ofxTimeline()
 	isOnThread(false),
 	unsavedChanges(false),
 	curvesUseBinary(false),
+	headersAreEditable(false),
 	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
@@ -767,6 +768,14 @@ void ofxTimeline::setLockWidthToWindow(bool lockWidth){
     if(width != ofGetWidth()){
         recalculateBoundingRects();
     }
+}
+
+void ofxTimeline::setEditableHeaders(bool headersEditable){
+	headersAreEditable = headersEditable;
+}
+
+bool ofxTimeline::areHeadersEditable(){
+	return headersAreEditable;
 }
 
 bool ofxTimeline::getLockWidthToWindow(){

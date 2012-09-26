@@ -120,7 +120,6 @@ class ofxTimeline : ofThread {
     virtual void show();
 	virtual void hide();
 	virtual void draw();
-//	virtual void draw(ofEventArgs& args);
     
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
@@ -209,6 +208,9 @@ class ofxTimeline : ofThread {
     void setOutPointAtTimecode(string timecode);
     void setOutPointAtPlayhead();
     
+	virtual void setEditableHeaders(bool headersEditable);
+	virtual bool areHeadersEditable();
+	
 	virtual void setInOutRange(ofRange inoutPercentRange);
 	virtual void clearInOut();
     
@@ -222,7 +224,6 @@ class ofxTimeline : ofThread {
 	float getOutTimeInSeconds();
 	long getOutTimeInMillis();
     string getOutPointTimecode();
-
 
 	virtual void setOffset(ofVec2f offset);
     virtual void setLockWidthToWindow(bool lockWidth);
@@ -513,6 +514,7 @@ class ofxTimeline : ofThread {
 
 	bool autosave;
 	bool unsavedChanges;
+	bool headersAreEditable;
 	
 	bool isFrameBased;
 	float durationInSeconds;

@@ -90,7 +90,7 @@ void ofxTLBangs::update(){
 		long thisTimelinePoint = timeline->getCurrentTimeMillis();
 		for(int i = 0; i < keyframes.size(); i++){
 			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
-				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
+//				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 				bangFired(keyframes[i]);
 				lastBangTime = ofGetElapsedTimef();
 			}
