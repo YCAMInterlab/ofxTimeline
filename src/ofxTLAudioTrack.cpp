@@ -25,8 +25,6 @@ bool ofxTLAudioTrack::loadSoundfile(string filepath){
 	if(player.loadSound(filepath, false)){
     	soundLoaded = true;
 		soundFilePath = filepath;
-        //	cout << "duration is " << player.getDuration() << endl;
-        //	cout << "num samples " << player.getBuffer().size() << endl;
 		shouldRecomputePreview = true;
     }
 	return soundLoaded;
@@ -218,6 +216,10 @@ void ofxTLAudioTrack::setSpeed(float speed){
 
 float ofxTLAudioTrack::getSpeed(){
     return player.getSpeed();
+}
+
+vector<float>& ofxTLAudioTrack::getFFTSpectrum(int numBins){
+	return player.getSpectrum(numBins);
 }
 
 string ofxTLAudioTrack::getTrackType(){
