@@ -408,7 +408,7 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 		drawRect = savedTrackPositions[trackName];
 	}
 	else {
-		drawRect = ofRectangle(0, newHeaderRect.y+newHeaderRect.height, ofGetWidth(), defaultTrackHeight);
+		drawRect = ofRectangle(trackContainerRect.x, newHeaderRect.y+newHeaderRect.height, trackContainerRect.width, defaultTrackHeight);
 	}
 
 	track->setDrawRect(drawRect);
@@ -531,8 +531,10 @@ void ofxTLPage::recalculateHeight(){
 		
 		thisHeader.width = trackContainerRect.width;
 		thisHeader.y = currentY;
+		thisHeader.x = trackContainerRect.x;
 		headers[i]->setDrawRect(thisHeader);
 		trackRectangle.y = startY;
+		trackRectangle.x = trackContainerRect.x;
 		trackRectangle.width = trackContainerRect.width;
 		
 		tracks[ headers[i]->name ]->setDrawRect( trackRectangle );
@@ -655,12 +657,13 @@ string ofxTLPage::getName(){
 }
 
 void ofxTLPage::setContainer(ofVec2f offset, float width){
-	if(offset != ofVec2f(trackContainerRect.x,trackContainerRect.y) || width != trackContainerRect.width){
+	if(offset != trackContainerRect.getMin() ||
+	   width  != trackContainerRect.width){
 		trackContainerRect.x = offset.x;
 		trackContainerRect.y = offset.y;
 		trackContainerRect.width = width;
 	}
-//	recalculateHeight();
+
 }
 
 void ofxTLPage::setHeaderHeight(float newHeaderHeight){

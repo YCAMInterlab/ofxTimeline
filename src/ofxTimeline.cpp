@@ -784,6 +784,9 @@ bool ofxTimeline::getLockWidthToWindow(){
 
 void ofxTimeline::setWidth(float newWidth){
     if(width != newWidth){
+		if(newWidth != ofGetWidth()){
+			lockWidthToWindow = false;
+		}
         width = newWidth;
         updatePagePositions();
         ofEventArgs args;
@@ -817,7 +820,7 @@ ofVec2f ofxTimeline::getBottomRight(){
 
 void ofxTimeline::updatePagePositions(){
 	if(isSetup){
-		ofVec2f pageOffset = ofVec2f(0, inoutTrack->getBottomEdge());
+		ofVec2f pageOffset = ofVec2f(offset.x, inoutTrack->getBottomEdge());
 		for(int i = 0; i < pages.size(); i++){
 			pages[i]->setContainer(pageOffset, width);
 		}
@@ -920,7 +923,7 @@ void ofxTimeline::disableEvents() {
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     long millis = screenXToMillis(args.x);
-    
+
     if(modalTrack != NULL){
     	modalTrack->mousePressed(args,millis);
     }
@@ -1742,9 +1745,9 @@ float ofxTimeline::normalizedXtoScreenX(float x){
 }
 
 float ofxTimeline::screenXtoNormalizedX(float x, ofRange outputRange){
-	return ofMap(x, getDrawRect().x, getDrawRect().x+getDrawRect().width, outputRange.min, outputRange.max, false);
+	return ofMap(x, getDrawRect().getMinX(), getDrawRect().getMaxX(), outputRange.min, outputRange.max, false);
 }
 
 float ofxTimeline::normalizedXtoScreenX(float x, ofRange inputRange){
-	return ofMap(x, inputRange.min, inputRange.max, getDrawRect().x, getDrawRect().x+getDrawRect().width, false);
+	return ofMap(x, inputRange.min, inputRange.max, getDrawRect().getMinX(), getDrawRect().getMaxX(), false);
 }

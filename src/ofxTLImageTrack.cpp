@@ -55,7 +55,7 @@ void ofxTLImageTrack::calculateFramePositions(){
     vector<ofxTLVideoThumb> newThumbs;
 	for(int i = 0; i < numberOfFramesInView; i++){
         ofxTLVideoThumb thumb;
-        thumb.displayRect = ofRectangle(pixelOffset + thumbWidth * i, bounds.y, thumbWidth, bounds.height);
+        thumb.displayRect = ofRectangle(bounds.x + pixelOffset + thumbWidth * i, bounds.y, thumbWidth, bounds.height);
         //TODO: account for offsets at some point
         thumb.timestamp = timeline->screenXToMillis(thumb.displayRect.x);
  		thumb.framenum = timeline->getTimecode().frameForMillis(thumb.timestamp);

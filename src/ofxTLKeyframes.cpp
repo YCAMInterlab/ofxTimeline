@@ -72,7 +72,7 @@ void ofxTLKeyframes::recomputePreviews(){
 		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
 	}
 	else{
-		for(int p = bounds.x; p <= bounds.width; p++){
+		for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
 	}
