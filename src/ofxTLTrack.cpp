@@ -44,9 +44,12 @@ ofxTLTrack::ofxTLTrack()
 	active(false),
 	hover(false),
 	createdByTimeline(false),
-	timeline(NULL)
+	timeline(NULL),
+	playbackStartTime(0),
+	isPlaying(false)
+
 {
-	// <(^_^)>
+
 }
 
 ofxTLTrack::~ofxTLTrack(){
@@ -64,6 +67,7 @@ void ofxTLTrack::enable(){
     if(!enabled){
 		enabled = true;
 		events().registerZoomEvents(this);
+		events().registerPlaybackEvents(this);
     }
 }
 
@@ -71,7 +75,8 @@ void ofxTLTrack::disable(){
     if(enabled){
 		enabled = false;
 		focused = false;
-		events().removeZoomEvents(this);	
+		events().removeZoomEvents(this);
+		events().removePlaybackEvents(this);
     }
 }
 
@@ -82,6 +87,13 @@ void ofxTLTrack::setDrawRect(ofRectangle drawRect){
 		drawRectChanged();
 	}
 }
+
+////override this in your sublcass
+//void ofxTLTrack::update(){
+//	if(isPlaying){
+//		
+//	}
+//}
 
 ofxTimeline* ofxTLTrack::getTimeline(){
 	return timeline;
@@ -131,11 +143,85 @@ void ofxTLTrack::_draw(){
 	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
 	ofPopStyle();
 
-	ofPopStyle();
-    draw();
 	ofPushStyle();
+    draw();
+	ofPopStyle();
+	
+	if(isPlaying){
+		float playheadScreenX = millisToScreenX(currentTrackTime());
+		if(isOnScreen(playheadScreenX)){
+			ofPushStyle();
+			ofSetColor(timeline->getColors().keyColor);
+			ofLine(playheadScreenX, bounds.getMinY(), playheadScreenX, bounds.getMaxY());
+			ofPopStyle();
+		}			
+	}
 	viewIsDirty = false;
 }
+
+unsigned long ofxTLTrack::currentTrackTime(){
+	if(isPlaying){
+		currentTime = timeline->getTimer().getAppTimeMillis() - playbackStartTime;
+		checkLoop();
+		return currentTime;
+		//return timeline->getInTimeInMillis() + (timeline->getTimer().getAppTimeMillis() - playbackStartTime) % timeline->getInOutRangeMillis().span() ;
+	}
+	else{
+		return timeline->getCurrentTimeMillis();
+	}
+}
+
+void ofxTLTrack::checkLoop(){
+	if(currentTime < timeline->getInTimeInMillis()){
+        currentTime = timeline->getInTimeInMillis();
+        playbackStartTime = timeline->getTimer().getAppTimeSeconds() - currentTime;
+//        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
+    }
+    
+    if(currentTime >= timeline->getOutTimeInMillis()){
+        if(timeline->getLoopType() == OF_LOOP_NONE){
+            stop();
+        }
+        else if(timeline->getLoopType() == OF_LOOP_NORMAL) {
+            currentTime = timeline->getInTimeInMillis() + (currentTime - timeline->getOutTimeInMillis());
+//            playbackStartFrame += getDurationInFrames()  * inoutRange.span();
+            playbackStartTime  += timeline->getInOutRangeMillis().span();
+        }
+    }
+}
+bool ofxTLTrack::togglePlay(){
+	if(isPlaying){
+		stop();
+	}
+	else{
+		play();
+	}
+	return isPlaying;
+}
+
+void ofxTLTrack::play(){
+	if(!isPlaying && !timeline->getIsPlaying()){
+		isPlaying = true;
+		currentTime = ofClamp(timeline->getCurrentTimeMillis(), timeline->getInTimeInMillis(), timeline->getOutTimeInMillis());
+		playbackStartTime = timeline->getTimer().getAppTimeMillis() - currentTime;
+		checkLoop();
+	}
+}
+
+void ofxTLTrack::stop(){
+	if(isPlaying){
+		isPlaying = false;
+	}
+}
+
+bool ofxTLTrack::getIsPlaying(){
+	return isPlaying;
+}
+
+void ofxTLTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
+	stop();
+}
+
 
 bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
     if(enabled){

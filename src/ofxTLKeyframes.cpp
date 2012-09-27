@@ -112,7 +112,9 @@ void ofxTLKeyframes::draw(){
 	
 	//draw current value indicator as a big transparent rectangle
 	ofSetColor(timeline->getColors().disabledColor, 30);
-	float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
+	//jg play solo change
+	//float currentPercent = sampleAtTime(timeline->getCurrentTimeMillis());
+	float currentPercent = sampleAtTime(currentTrackTime());
 	ofFill();
 	ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 	
@@ -179,6 +181,10 @@ void ofxTLKeyframes::setDefaultValue(float newDefaultValue){
 
 ofRange ofxTLKeyframes::getValueRange(){
 	return valueRange;
+}
+
+float ofxTLKeyframes::getValue(){
+	return getValueAtTimeInMillis(currentTrackTime());
 }
 
 //main function to get values out of the timeline, operates on the given value range
@@ -529,7 +535,9 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 }
 
 void ofxTLKeyframes::addKeyframe(float value){
-	addKeyframeAtMillis(value, timeline->getCurrentTimeMillis());
+	//play solo change
+//	addKeyframeAtMillis(value, timeline->getCurrentTimeMillis());
+	addKeyframeAtMillis(value, currentTrackTime());
 }
 
 void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long millis){

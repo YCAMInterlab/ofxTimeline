@@ -94,6 +94,7 @@ class ofxTLKeyframes : public ofxTLTrack
     virtual string getTrackType();
     
 	//sampling
+	virtual float getValue();
 	virtual float getValueAtPercent(float percent);
 	virtual float getValueAtTimeInMillis(long sampleTime);
 

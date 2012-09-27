@@ -55,6 +55,7 @@ class ofxTLSwitches : public ofxTLKeyframes {
 
     virtual void draw();
 
+	virtual bool isOn();
     virtual bool isOnAtMillis(long millis);
     virtual bool isOnAtPercent(float percent);
     

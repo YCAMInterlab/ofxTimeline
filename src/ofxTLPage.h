@@ -70,7 +70,9 @@ class ofxTLPage {
 	virtual void unselectAll();
     virtual void clear();
     virtual void save();
-    
+
+    virtual ofxTLTrack* getFocusedTrack();
+	
 	virtual float getComputedHeight();	
 	virtual float getBottomEdge();
     virtual ofRectangle getDrawRect();

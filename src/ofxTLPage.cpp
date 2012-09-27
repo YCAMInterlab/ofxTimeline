@@ -195,6 +195,10 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
     }
 }
 
+ofxTLTrack* ofxTLPage::getFocusedTrack(){
+	return focusedTrack;
+}
+
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args, long millis){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
@@ -399,7 +403,6 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 	ofRectangle newHeaderRect = ofRectangle(trackContainerRect.x, trackContainerRect.height, trackContainerRect.width, headerHeight);
 	newHeader->setDrawRect(newHeaderRect);
 
-	headers.push_back(newHeader);
 
 	track->setup();
 	
@@ -416,6 +419,8 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 
 	tracks[trackName] = track;
 	trackList.push_back(track);
+	headers.push_back(newHeader);
+
 }
 
 //computed on the fly so please use sparingly if you have a lot of tracks

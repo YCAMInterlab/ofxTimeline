@@ -173,7 +173,9 @@ bool ofxTLColorTrack::loadColorPalette(string imagePath){
 }
 
 ofColor ofxTLColorTrack::getColor(){
-	return getColorAtMillis(timeline->getCurrentTimeMillis());
+	//play solo change
+//	return getColorAtMillis(timeline->getCurrentTimeMillis());
+	return getColorAtMillis(currentTrackTime());
 }
 
 ofColor ofxTLColorTrack::getColorAtSecond(float second){

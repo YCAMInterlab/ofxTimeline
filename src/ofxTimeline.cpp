@@ -136,6 +136,7 @@ void ofxTimeline::setup(){
     
 	ofAddListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
+	ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 
     //You can change this name by calling setPageName()
 	addPage("Page One", true);
@@ -148,9 +149,9 @@ void ofxTimeline::moveToThread(){
 	if(!isOnThread){
 		stop();
 		isOnThread = true;
-		startThread();
+		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 		ofAddListener(ofEvents().exit, this, &ofxTimeline::exit);
-
+		startThread();
 	}
 }
 
@@ -158,8 +159,9 @@ void ofxTimeline::removeFromThread(){
 	if(isOnThread){
 		stop();
 		isOnThread = false;
-		waitForThread(true);
+		ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 		ofRemoveListener(ofEvents().exit, this, &ofxTimeline::exit);
+		waitForThread(true);
 	}
 }
 
@@ -436,9 +438,9 @@ void ofxTimeline::play(){
 	
 	if(!getIsPlaying()){
 		
-		if(!isOnThread){
-			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
-		}
+//		if(!isOnThread){
+//			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
+//		}
 
 		if(timeControl != NULL){
 			timeControl->play();
@@ -452,7 +454,6 @@ void ofxTimeline::play(){
 		
 		isPlaying = true;
         currentTime = ofClamp(currentTime, getInTimeInSeconds(), getOutTimeInSeconds());
-        
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
@@ -468,9 +469,9 @@ void ofxTimeline::stop(){
 
 	if(getIsPlaying()){
 		
-		if(!isOnThread){
-	        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
-		}
+//		if(!isOnThread){
+//	        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+//		}
 		
 		if(timeControl != NULL){
 			timeControl->stop();
@@ -482,6 +483,18 @@ void ofxTimeline::stop(){
         ofxTLPlaybackEventArgs args = createPlaybackEvent();
         ofNotifyEvent(timelineEvents.playbackEnded, args);
 	}
+}
+
+void ofxTimeline::playSelectedTrack(){
+	if(currentPage->getFocusedTrack() != NULL) currentPage->getFocusedTrack()->play();
+}
+
+void ofxTimeline::stopSelectedTrack(){
+	if(currentPage->getFocusedTrack() != NULL) currentPage->getFocusedTrack()->stop();
+}
+
+bool ofxTimeline::togglePlaySelectedTrack(){
+	if(currentPage->getFocusedTrack() != NULL) currentPage->getFocusedTrack()->togglePlay();
 }
 
 bool ofxTimeline::togglePlay(){
@@ -620,6 +633,10 @@ void ofxTimeline::clearInOut(){
 
 ofRange ofxTimeline::getInOutRange(){
 	return inoutRange;
+}
+
+ofLongRange ofxTimeline::getInOutRangeMillis(){
+	return ofLongRange(getInTimeInMillis(), getOutTimeInMillis());
 }
 
 int ofxTimeline::getInFrame(){
@@ -1186,30 +1203,33 @@ bool ofxTimeline::isDone(){
 }
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
-	
-	if(timeControl == NULL){
-		if(isFrameBased){
-			currentTime = timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
-		}
-		else {
-			currentTime = timer.getAppTimeSeconds() - playbackStartTime;
-		}
+	if(!isOnThread){
+		updateTime();
 	}
-	
-    checkLoop();
-	checkEvents();
 }
 
 void ofxTimeline::threadedFunction(){
 	while(isThreadRunning()){
-		if(isPlaying){
-			currentTime = timer.getAppTimeSeconds() - playbackStartTime;
-			
-			checkLoop();
-			checkEvents();
-		}
+		updateTime();
 		ofSleepMillis(1);
 	}
+}
+
+void ofxTimeline::updateTime(){
+	
+	if(getIsPlaying()){
+		if(timeControl == NULL){
+			if(isFrameBased){
+				currentTime = timecode.secondsForFrame(ofGetFrameNum() - playbackStartFrame);
+			}
+			else {
+				currentTime = timer.getAppTimeSeconds() - playbackStartTime;
+			}
+		}
+		checkLoop();
+	}
+	
+	checkEvents();
 }
 
 void ofxTimeline::checkEvents(){
@@ -1220,7 +1240,6 @@ void ofxTimeline::checkEvents(){
 
 void ofxTimeline::checkLoop(){
 	if(currentTime < durationInSeconds*inoutRange.min){
-		//        cout << "BELOW MIN " << endl;
         currentTime = durationInSeconds*inoutRange.min;
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
@@ -1384,28 +1403,33 @@ ofxTLCurves* ofxTimeline::addCurves(string trackName, string xmlFileName, ofRang
 }
 
 float ofxTimeline::getValue(string trackName, float atTime){
-	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
+	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
 		return 0.0;
 	}
-	ofxTLCurves* keyframer = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
-	if(keyframer == NULL){
-		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
-		return 0.0;
-	}
-	return keyframer->getValueAtPercent(atTime/durationInSeconds);
+	ofxTLCurves* curves = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
+	return curves->getValueAtTimeInMillis(atTime*1000);
 }
 
 float ofxTimeline::getValue(string trackName){
-	return getValue(trackName, currentTime);    
+	if(!hasTrack(trackName)){
+		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
+		return 0.0;
+	}
+	ofxTLCurves* curves = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
+	return curves->getValue();
 }
 
 float ofxTimeline::getValue(string trackName, int atFrame){
     return getValue(trackName, timecode.secondsForFrame(atFrame));
 }
 
+bool ofxTimeline::hasTrack(string trackName){
+	return trackNameToPage.find(trackName) != trackNameToPage.end();
+}
+
 ofxTLTrack* ofxTimeline::getTrack(string trackName){
-	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
+	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
 		return NULL;
 	}
@@ -1426,21 +1450,24 @@ ofxTLSwitches* ofxTimeline::addSwitches(string trackName, string xmlFileName){
 }
 
 bool ofxTimeline::isSwitchOn(string trackName, float atTime){
-	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
+	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
 	
 	ofxTLSwitches* switches = (ofxTLSwitches*)trackNameToPage[trackName]->getTrack(trackName);
-	if(switches == NULL){
-		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
-		return false;
-	}
     return switches->isOnAtPercent(atTime/durationInSeconds);
 }
 
 bool ofxTimeline::isSwitchOn(string trackName){
-    return isSwitchOn(trackName, currentTime);    
+	if(!hasTrack(trackName)){
+		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
+		return false;
+	}
+	
+	ofxTLSwitches* switches = (ofxTLSwitches*)trackNameToPage[trackName]->getTrack(trackName);
+	return switches->isOn();
+//    return isSwitchOn(trackName, currentTime);
 }
 
 bool ofxTimeline::isSwitchOn(string trackName, int atFrame){
@@ -1511,7 +1538,12 @@ ofxTLColorTrack* ofxTimeline::addColorsWithPalette(string trackName, string xmlF
 }
 
 ofColor ofxTimeline::getColor(string trackName){
-	return getColorAtMillis(trackName, getCurrentTimeMillis());
+	if(!hasTrack(trackName)){
+		ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
+		return ofColor(0,0,0);
+	}
+	ofxTLColorTrack* colors = (ofxTLColorTrack*)trackNameToPage[trackName]->getTrack(trackName);
+	return colors->getColor();
 }
 
 ofColor ofxTimeline::getColorAtPercent(string trackName, float percent){
@@ -1523,16 +1555,12 @@ ofColor ofxTimeline::getColorAtSecond(string trackName, float second){
 }
 
 ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long millis){
-	if(trackNameToPage.find(trackName) == trackNameToPage.end()){
-		ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
+	if(!hasTrack(trackName)){
+	   ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
 		return ofColor(0,0,0);
 	}
 	
 	ofxTLColorTrack* colors = (ofxTLColorTrack*)trackNameToPage[trackName]->getTrack(trackName);
-	if(colors == NULL){
-		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
-		return ofColor(0,0,0);
-	}
 	return colors->getColorAtMillis(millis);
 }
 
@@ -1672,6 +1700,10 @@ ofxTimecode& ofxTimeline::getTimecode(){
     return timecode;
 }
 
+ofxMSATimer& ofxTimeline::getTimer(){
+	return timer;
+}
+
 vector<ofxTLPage*>& ofxTimeline::getPages(){
     return pages;
 }
@@ -1702,6 +1734,8 @@ string ofxTimeline::confirmedUniqueName(string name){
     }
     return uniqueName;
 }
+
+
 
 void ofxTimeline::setDragTimeOffset(long millisecondOffset){
 

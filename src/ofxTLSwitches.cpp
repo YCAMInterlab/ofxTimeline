@@ -17,7 +17,9 @@ void ofxTLSwitches::draw(){
 	ofFill();
 	
 	//draw a little wobble if its on
-	if(isOnAtMillis(timeline->getCurrentTimeMillis())){
+	//if(isOnAtMillis(timeline->getCurrentTimeMillis())){
+	//play solo change
+	if(isOn()){
 		ofSetColor(timeline->getColors().disabledColor, 20+(1-powf(sin(ofGetElapsedTimef()*5)*.5+.5,2))*20);
 		ofRect(bounds);
 	}
@@ -106,6 +108,10 @@ bool ofxTLSwitches::isOnAtMillis(long millis){
         }
     }
     return false;    
+}
+
+bool ofxTLSwitches::isOn(){
+	return isOnAtMillis(currentTrackTime());
 }
 
 bool ofxTLSwitches::isOnAtPercent(float percent){
