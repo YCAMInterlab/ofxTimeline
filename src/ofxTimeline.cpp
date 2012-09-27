@@ -34,6 +34,9 @@
 
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
+#ifdef TARGET_OSX
+#include "ofxRemoveCocoaMenu.h"
+#endif
 
 //increments to keep auto generated names unique
 static int timelineNumber = 0;
@@ -141,7 +144,12 @@ void ofxTimeline::setup(){
     //You can change this name by calling setPageName()
 	addPage("Page One", true);
     
-    setName("timeline" + ofToString(timelineNumber++));
+	if(name == ""){
+	    setName("timeline" + ofToString(timelineNumber++));
+	}
+	else{
+		setupStandardElements();
+	}
 
 }
 
@@ -169,15 +177,21 @@ void ofxTimeline::setName(string newName){
     if(newName != name){
         
 	    name = newName;
-		
-        inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
-        inoutTrack->setup();
-        
-        zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
-        zoomer->setup();
-        
-        currentPage->loadTrackPositions();
+		if(isSetup){
+			setupStandardElements();
+		}
     }
+}
+
+void ofxTimeline::setupStandardElements(){
+	
+	inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
+	inoutTrack->setup();
+	
+	zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
+	zoomer->setup();
+	
+	currentPage->loadTrackPositions();	
 }
 
 string ofxTimeline::getName(){
@@ -459,6 +473,17 @@ void ofxTimeline::play(){
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(timelineEvents.playbackStarted, args);
 	}
+}
+
+static bool menusRemoved = false;
+void ofxTimeline::removeCocoaMenusFromGlut(string appName){
+
+	#ifdef TARGET_OSX
+	if(!menusRemoved){
+		RemoveCocoaMenusFromGlut(appName);
+		menusRemoved = true;
+	}
+	#endif
 }
 
 void ofxTimeline::stop(){
@@ -1269,6 +1294,9 @@ void ofxTimeline::draw(){
 		glDisable(GL_DEPTH_TEST);
         ofDisableLighting();
 		ofEnableAlphaBlending();
+		ofSetColor(255*.15);
+		ofRect(totalDrawRect);
+		ofSetColor(255);
 		
 		if (pages.size() > 1) {
 			tabs->draw();			

@@ -274,9 +274,12 @@ void ofxTLVideoTrack::draw(){
 
 	ofPushStyle();
 	
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(bounds.x, 0, bounds.width, ofGetHeight());
 	if(thumbsEnabled && getDrawRect().height > 10){
-        
-		ofSetColor(255);        
+		//clip hanging frames off the sides
+
+		ofSetColor(255);
         lock();
 		for(int i = 0; i < videoThumbs.size(); i++){
             if(videoThumbs[i].thumb != NULL){
@@ -311,7 +314,6 @@ void ofxTLVideoTrack::draw(){
 		}		
 	}
 	
-    //TODO: draw prettier
 	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofPushStyle();
 	ofFill();
@@ -336,6 +338,8 @@ void ofxTLVideoTrack::draw(){
 	}
 	
 	ofPopStyle();
+	
+	glDisable(GL_SCISSOR_TEST);
 }
 
 void ofxTLVideoTrack::setInFrame(int in){

@@ -82,6 +82,11 @@ typedef struct {
 
 class ofxTimeline : ofThread {
   public:
+	
+	//needed for hotkeys to work
+	//optionally pass in an "app name" for Quit.
+	static void removeCocoaMenusFromGlut(string appName);
+	
 	ofxTimeline();
 	virtual ~ofxTimeline();
 
@@ -447,6 +452,9 @@ class ofxTimeline : ofThread {
 	bool usingEvents;
 	bool isOnThread;
 
+	//called when the name changes to setup the inout track, zoomer, ticker etc
+	void setupStandardElements();
+	
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown

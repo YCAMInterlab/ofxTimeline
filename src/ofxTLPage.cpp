@@ -295,7 +295,7 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
         timeline->setHoverTime(millis);
 	}
 
-	if(draggingSelectionRectangle && selectionRectangle.getArea() != 0){
+	if(draggingSelectionRectangle && selectionRectangle.width != 0 && selectionRectangle.height != 0){
 		if(!ofGetModifierSelection() ){
 			timeline->unselectAll();
 		}

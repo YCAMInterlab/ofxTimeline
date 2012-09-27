@@ -105,7 +105,7 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 		else{
 			clickedTextField->textField.beginEditing();
 			enteringText = true;
-			//make sure this 
+			//make sure this key is selected
 			selectKeyframe(clickedTextField);
 		}
         return false;

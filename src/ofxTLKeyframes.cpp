@@ -37,7 +37,6 @@
 
 #include "ofxTLKeyframes.h"
 #include "ofxTimeline.h"
-//#include "ofxTLUtils.h"
 #include "ofxHotKeys.h"
 
 bool keyframesort(ofxTLKeyframe* a, ofxTLKeyframe* b){
@@ -209,11 +208,11 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 		return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0, true);
 	}
 	
-	if(sampleTime < keyframes[0]->time){
+	if(sampleTime <= keyframes[0]->time){
 		return keyframes[0]->value;
 	}
 	
-	if(sampleTime > keyframes[keyframes.size()-1]->time){
+	if(sampleTime >= keyframes[keyframes.size()-1]->time){
 		return keyframes[keyframes.size()-1]->value;
 	}
 	
@@ -433,7 +432,7 @@ void ofxTLKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
         ofVec2f screenpoint(args.x,args.y);
         for(int k = 0; k < selectedKeyframes.size(); k++){
             ofVec2f newScreenPosition;
-            selectedKeyframes[k]->time = millis - selectedKeyframes[k]->grabTimeOffset;
+            selectedKeyframes[k]->time = ofClamp(millis - selectedKeyframes[k]->grabTimeOffset, screenXToMillis(bounds.getMinX()), screenXToMillis(bounds.getMaxX()));
             selectedKeyframes[k]->value = screenYToValue(args.y - selectedKeyframes[k]->grabValueOffset);
             selectedKeyframes[k]->screenPosition = screenPositionForKeyframe(selectedKeyframes[k]);
         }

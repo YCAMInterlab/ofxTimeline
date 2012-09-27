@@ -138,10 +138,9 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 
 	if(!enabled) return;
 
-	minSelected = maxSelected = midSelected = focused  = false;
+	minSelected = maxSelected = midSelected = false;
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
 		mouseIsDown = true;
-		focused = true;
 		
 		//did we click on the min-left handle?
 		float minScreenX = normalizedXtoScreenX(currentViewRange.min, ofRange(0,1.0));
