@@ -295,12 +295,11 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
         timeline->setHoverTime(millis);
 	}
 
-	if(draggingSelectionRectangle && selectionRectangle.width != 0 && selectionRectangle.height != 0){
+	if(draggingSelectionRectangle && selectionRectangle.getArea() != 0){
 		if(!ofGetModifierSelection() ){
 			timeline->unselectAll();
 		}
 
-		draggingSelectionRectangle = false;
         ofLongRange timeRange = ofLongRange(timeline->screenXToMillis(selectionRectangle.x),
                                             timeline->screenXToMillis(selectionRectangle.x+selectionRectangle.width));
 		for(int i = 0; i < headers.size(); i++){
@@ -312,6 +311,7 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 			}
 		}		        
     }
+	draggingSelectionRectangle = false;
 }
 
 void ofxTLPage::setDragOffsetTime(long offsetMillis){
@@ -342,25 +342,52 @@ void ofxTLPage::refreshSnapPoints(){
 }
 
 //copy paste
-string ofxTLPage::copyRequest(){
-	string buf;
+void ofxTLPage::copyRequest(vector<string>& bufs){
+
 	for(int i = 0; i < headers.size(); i++){
-		buf += tracks[headers[i]->name]->copyRequest();
-	}	
-	return buf;	
+		string buf = tracks[headers[i]->name]->copyRequest();
+		if(buf != ""){
+//			cout << "copy for " << i << " returned " << buf << endl;
+			bufs.push_back(buf);
+		}
+	}
 }
 
-string ofxTLPage::cutRequest(){
-	string buf;
+void ofxTLPage::cutRequest(vector<string>& bufs){
 	for(int i = 0; i < headers.size(); i++){
-		buf += tracks[headers[i]->name]->cutRequest();
-	}	
-	return buf;
+		string buf = tracks[headers[i]->name]->cutRequest();
+		if(buf != ""){
+			bufs.push_back(buf);
+		}
+	}
 }
 
-void ofxTLPage::pasteSent(string pasteboard){
+void ofxTLPage::pasteSent(const vector<string>& pasteboard){
+	
     if(focusedTrack != NULL){
-        focusedTrack->pasteSent(pasteboard);
+		int pasteTrackIndex = -1;;
+		int bufferIndex = 0;
+		//iterate through all the  tracks, start pasting at the focused track down
+		for(int i = 0; i < headers.size(); i++){
+			//we haven't foudn the focused track yet
+			if(pasteTrackIndex == -1){
+				//start pasting here
+				if(headers[i]->getTrack() == focusedTrack){
+					pasteTrackIndex = i;
+				}
+			}
+			//we found the track!
+			if(pasteTrackIndex != -1){
+				//we ran into the end
+				if(pasteTrackIndex == headers.size() || bufferIndex == pasteboard.size()){
+					cout << "breaking with buffer index " << bufferIndex << " and paste index " << pasteTrackIndex << endl;
+					break;
+				}
+				cout << "pasting buffer " << bufferIndex << " into " << pasteTrackIndex << endl;
+				//paste the next bufer into the next track
+				headers[pasteTrackIndex++]->getTrack()->pasteSent(pasteboard[bufferIndex++]);
+			}
+		}
     }
     
 //	for(int i = 0; i < headers.size(); i++){

@@ -158,7 +158,7 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
     easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
-                                   MIN(args.y, ofGetHeight() - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+                                   MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
     
     drawingEasingWindow = true;
     timeline->presentedModalContent(this);

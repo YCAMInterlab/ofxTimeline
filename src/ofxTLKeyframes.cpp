@@ -489,20 +489,30 @@ void ofxTLKeyframes::getSnappingPoints(set<long>& points){
 }
 
 string ofxTLKeyframes::copyRequest(){
-	return getXMLStringForKeyframes(selectedKeyframes);
+	if(selectedKeyframes.size() > 0){
+		return getXMLStringForKeyframes(selectedKeyframes);
+	}
+	return "";
 }
 
 string ofxTLKeyframes::cutRequest(){
-	string xmlrep = getXMLStringForKeyframes(selectedKeyframes);
-	deleteSelectedKeyframes();
-	return xmlrep;	
+	if(selectedKeyframes.size() > 0){
+		string xmlrep = getXMLStringForKeyframes(selectedKeyframes);
+		deleteSelectedKeyframes();
+		return xmlrep;
+	}
+	return "";
 }
 
 void ofxTLKeyframes::pasteSent(string pasteboard){
 	vector<ofxTLKeyframe*> keyContainer;
 	ofxXmlSettings pastedKeys;
+	cout << " attempting to load buffer " << pasteboard << endl;
+	
 	if(pastedKeys.loadFromBuffer(pasteboard)){
+		cout << " Loaded bufer successfully " << endl;
 		createKeyframesFromXML(pastedKeys, keyContainer);
+		cout << "Created " << keyContainer.size() << " keys " << endl;
 		if(keyContainer.size() != 0){
 			timeline->unselectAll();
 			int numKeyframesPasted = 0;
@@ -522,13 +532,14 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 			}
 
 			if(numKeyframesPasted > 0){
+				cout << "pasted " << numKeyframesPasted << endl;
 				updateKeyframeSort();
 				timeline->flagTrackModified(this);
 			}
 			
-			if(timeline->getMovePlayheadOnPaste()){
-				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
-			}
+//			if(timeline->getMovePlayheadOnPaste()){
+//				timeline->setCurrentTimeMillis( keyContainer[keyContainer.size()-1]->time );
+//			}
 		}
 	}
 }

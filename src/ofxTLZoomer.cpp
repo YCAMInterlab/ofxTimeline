@@ -102,6 +102,7 @@ void ofxTLZoomer::draw(){
 }
 
 void ofxTLZoomer::load() {
+
 	notifyZoomStarted();
 	
 	ofxXmlSettings settings;
@@ -226,6 +227,7 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 	if(mouseIsDown){
 		mouseIsDown = false;
 		notifyZoomEnded();
+//		timeline->flagTrackModified(this);
 		save(); //intentionally ignores auto save since this is just a view parameter
 	}
 }

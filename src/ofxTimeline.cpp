@@ -287,7 +287,7 @@ bool ofxTimeline::getMovePlayheadOnPaste(){
 	return movePlayheadOnPaste;
 }
 
-string ofxTimeline::getPasteboard(){
+vector<string>& ofxTimeline::getPasteboard(){
 	return pasteboard;
 }
 
@@ -441,6 +441,8 @@ void ofxTimeline::save(){
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->save();
     }
+	zoomer->save();
+	inoutTrack->save();
 	unsavedChanges = false;
 }
 
@@ -759,7 +761,7 @@ void ofxTimeline::setDurationInSeconds(float seconds){
         return;
     }
 	durationInSeconds = seconds;
-	zoomer->setViewRange(ofRange(0,1.0));
+	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
 void ofxTimeline::setDurationInMillis(long millis){
@@ -1051,6 +1053,8 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		return;
     }
 
+	if(!timelineHasFocus) return;
+	
 	if(undoEnabled && ofGetModifierShortcutKeyPressed() && (args.key == 'z' || args.key == 'z'-96)){
 		if(ofGetModifierShiftPressed()){
 			redo();
@@ -1067,19 +1071,22 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     
 	if(ofGetModifierShortcutKeyPressed()){
 		if(args.key == 'c' || args.key == 'c'-96){ //copy
-			string copyattempt = currentPage->copyRequest();
-			if(copyattempt != ""){
+			vector<string> copyattempt;
+			currentPage->copyRequest(copyattempt);
+			if(copyattempt.size() > 0){
+				cout << "COPIED " << copyattempt.size() << endl;
 				pasteboard = copyattempt;
 			}
 		}
 		else if(args.key == 'x' || args.key == 'x'-96){ //cut
-			string copyattempt = currentPage->cutRequest();
-			if(copyattempt != ""){
+			vector<string> copyattempt;
+			currentPage->cutRequest(copyattempt);
+			if(copyattempt.size() > 0){
 				pasteboard = copyattempt;
 			}
 		}
 		else if(args.key == 'v' || args.key == 'v'-96){ //paste
-			if (pasteboard != "") {
+			if (pasteboard.size() > 0) {
 				currentPage->pasteSent(pasteboard);
 			}				
 		}
@@ -1287,7 +1294,8 @@ void ofxTimeline::checkLoop(){
 
 //void ofxTimeline::draw(ofEventArgs& args){
 void ofxTimeline::draw(){
-	if(isShowing){
+
+	if(isSetup && isShowing){
 		ofPushStyle();
 
 		glPushAttrib(GL_ENABLE_BIT);

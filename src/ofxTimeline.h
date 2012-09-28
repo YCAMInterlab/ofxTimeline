@@ -266,7 +266,7 @@ class ofxTimeline : ofThread {
     
 	void setMovePlayheadOnPaste(bool move);
 	bool getMovePlayheadOnPaste();	
-	string getPasteboard();
+	vector<string>& getPasteboard();
 	
     //Undo and Redo
     void enableUndo(bool enabled);
@@ -460,7 +460,8 @@ class ofxTimeline : ofThread {
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
 	bool lockWidthToWindow;
     
-	string pasteboard;
+	//one string per track
+	vector<string> pasteboard;
     
     bool undoEnabled; //turn off undo if you don't need it, it'll take up a ton of memory
     void collectStateBuffers();

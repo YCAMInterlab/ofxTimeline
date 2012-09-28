@@ -29,6 +29,9 @@ void ofxTLBangs::draw(){
 	}
 	
     for(int i = keyframes.size()-1; i >= 0; i--){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
         //int screenX = normalizedXtoScreenX(keyframes[i]->position.x);
         int screenX = millisToScreenX(keyframes[i]->time);
         if(isKeyframeSelected(keyframes[i])){

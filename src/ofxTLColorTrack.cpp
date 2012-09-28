@@ -108,7 +108,7 @@ void ofxTLColorTrack::drawModalContent(){
 		
 		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
-		if(colorWindow.getMaxY()+25 > ofGetHeight()){
+		if(colorWindow.getMaxY()+25 > timeline->getBottomLeft().y){
 			colorWindow.y = bounds.y - 25 - colorWindow.height;
 		}
 		if(colorWindow.getMaxX() > ofGetWidth()){
