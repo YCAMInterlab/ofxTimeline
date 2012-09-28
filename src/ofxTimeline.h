@@ -157,7 +157,7 @@ class ofxTimeline : ofThread {
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
 	void setDurationInSeconds(float seconds);
-	void setDurationInMillis(long millis);
+	void setDurationInMillis(unsigned long millis);
     void setDurationInTimecode(string timecode);
 
 	int getDurationInFrames();
@@ -180,7 +180,7 @@ class ofxTimeline : ofThread {
 	
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTimeSeconds(float time);
-    virtual void setCurrentTimeMillis(long millis);
+    virtual void setCurrentTimeMillis(unsigned long millis);
 	virtual void setPercentComplete(float percent);
 	virtual void setCurrentTimecode(string timecodeString);
     
@@ -300,7 +300,11 @@ class ofxTimeline : ofThread {
     //	if 2 or more is selected, it just trigger an unselect all before
     //	create any new items
     int getTotalSelectedItems();
-	
+	unsigned long getEarliestTime();
+	unsigned long getLatestTime();
+	unsigned long getEarliestSelectedTime();
+	unsigned long getLatestSelectedTime();
+
 	bool hasTrack(string trackName);
 	//type can be
 	//Bangs, Switches, Flags, Colors, Curves, Audio or Video
@@ -394,13 +398,13 @@ class ofxTimeline : ofThread {
 	//and the mouse.  
 	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
-	void setDragTimeOffset(long millisecondOffset);
+	void setDragTimeOffset(unsigned long millisecondOffset);
     void cancelSnapping();
 	long getDragTimeOffset();
-    void setHoverTime(long millisTime);
+    void setHoverTime(unsigned long millisTime);
         
     string formatTime(float seconds);
-    string formatTime(long millis);
+    string formatTime(unsigned long millis);
 
     string nameToXMLName(string name);
     string confirmedUniqueName(string name);

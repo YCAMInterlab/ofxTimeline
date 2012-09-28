@@ -559,7 +559,7 @@ void ofxTimeline::setCurrentTimecode(string timecodeString){
     currentTime = timecode.secondsForTimecode(timecodeString);
 }
 
-void ofxTimeline::setHoverTime(long millisTime){
+void ofxTimeline::setHoverTime(unsigned long millisTime){
 	ticker->setHoverTime(millisTime);
 }
 
@@ -567,7 +567,7 @@ void ofxTimeline::setCurrentTimeSeconds(float time){
 	currentTime = time;
 }
 
-void ofxTimeline::setCurrentTimeMillis(long millis){
+void ofxTimeline::setCurrentTimeMillis(unsigned long millis){
 	currentTime = millis/1000.;
 }
 
@@ -764,7 +764,7 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
-void ofxTimeline::setDurationInMillis(long millis){
+void ofxTimeline::setDurationInMillis(unsigned long millis){
     setDurationInSeconds(millis/1000.);
 }
 
@@ -1390,6 +1390,47 @@ int ofxTimeline::getTotalSelectedItems(){
     return totalSelected;
 }
 
+unsigned long ofxTimeline::getEarliestTime(){
+	unsigned long earliestTime = LONG_MAX;
+    for(int i = 0; i < pages.size(); i++){
+		for(int t = 0; t < pages[i]->getTracks().size(); t++){
+			earliestTime = MIN(earliestTime,pages[i]->getTracks()[t]->getEarliestTime());
+		}
+    }
+	return earliestTime;
+}
+
+unsigned long ofxTimeline::getLatestTime(){
+	unsigned long latestTime = 0;
+    for(int i = 0; i < pages.size(); i++){
+		for(int t = 0; t < pages[i]->getTracks().size(); t++){
+			latestTime = MAX(latestTime,pages[i]->getTracks()[t]->getLatestTime());
+		}
+    }
+	return latestTime;	
+}
+
+unsigned long ofxTimeline::getEarliestSelectedTime(){
+	unsigned long earliestTime = LONG_MAX;
+    for(int i = 0; i < pages.size(); i++){
+		for(int t = 0; t < pages[i]->getTracks().size(); t++){
+			earliestTime = MIN(earliestTime,pages[i]->getTracks()[t]->getEarliestSelectedTime());
+		}
+    }
+	return earliestTime;	
+}
+
+unsigned long ofxTimeline::getLatestSelectedTime(){
+	unsigned long latestTime = 0;
+    for(int i = 0; i < pages.size(); i++){
+		for(int t = 0; t < pages[i]->getTracks().size(); t++){
+			latestTime = MAX(latestTime,pages[i]->getTracks()[t]->getLatestSelectedTime());
+//			cout << "latest selected time is now " << latestTime << endl;
+		}
+    }
+	return latestTime;
+}
+
 bool ofxTimeline::isModal(){
     return modalTrack != NULL;
 }
@@ -1413,7 +1454,7 @@ ofxTLZoomer* ofxTimeline::getZoomer(){
 //can be used to add custom elements
 void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	if(trackNameToPage[trackName] != NULL){
-        ofLogError() << "ofxTimeline::addTrack -- Overriding track " << trackName;
+        ofLogError("ofxTimeline::addTrack") << " Adding dupliciate track name " << trackName;
     }
 	track->setTimeline( this );
 	track->setName( trackName );
@@ -1748,7 +1789,7 @@ string ofxTimeline::formatTime(float seconds){
     return timecode.timecodeForSeconds(seconds);
 }
 
-string ofxTimeline::formatTime(long millis){
+string ofxTimeline::formatTime(unsigned long millis){
     return timecode.timecodeForMillis(millis);
 }
 
@@ -1773,7 +1814,7 @@ string ofxTimeline::confirmedUniqueName(string name){
 
 
 
-void ofxTimeline::setDragTimeOffset(long millisecondOffset){
+void ofxTimeline::setDragTimeOffset(unsigned long millisecondOffset){
 
 	dragMillsecondOffset = millisecondOffset;
 

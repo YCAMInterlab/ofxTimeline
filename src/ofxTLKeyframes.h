@@ -43,7 +43,7 @@
 class ofxTLKeyframe {
   public:
 	ofVec2f screenPosition; // cached screen position
-    long time; //in millis
+    unsigned long time; //in millis
     float value; //normalized
     long grabTimeOffset;
     float grabValueOffset;
@@ -66,7 +66,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void getSnappingPoints(set<long>& points);
+	virtual void getSnappingPoints(set<unsigned long>& points);
 	
 	virtual void save();
 	virtual void load();
@@ -85,6 +85,11 @@ class ofxTLKeyframes : public ofxTLTrack
     
     virtual int getSelectedItemCount();
     
+	virtual unsigned long getEarliestTime();
+	virtual unsigned long getLatestTime();
+	virtual unsigned long getEarliestSelectedTime();
+	virtual unsigned long getLatestSelectedTime();
+
     //undo
     virtual string getXMLRepresentation();
     virtual void loadFromXMLRepresentation(string rep);
@@ -151,8 +156,12 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	int selectedKeyframeIndex;
 	bool keysAreDraggable;
+	bool keysAreStretchable;
+	unsigned long stretchAnchor;
+	unsigned long stretchSelectPoint;
 	
 	virtual void updateKeyframeSort();
+	virtual void updateStretchOffsets(ofVec2f screenpoint, long grabMillis);
 	virtual void updateDragOffsets(ofVec2f screenpoint, long grabMillis);
 
 	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);

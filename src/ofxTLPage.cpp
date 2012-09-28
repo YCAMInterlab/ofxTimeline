@@ -114,7 +114,7 @@ void ofxTLPage::draw(){
 	if(!headerHasFocus && !footerIsDragging && draggingInside && snapPoints.size() > 0){
 		ofPushStyle();
 		ofSetColor(255,255,255,100);
-		set<long>::iterator it;
+		set<unsigned long>::iterator it;
 //		for(int i = 0; i < snapPoints.size(); i++){
 		for(it = snapPoints.begin(); it != snapPoints.end(); it++){
 			ofLine(timeline->millisToScreenX(*it), trackContainerRect.y,
@@ -252,7 +252,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
 
 		if(snappingEnabled && snapPoints.size() > 0){
 			//hack to find snap distance in millseconds
-			set<long>::iterator it;
+			set<unsigned long>::iterator it;
 			long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
 			long closestSnapDistance = snappingToleranceMillis;
 			long closestSnapPoint;

@@ -143,7 +143,7 @@ void ofxTLTicker::draw(){
 	ofPopStyle();
 }
 
-void ofxTLTicker::setHoverTime(long millis){
+void ofxTLTicker::setHoverTime(unsigned long millis){
     hoverTime = millis;
 }
 
@@ -159,7 +159,7 @@ float ofxTLTicker::getBPM(){
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
-void ofxTLTicker::getSnappingPoints(set<long>& points){
+void ofxTLTicker::getSnappingPoints(set<unsigned long>& points){
 
 	if(!drawBPMGrid){
 		updateBPMPoints();

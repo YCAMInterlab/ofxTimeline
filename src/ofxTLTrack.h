@@ -127,6 +127,13 @@ class ofxTLTrack
 	virtual void selectAll(){};
 	virtual void unselectAll(){};
 	
+	//returns the bounds at which something interesting happens on this track
+	//used for finding min/max times on a timeline
+	virtual unsigned long getEarliestTime(){ return LONG_MAX; };
+	virtual unsigned long getLatestTime(){ return 0; };
+	virtual unsigned long getEarliestSelectedTime(){ return LONG_MAX; };
+	virtual unsigned long getLatestSelectedTime(){ return 0; };
+	
     //returns the number of selected items
     //this used to determine two things:
     //1 Should an incoming click create a new item or remove a multiple selection? 
@@ -152,7 +159,7 @@ class ofxTLTrack
 	virtual void clear(){};
 	    
 	//add any points (in screenspace x) that should be snapped to
-	virtual void getSnappingPoints(std::set<long>& points){};
+	virtual void getSnappingPoints(std::set<unsigned long>& points){};
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
