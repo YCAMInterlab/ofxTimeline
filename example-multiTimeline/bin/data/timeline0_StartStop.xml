@@ -1,37 +1,42 @@
 <keyframes>
     <key>
-        <flag>start&gt;0</flag>
-        <time>00:00:08:984</time>
-        <value>0.85</value>
+        <flag>start 0</flag>
+        <time>00:00:01:171</time>
+        <value>0.800000012</value>
     </key>
     <key>
-        <flag>stop&gt;0</flag>
-        <time>00:00:10:840</time>
-        <value>0.05</value>
+        <flag>stop 0</flag>
+        <time>00:00:02:637</time>
+        <value>0.000000000</value>
     </key>
     <key>
-        <flag>start&gt;7</flag>
-        <time>00:00:25:000</time>
-        <value>0.7</value>
+        <flag>start 4</flag>
+        <time>00:00:05:469</time>
+        <value>0.449999988</value>
     </key>
     <key>
-        <flag>start&gt;8</flag>
-        <time>00:00:27:148</time>
-        <value>0.45</value>
+        <flag>start 1</flag>
+        <time>00:00:07:617</time>
+        <value>0.199999988</value>
     </key>
     <key>
-        <flag>start&gt;3</flag>
-        <time>00:00:38:867</time>
-        <value>0.725</value>
+        <flag>start 3</flag>
+        <time>00:00:10:937</time>
+        <value>0.399999976</value>
     </key>
     <key>
-        <flag>stop&gt;7</flag>
-        <time>00:00:41:796</time>
-        <value>0.45</value>
+        <flag>stop 1</flag>
+        <time>00:00:12:988</time>
+        <value>0.000000000</value>
     </key>
     <key>
-        <flag>stop&gt;8</flag>
-        <time>00:00:57:031</time>
-        <value>0.675</value>
+        <flag>stop 4</flag>
+        <time>00:00:14:453</time>
+        <value>0.000000000</value>
+    </key>
+    <key>
+        <flag>stop 3</flag>
+        <time>00:00:16:894</time>
+        <value>0.000000000</value>
     </key>
 </keyframes>

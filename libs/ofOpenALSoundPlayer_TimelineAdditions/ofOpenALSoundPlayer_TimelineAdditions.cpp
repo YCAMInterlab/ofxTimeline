@@ -832,10 +832,10 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getCurrentBufferSum(int size){
 }
 
 // ----------------------------------------------------------------------------
-float * ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
+vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
 	initFFT(bands);
 	bins.assign(bins.size(),0);
-	if(sources.empty()) return &bins[0];
+	if(sources.empty()) return bins;
 
 	int signalSize = (bands-1)*2;
 	getCurrentBufferSum(signalSize);
@@ -846,7 +846,7 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
 	for(int i= 0; i < bands; i++) {
 		bins[i] += sqrtf(cx_out[i].r * cx_out[i].r + cx_out[i].i * cx_out[i].i) * normalizer;
 	}
-	return &bins[0];
+	return bins;
 }
 
 // ----------------------------------------------------------------------------

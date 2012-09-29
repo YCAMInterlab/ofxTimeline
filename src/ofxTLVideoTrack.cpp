@@ -274,9 +274,12 @@ void ofxTLVideoTrack::draw(){
 
 	ofPushStyle();
 	
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(bounds.x, 0, bounds.width, ofGetHeight());
 	if(thumbsEnabled && getDrawRect().height > 10){
-        
-		ofSetColor(255);        
+		//clip hanging frames off the sides
+
+		ofSetColor(255);
         lock();
 		for(int i = 0; i < videoThumbs.size(); i++){
             if(videoThumbs[i].thumb != NULL){
@@ -311,17 +314,16 @@ void ofxTLVideoTrack::draw(){
 		}		
 	}
 	
-    //TODO: draw prettier
 	int selectedFrameX = screenXForIndex(selectedFrame);
 	ofPushStyle();
 	ofFill();
-	ofSetColor(timeline->getColors().backgroundColor, 250);
-	ofRect(selectedFrameX, bounds.y, 150, bounds.height);
+	ofSetColor(timeline->getColors().backgroundColor, 150);
+	ofRect(selectedFrameX, bounds.y, 120, bounds.height);
 	ofPopStyle();
 	ofSetColor(timeline->getColors().textColor);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
-	timeline->getFont().drawString("frame " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
-	timeline->getFont().drawString("seconds " + ofToString(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
+	timeline->getFont().drawString("F# " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
+	timeline->getFont().drawString(ofxTimecode::timecodeForSeconds(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
 	
 	if(inFrame != -1){
 		ofSetLineWidth(2);
@@ -336,6 +338,8 @@ void ofxTLVideoTrack::draw(){
 	}
 	
 	ofPopStyle();
+	
+	glDisable(GL_SCISSOR_TEST);
 }
 
 void ofxTLVideoTrack::setInFrame(int in){

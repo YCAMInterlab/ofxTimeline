@@ -10,7 +10,13 @@ bool ofGetModifierSelection(){
 }
 
 bool ofGetModifierShortcutKeyPressed(){
-	return ofGetModifierSpecialPressed();
+#ifdef MAC_USE_CONTROL
+//		cout << "using command" << endl;
+		return ofGetModifierSpecialPressed();
+#else
+//		cout << "using control" << endl;
+		return ofGetModifierControlPressed();
+#endif
 }
 
 bool ofGetModifierPressed(ofxModifierKey mod) {
@@ -30,5 +36,7 @@ bool ofGetModifierPressed(ofxModifierKey mod) {
 
 	return [[NSApp currentEvent] modifierFlags] & t;
 }
+
+
 
 #endif

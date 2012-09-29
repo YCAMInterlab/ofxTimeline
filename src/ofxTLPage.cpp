@@ -114,7 +114,7 @@ void ofxTLPage::draw(){
 	if(!headerHasFocus && !footerIsDragging && draggingInside && snapPoints.size() > 0){
 		ofPushStyle();
 		ofSetColor(255,255,255,100);
-		set<long>::iterator it;
+		set<unsigned long>::iterator it;
 //		for(int i = 0; i < snapPoints.size(); i++){
 		for(it = snapPoints.begin(); it != snapPoints.end(); it++){
 			ofLine(timeline->millisToScreenX(*it), trackContainerRect.y,
@@ -195,6 +195,10 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
     }
 }
 
+ofxTLTrack* ofxTLPage::getFocusedTrack(){
+	return focusedTrack;
+}
+
 void ofxTLPage::mouseMoved(ofMouseEventArgs& args, long millis){
 	for(int i = 0; i < headers.size(); i++){
 		headers[i]->mouseMoved(args);
@@ -248,7 +252,7 @@ void ofxTLPage::mouseDragged(ofMouseEventArgs& args, long millis){
 
 		if(snappingEnabled && snapPoints.size() > 0){
 			//hack to find snap distance in millseconds
-			set<long>::iterator it;
+			set<unsigned long>::iterator it;
 			long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
 			long closestSnapDistance = snappingToleranceMillis;
 			long closestSnapPoint;
@@ -296,18 +300,25 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 			timeline->unselectAll();
 		}
 
-		draggingSelectionRectangle = false;
         ofLongRange timeRange = ofLongRange(timeline->screenXToMillis(selectionRectangle.x),
                                             timeline->screenXToMillis(selectionRectangle.x+selectionRectangle.width));
 		for(int i = 0; i < headers.size(); i++){
             ofRectangle trackBounds = tracks[headers[i]->name]->getDrawRect();
-			ofRange valueRange = ofRange(ofMap(selectionRectangle.y, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
-                                         ofMap(selectionRectangle.y+selectionRectangle.height, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true));
+			ofRange valueRange;
+			if(trackBounds.height == 0){
+				valueRange = ofRange(0,1.0);
+			}
+			else{
+				valueRange = ofRange(ofMap(selectionRectangle.getMinY(), trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
+									 ofMap(selectionRectangle.getMaxY(), trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true));
+			}
+			
             if(valueRange.min != valueRange.max){
 				tracks[headers[i]->name]->regionSelected(timeRange, valueRange);
 			}
 		}		        
     }
+	draggingSelectionRectangle = false;
 }
 
 void ofxTLPage::setDragOffsetTime(long offsetMillis){
@@ -331,32 +342,76 @@ void ofxTLPage::refreshSnapPoints(){
 		ticker->getSnappingPoints(snapPoints);
 	}
 	
-	//double check to make sure snap points are all on screen
-	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
-		snapPoints.clear();
-	}	
+	if(snapPoints.size() > 2){
+		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
+		set<unsigned long>::iterator it = snapPoints.begin();
+		
+		while(true){
+			unsigned long a = *(it++);
+			if(it == snapPoints.end()){
+				break;
+			}
+			unsigned long b = *(it);
+			if(b - a < snappingToleranceMillis){
+				snapPoints.erase(it);
+				it++;
+			}
+		}
+	}
+	
+//	//double check to make sure snap points are all on screen
+//	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
+//		snapPoints.clear();
+//	}	
 }
 
 //copy paste
-string ofxTLPage::copyRequest(){
-	string buf;
+void ofxTLPage::copyRequest(vector<string>& bufs){
+
 	for(int i = 0; i < headers.size(); i++){
-		buf += tracks[headers[i]->name]->copyRequest();
-	}	
-	return buf;	
+		string buf = tracks[headers[i]->name]->copyRequest();
+		if(buf != ""){
+//			cout << "copy for " << i << " returned " << buf << endl;
+			bufs.push_back(buf);
+		}
+	}
 }
 
-string ofxTLPage::cutRequest(){
-	string buf;
+void ofxTLPage::cutRequest(vector<string>& bufs){
 	for(int i = 0; i < headers.size(); i++){
-		buf += tracks[headers[i]->name]->cutRequest();
-	}	
-	return buf;
+		string buf = tracks[headers[i]->name]->cutRequest();
+		if(buf != ""){
+			bufs.push_back(buf);
+		}
+	}
 }
 
-void ofxTLPage::pasteSent(string pasteboard){
+void ofxTLPage::pasteSent(const vector<string>& pasteboard){
+	
     if(focusedTrack != NULL){
-        focusedTrack->pasteSent(pasteboard);
+		int pasteTrackIndex = -1;;
+		int bufferIndex = 0;
+		//iterate through all the  tracks, start pasting at the focused track down
+		for(int i = 0; i < headers.size(); i++){
+			//we haven't foudn the focused track yet
+			if(pasteTrackIndex == -1){
+				//start pasting here
+				if(headers[i]->getTrack() == focusedTrack){
+					pasteTrackIndex = i;
+				}
+			}
+			//we found the track!
+			if(pasteTrackIndex != -1){
+				//we ran into the end
+				if(pasteTrackIndex == headers.size() || bufferIndex == pasteboard.size()){
+//					cout << "breaking with buffer index " << bufferIndex << " and paste index " << pasteTrackIndex << endl;
+					break;
+				}
+//				cout << "pasting buffer " << bufferIndex << " into " << pasteTrackIndex << endl;
+				//paste the next bufer into the next track
+				headers[pasteTrackIndex++]->getTrack()->pasteSent(pasteboard[bufferIndex++]);
+			}
+		}
     }
     
 //	for(int i = 0; i < headers.size(); i++){
@@ -399,7 +454,6 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 	ofRectangle newHeaderRect = ofRectangle(trackContainerRect.x, trackContainerRect.height, trackContainerRect.width, headerHeight);
 	newHeader->setDrawRect(newHeaderRect);
 
-	headers.push_back(newHeader);
 
 	track->setup();
 	
@@ -408,7 +462,7 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 		drawRect = savedTrackPositions[trackName];
 	}
 	else {
-		drawRect = ofRectangle(0, newHeaderRect.y+newHeaderRect.height, ofGetWidth(), defaultTrackHeight);
+		drawRect = ofRectangle(trackContainerRect.x, newHeaderRect.y+newHeaderRect.height, trackContainerRect.width, defaultTrackHeight);
 	}
 
 	track->setDrawRect(drawRect);
@@ -416,6 +470,8 @@ void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 
 	tracks[trackName] = track;
 	trackList.push_back(track);
+	headers.push_back(newHeader);
+
 }
 
 //computed on the fly so please use sparingly if you have a lot of tracks
@@ -531,8 +587,10 @@ void ofxTLPage::recalculateHeight(){
 		
 		thisHeader.width = trackContainerRect.width;
 		thisHeader.y = currentY;
+		thisHeader.x = trackContainerRect.x;
 		headers[i]->setDrawRect(thisHeader);
 		trackRectangle.y = startY;
+		trackRectangle.x = trackContainerRect.x;
 		trackRectangle.width = trackContainerRect.width;
 		
 		tracks[ headers[i]->name ]->setDrawRect( trackRectangle );
@@ -565,7 +623,10 @@ float ofxTLPage::getBottomEdge(){
 #pragma mark saving/restoring state
 void ofxTLPage::loadTrackPositions(){
 	ofxXmlSettings trackPositions;
-	if(trackPositions.loadFile(ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml"))){
+	string xmlPageName = name;
+	ofStringReplace(xmlPageName," ", "_");
+	string positionFileName = ofToDataPath(timeline->getWorkingFolder() + timeline->getName() + "_" + xmlPageName + "_trackPositions.xml");
+	if(trackPositions.loadFile(positionFileName)){
 		
 		//cout << "loading element position " << name << "_trackPositions.xml" << endl;
 		
@@ -582,6 +643,9 @@ void ofxTLPage::loadTrackPositions(){
 			trackPositions.popTag();
 		}
 		trackPositions.popTag();
+	}
+	else{
+		 ofLogNotice("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
 	}
 }
 
@@ -607,9 +671,11 @@ void ofxTLPage::saveTrackPositions(){
 		curElement++;
 	}
 	trackPositions.popTag();
-	trackPositions.saveFile( ofToDataPath(timeline->getWorkingFolder() + "/" + timeline->getName() + "_" + name + "_trackPositions.xml") );
+	string xmlPageName = name;
+	ofStringReplace(xmlPageName," ", "_");
+	string trackPositionsFile = ofToDataPath(timeline->getWorkingFolder() + timeline->getName() + "_" +  xmlPageName + "_trackPositions.xml");
+	trackPositions.saveFile( trackPositionsFile );
 }
-
 
 #pragma mark getters/setters
 void ofxTLPage::setZoomBounds(ofRange zoomBounds){
@@ -647,12 +713,13 @@ string ofxTLPage::getName(){
 }
 
 void ofxTLPage::setContainer(ofVec2f offset, float width){
-	if(offset != ofVec2f(trackContainerRect.x,trackContainerRect.y) || width != trackContainerRect.width){
+	if(offset != trackContainerRect.getMin() ||
+	   width  != trackContainerRect.width){
 		trackContainerRect.x = offset.x;
 		trackContainerRect.y = offset.y;
 		trackContainerRect.width = width;
 	}
-//	recalculateHeight();
+
 }
 
 void ofxTLPage::setHeaderHeight(float newHeaderHeight){

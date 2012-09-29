@@ -49,7 +49,6 @@ void ofxTLTrackHeader::enable(){
 	if(!isEnabled()){
 		nameField.setFont(timeline->getFont());
 		ofxTLTrack::enable();
-		nameField.setup();
     	ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
 	}
 }
@@ -57,6 +56,7 @@ void ofxTLTrackHeader::enable(){
 void ofxTLTrackHeader::disable(){
 	if(isEnabled()){
 		ofxTLTrack::disable();
+		nameField.disable();
 	    ofRemoveListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
 	}
 }
@@ -113,7 +113,15 @@ void ofxTLTrackHeader::draw(){
     	nameField.text = track->getDisplayName();   
     }
     
-    if(nameField.getIsEnabled()){
+	if(timeline->areHeadersEditable() && !nameField.getIsEnabled()){
+		nameField.enable();
+	}
+	
+	if(!timeline->areHeadersEditable() && nameField.getIsEnabled()){
+		nameField.disable();
+	}
+	
+    if(nameField.getIsEditing()){
     	track->getTimeline()->presentedModalContent(this);
     }
     

@@ -57,6 +57,7 @@ class ofxTLPageTabs : public ofxTLTrack {
 	
 	virtual void clear();
 	
+	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseReleased(ofMouseEventArgs& args);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
@@ -65,5 +66,5 @@ class ofxTLPageTabs : public ofxTLTrack {
 	virtual void drawRectChanged();
 	int selectedPageIndex;
 	vector<Tab> pages;
-	
+	int pressedPageIndex;
 };

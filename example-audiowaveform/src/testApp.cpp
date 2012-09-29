@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	ofBackground(255*.15);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetEscapeQuitsApp(false);
@@ -29,7 +30,7 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::bangFired(ofxTLBangEventArgs& bang){
-    lastBang = timeline.getCurrentTime();
+//    lastBang = timeline.getCurrentTime();
 }
 
 //--------------------------------------------------------------
@@ -41,8 +42,12 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     float curtime = timeline.getCurrentTime();
-	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
-    
+//	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
+	int numBands = 256;
+    vector<float>& fft = waveform.getFFTSpectrum(numBands);
+	for(int i = 0; i < fft.size(); i++){
+		ofRect(ofGetWidth()/numBands * i, 0, ofGetWidth()/numBands, fft[i]*ofGetHeight());
+	}
 	timeline.draw();
 }
 

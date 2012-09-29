@@ -16,12 +16,12 @@ ofxTLInOut::ofxTLInOut()
 void ofxTLInOut::draw(){
     ofPushStyle();
     
+	ofRange screenXRange(bounds.getMinX(),bounds.getMaxX());
     if(bounds.height > 2){
         ofSetLineWidth(3);
         int inScreenX = normalizedXtoScreenX( timeline->getInOutRange().min );
         int outScreenX = normalizedXtoScreenX( timeline->getInOutRange().max ); 
-        
-        if(inScreenX > bounds.x && inScreenX < bounds.x+bounds.width){
+        if(screenXRange.contains(inScreenX)){
             if(hoveringIn){
                 ofSetColor(timeline->getColors().highlightColor);
             }
@@ -31,7 +31,7 @@ void ofxTLInOut::draw(){
             ofLine(inScreenX, bounds.y, inScreenX, bounds.y+bounds.height);
         }
 
-        if(outScreenX > bounds.x && outScreenX < bounds.x+bounds.width){
+        if(screenXRange.contains(outScreenX)){
             if(hoveringOut){
                 ofSetColor(timeline->getColors().highlightColor);
             }
@@ -46,8 +46,8 @@ void ofxTLInOut::draw(){
     ofFill();
     ofSetLineWidth(1);
 	//draw in/out point
-	float inPointX = normalizedXtoScreenX(timeline->getInOutRange().min);
-	float outPointX = normalizedXtoScreenX(timeline->getInOutRange().max);
+	float inPointX = ofClamp(normalizedXtoScreenX(timeline->getInOutRange().min), screenXRange.min, screenXRange.max);
+	float outPointX = ofClamp(normalizedXtoScreenX(timeline->getInOutRange().max),screenXRange.min, screenXRange.max);
     
 	if(bounds.x < inPointX){
 		ofSetColor(timeline->getColors().disabledColor,120);
@@ -143,7 +143,7 @@ void ofxTLInOut::load(){
 }
 
 void ofxTLInOut::save(){
-    
+
 	ofxXmlSettings savedSettings;
 	savedSettings.addTag("inout");
 	savedSettings.pushTag("inout");

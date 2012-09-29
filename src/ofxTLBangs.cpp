@@ -4,26 +4,11 @@
 
 ofxTLBangs::ofxTLBangs(){
     lastTimelinePoint = 0;
-    isPlayingBack = false;
 	lastBangTime = 0;
 }
 
 ofxTLBangs::~ofxTLBangs(){
 	disable();
-}
-
-void ofxTLBangs::enable(){
-    if(!isEnabled()){
-	    ofxTLKeyframes::enable();
-		events().registerPlaybackEvents(this);    
-    }
-}
-
-void ofxTLBangs::disable(){
-    if(isEnabled()){		
-	    ofxTLKeyframes::disable();
-    	events().removePlaybackEvents(this);
-    }
 }
 
 void ofxTLBangs::draw(){
@@ -44,6 +29,9 @@ void ofxTLBangs::draw(){
 	}
 	
     for(int i = keyframes.size()-1; i >= 0; i--){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
         //int screenX = normalizedXtoScreenX(keyframes[i]->position.x);
         int screenX = millisToScreenX(keyframes[i]->time);
         if(isKeyframeSelected(keyframes[i])){
@@ -86,10 +74,10 @@ ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p){
 }
 
 void ofxTLBangs::update(){
-	if(isPlayingBack){
-		long thisTimelinePoint = timeline->getCurrentTimeMillis();
+	if(isPlaying || timeline->getIsPlaying()){
+		long thisTimelinePoint = currentTrackTime();
 		for(int i = 0; i < keyframes.size(); i++){
-			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
+			if(timeline->getInOutRangeMillis().contains(keyframes[i]->time) && lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
 //				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 				bangFired(keyframes[i]);
 				lastBangTime = ofGetElapsedTimef();
@@ -99,15 +87,13 @@ void ofxTLBangs::update(){
 	}
 }
 
-void ofxTLBangs::update(ofEventArgs& args){
-	update();
-}
-
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
-    args.currentMillis = timeline->getCurrentTimeMillis();
+	//play solo change
+    //args.currentMillis = timeline->getCurrentTimeMillis();
+	args.currentMillis = currentTrackTime();
     args.currentPercent = timeline->getPercentComplete();
     args.currentFrame = timeline->getCurrentFrame();
     args.currentTime = timeline->getCurrentTime();
@@ -115,14 +101,12 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
 }
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
-	lastTimelinePoint = timeline->getCurrentTimeMillis();
-//	ofAddListener(ofEvents().update, this, &ofxTLBangs::update);
-    isPlayingBack = true;
+	ofxTLTrack::playbackStarted(args);
+	lastTimelinePoint = currentTrackTime();
 }
 
 void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
-//	ofRemoveListener(ofEvents().update, this, &ofxTLBangs::update);
-    isPlayingBack = true;
+//    isPlayingBack = false;
 }
 
 void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){

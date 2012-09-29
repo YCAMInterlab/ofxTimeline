@@ -37,6 +37,7 @@
 
 void ofxTLPageTabs::setup(){
 	selectedPageIndex = -1;
+	pressedPageIndex = -1;
 }
 
 void ofxTLPageTabs::draw(){
@@ -44,24 +45,32 @@ void ofxTLPageTabs::draw(){
 	for(int i = 0; i < pages.size(); i++){
 		if(i == selectedPageIndex){
 			ofFill();
-			ofSetColor(255/4., 100/4., 0);
+			ofSetColor(timeline->getColors().highlightColor, 120);
 			ofRect(pages[i].bounds);
 		}
 		ofNoFill();
-		ofSetColor(255, 100, 0);		
+		//ofSetColor(255, 100, 0);
+		ofSetColor(timeline->getColors().outlineColor);
 		ofRect(pages[i].bounds);
-		
-		timeline->getFont().drawString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + 10);
+		ofSetColor(timeline->getColors().textColor);
+		timeline->getFont().drawString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + timeline->getFont().getLineHeight());
 	}
 	ofPopStyle();
 }
 
-	
-void ofxTLPageTabs::mouseReleased(ofMouseEventArgs& args){
+void ofxTLPageTabs::mousePressed(ofMouseEventArgs& args){
+	pressedPageIndex = -1;
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i].bounds.inside(args.x, args.y)){
-			selectPage(i);
+			pressedPageIndex = i;
+			break;
 		}
+	}
+}
+
+void ofxTLPageTabs::mouseReleased(ofMouseEventArgs& args){
+	if(pressedPageIndex != -1 && pages[pressedPageIndex].bounds.inside(args.x, args.y)){
+		selectPage(pressedPageIndex);
 	}
 }
 

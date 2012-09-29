@@ -1,7 +1,7 @@
 /**
  *
  * Interface for tracks that can control the playhead
- * See ofxTLVideoTrack and ofxTLAudioWaveform for examples
+ * See ofxTLVideoTrack and ofxTLAudioTrack for examples
  */
 
 #pragma once

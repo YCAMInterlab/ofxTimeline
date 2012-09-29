@@ -49,7 +49,8 @@ class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
     virtual float getSpeed();
     
 	virtual string getTrackType();
-
+	vector<float>& getFFTSpectrum(int numBins);
+	
   protected:	
     bool soundLoaded;
 	bool shouldRecomputePreview;

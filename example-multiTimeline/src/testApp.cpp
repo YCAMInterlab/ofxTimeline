@@ -3,22 +3,22 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	ofBackground(.15*255);
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
-//	ofSetEscapeQuitsApp(false);
     ofEnableSmoothing();
 	
 	ofSetLogLevel(OF_LOG_VERBOSE);
     
 	timeline.setup();
     timeline.setFrameRate(24);
-	timeline.setDurationInSeconds(100);
+	timeline.setDurationInSeconds(18);
 
     timeline.addFlags("StartStop");
     
     ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
 
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 5; i++){
         ofxTimeline* t = new ofxTimeline();
 		t->setup();
         t->setDurationInFrames(400);
@@ -40,7 +40,7 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	
-    ofBackground(.15*255);
+    
     ofDrawBitmapString(ofToString(ofGetFrameRate(), 3), ofGetWidth()-100, ofGetHeight()-50);
     
     timeline.draw(); 
@@ -84,7 +84,7 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
     //This is our own custom flag protocol to enslave playback
     //on the sub timelines
     //a flag that is start>3 or stop>2 will start and stop those timelines
-	vector<string> command = ofSplitString(bang.flag, ">");
+	vector<string> command = ofSplitString(bang.flag, " ");
     if(command.size() == 2){
         int trackIndex = ofToInt(command[1]);           
         if(trackIndex >= 0 && trackIndex < sublines.size()){

@@ -70,7 +70,9 @@ class ofxTLPage {
 	virtual void unselectAll();
     virtual void clear();
     virtual void save();
-    
+
+    virtual ofxTLTrack* getFocusedTrack();
+	
 	virtual float getComputedHeight();	
 	virtual float getBottomEdge();
     virtual ofRectangle getDrawRect();
@@ -111,9 +113,9 @@ class ofxTLPage {
     void bringTrackToBottom(ofxTLTrack* track);
 
 	//copy paste
-	virtual string copyRequest();
-	virtual string cutRequest();
-	virtual void pasteSent(string pasteboard);
+	virtual void copyRequest(vector<string>& bufs);
+	virtual void cutRequest(vector<string>& bufs);
+	virtual void pasteSent(const vector<string>& pasteboard);
 	virtual void selectAll();
 	
 	virtual void setDragOffsetTime(long offsetMillis);
@@ -139,7 +141,7 @@ class ofxTLPage {
 	bool footerIsDragging;
 	bool snappingEnabled;
 	
-	set<long> snapPoints; //in millis
+	set<unsigned long> snapPoints; //in millis
 	float snappingTolerance; //in pixels
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	

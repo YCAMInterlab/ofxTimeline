@@ -53,7 +53,7 @@ class ofxTLTrack
 	virtual void setup();
     void _draw(); //calls draw() internally plus some universal stuff
     //override this in your sublcass
-	virtual void update(){}; //events should be triggered from here
+	virtual void update(){};
 	virtual void draw(){};
     
     //draw modal content is called after the main draw() call
@@ -69,20 +69,23 @@ class ofxTLTrack
     virtual bool isActive();
 	virtual bool hasFocus();
 	virtual bool isHovering();
-	
-    //managed by the page object, do not set yourself
-	virtual void setDrawRect(ofRectangle bounds);
-//	virtual void offsetDrawRect(ofVec2f offset);
-	float getBottomEdge();
-    
+	    
+	//solo playback events for tracks
+	virtual bool togglePlay();
+	virtual void play();
+	virtual void stop();
+	virtual bool getIsPlaying();
+	unsigned long currentTrackTime();
+
     //returns the screenspace position of the elements bounds, not including header and footer
 	virtual ofRectangle getDrawRect();
+    //managed by the page object, do not set yourself
+	virtual void setDrawRect(ofRectangle bounds);
+	float getBottomEdge();
 	
     //saving and loading
-    //Could potentially be moved out of the main track to keyframe
     virtual string getXMLFilePath();
     virtual string getXMLFileName();
-    
 	virtual void setXMLFileName(string filename);
 	
     //parent wrappers that call virtual versions implemented by subclasses
@@ -98,7 +101,12 @@ class ofxTLTrack
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis){}
     virtual void mouseDragged(ofMouseEventArgs& args, long millis){}; 
 	virtual void mouseReleased(ofMouseEventArgs& args, long mllis){};
-	
+		
+	//if you override playbackStarted() you have to call super ofxTLTrack's method as well
+    virtual void playbackStarted(ofxTLPlaybackEventArgs& args);
+	virtual void playbackLooped(ofxTLPlaybackEventArgs& args){};
+	virtual void playbackEnded(ofxTLPlaybackEventArgs& args){};
+
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	virtual void nudgeBy(ofVec2f nudgePercent){};
 	
@@ -118,6 +126,13 @@ class ofxTLTrack
 	virtual void pasteSent(string pasteboard){};
 	virtual void selectAll(){};
 	virtual void unselectAll(){};
+	
+	//returns the bounds at which something interesting happens on this track
+	//used for finding min/max times on a timeline
+	virtual unsigned long getEarliestTime(){ return LONG_MAX; };
+	virtual unsigned long getLatestTime(){ return 0; };
+	virtual unsigned long getEarliestSelectedTime(){ return LONG_MAX; };
+	virtual unsigned long getLatestSelectedTime(){ return 0; };
 	
     //returns the number of selected items
     //this used to determine two things:
@@ -142,13 +157,9 @@ class ofxTLTrack
 	virtual void save(){};
 	virtual void load(){};
 	virtual void clear(){};
-	
-    //override this if your track can be used as the timeControl
-    //for example video and audio tracks implement this
-    virtual bool isPlaying(){ return false; }
-    
+	    
 	//add any points (in screenspace x) that should be snapped to
-	virtual void getSnappingPoints(std::set<long>& points){};
+	virtual void getSnappingPoints(std::set<unsigned long>& points){};
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
@@ -159,7 +170,6 @@ class ofxTLTrack
     //optional display name that track headers will use
     virtual void setDisplayName(string name);
     virtual string getDisplayName();
-    
     virtual string getTrackType();
     
 	bool getCreatedByTimeline();
@@ -173,6 +183,7 @@ class ofxTLTrack
 	//responsability of subclass to react to this on draw, is cleared by super class each frame
 	bool viewIsDirty;
 	
+	virtual bool isOnScreen(float screenX);
 	virtual bool pointInScreenBounds(ofVec2f screenpoint);
 	virtual float screenXtoNormalizedX(float x);
 	virtual float normalizedXtoScreenX(float x);
@@ -195,14 +206,18 @@ class ofxTLTrack
 		
 	virtual void drawRectChanged(){};
 	
-	virtual bool isOnScreen(float screenX);
-	
 	bool hover; //mouse is over the element
     bool active; //mouse is clicking on the element
 	bool focused; //this element was the last one interacted with
     
 	bool createdByTimeline;
 
+	//will be our internal time when playing solo, otherwise timeline time
+	unsigned long playbackStartTime;
+	unsigned long currentTime;
+	bool isPlaying;
+	void checkLoop();
+	
 	string name;
     string displayName;
 	string xmlFileName;

@@ -15,21 +15,6 @@
 //#include "ofxModifierKeys.h"
 #include "ofMain.h"
 
-/*
-#ifdef TARGET_WIN32
-	#define GLUT_BUILDING_LIB
-	 #include "glut.h"
-#endif
-
-#ifdef TARGET_OSX
-  #include "../../../libs/glut/lib/osx/GLUT.framework/Versions/A/Headers/glut.h"
-  #include <Carbon/Carbon.h>
-#endif
-
-#ifdef TARGET_LINUX
-  #include <GL/glut.h>
-#endif
-*/
 
 enum ofxModifierKey {
 	OF_MODIFIER_KEY_SHIFT = 1,
@@ -69,12 +54,5 @@ static bool ofGetModifierControlPressed(){
 static bool ofGetModifierSpecialPressed(){
 	return ofGetModifierPressed(OF_MODIFIER_KEY_SPECIAL);
 }
-
-
-
-class ofxHotKeys {
-  public:
-	
-};
 
 #endif
