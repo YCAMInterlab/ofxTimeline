@@ -43,6 +43,7 @@
 class ofxTLKeyframe {
   public:
 	ofVec2f screenPosition; // cached screen position
+	unsigned long previousTime; //for preventing overlap conflicts
     unsigned long time; //in millis
     float value; //normalized
     long grabTimeOffset;
@@ -160,6 +161,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	unsigned long stretchAnchor;
 	unsigned long stretchSelectPoint;
 	
+	virtual void setKeyframeTime(ofxTLKeyframe* key, unsigned long newTime);
 	virtual void updateKeyframeSort();
 	virtual void updateStretchOffsets(ofVec2f screenpoint, long grabMillis);
 	virtual void updateDragOffsets(ofVec2f screenpoint, long grabMillis);
@@ -170,7 +172,8 @@ class ofxTLKeyframes : public ofxTLTrack
     virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){};
 
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args){};
-
+	
+	
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f screenPositionForKeyframe(ofxTLKeyframe* keyframe);
 

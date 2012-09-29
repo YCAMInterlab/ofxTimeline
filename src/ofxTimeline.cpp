@@ -45,6 +45,7 @@ bool headersort(ofxTLTrackHeader* a, ofxTLTrackHeader* b){
 	return a->getDrawRect().y < b->getDrawRect().y;
 }
 
+#define TAB_HEIGHT 18
 #define TICKER_HEIGHT 27
 #define ZOOMER_HEIGHT 14
 #define INOUT_HEIGHT 7
@@ -116,7 +117,7 @@ void ofxTimeline::setup(){
 	tabs = new ofxTLPageTabs();
 	tabs->setTimeline(this);
 	tabs->setup();
-	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
+	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TAB_HEIGHT));
 
     inoutTrack = new ofxTLInOut();
     inoutTrack->setTimeline(this);
@@ -980,14 +981,17 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 			currentPage->timelineLostFocus();
 		}
 		timelineHasFocus = focus;
-		inoutTrack->mousePressed(args);
-		ticker->mousePressed(args);
-		currentPage->mousePressed(args,millis);
-		zoomer->mousePressed(args);
-		currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
-		if(!focus){
+		if(timelineHasFocus){
+			tabs->mousePressed(args);
+			inoutTrack->mousePressed(args);
+			ticker->mousePressed(args);
+			currentPage->mousePressed(args,millis);
+			zoomer->mousePressed(args);
+		}
+		else{
 			unselectAll();
 		}
+		currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
 	}
 	
     //collect state buffers after items are selected and focus is set
@@ -1074,7 +1078,6 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 			vector<string> copyattempt;
 			currentPage->copyRequest(copyattempt);
 			if(copyattempt.size() > 0){
-				cout << "COPIED " << copyattempt.size() << endl;
 				pasteboard = copyattempt;
 			}
 		}
@@ -1188,7 +1191,7 @@ void ofxTimeline::recalculateBoundingRects(){
     }
     
 	if(pages.size() > 1){
-		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TICKER_HEIGHT));
+		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TAB_HEIGHT));
 	}
 	else{
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));

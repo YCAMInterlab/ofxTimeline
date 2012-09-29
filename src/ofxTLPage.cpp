@@ -304,8 +304,15 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
                                             timeline->screenXToMillis(selectionRectangle.x+selectionRectangle.width));
 		for(int i = 0; i < headers.size(); i++){
             ofRectangle trackBounds = tracks[headers[i]->name]->getDrawRect();
-			ofRange valueRange = ofRange(ofMap(selectionRectangle.y, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
-                                         ofMap(selectionRectangle.y+selectionRectangle.height, trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true));
+			ofRange valueRange;
+			if(trackBounds.height == 0){
+				valueRange = ofRange(0,1.0);
+			}
+			else{
+				valueRange = ofRange(ofMap(selectionRectangle.getMinY(), trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
+									 ofMap(selectionRectangle.getMaxY(), trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true));
+			}
+			
             if(valueRange.min != valueRange.max){
 				tracks[headers[i]->name]->regionSelected(timeRange, valueRange);
 			}
@@ -335,10 +342,27 @@ void ofxTLPage::refreshSnapPoints(){
 		ticker->getSnappingPoints(snapPoints);
 	}
 	
-	//double check to make sure snap points are all on screen
-	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
-		snapPoints.clear();
-	}	
+	if(snapPoints.size() > 2){
+		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
+		set<unsigned long>::iterator it = snapPoints.begin();
+		
+		while(true){
+			unsigned long a = *(it++);
+			if(it == snapPoints.end()){
+				break;
+			}
+			unsigned long b = *(it);
+			if(b - a < snappingToleranceMillis){
+				snapPoints.erase(it);
+				it++;
+			}
+		}
+	}
+	
+//	//double check to make sure snap points are all on screen
+//	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
+//		snapPoints.clear();
+//	}	
 }
 
 //copy paste
@@ -380,10 +404,10 @@ void ofxTLPage::pasteSent(const vector<string>& pasteboard){
 			if(pasteTrackIndex != -1){
 				//we ran into the end
 				if(pasteTrackIndex == headers.size() || bufferIndex == pasteboard.size()){
-					cout << "breaking with buffer index " << bufferIndex << " and paste index " << pasteTrackIndex << endl;
+//					cout << "breaking with buffer index " << bufferIndex << " and paste index " << pasteTrackIndex << endl;
 					break;
 				}
-				cout << "pasting buffer " << bufferIndex << " into " << pasteTrackIndex << endl;
+//				cout << "pasting buffer " << bufferIndex << " into " << pasteTrackIndex << endl;
 				//paste the next bufer into the next track
 				headers[pasteTrackIndex++]->getTrack()->pasteSent(pasteboard[bufferIndex++]);
 			}
