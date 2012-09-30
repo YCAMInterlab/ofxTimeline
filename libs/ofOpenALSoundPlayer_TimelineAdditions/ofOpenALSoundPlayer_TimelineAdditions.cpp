@@ -373,8 +373,10 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 	if(channels==1){
 		sources.resize(1);
 		alGenSources(1, &sources[0]);
-		if (alGetError() != AL_NO_ERROR)
-			return false;
+		if (alGetError() != AL_NO_ERROR){
+			ofLog(OF_LOG_WARNING,"ofOpenALSoundPlayer_TimelineAdditions: openAL error reported generating sources for " + fileName);
+			//return false;
+		}
 
 		for(int i=0; i<(int)buffers.size(); i++){
 			alBufferData(buffers[i],format,&buffer[0],buffer.size()*2,samplerate);
@@ -450,6 +452,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 			alSourcei (sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
 		}
 	}
+	ofLogVerbose("ofOpenALSoundPlayer_TimelineAdditions: successfully loaded " + fileName);
 	bLoadedOk = true;
 	return true;
 }
@@ -833,6 +836,7 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getCurrentBufferSum(int size){
 
 // ----------------------------------------------------------------------------
 vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
+
 	initFFT(bands);
 	bins.assign(bins.size(),0);
 	if(sources.empty()) return bins;

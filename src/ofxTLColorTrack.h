@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxTLBangs.h"
+#include "ofxTLKeyframes.h"
 
 class ofxTLColorSample : public ofxTLKeyframe {
   public:

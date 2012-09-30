@@ -6,35 +6,18 @@ void testApp::setup(){
 	ofBackground(255*.15);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
-	ofSetEscapeQuitsApp(false);
+	
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
-    timeline.setBPM(120.f);
-	timeline.enableSnapToBPM(true);
-	timeline.setShowBPMGrid(true);
 	
-	timeline.addTrack("Track", &waveform);
-	
-	//this means that calls to play/stop etc will be  routed to the waveform
-	timeline.setTimecontrolTrack(&waveform);
-    waveform.loadSoundfile("4chan.wav");
-	//fun to watch on FFT
-	//waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
-	//waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
-	
-	timeline.setDurationInSeconds(waveform.getDuration());
-    timeline.addBangs("clickbangs"); //just for fun
+	emptyTrack = new ofxTLEmptyTrack();
+	emptyTrack->setXMLFileName("MyCustomTrackSave.xml");	
+	timeline.addTrack("New Custom Track", emptyTrack);
+	timeline.setDurationInSeconds(100);
 
-	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
-    lastBang = 0;
-}
-
-//--------------------------------------------------------------
-void testApp::bangFired(ofxTLBangEventArgs& bang){
-//    lastBang = timeline.getCurrentTime();
 }
 
 //--------------------------------------------------------------
@@ -46,12 +29,6 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
     float curtime = timeline.getCurrentTime();
-//	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
-//	int numBands = 256;
-//    vector<float>& fft = waveform.getFFTSpectrum(numBands);
-//	for(int i = 0; i < fft.size(); i++){
-//		ofRect(ofGetWidth()/numBands * i, 0, ofGetWidth()/numBands, fft[i]*ofGetHeight());
-//	}
 	timeline.draw();
 }
 

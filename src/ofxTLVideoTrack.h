@@ -12,12 +12,10 @@
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
 #include "ofxTLImageTrack.h"
-#include "ofxTLTimeController.h"
 
-//TODO: Playback control system for overall timeline
 //TODO: Start and stop points (w handles!) (saving!)
 
-class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTimeController {
+class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
   public:
 	ofxTLVideoTrack();
 	virtual ~ofxTLVideoTrack();
@@ -56,7 +54,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread, public ofxTLTim
     virtual bool togglePlay();
     virtual void play();
     virtual void stop();
-    virtual bool isPlaying();
+    virtual bool getIsPlaying();
     	
     virtual string getTrackType();
     

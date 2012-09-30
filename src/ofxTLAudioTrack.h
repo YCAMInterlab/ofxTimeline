@@ -11,9 +11,8 @@
 #include "ofMain.h"
 #include "ofxTLTrack.h"
 #include "ofOpenALSoundPlayer_TimelineAdditions.h"
-#include "ofxTLTimeController.h"
 
-class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
+class ofxTLAudioTrack : public ofxTLTrack
 {
   public:	
 	ofxTLAudioTrack();
@@ -33,12 +32,15 @@ class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
-	//this will play the timeline along to the song
+	//this will play the timeline along to the audio
     virtual bool togglePlay();
     virtual void play();
     virtual void stop();
-    virtual bool isPlaying();
+    virtual bool getIsPlaying();
 	
+	vector<float>& getFFTSpectrum(int numBins);
+	int getDefaultBinCount();
+
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
@@ -49,7 +51,6 @@ class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
     virtual float getSpeed();
     
 	virtual string getTrackType();
-	vector<float>& getFFTSpectrum(int numBins);
 	
   protected:	
     bool soundLoaded;
@@ -57,9 +58,12 @@ class ofxTLAudioTrack : public ofxTLTrack, public ofxTLTimeController
 	vector<ofPolyline> previews;
 	void recomputePreview();
 	string soundFilePath;
-	
+	float lastFFTPosition;
+	int defaultFFTBins;
+	vector<float> fftBins;
 	float lastPercent;
 	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer_TimelineAdditions player;
 	ofRange computedZoomBounds;
+	float maxBinReceived;
 };

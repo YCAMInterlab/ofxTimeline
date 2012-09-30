@@ -88,13 +88,6 @@ void ofxTLTrack::setDrawRect(ofRectangle drawRect){
 	}
 }
 
-////override this in your sublcass
-//void ofxTLTrack::update(){
-//	if(isPlaying){
-//		
-//	}
-//}
-
 ofxTimeline* ofxTLTrack::getTimeline(){
 	return timeline;
 }
@@ -219,9 +212,11 @@ bool ofxTLTrack::getIsPlaying(){
 }
 
 void ofxTLTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
-	stop();
+	//we stop playing solo if the main timeline starts
+	if(timeline->getTimecontrolTrack() == NULL || this != timeline->getTimecontrolTrack()){
+		stop();
+	}
 }
-
 
 bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
     if(enabled){

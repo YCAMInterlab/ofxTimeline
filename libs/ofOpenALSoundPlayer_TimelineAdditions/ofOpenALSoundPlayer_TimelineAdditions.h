@@ -144,6 +144,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 
 		static ALCdevice * alDevice;
 
+	
 		static vector<float> window;
 		static float windowSum;
 

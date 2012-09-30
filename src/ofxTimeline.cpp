@@ -454,16 +454,15 @@ void ofxTimeline::play(){
     }
 	
 	if(!getIsPlaying()){
-		
+
+		//commented out - always updating
 //		if(!isOnThread){
 //			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 //		}
-
 		if(timeControl != NULL){
 			timeControl->play();
 			return;
 		}
-		
 		//if we are at the end and not looping, reset to the beginning
         if(isDone()){
             setPercentComplete(0.0);
@@ -545,7 +544,7 @@ bool ofxTimeline::togglePlay(){
 }
 
 bool ofxTimeline::getIsPlaying(){
-	return timeControl != NULL ? timeControl->isPlaying() : isPlaying;
+	return timeControl != NULL ? timeControl->getIsPlaying() : isPlaying;
 }
 
 void ofxTimeline::setCurrentFrame(int newFrame){
@@ -1442,11 +1441,12 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
     return modalTrack;
 }
 
-void ofxTimeline::setTimecontrolTrack(ofxTLTimeController* track){
+void ofxTimeline::setTimecontrolTrack(ofxTLTrack* track){
+	cout << "setting time control track, NULL? " << (track == NULL) << endl;
     timeControl = track;
 }
 
-ofxTLTimeController* ofxTimeline::getTimecontrolTrack(){
+ofxTLTrack* ofxTimeline::getTimecontrolTrack(){
     return timeControl;
 }
 

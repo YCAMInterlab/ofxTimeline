@@ -73,7 +73,6 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
-#include "ofxTLTimeController.h"
 
 typedef struct {
     ofxTLTrack* track;
@@ -359,8 +358,8 @@ class ofxTimeline : ofThread {
     //used for audio and video.
     //we punt to the track to control time.
     //this can be a video or audio track
-    void setTimecontrolTrack(ofxTLTimeController* track);
-	ofxTLTimeController* getTimecontrolTrack();
+    void setTimecontrolTrack(ofxTLTrack* track);
+	ofxTLTrack* getTimecontrolTrack();
     
 	//you can add custom tracks this way
 	virtual void addTrack(string name, ofxTLTrack* track);
@@ -447,7 +446,7 @@ class ofxTimeline : ofThread {
     map<string, ofxTLPage*> trackNameToPage;
 
     ofxTLTrack* modalTrack;
-    ofxTLTimeController* timeControl;
+    ofxTLTrack* timeControl;
 
     //can be blank, default save to bin/data/
     string workingFolder; 

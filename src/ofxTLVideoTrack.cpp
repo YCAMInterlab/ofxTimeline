@@ -51,14 +51,13 @@ bool ofxTLVideoTrack::togglePlay(){
 	
     if(!isLoaded()) return false;
     
-    if(isPlaying()){
+    if(getIsPlaying()){
         stop();
-        return false;
     }
     else{
         play();
-        return true;
     }
+	return getIsPlaying();
 }
 
 void ofxTLVideoTrack::play(){
@@ -77,7 +76,7 @@ void ofxTLVideoTrack::play(){
 }
 
 void ofxTLVideoTrack::stop(){
-    if(isLoaded()){
+    if(isLoaded() && getIsPlaying()){
         player->setSpeed(0.0);
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
         ofNotifyEvent(events().playbackEnded, args);
@@ -85,7 +84,7 @@ void ofxTLVideoTrack::stop(){
     }
 }
 
-bool ofxTLVideoTrack::isPlaying(){
+bool ofxTLVideoTrack::getIsPlaying(){
 	return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
 }
 
@@ -99,7 +98,7 @@ void ofxTLVideoTrack::update(ofEventArgs& args){
 		timeline->setCurrentFrame(player->getCurrentFrame());
 	}
 	
-   	if(timeline->getTimecontrolTrack() == this && isPlaying()){
+   	if(timeline->getTimecontrolTrack() == this && getIsPlaying()){
         
         //this will happen if the user calls play on the video itself
 		if(!currentlyPlaying){

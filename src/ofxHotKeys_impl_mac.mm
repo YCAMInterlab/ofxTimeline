@@ -12,10 +12,10 @@ bool ofGetModifierSelection(){
 bool ofGetModifierShortcutKeyPressed(){
 #ifdef MAC_USE_CONTROL
 //		cout << "using command" << endl;
-		return ofGetModifierSpecialPressed();
+	return ofGetModifierControlPressed();
 #else
 //		cout << "using control" << endl;
-		return ofGetModifierControlPressed();
+	return ofGetModifierSpecialPressed();
 #endif
 }
 
