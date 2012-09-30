@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxTimeline.h"
 #include "ofxTLEmptyTrack.h"
+#include "ofxTLEmptyKeyframes.h"
 
 class testApp : public ofBaseApp{
 
@@ -23,4 +24,5 @@ class testApp : public ofBaseApp{
 	
 	ofxTimeline timeline;
 	ofxTLEmptyTrack* emptyTrack;
+	ofxTLEmptyKeyframes* emptyKeyframes;
 };

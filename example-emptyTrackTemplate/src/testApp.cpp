@@ -9,14 +9,24 @@ void testApp::setup(){
 	
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
+
+	//lets you use COMMAND+C and COMMAND+V actions
+	//on mac
+	ofxTimeline::removeCocoaMenusFromGlut("Empty Templates");
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
+	//this is the simplest example and is really flexible
 	emptyTrack = new ofxTLEmptyTrack();
-	emptyTrack->setXMLFileName("MyCustomTrackSave.xml");	
 	timeline.addTrack("New Custom Track", emptyTrack);
-	timeline.setDurationInSeconds(100);
+
+	//a very simple color keyframe
+	emptyKeyframes = new ofxTLEmptyKeyframes();
+	emptyKeyframes->setXMLFileName("MyEmptyKeyframes.xml");
+	timeline.addTrack("My Custom Keyframes", emptyKeyframes);
+	
+	timeline.setDurationInSeconds(30);
 
 }
 

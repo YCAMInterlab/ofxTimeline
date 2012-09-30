@@ -46,6 +46,9 @@ class ofxTLEmptyTrack : public ofxTLTrack {
 	//if your track has some selectable elements you can interface with snapping
 	//and selection/unselection here
     virtual void getSnappingPoints(set<unsigned long>& points);
+	
+	//time range contains MIN and MAX time in milliseconds
+	//valueRange is 0 at the bottom of the track, and 1 at the top
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
     virtual void unselectAll();
 	virtual void selectAll();
