@@ -10,6 +10,7 @@ ofxTLEmptyKeyframes::~ofxTLEmptyKeyframes(){
 	
 }
 
+//draw your keyframes into bounds
 void ofxTLEmptyKeyframes::draw(){
 	
 	ofPushStyle();
@@ -128,6 +129,10 @@ void ofxTLEmptyKeyframes::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlS
 	xmlStore.addValue("r",emptyKey->color.r);
 	xmlStore.addValue("g",emptyKey->color.g);
 	xmlStore.addValue("b",emptyKey->color.b);
+}
+
+ofxTLKeyframe* ofxTLEmptyKeyframes::keyframeAtScreenpoint(ofVec2f p){
+	return ofxTLKeyframes::keyframeAtScreenpoint(p);
 }
 
 void ofxTLEmptyKeyframes::selectedKeySecondaryClick(ofMouseEventArgs& args){

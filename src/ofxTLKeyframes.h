@@ -124,13 +124,14 @@ class ofxTLKeyframes : public ofxTLTrack
 	ofPolyline preview;
 	vector<ofVec2f> keyPoints;
 	
-	void recomputePreviews();
+	virtual void recomputePreviews();
 	bool shouldRecomputePreviews;
 	
 	virtual float sampleAtPercent(float percent); //less accurate than millis
     virtual float sampleAtTime(long sampleTime);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime);
+
     ofRange valueRange;
 	float defaultValue;
 	

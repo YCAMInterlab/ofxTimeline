@@ -66,15 +66,15 @@ void ofxTLKeyframes::recomputePreviews(){
 	
 //	cout << "ofxTLKeyframes::recomputePreviews " << endl;
 	
-	if(keyframes.size() == 0 || keyframes.size() == 1){
-		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
-		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
-	}
-	else{
+//	if(keyframes.size() == 0 || keyframes.size() == 1){
+//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+//		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+//	}
+//	else{
 		for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
-	}
+//	}
 //	int size = preview.getVertices().size();
 	preview.simplify();
 	//cout << "simplify pre " << size << " post: " << preview.getVertices().size() << " dif: " << (size - preview.getVertices().size()) << endl;
@@ -209,11 +209,13 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	}
 	
 	if(sampleTime <= keyframes[0]->time){
-		return keyframes[0]->value;
+		return evaluateKeyframeAtTime(keyframes[0], sampleTime);
+//		return keyframes[0]->value;
 	}
 	
 	if(sampleTime >= keyframes[keyframes.size()-1]->time){
-		return keyframes[keyframes.size()-1]->value;
+		//return keyframes[keyframes.size()-1]->value;
+		return evaluateKeyframeAtTime(keyframes[keyframes.size()-1], sampleTime);
 	}
 	
 	//optimization for linear playback
@@ -231,6 +233,10 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	}
 	ofLog(OF_LOG_ERROR, "ofxTLKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
 	return defaultValue;
+}
+
+float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
+	return key->value;
 }
 
 float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){

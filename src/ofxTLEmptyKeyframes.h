@@ -58,6 +58,9 @@ class ofxTLEmptyKeyframes : public ofxTLKeyframes {
 	//save custom properties into the xml
     virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 
+	//return keyframe at this mouse point if you have non circular keyframes
+	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
+	
 	//responde to right clicks on keyframes
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);
 	
