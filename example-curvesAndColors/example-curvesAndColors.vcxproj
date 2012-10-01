@@ -57,7 +57,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTimeline\libs\kiss;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\lib;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions;..\..\..\addons\ofxTimeline\libs\sndfile;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxTimeline\libs\sndfile\include\AL;..\..\..\addons\ofxTimeline\libs\sndfile\lib;..\..\..\addons\ofxTimeline\libs\sndfile\lib\__vs2010_not_working;..\..\..\addons\ofxTimeline\libs\vorbis;..\..\..\addons\ofxTimeline\libs\vorbis\lib;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -80,7 +80,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat />
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTimeline\libs\kiss;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\lib;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions;..\..\..\addons\ofxTimeline\libs\sndfile;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxTimeline\libs\sndfile\lib;..\..\..\addons\ofxTimeline\libs\sndfile\lib\win32;..\..\..\addons\ofxTimeline\libs\vorbis;..\..\..\addons\ofxTimeline\libs\vorbis\lib;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -103,18 +103,24 @@
     <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_linux.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_mac.mm" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_win.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.mm" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequenceFrame.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.cpp" />
@@ -149,11 +155,14 @@
     <ClInclude Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.h" />
     <ClInclude Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEvents.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.h" />
@@ -161,11 +170,11 @@
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTicker.h" />
-    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTimeController.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrackHeader.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoThumb.h" />

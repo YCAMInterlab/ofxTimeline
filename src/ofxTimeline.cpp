@@ -520,6 +520,7 @@ void ofxTimeline::stopSelectedTrack(){
 
 bool ofxTimeline::togglePlaySelectedTrack(){
 	if(currentPage->getFocusedTrack() != NULL) currentPage->getFocusedTrack()->togglePlay();
+	return getIsPlaying();
 }
 
 bool ofxTimeline::togglePlay(){

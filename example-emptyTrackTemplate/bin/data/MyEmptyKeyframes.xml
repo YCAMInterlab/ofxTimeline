@@ -1,128 +1,128 @@
 <keyframes>
     <key>
         <r>97</r>
-        <g>88</g>
-        <b>238</b>
+        <g>238</g>
+        <b>88</b>
         <time>00:00:00:295</time>
-        <value>0.532934129</value>
+        <value>0.532934</value>
     </key>
     <key>
         <r>175</r>
-        <g>68</g>
-        <b>108</b>
+        <g>108</g>
+        <b>68</b>
         <time>00:00:00:358</time>
-        <value>0.239520967</value>
+        <value>0.239521</value>
     </key>
     <key>
         <r>169</r>
-        <g>193</g>
-        <b>146</b>
+        <g>146</g>
+        <b>193</b>
         <time>00:00:00:973</time>
-        <value>0.568862319</value>
+        <value>0.568862</value>
     </key>
     <key>
         <r>230</r>
-        <g>185</g>
-        <b>206</b>
+        <g>206</g>
+        <b>185</b>
         <time>00:00:01:604</time>
-        <value>0.383233547</value>
+        <value>0.383234</value>
     </key>
     <key>
         <r>212</r>
-        <g>36</g>
-        <b>171</b>
+        <g>171</g>
+        <b>36</b>
         <time>00:00:03:458</time>
-        <value>0.479041934</value>
+        <value>0.479042</value>
     </key>
     <key>
         <r>116</r>
-        <g>30</g>
-        <b>4</b>
+        <g>4</g>
+        <b>30</b>
         <time>00:00:03:695</time>
-        <value>0.688622713</value>
+        <value>0.688623</value>
     </key>
     <key>
         <r>67</r>
-        <g>176</g>
-        <b>58</b>
+        <g>58</g>
+        <b>176</b>
         <time>00:00:05:624</time>
-        <value>0.245714307</value>
+        <value>0.245714</value>
     </key>
     <key>
         <r>19</r>
-        <g>180</g>
-        <b>32</b>
+        <g>32</g>
+        <b>180</b>
         <time>00:00:06:644</time>
-        <value>0.772455096</value>
+        <value>0.772455</value>
     </key>
     <key>
         <r>184</r>
-        <g>221</g>
-        <b>238</b>
+        <g>238</g>
+        <b>221</b>
         <time>00:00:07:298</time>
-        <value>0.329341292</value>
+        <value>0.329341</value>
     </key>
     <key>
         <r>136</r>
-        <g>22</g>
-        <b>222</b>
+        <g>222</g>
+        <b>22</b>
         <time>00:00:07:757</time>
-        <value>0.766467094</value>
+        <value>0.766467</value>
     </key>
     <key>
         <r>5</r>
-        <g>18</g>
-        <b>106</b>
+        <g>106</g>
+        <b>18</b>
         <time>00:00:07:781</time>
-        <value>0.443113744</value>
+        <value>0.443114</value>
     </key>
     <key>
         <r>10</r>
-        <g>71</g>
-        <b>52</b>
+        <g>52</g>
+        <b>71</b>
         <time>00:00:08:973</time>
-        <value>0.550333500</value>
+        <value>0.550333</value>
     </key>
     <key>
         <r>150</r>
-        <g>92</g>
-        <b>30</b>
+        <g>30</g>
+        <b>92</b>
         <time>00:00:10:074</time>
-        <value>0.414285749</value>
+        <value>0.414286</value>
     </key>
     <key>
         <r>228</r>
-        <g>140</g>
-        <b>41</b>
+        <g>41</g>
+        <b>140</b>
         <time>00:00:11:809</time>
-        <value>0.606381536</value>
+        <value>0.606382</value>
     </key>
     <key>
         <r>101</r>
-        <g>132</g>
-        <b>68</b>
+        <g>68</g>
+        <b>132</b>
         <time>00:00:19:980</time>
-        <value>0.600000024</value>
+        <value>0.6</value>
     </key>
     <key>
         <r>27</r>
-        <g>23</g>
-        <b>97</b>
+        <g>97</g>
+        <b>23</b>
         <time>00:00:20:976</time>
-        <value>0.371428549</value>
+        <value>0.371429</value>
     </key>
     <key>
         <r>64</r>
-        <g>222</g>
-        <b>211</b>
+        <g>211</g>
+        <b>222</b>
         <time>00:00:23:994</time>
-        <value>0.560000002</value>
+        <value>0.56</value>
     </key>
     <key>
         <r>116</r>
-        <g>192</g>
-        <b>228</b>
+        <g>228</g>
+        <b>192</b>
         <time>00:00:27:480</time>
-        <value>0.360000014</value>
+        <value>0.36</value>
     </key>
 </keyframes>
