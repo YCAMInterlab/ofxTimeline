@@ -191,6 +191,7 @@ class ofxTimeline : ofThread {
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
 	virtual string getCurrentTimecode();
+	virtual long getQuantizedTime(unsigned long time, unsigned long step);
     
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
