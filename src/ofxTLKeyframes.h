@@ -109,6 +109,8 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void setValueRangeMax(float max);
 	virtual void setDefaultValue(float defaultValue);
 	
+	virtual void quantizeKeys(int step);
+	
     virtual ofRange getValueRange();
 	
 	//experimental binary saving. does not work with subclasses yet
