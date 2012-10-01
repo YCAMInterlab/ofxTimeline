@@ -267,6 +267,14 @@ float ofxTLAudioTrack::getSpeed(){
     return player.getSpeed();
 }
 
+void ofxTLAudioTrack::setVolume(float volume){
+    player.setVolume(volume);
+}
+
+void ofxTLAudioTrack::setPan(float pan){
+    player.setPan(pan);
+}
+
 vector<float>& ofxTLAudioTrack::getFFTSpectrum(int numBins){
 	float fftPosition = player.getPosition();
 	if(isSoundLoaded() && lastFFTPosition != fftPosition){

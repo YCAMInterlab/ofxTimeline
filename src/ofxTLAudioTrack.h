@@ -49,6 +49,8 @@ class ofxTLAudioTrack : public ofxTLTrack
 	
 	virtual void setSpeed(float speed);
     virtual float getSpeed();
+	virtual void setVolume(float volume);
+	virtual void setPan(float pan);
     
 	virtual string getTrackType();
 	
