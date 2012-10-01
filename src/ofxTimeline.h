@@ -1,7 +1,9 @@
 /**
  * ofxTimeline
+ * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase
  *
@@ -26,14 +28,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
- *
- * Developed with support of YCAM InterLab
  */
-
 
 #pragma once
 
@@ -73,7 +68,7 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
-#include "ofxTLTimeController.h"
+#include "ofxTLLFO.h"
 
 typedef struct {
     ofxTLTrack* track;
@@ -192,6 +187,7 @@ class ofxTimeline : ofThread {
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
 	virtual string getCurrentTimecode();
+	virtual long getQuantizedTime(unsigned long time, unsigned long step);
     
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
@@ -317,6 +313,10 @@ class ofxTimeline : ofThread {
 	float getValue(string name, float atTime);
 	float getValue(string name, int atFrame);
 
+	//adding tracks always adds to the current page
+    ofxTLLFO* addLFO(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	ofxTLLFO* addLFO(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+
     ofxTLSwitches* addSwitches(string name);
 	ofxTLSwitches* addSwitches(string name, string xmlFileName);
 	bool isSwitchOn(string name);
@@ -359,8 +359,8 @@ class ofxTimeline : ofThread {
     //used for audio and video.
     //we punt to the track to control time.
     //this can be a video or audio track
-    void setTimecontrolTrack(ofxTLTimeController* track);
-	ofxTLTimeController* getTimecontrolTrack();
+    void setTimecontrolTrack(ofxTLTrack* track);
+	ofxTLTrack* getTimecontrolTrack();
     
 	//you can add custom tracks this way
 	virtual void addTrack(string name, ofxTLTrack* track);
@@ -447,7 +447,7 @@ class ofxTimeline : ofThread {
     map<string, ofxTLPage*> trackNameToPage;
 
     ofxTLTrack* modalTrack;
-    ofxTLTimeController* timeControl;
+    ofxTLTrack* timeControl;
 
     //can be blank, default save to bin/data/
     string workingFolder; 

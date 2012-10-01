@@ -1,10 +1,32 @@
-
-/*
- *  ofxTLVideoTrack.cpp
- *  timelineExampleVideoPlayer
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
  *
- *  Created by James George on 11/12/11.
- *  Copyright 2011 __MyCompanyName__. All rights reserved.
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
@@ -33,7 +55,7 @@ void ofxTLVideoTrack::setup(){
 void ofxTLVideoTrack::enable(){
 	if(!enabled){
 		ofxTLImageTrack::enable();
-		ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+//		ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
 		ofAddListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 	}
 }
@@ -42,7 +64,7 @@ void ofxTLVideoTrack::disable(){
 	if(enabled){
 		stop();
 		ofxTLImageTrack::disable();
-		ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+//		ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
 		ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 	} 
 }
@@ -51,19 +73,18 @@ bool ofxTLVideoTrack::togglePlay(){
 	
     if(!isLoaded()) return false;
     
-    if(isPlaying()){
+    if(getIsPlaying()){
         stop();
-        return false;
     }
     else{
         play();
-        return true;
     }
+	return getIsPlaying();
 }
 
 void ofxTLVideoTrack::play(){
     if(isLoaded()){
-        cout << " current video frame is " << player->getCurrentFrame() << " current video time is " << ofxTimecode::timecodeForSeconds(player->getDuration()*player->getPosition()) << " current timeline time is " << timeline->getCurrentTime() << endl;
+//        cout << " current video frame is " << player->getCurrentFrame() << " current video time is " << ofxTimecode::timecodeForSeconds(player->getDuration()*player->getPosition()) << " current timeline time is " << timeline->getCurrentTime() << endl;
         if(!player->isPlaying()){
             player->play();
         }
@@ -77,7 +98,7 @@ void ofxTLVideoTrack::play(){
 }
 
 void ofxTLVideoTrack::stop(){
-    if(isLoaded()){
+    if(isLoaded() && getIsPlaying()){
         player->setSpeed(0.0);
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
         ofNotifyEvent(events().playbackEnded, args);
@@ -85,21 +106,22 @@ void ofxTLVideoTrack::stop(){
     }
 }
 
-bool ofxTLVideoTrack::isPlaying(){
+bool ofxTLVideoTrack::getIsPlaying(){
 	return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
 }
 
-void ofxTLVideoTrack::update(ofEventArgs& args){
+//void ofxTLVideoTrack::update(ofEventArgs& args){
+void ofxTLVideoTrack::update(){
     
 	if(!isLoaded()){
 		return;
 	}
    	
-	if(timeline->getTimecontrolTrack()){
+	if(timeline->getTimecontrolTrack() && timeline->getIsFrameBased()){
 		timeline->setCurrentFrame(player->getCurrentFrame());
 	}
 	
-   	if(timeline->getTimecontrolTrack() == this && isPlaying()){
+   	if(timeline->getTimecontrolTrack() == this && getIsPlaying()){
         
         //this will happen if the user calls play on the video itself
 		if(!currentlyPlaying){
@@ -394,9 +416,11 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 	if(isLoaded() && hasFocus()){
 		if(args.key == OF_KEY_LEFT){
 			selectFrame(MAX(selectedFrame-1, 0));
+			timeline->setCurrentFrame(player->getCurrentFrame());
 		}
 		else if(args.key == OF_KEY_RIGHT){
-			selectFrame(MIN(selectedFrame+1, player->getTotalNumFrames()-1));		
+			selectFrame(MIN(selectedFrame+1, player->getTotalNumFrames()-1));
+			timeline->setCurrentFrame(player->getCurrentFrame());
 		}
 	}	
 }

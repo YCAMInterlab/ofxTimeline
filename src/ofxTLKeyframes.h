@@ -1,11 +1,12 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
- * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * openFrameworks graphical timeline addon
  *
- * 
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -27,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #pragma once
@@ -109,6 +106,8 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void setValueRangeMax(float max);
 	virtual void setDefaultValue(float defaultValue);
 	
+	virtual void quantizeKeys(int step);
+	
     virtual ofRange getValueRange();
 	
 	//experimental binary saving. does not work with subclasses yet
@@ -124,13 +123,14 @@ class ofxTLKeyframes : public ofxTLTrack
 	ofPolyline preview;
 	vector<ofVec2f> keyPoints;
 	
-	void recomputePreviews();
+	virtual void recomputePreviews();
 	bool shouldRecomputePreviews;
 	
 	virtual float sampleAtPercent(float percent); //less accurate than millis
     virtual float sampleAtTime(long sampleTime);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime);
+
     ofRange valueRange;
 	float defaultValue;
 	

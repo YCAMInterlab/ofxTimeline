@@ -1,3 +1,11 @@
+/**
+ * Video Renderer Demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create video effects with a shader
+ * that can be rendered to an image sequence
+ */
+
 #include "ofMain.h"
 #include "testApp.h"
 #include "ofAppGlutWindow.h"

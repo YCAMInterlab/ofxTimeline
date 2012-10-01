@@ -1,11 +1,12 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
- * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * openFrameworks graphical timeline addon
  *
- * 
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -27,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLFlags.h"
@@ -235,4 +232,17 @@ string ofxTLFlags::getTrackType(){
     return "Flags";
 }
 
+void ofxTLFlags::addFlag(string key) {
+	addFlagAtTime(key, timeline->getCurrentTimeMillis());
+}
+
+void ofxTLFlags::addFlagAtTime(string key, unsigned long time){
+	ofxTLKeyframe* keyFrame = newKeyframe();
+	ofxTLFlag* flag = (ofxTLFlag*)keyFrame;
+	setKeyframeTime(keyFrame, time);
+	flag->textField.text = key;
+	keyframes.push_back(keyFrame);
+	updateKeyframeSort();
+	timeline->flagTrackModified(this);
+}
 

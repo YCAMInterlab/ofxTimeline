@@ -1,3 +1,11 @@
+/**
+ * Video Renderer Demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create video effects with a shader
+ * that can be rendered to an image sequence
+ */
+
 #include "testApp.h"
 #define BUTTON_HEIGHT 30
 

@@ -1,13 +1,12 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
- * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * openFrameworks graphical timeline addon
  *
- * implementaiton by James George (@obviousjim) and Tim Gfrerer (@tgfrerer) for the 
- * Voyagers gallery National Maritime Museum 
- * 
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -29,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLKeyframes.h"
@@ -52,7 +47,8 @@ ofxTLKeyframes::ofxTLKeyframes()
 	lastSampleTime(0),
 	shouldRecomputePreviews(false),
 	createNewOnMouseup(false),
-	useBinarySave(false)
+	useBinarySave(false),
+	valueRange(ofRange(0,1.))
 {
 	xmlFileName = "_keyframes.xml";	
 }
@@ -66,15 +62,15 @@ void ofxTLKeyframes::recomputePreviews(){
 	
 //	cout << "ofxTLKeyframes::recomputePreviews " << endl;
 	
-	if(keyframes.size() == 0 || keyframes.size() == 1){
-		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
-		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
-	}
-	else{
+//	if(keyframes.size() == 0 || keyframes.size() == 1){
+//		preview.addVertex(ofPoint(bounds.x, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+//		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
+//	}
+//	else{
 		for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
-	}
+//	}
 //	int size = preview.getVertices().size();
 	preview.simplify();
 	//cout << "simplify pre " << size << " post: " << preview.getVertices().size() << " dif: " << (size - preview.getVertices().size()) << endl;
@@ -178,6 +174,12 @@ void ofxTLKeyframes::setDefaultValue(float newDefaultValue){
 	defaultValue = newDefaultValue;
 }
 
+void ofxTLKeyframes::quantizeKeys(int step){
+	for(int i = 0; i < keyframes.size(); i++){
+		setKeyframeTime(keyframes[i], getTimeline()->getQuantizedTime(keyframes[i]->time, step));
+	}
+}
+
 ofRange ofxTLKeyframes::getValueRange(){
 	return valueRange;
 }
@@ -209,11 +211,13 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	}
 	
 	if(sampleTime <= keyframes[0]->time){
-		return keyframes[0]->value;
+		return evaluateKeyframeAtTime(keyframes[0], sampleTime);
+//		return keyframes[0]->value;
 	}
 	
 	if(sampleTime >= keyframes[keyframes.size()-1]->time){
-		return keyframes[keyframes.size()-1]->value;
+		//return keyframes[keyframes.size()-1]->value;
+		return evaluateKeyframeAtTime(keyframes[keyframes.size()-1], sampleTime);
 	}
 	
 	//optimization for linear playback
@@ -231,6 +235,10 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	}
 	ofLog(OF_LOG_ERROR, "ofxTLKeyframes --- Error condition, couldn't find keyframe for percent " + ofToString(sampleTime));
 	return defaultValue;
+}
+
+float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
+	return key->value;
 }
 
 float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){

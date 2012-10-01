@@ -1,9 +1,11 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLTrack.h"
@@ -87,13 +85,6 @@ void ofxTLTrack::setDrawRect(ofRectangle drawRect){
 		drawRectChanged();
 	}
 }
-
-////override this in your sublcass
-//void ofxTLTrack::update(){
-//	if(isPlaying){
-//		
-//	}
-//}
 
 ofxTimeline* ofxTLTrack::getTimeline(){
 	return timeline;
@@ -219,9 +210,11 @@ bool ofxTLTrack::getIsPlaying(){
 }
 
 void ofxTLTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
-	stop();
+	//we stop playing solo if the main timeline starts
+	if(timeline->getTimecontrolTrack() == NULL || this != timeline->getTimecontrolTrack()){
+		stop();
+	}
 }
-
 
 bool ofxTLTrack::_mousePressed(ofMouseEventArgs& args, long millis){
     if(enabled){

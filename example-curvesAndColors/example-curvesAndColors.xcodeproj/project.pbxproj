@@ -52,6 +52,7 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E77AB9CE1619DFEE004B48C7 /* ofxTLLFO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E77AB9CC1619DFEE004B48C7 /* ofxTLLFO.cpp */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
@@ -177,6 +178,8 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E77AB9CC1619DFEE004B48C7 /* ofxTLLFO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLLFO.cpp; path = ../src/ofxTLLFO.cpp; sourceTree = "<group>"; };
+		E77AB9CD1619DFEE004B48C7 /* ofxTLLFO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLLFO.h; path = ../src/ofxTLLFO.h; sourceTree = "<group>"; };
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
@@ -190,7 +193,6 @@
 		af17eb492db2858a0ebd94cd64092fb9 /* ofxEasingCirc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCirc.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCirc.h; sourceTree = SOURCE_ROOT; };
 		afcc811df430141d32bab3ebf9ba8734 /* ofxTLColors.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLColors.h; path = ../../../addons/ofxTimeline/src/ofxTLColors.h; sourceTree = SOURCE_ROOT; };
 		b07c508e7717e6c892502adf5fddc285 /* ofxEasingQuad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingQuad.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingQuad.h; sourceTree = SOURCE_ROOT; };
-		b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLTimeController.h; path = ../../../addons/ofxTimeline/src/ofxTLTimeController.h; sourceTree = SOURCE_ROOT; };
 		b21e7e5f548eea92f368040bb1aa2f69 /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		b4ebe6922de4dcb97639b65f848e477b /* ofxMSATimer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxMSATimer.cpp; path = ../../../addons/ofxMSATimer/src/ofxMSATimer.cpp; sourceTree = SOURCE_ROOT; };
 		b788152c3fe538e700d063c7d17da903 /* ofxEasingCubic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCubic.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCubic.h; sourceTree = SOURCE_ROOT; };
@@ -358,7 +360,6 @@
 				66c910bfbec609d16e3b249a8448466d /* ofxTLSwitches.h */,
 				e8e616bc8e15dee74a54901f444f74a3 /* ofxTLTicker.cpp */,
 				410e5fe3eb7fe9cb2726d36d724fd561 /* ofxTLTicker.h */,
-				b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */,
 				a5c128c6d62190c88cc9ab3b401d6e25 /* ofxTLTrack.cpp */,
 				96033bf9d1ef22715e6afdc3b189dbc8 /* ofxTLTrack.h */,
 				ec09f970448422c45b6d1ebf77f17fde /* ofxTLTrackHeader.cpp */,
@@ -367,6 +368,8 @@
 				2af40c99324fbebe7bab30147fc27af8 /* ofxTLVideoThumb.h */,
 				16644a54427c234fd75cb89d48524e02 /* ofxTLVideoTrack.cpp */,
 				8e52dc6b4ea21969c85b8e832936acc3 /* ofxTLVideoTrack.h */,
+				E77AB9CC1619DFEE004B48C7 /* ofxTLLFO.cpp */,
+				E77AB9CD1619DFEE004B48C7 /* ofxTLLFO.h */,
 				c7a760ce8107cc5bb8ecbd37a5609bf9 /* ofxTLZoomer.cpp */,
 				1a433a24e8182dd578600bffe7ac6da5 /* ofxTLZoomer.h */,
 			);
@@ -670,6 +673,7 @@
 				933a2227713c720ceff80fd967d0a8ee /* tinyxml.cpp in Sources */,
 				9d44dc88ef9e7991b4a09951e2e4769f /* tinyxmlerror.cpp in Sources */,
 				5a4349e9754d6fa14c0f2a3a1abc30b6 /* tinyxmlparser.cpp in Sources */,
+				E77AB9CE1619DFEE004B48C7 /* ofxTLLFO.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -204,7 +204,6 @@
 		af17eb492db2858a0ebd94cd64092fb9 /* ofxEasingCirc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCirc.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCirc.h; sourceTree = SOURCE_ROOT; };
 		afcc811df430141d32bab3ebf9ba8734 /* ofxTLColors.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLColors.h; path = ../../../addons/ofxTimeline/src/ofxTLColors.h; sourceTree = SOURCE_ROOT; };
 		b07c508e7717e6c892502adf5fddc285 /* ofxEasingQuad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingQuad.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingQuad.h; sourceTree = SOURCE_ROOT; };
-		b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLTimeController.h; path = ../../../addons/ofxTimeline/src/ofxTLTimeController.h; sourceTree = SOURCE_ROOT; };
 		b21e7e5f548eea92f368040bb1aa2f69 /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		b4ebe6922de4dcb97639b65f848e477b /* ofxMSATimer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxMSATimer.cpp; path = ../../../addons/ofxMSATimer/src/ofxMSATimer.cpp; sourceTree = SOURCE_ROOT; };
 		b788152c3fe538e700d063c7d17da903 /* ofxEasingCubic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCubic.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCubic.h; sourceTree = SOURCE_ROOT; };
@@ -409,7 +408,6 @@
 				66c910bfbec609d16e3b249a8448466d /* ofxTLSwitches.h */,
 				e8e616bc8e15dee74a54901f444f74a3 /* ofxTLTicker.cpp */,
 				410e5fe3eb7fe9cb2726d36d724fd561 /* ofxTLTicker.h */,
-				b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */,
 				a5c128c6d62190c88cc9ab3b401d6e25 /* ofxTLTrack.cpp */,
 				96033bf9d1ef22715e6afdc3b189dbc8 /* ofxTLTrack.h */,
 				ec09f970448422c45b6d1ebf77f17fde /* ofxTLTrackHeader.cpp */,

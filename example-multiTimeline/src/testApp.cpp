@@ -1,3 +1,10 @@
+/**
+ * Multi timeline exmaple
+ * ofxTimeline
+ *
+ * Examples of how to create simple interactions between multiple timelines
+ */
+
 #include "testApp.h"
 
 //--------------------------------------------------------------
@@ -10,6 +17,8 @@ void testApp::setup(){
 	
 	ofSetLogLevel(OF_LOG_VERBOSE);
     
+	ofxTimeline::removeCocoaMenusFromGlut("Multitimeline Example");
+	
 	timeline.setup();
     timeline.setFrameRate(24);
 	timeline.setDurationInSeconds(18);

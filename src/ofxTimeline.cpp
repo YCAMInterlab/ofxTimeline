@@ -1,9 +1,11 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTimeline.h"
@@ -85,7 +83,7 @@ ofxTimeline::ofxTimeline()
 	curvesUseBinary(false),
 	headersAreEditable(false),
 	//copy from ofxTimeline/assets into bin/data/
-	defaultPalettePath("defaultColorPalette.png"),
+	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
 	fontSize(9)
@@ -454,16 +452,15 @@ void ofxTimeline::play(){
     }
 	
 	if(!getIsPlaying()){
-		
+
+		//commented out - always updating
 //		if(!isOnThread){
 //			ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 //		}
-
 		if(timeControl != NULL){
 			timeControl->play();
 			return;
 		}
-		
 		//if we are at the end and not looping, reset to the beginning
         if(isDone()){
             setPercentComplete(0.0);
@@ -545,7 +542,7 @@ bool ofxTimeline::togglePlay(){
 }
 
 bool ofxTimeline::getIsPlaying(){
-	return timeControl != NULL ? timeControl->isPlaying() : isPlaying;
+	return timeControl != NULL ? timeControl->getIsPlaying() : isPlaying;
 }
 
 void ofxTimeline::setCurrentFrame(int newFrame){
@@ -602,6 +599,14 @@ float ofxTimeline::getPercentComplete(){
 
 string ofxTimeline::getCurrentTimecode(){
     return timecode.timecodeForSeconds(currentTime);
+}
+
+long ofxTimeline::getQuantizedTime(unsigned long time, unsigned long step){
+	double oneMeasure = 1000/(getBPM()/240.); // in milliseconds
+	step = oneMeasure / step; // convert step to milliseconds
+	unsigned long base = time / step;
+	base = time % step > (step * 0.5) ? base + 1 : base; // round up or down
+	return base * step;
 }
 
 void ofxTimeline::setInPointAtPlayhead(){
@@ -1442,11 +1447,11 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
     return modalTrack;
 }
 
-void ofxTimeline::setTimecontrolTrack(ofxTLTimeController* track){
+void ofxTimeline::setTimecontrolTrack(ofxTLTrack* track){
     timeControl = track;
 }
 
-ofxTLTimeController* ofxTimeline::getTimecontrolTrack(){
+ofxTLTrack* ofxTimeline::getTimecontrolTrack(){
     return timeControl;
 }
 
@@ -1465,6 +1470,21 @@ void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	trackNameToPage[trackName] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(events().viewWasResized, args);
+}
+
+//adding tracks always adds to the current page
+ofxTLLFO* ofxTimeline::addLFO(string trackName, ofRange valueRange, float defaultValue){
+    string uniqueName = confirmedUniqueName(trackName);
+    return addLFO(uniqueName, nameToXMLName(uniqueName), valueRange, defaultValue);
+}
+
+ofxTLLFO* ofxTimeline::addLFO(string trackName, string xmlFileName, ofRange valueRange, float defaultValue){
+	ofxTLLFO* newLFO = new ofxTLLFO();
+	newLFO->setCreatedByTimeline(true);
+	newLFO->setValueRange(valueRange, defaultValue);
+	newLFO->setXMLFileName(xmlFileName);
+	addTrack(confirmedUniqueName(trackName), newLFO);
+	return newLFO;
 }
 
 ofxTLCurves* ofxTimeline::addCurves(string trackName, ofRange valueRange, float defaultValue){
@@ -1689,6 +1709,12 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	if(videoPath != ""){
 	    if(!videoTrack->load(videoPath)){
         	ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
+		}
+		else{
+			//make time control by default
+			setTimecontrolTrack(videoTrack);
+			setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
 		}
     }
     return videoTrack;
