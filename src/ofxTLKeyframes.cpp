@@ -179,6 +179,12 @@ void ofxTLKeyframes::setDefaultValue(float newDefaultValue){
 	defaultValue = newDefaultValue;
 }
 
+void ofxTLKeyframes::quantizeKeys(int step){
+	for(int i = 0; i < keyframes.size(); i++){
+		setKeyframeTime(keyframes[i], getTimeline()->getQuantizedTime(keyframes[i]->time, step));
+	}
+}
+
 ofRange ofxTLKeyframes::getValueRange(){
 	return valueRange;
 }
