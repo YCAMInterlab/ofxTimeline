@@ -1,8 +1,8 @@
 <positions>
     <element name="1">
-        <x>0.000000000</x>
-        <y>208.000000000</y>
-        <width>1024.000000000</width>
-        <height>40.000000000</height>
+        <x>0</x>
+        <y>208</y>
+        <width>1024</width>
+        <height>40</height>
     </element>
 </positions>

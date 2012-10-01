@@ -52,6 +52,8 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
+		E77AB9E11619E1BF004B48C7 /* ofxTLLFO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E77AB9DF1619E1BF004B48C7 /* ofxTLLFO.cpp */; };
+		E77AB9E41619E1D0004B48C7 /* ofxRemoveCocoaMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = E77AB9E31619E1D0004B48C7 /* ofxRemoveCocoaMenu.mm */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F985F515E0DE99003869B5 /* Accelerate.framework */; };
@@ -177,6 +179,10 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		E77AB9DF1619E1BF004B48C7 /* ofxTLLFO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLLFO.cpp; path = ../src/ofxTLLFO.cpp; sourceTree = "<group>"; };
+		E77AB9E01619E1BF004B48C7 /* ofxTLLFO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLLFO.h; path = ../src/ofxTLLFO.h; sourceTree = "<group>"; };
+		E77AB9E21619E1D0004B48C7 /* ofxRemoveCocoaMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxRemoveCocoaMenu.h; path = ../src/ofxRemoveCocoaMenu.h; sourceTree = "<group>"; };
+		E77AB9E31619E1D0004B48C7 /* ofxRemoveCocoaMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofxRemoveCocoaMenu.mm; path = ../src/ofxRemoveCocoaMenu.mm; sourceTree = "<group>"; };
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		E7F985F515E0DE99003869B5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = /System/Library/Frameworks/Accelerate.framework; sourceTree = "<absolute>"; };
@@ -190,7 +196,6 @@
 		af17eb492db2858a0ebd94cd64092fb9 /* ofxEasingCirc.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCirc.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCirc.h; sourceTree = SOURCE_ROOT; };
 		afcc811df430141d32bab3ebf9ba8734 /* ofxTLColors.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLColors.h; path = ../../../addons/ofxTimeline/src/ofxTLColors.h; sourceTree = SOURCE_ROOT; };
 		b07c508e7717e6c892502adf5fddc285 /* ofxEasingQuad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingQuad.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingQuad.h; sourceTree = SOURCE_ROOT; };
-		b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTLTimeController.h; path = ../../../addons/ofxTimeline/src/ofxTLTimeController.h; sourceTree = SOURCE_ROOT; };
 		b21e7e5f548eea92f368040bb1aa2f69 /* tinyxml.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = tinyxml.h; path = ../../../addons/ofxXmlSettings/libs/tinyxml.h; sourceTree = SOURCE_ROOT; };
 		b4ebe6922de4dcb97639b65f848e477b /* ofxMSATimer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxMSATimer.cpp; path = ../../../addons/ofxMSATimer/src/ofxMSATimer.cpp; sourceTree = SOURCE_ROOT; };
 		b788152c3fe538e700d063c7d17da903 /* ofxEasingCubic.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasingCubic.h; path = ../../../addons/ofxTween/src/Easings/ofxEasingCubic.h; sourceTree = SOURCE_ROOT; };
@@ -327,6 +332,8 @@
 				6146999aa0b432590d07eb521d43e191 /* ofxHotKeys.h */,
 				2506aa6a6ef4e116e23a1c24c5fbd57f /* ofxHotKeys_impl_mac.mm */,
 				30666c151f907fce97822a8a38b276a6 /* ofxHotKeys_impl_win.cpp */,
+				E77AB9E21619E1D0004B48C7 /* ofxRemoveCocoaMenu.h */,
+				E77AB9E31619E1D0004B48C7 /* ofxRemoveCocoaMenu.mm */,
 				173c557b81a5be86d194eeb6d6250f91 /* ofxTimeline.cpp */,
 				9a2f1d6ae148cd25f6bea00506177bc5 /* ofxTimeline.h */,
 				689fe82c6569027132ca3ee568a4ee1e /* ofxTLBangs.cpp */,
@@ -358,9 +365,10 @@
 				66c910bfbec609d16e3b249a8448466d /* ofxTLSwitches.h */,
 				e8e616bc8e15dee74a54901f444f74a3 /* ofxTLTicker.cpp */,
 				410e5fe3eb7fe9cb2726d36d724fd561 /* ofxTLTicker.h */,
-				b20003bdda1fd5369e68806dfc35351e /* ofxTLTimeController.h */,
 				a5c128c6d62190c88cc9ab3b401d6e25 /* ofxTLTrack.cpp */,
 				96033bf9d1ef22715e6afdc3b189dbc8 /* ofxTLTrack.h */,
+				E77AB9DF1619E1BF004B48C7 /* ofxTLLFO.cpp */,
+				E77AB9E01619E1BF004B48C7 /* ofxTLLFO.h */,
 				ec09f970448422c45b6d1ebf77f17fde /* ofxTLTrackHeader.cpp */,
 				3d0621ce540a64d8d27e0af7f83b3eb2 /* ofxTLTrackHeader.h */,
 				a208db91709b73833548f57d7336831e /* ofxTLVideoThumb.cpp */,
@@ -670,6 +678,8 @@
 				933a2227713c720ceff80fd967d0a8ee /* tinyxml.cpp in Sources */,
 				9d44dc88ef9e7991b4a09951e2e4769f /* tinyxmlerror.cpp in Sources */,
 				5a4349e9754d6fa14c0f2a3a1abc30b6 /* tinyxmlparser.cpp in Sources */,
+				E77AB9E11619E1BF004B48C7 /* ofxTLLFO.cpp in Sources */,
+				E77AB9E41619E1D0004B48C7 /* ofxRemoveCocoaMenu.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -3,78 +3,78 @@
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:00:369</time>
-        <value>0.750000000</value>
+        <value>0.75</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:00:859</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:01:371</time>
-        <value>0.899999976</value>
+        <value>0.9</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:01:868</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:02:529</time>
-        <value>0.899999976</value>
+        <value>0.9</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:03:097</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:03:694</time>
-        <value>1.000000000</value>
+        <value>1</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:04:177</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:04:774</time>
-        <value>0.925000012</value>
+        <value>0.925</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:05:477</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:06:180</time>
-        <value>0.975000024</value>
+        <value>0.975</value>
     </key>
     <key>
         <easefunc>4</easefunc>
         <easetype>2</easetype>
         <time>00:00:06:955</time>
-        <value>0.000000000</value>
+        <value>0</value>
     </key>
     <key>
         <easefunc>0</easefunc>
         <easetype>0</easetype>
         <time>00:07:20:267</time>
-        <value>0.349999994</value>
+        <value>0.35</value>
     </key>
 </keyframes>

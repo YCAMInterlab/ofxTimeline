@@ -1,3 +1,34 @@
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 #include "ofxTLSwitches.h"
 #include "ofxTimeline.h"
@@ -17,7 +48,9 @@ void ofxTLSwitches::draw(){
 	ofFill();
 	
 	//draw a little wobble if its on
-	if(isOnAtMillis(timeline->getCurrentTimeMillis())){
+	//if(isOnAtMillis(timeline->getCurrentTimeMillis())){
+	//play solo change
+	if(isOn()){
 		ofSetColor(timeline->getColors().disabledColor, 20+(1-powf(sin(ofGetElapsedTimef()*5)*.5+.5,2))*20);
 		ofRect(bounds);
 	}
@@ -106,6 +139,10 @@ bool ofxTLSwitches::isOnAtMillis(long millis){
         }
     }
     return false;    
+}
+
+bool ofxTLSwitches::isOn(){
+	return isOnAtMillis(currentTrackTime());
 }
 
 bool ofxTLSwitches::isOnAtPercent(float percent){
@@ -345,7 +382,7 @@ void ofxTLSwitches::regionSelected(ofLongRange timeRange, ofRange valueRange){
     }
 }
 
-void ofxTLSwitches::getSnappingPoints(set<long>& points){
+void ofxTLSwitches::getSnappingPoints(set<unsigned long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
 		if (isKeyframeIsInBounds(switchKey) && !isKeyframeSelected(switchKey) &&

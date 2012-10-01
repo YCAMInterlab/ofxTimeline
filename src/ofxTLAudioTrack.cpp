@@ -1,9 +1,32 @@
-/*
- *  ofxTLAudioTrack.cpp
- *  audiowaveformTimelineExample
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
  *
- *  Created by Jim on 12/28/11.
- *  Copyright 2011 FlightPhase. All rights reserved.
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  *
  */
 
@@ -13,7 +36,9 @@
 ofxTLAudioTrack::ofxTLAudioTrack(){
 	shouldRecomputePreview = false;
     soundLoaded = false;
-
+	lastFFTPosition = 0;
+	defaultFFTBins = 256;
+	maxBinReceived = 0;
 }
 
 ofxTLAudioTrack::~ofxTLAudioTrack(){
@@ -25,8 +50,6 @@ bool ofxTLAudioTrack::loadSoundfile(string filepath){
 	if(player.loadSound(filepath, false)){
     	soundLoaded = true;
 		soundFilePath = filepath;
-        //	cout << "duration is " << player.getDuration() << endl;
-        //	cout << "num samples " << player.getBuffer().size() << endl;
 		shouldRecomputePreview = true;
     }
 	return soundLoaded;
@@ -50,11 +73,24 @@ void ofxTLAudioTrack::update(ofEventArgs& args){
 		ofNotifyEvent(events().playbackLooped, args);
 	}
 	lastPercent = player.getPosition();
-
+	
     //currently only supports timelines with duration == duration of player
+	if(lastPercent < timeline->getInOutRange().min){
+		player.setPosition(timeline->getInOutRange().min);
+	}
+	else if(lastPercent > timeline->getInOutRange().max){
+		if(timeline->getLoopType() == OF_LOOP_NONE){
+			player.setPosition(timeline->getInOutRange().max);
+			stop();
+		}
+		else{
+			player.setPosition(timeline->getInOutRange().min);
+		}
+	}
+	
     timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 }
-
+ 
 void ofxTLAudioTrack::draw(){
 	
 	if(!soundLoaded || player.getBuffer().size() == 0){
@@ -69,6 +105,7 @@ void ofxTLAudioTrack::draw(){
 		recomputePreview();
 	}
 
+
     ofPushStyle();
     ofSetColor(timeline->getColors().keyColor);
     ofNoFill();
@@ -81,6 +118,32 @@ void ofxTLAudioTrack::draw(){
         ofPopMatrix();
     }
     ofPopStyle();
+	
+	if(getIsPlaying() || timeline->getIsPlaying()){
+		ofPushStyle();
+		
+		//will refresh fft bins for other calls too
+		vector<float>& bins = getFFTSpectrum(defaultFFTBins);
+		float binWidth = bounds.width / bins.size();
+		//find max
+		float averagebin = 0 ;
+		for(int i = 0; i < bins.size(); i++){
+			maxBinReceived = MAX(maxBinReceived, bins[i]);
+			averagebin += bins[i];
+		}
+		averagebin /= bins.size();
+		
+		ofFill();
+		ofSetColor(timeline->getColors().disabledColor, 120);
+		for(int i = 0; i < bins.size(); i++){
+			float height = bounds.height * bins[i]/maxBinReceived;
+			float y = bounds.y + bounds.height - height;
+			ofRect(i*binWidth, y, binWidth, height);
+		}
+		
+		ofPopStyle();
+	}
+	
 }
 
 void ofxTLAudioTrack::recomputePreview(){
@@ -139,6 +202,11 @@ void ofxTLAudioTrack::recomputePreview(){
 	shouldRecomputePreview = false;
 }
 
+int ofxTLAudioTrack::getDefaultBinCount(){
+//	cout << defaultFFTBins << endl;
+	return defaultFFTBins;
+}
+
 bool ofxTLAudioTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	return false;
 }
@@ -179,7 +247,7 @@ void ofxTLAudioTrack::play(){
 		
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
-
+//		cout << "calling play on track " << endl;
 		player.play();
 		player.setPosition(timeline->getPercentComplete());
 		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
@@ -190,6 +258,8 @@ void ofxTLAudioTrack::play(){
 
 void ofxTLAudioTrack::stop(){
 	if(player.getIsPlaying()){
+
+//		cout << "calling stop on track " << endl;
 		player.setPaused(true);
 		ofRemoveListener(ofEvents().update, this, &ofxTLAudioTrack::update);
 		
@@ -199,16 +269,16 @@ void ofxTLAudioTrack::stop(){
 }
 
 bool ofxTLAudioTrack::togglePlay(){
-	if(isPlaying()){
+	if(getIsPlaying()){
 		stop();
 	}
 	else {
 		play();
 	}
-	return isPlaying();
+	return getIsPlaying();
 }
 
-bool ofxTLAudioTrack::isPlaying(){
+bool ofxTLAudioTrack::getIsPlaying(){
     return player.getIsPlaying();
 }
 
@@ -218,6 +288,27 @@ void ofxTLAudioTrack::setSpeed(float speed){
 
 float ofxTLAudioTrack::getSpeed(){
     return player.getSpeed();
+}
+
+void ofxTLAudioTrack::setVolume(float volume){
+    player.setVolume(volume);
+}
+
+void ofxTLAudioTrack::setPan(float pan){
+    player.setPan(pan);
+}
+
+vector<float>& ofxTLAudioTrack::getFFTSpectrum(int numBins){
+	float fftPosition = player.getPosition();
+	if(isSoundLoaded() && lastFFTPosition != fftPosition){
+		if(defaultFFTBins != numBins){
+			maxBinReceived = 0;
+			defaultFFTBins = numBins;
+		}
+		lastFFTPosition = fftPosition;
+		fftBins = player.getSpectrum(defaultFFTBins);
+	}
+	return fftBins;
 }
 
 string ofxTLAudioTrack::getTrackType(){

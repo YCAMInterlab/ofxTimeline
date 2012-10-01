@@ -1,29 +1,45 @@
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 #include "ofxTimeline.h"
 #include "ofxTLBangs.h"
 
 ofxTLBangs::ofxTLBangs(){
     lastTimelinePoint = 0;
-    isPlayingBack = false;
 	lastBangTime = 0;
 }
 
 ofxTLBangs::~ofxTLBangs(){
 	disable();
-}
-
-void ofxTLBangs::enable(){
-    if(!isEnabled()){
-	    ofxTLKeyframes::enable();
-		events().registerPlaybackEvents(this);    
-    }
-}
-
-void ofxTLBangs::disable(){
-    if(isEnabled()){		
-	    ofxTLKeyframes::disable();
-    	events().removePlaybackEvents(this);
-    }
 }
 
 void ofxTLBangs::draw(){
@@ -44,6 +60,9 @@ void ofxTLBangs::draw(){
 	}
 	
     for(int i = keyframes.size()-1; i >= 0; i--){
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
         //int screenX = normalizedXtoScreenX(keyframes[i]->position.x);
         int screenX = millisToScreenX(keyframes[i]->time);
         if(isKeyframeSelected(keyframes[i])){
@@ -86,11 +105,11 @@ ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p){
 }
 
 void ofxTLBangs::update(){
-	if(isPlayingBack){
-		long thisTimelinePoint = timeline->getCurrentTimeMillis();
+	if(isPlaying || timeline->getIsPlaying()){
+		long thisTimelinePoint = currentTrackTime();
 		for(int i = 0; i < keyframes.size(); i++){
-			if(lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
-				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
+			if(timeline->getInOutRangeMillis().contains(keyframes[i]->time) && lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
+//				ofLogNotice() << "fired bang with accuracy of " << (keyframes[i]->time - thisTimelinePoint) << endl;
 				bangFired(keyframes[i]);
 				lastBangTime = ofGetElapsedTimef();
 			}
@@ -103,7 +122,9 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
-    args.currentMillis = timeline->getCurrentTimeMillis();
+	//play solo change
+    //args.currentMillis = timeline->getCurrentTimeMillis();
+	args.currentMillis = currentTrackTime();
     args.currentPercent = timeline->getPercentComplete();
     args.currentFrame = timeline->getCurrentFrame();
     args.currentTime = timeline->getCurrentTime();
@@ -111,12 +132,12 @@ void ofxTLBangs::bangFired(ofxTLKeyframe* key){
 }
 
 void ofxTLBangs::playbackStarted(ofxTLPlaybackEventArgs& args){
-	lastTimelinePoint = timeline->getCurrentTimeMillis();
-    isPlayingBack = true;
+	ofxTLTrack::playbackStarted(args);
+	lastTimelinePoint = currentTrackTime();
 }
 
 void ofxTLBangs::playbackEnded(ofxTLPlaybackEventArgs& args){
-    isPlayingBack = false;
+//    isPlayingBack = false;
 }
 
 void ofxTLBangs::playbackLooped(ofxTLPlaybackEventArgs& args){

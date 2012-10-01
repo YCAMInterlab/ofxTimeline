@@ -1,0 +1,20 @@
+<positions>
+    <element name="My Custom Keyframes">
+        <x>0</x>
+        <y>116</y>
+        <width>1024</width>
+        <height>167</height>
+    </element>
+    <element name="My Custom Track">
+        <x>0</x>
+        <y>52</y>
+        <width>1024</width>
+        <height>40</height>
+    </element>
+    <element name="New Custom Track">
+        <x>0</x>
+        <y>52</y>
+        <width>1024</width>
+        <height>149</height>
+    </element>
+</positions>

@@ -4,8 +4,6 @@
  *
  * Shows how to use ofxTimeline to create video effects with a shader
  * that can be rendered to an image sequence
-
- *
  */
 
 #pragma once

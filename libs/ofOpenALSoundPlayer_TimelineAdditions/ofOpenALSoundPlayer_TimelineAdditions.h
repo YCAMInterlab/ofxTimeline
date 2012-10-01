@@ -101,7 +101,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		static void initialize();
 		static void close();
 
-		float * getSpectrum(int bands);
+		vector<float>& getSpectrum(int bands);
 
 		static float * getSystemSpectrum(int bands);
 
@@ -144,6 +144,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 
 		static ALCdevice * alDevice;
 
+	
 		static vector<float> window;
 		static float windowSum;
 

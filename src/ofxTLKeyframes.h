@@ -1,11 +1,12 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
- * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * openFrameworks graphical timeline addon
  *
- * 
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -27,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #pragma once
@@ -43,7 +40,8 @@
 class ofxTLKeyframe {
   public:
 	ofVec2f screenPosition; // cached screen position
-    long time; //in millis
+	unsigned long previousTime; //for preventing overlap conflicts
+    unsigned long time; //in millis
     float value; //normalized
     long grabTimeOffset;
     float grabValueOffset;
@@ -66,7 +64,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void getSnappingPoints(set<long>& points);
+	virtual void getSnappingPoints(set<unsigned long>& points);
 	
 	virtual void save();
 	virtual void load();
@@ -85,6 +83,11 @@ class ofxTLKeyframes : public ofxTLTrack
     
     virtual int getSelectedItemCount();
     
+	virtual unsigned long getEarliestTime();
+	virtual unsigned long getLatestTime();
+	virtual unsigned long getEarliestSelectedTime();
+	virtual unsigned long getLatestSelectedTime();
+
     //undo
     virtual string getXMLRepresentation();
     virtual void loadFromXMLRepresentation(string rep);
@@ -94,6 +97,7 @@ class ofxTLKeyframes : public ofxTLTrack
     virtual string getTrackType();
     
 	//sampling
+	virtual float getValue();
 	virtual float getValueAtPercent(float percent);
 	virtual float getValueAtTimeInMillis(long sampleTime);
 
@@ -101,6 +105,8 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void setValueRangeMin(float min);
 	virtual void setValueRangeMax(float max);
 	virtual void setDefaultValue(float defaultValue);
+	
+	virtual void quantizeKeys(int step);
 	
     virtual ofRange getValueRange();
 	
@@ -117,13 +123,14 @@ class ofxTLKeyframes : public ofxTLTrack
 	ofPolyline preview;
 	vector<ofVec2f> keyPoints;
 	
-	void recomputePreviews();
+	virtual void recomputePreviews();
 	bool shouldRecomputePreviews;
 	
 	virtual float sampleAtPercent(float percent); //less accurate than millis
     virtual float sampleAtTime(long sampleTime);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime);
+
     ofRange valueRange;
 	float defaultValue;
 	
@@ -150,8 +157,13 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	int selectedKeyframeIndex;
 	bool keysAreDraggable;
+	bool keysAreStretchable;
+	unsigned long stretchAnchor;
+	unsigned long stretchSelectPoint;
 	
+	virtual void setKeyframeTime(ofxTLKeyframe* key, unsigned long newTime);
 	virtual void updateKeyframeSort();
+	virtual void updateStretchOffsets(ofVec2f screenpoint, long grabMillis);
 	virtual void updateDragOffsets(ofVec2f screenpoint, long grabMillis);
 
 	virtual string getXMLStringForKeyframes(vector<ofxTLKeyframe*>& keys);
@@ -160,7 +172,8 @@ class ofxTLKeyframes : public ofxTLTrack
     virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){};
 
     virtual void selectedKeySecondaryClick(ofMouseEventArgs& args){};
-
+	
+	
 	bool screenpointIsInBounds(ofVec2f screenpoint);
 	ofVec2f screenPositionForKeyframe(ofxTLKeyframe* keyframe);
 
