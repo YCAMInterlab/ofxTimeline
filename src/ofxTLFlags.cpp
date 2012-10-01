@@ -235,4 +235,17 @@ string ofxTLFlags::getTrackType(){
     return "Flags";
 }
 
+void ofxTLFlags::addFlag(string key) {
+	addFlagAtTime(key, timeline->getCurrentTimeMillis());
+}
+
+void ofxTLFlags::addFlagAtTime(string key, unsigned long time){
+	ofxTLKeyframe* keyFrame = newKeyframe();
+	ofxTLFlag* flag = (ofxTLFlag*)keyFrame;
+	setKeyframeTime(keyFrame, time);
+	flag->textField.text = key;
+	keyframes.push_back(keyFrame);
+	updateKeyframeSort();
+	timeline->flagTrackModified(this);
+}
 
