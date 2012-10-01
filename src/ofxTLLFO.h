@@ -20,6 +20,7 @@ class ofxTLLFOKey : public ofxTLKeyframe {
 	float frequency;
 	float seed; // for noise
 	float center; // 0 is middle
+	float freqDeviation;
 	bool interpolate;
 };
 
@@ -33,7 +34,7 @@ class ofxTLLFO : public ofxTLKeyframes {
 	//draw your keyframes
 	//some default style is done before this
 	virtual void draw();
-	
+	virtual void drawModalContent();
 	//you can implement custom behavior here, but can get tricky
 	//with when to call the super class.
 	//see some of the other tracks for interesting patterns on how to
@@ -78,6 +79,24 @@ class ofxTLLFO : public ofxTLKeyframes {
 	//you can responde to a keyframe about to be killed with this function right before the parent class deletes it
 	virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe);
 
+	int rectWidth;
+	int rectHeight;
 	bool drawingLFORect;
 	ofRectangle lfoRect;
+	ofRectangle sineTypeRect;
+	ofRectangle noiseTypeRect;
+	ofRectangle phaseShiftRect;
+	ofRectangle amplitudeRect;
+	ofRectangle frequencyRect;
+	ofRectangle seedRect;
+	ofRectangle centerRect;
+	ofRectangle interpolateRect;
+	ofRectangle* mouseDownRect;
+	float* editingParam;
+	float editingStartValue;
+	ofRange editingRange;
+	float editingSensitivity;
+	float editingExponent;
+	float editingClickX;
+	
 };

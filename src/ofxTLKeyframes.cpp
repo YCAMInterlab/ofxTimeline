@@ -52,7 +52,8 @@ ofxTLKeyframes::ofxTLKeyframes()
 	lastSampleTime(0),
 	shouldRecomputePreviews(false),
 	createNewOnMouseup(false),
-	useBinarySave(false)
+	useBinarySave(false),
+	valueRange(ofRange(0,1.))
 {
 	xmlFileName = "_keyframes.xml";	
 }
