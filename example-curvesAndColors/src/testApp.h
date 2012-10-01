@@ -1,3 +1,10 @@
+/**
+ * Curves demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create a simple curves and color change
+ */
+
 #pragma once
 
 #include "ofMain.h"

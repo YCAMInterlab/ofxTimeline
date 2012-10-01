@@ -1,3 +1,10 @@
+/**
+ * LFO example
+ * ofxTimeline
+ *
+ * simple example for low frequency oscillator track
+ */
+
 #include "testApp.h"
 
 //--------------------------------------------------------------
@@ -17,22 +24,19 @@ void testApp::setup(){
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
 	//this is the simplest example and is really flexible
-	lfoTrack = new ofxTLLFO();
-	timeline.addTrack("LFO", lfoTrack);
+	timeline.addLFO("LFO");
 	
 	timeline.setDurationInSeconds(30);
-
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-	
-	
+		
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    float curtime = timeline.getCurrentTime();
+
 	timeline.draw();
 }
 
@@ -74,7 +78,6 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	timeline.setWidth(w);
 	
 }
 

@@ -1,3 +1,10 @@
+/**
+ * Curves demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create a simple curves and color change
+ */
+
 #include "testApp.h"
 
 //--------------------------------------------------------------
@@ -51,7 +58,7 @@ void testApp::draw(){
 	ofSetColor(timeline.getColor("Colors"));
 	
     //translate to the center of the screen
-	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.5, 40);	
+	ofTranslate(ofGetWidth()*.5, ofGetHeight()*.66, 40);
     
     //Read the values out of the timeline and use them to change the viewport rotation
 	ofRotate(timeline.getValue("Rotate X"), 1, 0, 0);

@@ -1,3 +1,10 @@
+/**
+ * LFO example
+ * ofxTimeline
+ *
+ * simple example for low frequency oscillator track
+ */
+
 #pragma once
 
 #include "ofMain.h"
@@ -21,6 +28,4 @@ class testApp : public ofBaseApp{
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 	
-	ofxTimeline timeline;
-	ofxTLLFO* lfoTrack;
-};
+	ofxTimeline timeline;};

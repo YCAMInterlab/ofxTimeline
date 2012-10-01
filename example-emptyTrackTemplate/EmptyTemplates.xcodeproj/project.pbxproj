@@ -54,9 +54,10 @@
 		E4C2424810CC5A17004149E2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424510CC5A17004149E2 /* Cocoa.framework */; };
 		E4C2424910CC5A17004149E2 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4C2424610CC5A17004149E2 /* IOKit.framework */; };
 		E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
-		E734FF4E161841C300DFC0DB /* ofxTLEmptyTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E734FF4C161841C300DFC0DB /* ofxTLEmptyTrack.cpp */; };
-		E734FF54161882D100DFC0DB /* ofxTLEmptyKeyframes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E734FF52161882D000DFC0DB /* ofxTLEmptyKeyframes.cpp */; };
 		E734FF5716188FB800DFC0DB /* ofxRemoveCocoaMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = E734FF5616188FB700DFC0DB /* ofxRemoveCocoaMenu.mm */; };
+		E734FFAD1619B64000DFC0DB /* ofxTLLFO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E734FFAB1619B64000DFC0DB /* ofxTLLFO.cpp */; };
+		E734FFB31619B65300DFC0DB /* ofxTLEmptyKeyframes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E734FFAF1619B65300DFC0DB /* ofxTLEmptyKeyframes.cpp */; };
+		E734FFB41619B65300DFC0DB /* ofxTLEmptyTrack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E734FFB11619B65300DFC0DB /* ofxTLEmptyTrack.cpp */; };
 		E7E077E515D3B63C0020DFD4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */; };
 		E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E077E715D3B6510020DFD4 /* QTKit.framework */; };
 		E7F31CA5160EFD9400C71EB8 /* libsndfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7F31C9E160EFD9400C71EB8 /* libsndfile.a */; };
@@ -192,12 +193,14 @@
 		E4C2424610CC5A17004149E2 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
-		E734FF4C161841C300DFC0DB /* ofxTLEmptyTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLEmptyTrack.cpp; sourceTree = "<group>"; };
-		E734FF4D161841C300DFC0DB /* ofxTLEmptyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLEmptyTrack.h; sourceTree = "<group>"; };
-		E734FF52161882D000DFC0DB /* ofxTLEmptyKeyframes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTLEmptyKeyframes.cpp; sourceTree = "<group>"; };
-		E734FF53161882D100DFC0DB /* ofxTLEmptyKeyframes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTLEmptyKeyframes.h; sourceTree = "<group>"; };
 		E734FF5516188FB600DFC0DB /* ofxRemoveCocoaMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxRemoveCocoaMenu.h; path = ../src/ofxRemoveCocoaMenu.h; sourceTree = "<group>"; };
 		E734FF5616188FB700DFC0DB /* ofxRemoveCocoaMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofxRemoveCocoaMenu.mm; path = ../src/ofxRemoveCocoaMenu.mm; sourceTree = "<group>"; };
+		E734FFAB1619B64000DFC0DB /* ofxTLLFO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLLFO.cpp; path = ../src/ofxTLLFO.cpp; sourceTree = "<group>"; };
+		E734FFAC1619B64000DFC0DB /* ofxTLLFO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLLFO.h; path = ../src/ofxTLLFO.h; sourceTree = "<group>"; };
+		E734FFAF1619B65300DFC0DB /* ofxTLEmptyKeyframes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLEmptyKeyframes.cpp; path = ../src/ofxTLEmptyKeyframes.cpp; sourceTree = "<group>"; };
+		E734FFB01619B65300DFC0DB /* ofxTLEmptyKeyframes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLEmptyKeyframes.h; path = ../src/ofxTLEmptyKeyframes.h; sourceTree = "<group>"; };
+		E734FFB11619B65300DFC0DB /* ofxTLEmptyTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxTLEmptyTrack.cpp; path = ../src/ofxTLEmptyTrack.cpp; sourceTree = "<group>"; };
+		E734FFB21619B65300DFC0DB /* ofxTLEmptyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxTLEmptyTrack.h; path = ../src/ofxTLEmptyTrack.h; sourceTree = "<group>"; };
 		E7E077E415D3B63C0020DFD4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		E7E077E715D3B6510020DFD4 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		E7F31C9E160EFD9400C71EB8 /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsndfile.a; sourceTree = "<group>"; };
@@ -429,10 +432,12 @@
 				8e52dc6b4ea21969c85b8e832936acc3 /* ofxTLVideoTrack.h */,
 				c7a760ce8107cc5bb8ecbd37a5609bf9 /* ofxTLZoomer.cpp */,
 				1a433a24e8182dd578600bffe7ac6da5 /* ofxTLZoomer.h */,
-				E734FF4D161841C300DFC0DB /* ofxTLEmptyTrack.h */,
-				E734FF4C161841C300DFC0DB /* ofxTLEmptyTrack.cpp */,
-				E734FF53161882D100DFC0DB /* ofxTLEmptyKeyframes.h */,
-				E734FF52161882D000DFC0DB /* ofxTLEmptyKeyframes.cpp */,
+				E734FFAB1619B64000DFC0DB /* ofxTLLFO.cpp */,
+				E734FFAC1619B64000DFC0DB /* ofxTLLFO.h */,
+				E734FFAF1619B65300DFC0DB /* ofxTLEmptyKeyframes.cpp */,
+				E734FFB01619B65300DFC0DB /* ofxTLEmptyKeyframes.h */,
+				E734FFB11619B65300DFC0DB /* ofxTLEmptyTrack.cpp */,
+				E734FFB21619B65300DFC0DB /* ofxTLEmptyTrack.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -792,9 +797,10 @@
 				933a2227713c720ceff80fd967d0a8ee /* tinyxml.cpp in Sources */,
 				9d44dc88ef9e7991b4a09951e2e4769f /* tinyxmlerror.cpp in Sources */,
 				5a4349e9754d6fa14c0f2a3a1abc30b6 /* tinyxmlparser.cpp in Sources */,
-				E734FF4E161841C300DFC0DB /* ofxTLEmptyTrack.cpp in Sources */,
-				E734FF54161882D100DFC0DB /* ofxTLEmptyKeyframes.cpp in Sources */,
 				E734FF5716188FB800DFC0DB /* ofxRemoveCocoaMenu.mm in Sources */,
+				E734FFAD1619B64000DFC0DB /* ofxTLLFO.cpp in Sources */,
+				E734FFB31619B65300DFC0DB /* ofxTLEmptyKeyframes.cpp in Sources */,
+				E734FFB41619B65300DFC0DB /* ofxTLEmptyTrack.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

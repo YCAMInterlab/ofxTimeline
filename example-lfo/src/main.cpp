@@ -1,3 +1,10 @@
+/**
+ * LFO example
+ * ofxTimeline
+ *
+ * simple example for low frequency oscillator track
+ */
+
 #include "ofMain.h"
 #include "testApp.h"
 #include "ofAppGlutWindow.h"

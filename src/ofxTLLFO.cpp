@@ -1,3 +1,34 @@
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 #include "ofxTLLFO.h"
 #include "ofxTimeline.h"
@@ -143,11 +174,12 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 		ofxTLLFOKey tempkey;
 		tempkey.time = prevKey->time;
 		tempkey.type = prevKey->type;
+		
 		tempkey.phaseShift = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->phaseShift, nextKey->phaseShift);
 		tempkey.amplitude = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->amplitude, nextKey->amplitude);
 		tempkey.center = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->center, nextKey->center);
 		tempkey.frequency = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->frequency, nextKey->frequency);
-		tempkey.freqDeviation = (nextKey->frequency - prevKey->frequency);
+		//tempkey.freqDeviation = (nextKey->frequency - prevKey->frequency);
 		//ofxTLLFOKey* lfo = &tempkey;
 		//return ofClamp( (cos( (2*PI*lfo->frequency/(1000*60))*(sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
 //		alpha = 1;
@@ -167,8 +199,9 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
 	ofxTLLFOKey* lfo = (ofxTLLFOKey*)key;
 	if(lfo->type == OFXTL_LFO_TYPE_SINE){
+		//lfo->frequency*sampleTime;
 		//return ofClamp( (sin( lfo->samplePoint )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
-		return ofClamp( (cos( (2*PI*lfo->frequency/(1000*60))*(sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
+		return ofClamp(( cos( (2*PI*lfo->frequency/(1000*60)) * (sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
 	}
 	else {
 		return ofClamp( (ofSignedNoise(lfo->seed, (2*PI*lfo->frequency/(1000*60*10))*(lfo->phaseShift + sampleTime)) * lfo->amplitude)*.5+.5 + lfo->center, 0, 1);

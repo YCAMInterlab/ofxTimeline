@@ -1,3 +1,11 @@
+/**
+ * Empty Template
+ * ofxTimeline
+ *
+ * Examples of two template classes that can be copied and extended
+ * to invent new types of timeline tracks
+ */
+
 #pragma once
 
 #include "ofMain.h"

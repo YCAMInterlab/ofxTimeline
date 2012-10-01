@@ -1,7 +1,9 @@
 /**
  * ofxTimeline
+ * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase
  *
@@ -26,14 +28,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
- *
- * Developed with support of YCAM InterLab
  */
-
 
 #pragma once
 

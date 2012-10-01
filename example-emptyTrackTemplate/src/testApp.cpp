@@ -1,3 +1,11 @@
+/**
+ * Empty Template
+ * ofxTimeline
+ *
+ * Examples of two template classes that can be copied and extended
+ * to invent new types of timeline tracks
+ */
+
 #include "testApp.h"
 
 //--------------------------------------------------------------
@@ -10,8 +18,7 @@ void testApp::setup(){
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 
-	//lets you use COMMAND+C and COMMAND+V actions
-	//on mac
+	//lets you use COMMAND+C and COMMAND+V actions on mac
 	ofxTimeline::removeCocoaMenusFromGlut("Empty Templates");
 	
 	timeline.setup();
@@ -19,7 +26,7 @@ void testApp::setup(){
 	
 	//this is the simplest example and is really flexible
 	emptyTrack = new ofxTLEmptyTrack();
-	timeline.addTrack("New Custom Track", emptyTrack);
+	timeline.addTrack("My Custom Track", emptyTrack);
 
 	//a very simple color keyframe
 	emptyKeyframes = new ofxTLEmptyKeyframes();
