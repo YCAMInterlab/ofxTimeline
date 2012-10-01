@@ -73,6 +73,7 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
+#include "ofxTLLFO.h"
 
 typedef struct {
     ofxTLTrack* track;
@@ -315,6 +316,10 @@ class ofxTimeline : ofThread {
 	float getValue(string name);
 	float getValue(string name, float atTime);
 	float getValue(string name, int atFrame);
+
+	//adding tracks always adds to the current page
+    ofxTLLFO* addLFO(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	ofxTLLFO* addLFO(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 
     ofxTLSwitches* addSwitches(string name);
 	ofxTLSwitches* addSwitches(string name, string xmlFileName);

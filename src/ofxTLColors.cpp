@@ -35,7 +35,7 @@
 #include "ofxTLColors.h"
 
 void ofxTLColors::load() {
-	load("defaultColors.xml");
+	load("GUI/defaultColors.xml");
 }
 
 //TODO add reasonable default colors

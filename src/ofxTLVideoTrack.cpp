@@ -33,7 +33,7 @@ void ofxTLVideoTrack::setup(){
 void ofxTLVideoTrack::enable(){
 	if(!enabled){
 		ofxTLImageTrack::enable();
-		ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+//		ofAddListener(ofEvents().update, this, &ofxTLVideoTrack::update);
 		ofAddListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 	}
 }
@@ -42,7 +42,7 @@ void ofxTLVideoTrack::disable(){
 	if(enabled){
 		stop();
 		ofxTLImageTrack::disable();
-		ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
+//		ofRemoveListener(ofEvents().update, this, &ofxTLVideoTrack::update);
 		ofRemoveListener(events().playheadScrubbed, this, &ofxTLVideoTrack::playheadScrubbed);
 	} 
 }
@@ -88,13 +88,14 @@ bool ofxTLVideoTrack::getIsPlaying(){
 	return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
 }
 
-void ofxTLVideoTrack::update(ofEventArgs& args){
+//void ofxTLVideoTrack::update(ofEventArgs& args){
+void ofxTLVideoTrack::update(){
     
 	if(!isLoaded()){
 		return;
 	}
    	
-	if(timeline->getTimecontrolTrack()){
+	if(timeline->getTimecontrolTrack() && timeline->getIsFrameBased()){
 		timeline->setCurrentFrame(player->getCurrentFrame());
 	}
 	
@@ -393,9 +394,11 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 	if(isLoaded() && hasFocus()){
 		if(args.key == OF_KEY_LEFT){
 			selectFrame(MAX(selectedFrame-1, 0));
+			timeline->setCurrentFrame(player->getCurrentFrame());
 		}
 		else if(args.key == OF_KEY_RIGHT){
-			selectFrame(MIN(selectedFrame+1, player->getTotalNumFrames()-1));		
+			selectFrame(MIN(selectedFrame+1, player->getTotalNumFrames()-1));
+			timeline->setCurrentFrame(player->getCurrentFrame());
 		}
 	}	
 }

@@ -168,6 +168,8 @@ void ofxTLTicker::getSnappingPoints(set<unsigned long>& points){
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
 		points.insert(bpmScreenPoints[i].millis);
 	}
+	
+	points.insert(timeline->getCurrentTimeMillis());
 }
 
 void ofxTLTicker::refreshTickMarks(){

@@ -138,15 +138,23 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 	
 	//parametric interpolation
 	if(prevKey->type == nextKey->type){
+		//float alpha = sin(2*PI*ofMap(sampleTime, start->time,end->time, 0, 1.0));
 //		float alpha = ofMap(sampleTime, start->time,end->time, 0, 1.0);
 		ofxTLLFOKey tempkey;
-		tempkey.time = sampleTime;
+		tempkey.time = prevKey->time;
 		tempkey.type = prevKey->type;
 		tempkey.phaseShift = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->phaseShift, nextKey->phaseShift);
 		tempkey.amplitude = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->amplitude, nextKey->amplitude);
 		tempkey.center = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->center, nextKey->center);
 		tempkey.frequency = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->frequency, nextKey->frequency);
 		tempkey.freqDeviation = (nextKey->frequency - prevKey->frequency);
+		//ofxTLLFOKey* lfo = &tempkey;
+		//return ofClamp( (cos( (2*PI*lfo->frequency/(1000*60))*(sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
+//		alpha = 1;
+//		return ofClamp( (cos( 2*PI*(prevKey->frequency * prevKey->time)/(1000*60) +
+//							  2*PI*(prevKey->frequency + tempkey.freqDeviation*alpha)*(sampleTime-prevKey->time)/(1000*60) )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
+//		return ofClamp( (cos( (2*PI*(prevKey->frequency)/(1000*60)*sampleTime) + tempkey.freqDeviation/*cos(2*) alpha)) )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
+		//return ofClamp( (sin( (2*PI*prevKey->frequency/(1000*60))*(sampleTime) + 2*PI*(tempkey.freqDeviation/(1000*60)*sampleTime)*alpha )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
 		return evaluateKeyframeAtTime(&tempkey, sampleTime);
 	}
 	//value interpolation
@@ -160,10 +168,10 @@ float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleT
 	ofxTLLFOKey* lfo = (ofxTLLFOKey*)key;
 	if(lfo->type == OFXTL_LFO_TYPE_SINE){
 		//return ofClamp( (sin( lfo->samplePoint )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
-		return ofClamp( (sin( (2*PI*lfo->frequency/(1000*60))*(lfo->phaseShift + sampleTime) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
-}
+		return ofClamp( (cos( (2*PI*lfo->frequency/(1000*60))*(sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
+	}
 	else {
-		return ofClamp( (ofSignedNoise(lfo->seed, (2*PI*lfo->frequency)*(lfo->phaseShift + sampleTime)) * lfo->amplitude)*.5+.5 + lfo->center, 0, 1);
+		return ofClamp( (ofSignedNoise(lfo->seed, (2*PI*lfo->frequency/(1000*60*10))*(lfo->phaseShift + sampleTime)) * lfo->amplitude)*.5+.5 + lfo->center, 0, 1);
 	}
 }
 
@@ -307,11 +315,11 @@ ofxTLKeyframe* ofxTLLFO::newKeyframe(){
 void ofxTLLFO::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	ofxTLLFOKey* lfoKey = (ofxTLLFOKey*)key;
 	lfoKey->type = (ofxTLLFOType)xmlStore.getValue("type", int(OFXTL_LFO_TYPE_NOISE));
-	lfoKey->phaseShift = xmlStore.getValue("phaseShift", 0);
+	lfoKey->phaseShift = xmlStore.getValue("phaseShift", 0.);
 	lfoKey->amplitude = xmlStore.getValue("amplitude", 1.);
 	lfoKey->frequency = xmlStore.getValue("frequency", 100.);
-	lfoKey->seed = xmlStore.getValue("seed", 0);
-	lfoKey->center = xmlStore.getValue("center", 0);
+	lfoKey->seed = xmlStore.getValue("seed", 0.);
+	lfoKey->center = xmlStore.getValue("center", 0.);
 	lfoKey->interpolate = xmlStore.getValue("interpolate", true);
 }
 
@@ -344,12 +352,6 @@ void ofxTLLFO::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	if(rectangleX < timeline->getDrawRect().getMinX()){
 		rectangleX = timeline->getDrawRect().getMinX();
 	}
-//	if(args.x + rectWidth > timeline->getDrawRect().getMaxX()){
-//		rectangleX = timeline->getDrawRect().getMaxX() - rectWidth;
-//	}
-//	else{
-//		rectangleX = args.x;
-//	}
 	int rectNum = 0;
 	sineTypeRect = ofRectangle(rectangleX, rectangleY, rectWidth/2, rectHeight);
 	noiseTypeRect = ofRectangle(rectangleX+rectWidth/2, rectangleY, rectWidth/2, rectHeight);

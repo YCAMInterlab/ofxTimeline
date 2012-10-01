@@ -85,7 +85,7 @@ ofxTimeline::ofxTimeline()
 	curvesUseBinary(false),
 	headersAreEditable(false),
 	//copy from ofxTimeline/assets into bin/data/
-	defaultPalettePath("defaultColorPalette.png"),
+	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
 	fontSize(9)
@@ -1442,7 +1442,6 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
 }
 
 void ofxTimeline::setTimecontrolTrack(ofxTLTrack* track){
-	cout << "setting time control track, NULL? " << (track == NULL) << endl;
     timeControl = track;
 }
 
@@ -1465,6 +1464,21 @@ void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	trackNameToPage[trackName] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(events().viewWasResized, args);
+}
+
+//adding tracks always adds to the current page
+ofxTLLFO* ofxTimeline::addLFO(string trackName, ofRange valueRange, float defaultValue){
+    string uniqueName = confirmedUniqueName(trackName);
+    return addLFO(uniqueName, nameToXMLName(uniqueName), valueRange, defaultValue);
+}
+
+ofxTLLFO* ofxTimeline::addLFO(string trackName, string xmlFileName, ofRange valueRange, float defaultValue){
+	ofxTLLFO* newLFO = new ofxTLLFO();
+	newLFO->setCreatedByTimeline(true);
+	newLFO->setValueRange(valueRange, defaultValue);
+	newLFO->setXMLFileName(xmlFileName);
+	addTrack(confirmedUniqueName(trackName), newLFO);
+	return newLFO;
 }
 
 ofxTLCurves* ofxTimeline::addCurves(string trackName, ofRange valueRange, float defaultValue){
@@ -1689,6 +1703,12 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	if(videoPath != ""){
 	    if(!videoTrack->load(videoPath)){
         	ofLogError("ofxTimeline::addVideoTrack -- video " + videoPath + " failed to load");
+		}
+		else{
+			//make time control by default
+			setTimecontrolTrack(videoTrack);
+			setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
 		}
     }
     return videoTrack;
