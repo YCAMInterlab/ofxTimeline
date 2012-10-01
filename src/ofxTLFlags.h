@@ -61,6 +61,9 @@ class ofxTLFlags : public ofxTLBangs {
 	virtual void unselectAll();
     
     virtual string getTrackType();
+	
+	virtual void addFlag(string key);
+	virtual void addFlagAtTime(string key, unsigned long time);
     
 protected:
     
