@@ -180,7 +180,7 @@ void ofxTLKeyframes::setDefaultValue(float newDefaultValue){
 
 void ofxTLKeyframes::quantizeKeys(int step){
 	for(int i = 0; i < keyframes.size(); i++){
-		keyframes[i]->time = getTimeline()->getQuantizedTime(keyframes[i]->time, step);
+		setKeyframeTime(keyframes[i], getTimeline()->getQuantizedTime(keyframes[i]->time, step));
 	}
 }
 
