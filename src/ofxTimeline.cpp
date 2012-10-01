@@ -606,7 +606,7 @@ string ofxTimeline::getCurrentTimecode(){
 long ofxTimeline::getQuantizedTime(unsigned long time, unsigned long step){
 	double oneMeasure = 1000/(getBPM()/240.); // in milliseconds
 	step = oneMeasure / step; // convert step to milliseconds
-	int base = time / step;
+	unsigned long base = time / step;
 	base = time % step > (step * 0.5) ? base + 1 : base; // round up or down
 	return base * step;
 }
