@@ -1266,8 +1266,8 @@ void ofxTimeline::updateTime(){
 			else {
 				currentTime = timer.getAppTimeSeconds() - playbackStartTime;
 			}
+			checkLoop();
 		}
-		checkLoop();
 	}
 	
 	checkEvents();

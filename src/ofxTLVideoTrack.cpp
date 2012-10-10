@@ -84,30 +84,38 @@ bool ofxTLVideoTrack::togglePlay(){
 
 void ofxTLVideoTrack::play(){
     if(isLoaded()){
-//        cout << " current video frame is " << player->getCurrentFrame() << " current video time is " << ofxTimecode::timecodeForSeconds(player->getDuration()*player->getPosition()) << " current timeline time is " << timeline->getCurrentTime() << endl;
-        if(!player->isPlaying()){
-            player->play();
-        }
-        player->setSpeed(1.0);
-        
-        
+        if(player->getIsMovieDone()){
+			player->setFrame(inFrame);
+		}
+		if(getCurrentFrame() >= timeline->getOutFrame()){
+			player->setFrame(timeline->getInFrame());
+		}
+		player->play();
+		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+		ofNotifyEvent(events().playbackStarted, args);
+		
         currentlyPlaying = true;
-        ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-        ofNotifyEvent(events().playbackStarted, args);
     }
 }
 
 void ofxTLVideoTrack::stop(){
     if(isLoaded() && getIsPlaying()){
-        player->setSpeed(0.0);
+//		cout << "stopping playback" << endl;
+//        player->setSpeed(0.0);
+		player->stop();
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
         ofNotifyEvent(events().playbackEnded, args);
-        currentlyPlaying = false;    
+        currentlyPlaying = false;
+//		cout << "player is playing? " << player->isPlaying() << endl;
+		if(timeline->getTimecontrolTrack() == this){
+			timeline->setPercentComplete(player->getPosition());
+		}
     }
 }
 
 bool ofxTLVideoTrack::getIsPlaying(){
-	return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
+	//return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
+	return isLoaded() && currentlyPlaying;
 }
 
 //void ofxTLVideoTrack::update(ofEventArgs& args){
@@ -117,17 +125,18 @@ void ofxTLVideoTrack::update(){
 		return;
 	}
    	
-	if(timeline->getTimecontrolTrack() && timeline->getIsFrameBased()){
+	if(timeline->getTimecontrolTrack() == this && timeline->getIsFrameBased()){
 		timeline->setCurrentFrame(player->getCurrentFrame());
 	}
 	
    	if(timeline->getTimecontrolTrack() == this && getIsPlaying()){
         
         //this will happen if the user calls play on the video itself
-		if(!currentlyPlaying){
-            play(); //to trigger events
-        }
-        
+//		if(!currentlyPlaying){
+//            play(); //to trigger events
+//        }
+		
+        //no longer used
         if(player->getCurrentFrame() < inFrame || player->getCurrentFrame() > outFrame){
 //            cout << "reset in frame from " << player->getCurrentFrame() << endl;
             player->setFrame(inFrame);
@@ -140,13 +149,16 @@ void ofxTLVideoTrack::update(){
         }
 
         //if(timeline->getInOutRange().max < player->getPosition()){
-        if(timeline->getOutFrame() <= player->getCurrentFrame()){
+        if(timeline->getOutFrame() <= player->getCurrentFrame() || player->getIsMovieDone()){
+//			cout << " OVER " << endl;
             if(timeline->getLoopType() == OF_LOOP_NONE){
+//				cout << " no loop g" << endl;
                 stop();                
             }
             else{
                 int loopFrame = timeline->getInFrame();
 				selectFrame(loopFrame);
+				player->play();
                 ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
                 ofNotifyEvent(events().playbackLooped, args);                
             }
@@ -163,9 +175,9 @@ void ofxTLVideoTrack::update(){
         player->update();
 	}
     else{
-        if(player->getSpeed() != 0){
-	        player->setSpeed(0);
-        }
+//        if(player->getSpeed() != 0){
+//	        player->setSpeed(0);
+//        }
         if(currentlyPlaying){
             stop();
         }
@@ -270,9 +282,8 @@ void ofxTLVideoTrack::setPlayer(ofPtr<ofVideoPlayer> newPlayer){
         
 		inFrame = 0;
 		outFrame = player->getTotalNumFrames();
-        
-        player->play();
-        player->setSpeed(0.);
+        currentlyPlaying = false;
+		player->setLoopState(OF_LOOP_NONE);
         player->setFrame(0);
         player->update();
     }
@@ -432,9 +443,6 @@ int ofxTLVideoTrack::selectFrame(int frame){
 //	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
 	timeline->flagUserChangedValue();
-	if(player->getCurrentFrame() == selectedFrame-1){
-		player->nextFrame();
-	}
 	player->update();
 //	cout << "selectFrame: player reports frame " << player->getCurrentFrame() << " with requested frame " << frame << endl;
 
