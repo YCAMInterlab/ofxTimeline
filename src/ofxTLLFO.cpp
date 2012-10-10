@@ -61,11 +61,13 @@ void ofxTLLFO::drawModalContent(){
 	ofRect(sineTypeRect);
 	ofRect(noiseTypeRect);
 	ofRect(phaseShiftRect);
+//    ofRect(phaseMatchRect);
 	ofRect(amplitudeRect);
 	ofRect(frequencyRect);
 	ofRect(seedRect);
 	ofRect(centerRect);
 	ofRect(interpolateRect);
+    ofRect(expInterpolateRect);
 	
 	ofNoFill();
 	ofSetColor(timeline->getColors().keyColor);
@@ -73,11 +75,13 @@ void ofxTLLFO::drawModalContent(){
 	ofRect(sineTypeRect);
 	ofRect(noiseTypeRect);
 	ofRect(phaseShiftRect);
+//    ofRect(phaseMatchRect);
 	ofRect(amplitudeRect);
 	ofRect(frequencyRect);
 	ofRect(seedRect);
 	ofRect(centerRect);
 	ofRect(interpolateRect);
+    ofRect(expInterpolateRect);
 	
 	ofxTLLFOKey* lfokey = (ofxTLLFOKey*)selectedKeyframe;
 	ofSetColor(timeline->getColors().highlightColor, 128);
@@ -88,20 +92,33 @@ void ofxTLLFO::drawModalContent(){
 	else{
 		ofRect(noiseTypeRect);
 	}
+			//TODO: Phase match
+//    if(lfokey->phaseMatch){
+//		ofRect(phaseMatchRect);
+//	}
+    
 	if(lfokey->interpolate){
 		ofRect(interpolateRect);
 	}
+    
+    if (lfokey->expInterpolate){
+        ofRect(expInterpolateRect);
+    }
+    
 	
 	ofSetColor(timeline->getColors().textColor, 200);
 	float lineHeight = timeline->getFont().getLineHeight();
 	timeline->getFont().drawString("sine", sineTypeRect.x+10, sineTypeRect.y+lineHeight);
 	timeline->getFont().drawString("noise", noiseTypeRect.x+10, noiseTypeRect.y+lineHeight);
 	timeline->getFont().drawString("phase: " + ofToString(lfokey->phaseShift, 1), phaseShiftRect.x+10, phaseShiftRect.y+lineHeight);
+			//TODO: Phase match
+//	timeline->getFont().drawString("phaseMatch", phaseMatchRect.x+10, phaseMatchRect.y+lineHeight);
 	timeline->getFont().drawString("amplitude: " + ofToString(lfokey->amplitude, 4), amplitudeRect.x+10, amplitudeRect.y+lineHeight);
 	timeline->getFont().drawString("frequency: " + ofToString(lfokey->frequency, 1), frequencyRect.x+10, frequencyRect.y+lineHeight);
 	timeline->getFont().drawString("seed: " + ofToString(lfokey->seed, 1), seedRect.x+10, seedRect.y+lineHeight);
 	timeline->getFont().drawString("center: " + ofToString(ofMap(lfokey->center, 0, 4, valueRange.min, valueRange.max), 4), centerRect.x+10, centerRect.y+lineHeight);
 	timeline->getFont().drawString("interpolate", interpolateRect.x+10, interpolateRect.y+lineHeight);
+	timeline->getFont().drawString("expinterpolate", expInterpolateRect.x+10, expInterpolateRect.y+lineHeight);
 	
 	ofPopStyle();
 }
@@ -161,7 +178,7 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 	ofxTLLFOKey* prevKey = (ofxTLLFOKey*)start;
 //	prevKey->samplePoint = (1./prevKey->frequency)*(prevKey->phaseShift + prevKey->time + sampleTime );
 	
-	if(!prevKey->interpolate){
+	if(!prevKey->interpolate && !prevKey->expInterpolate){
 		return evaluateKeyframeAtTime(prevKey, sampleTime);
 	}
 	
@@ -169,7 +186,7 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 	
 	//parametric interpolation
 	if(prevKey->type == nextKey->type){
-		//float alpha = sin(2*PI*ofMap(sampleTime, start->time,end->time, 0, 1.0));
+//      float alpha = sin(2*PI*ofMap(sampleTime, start->time,end->time, 0, 1.0));
 //		float alpha = ofMap(sampleTime, start->time,end->time, 0, 1.0);
 		ofxTLLFOKey tempkey;
 		tempkey.time = prevKey->time;
@@ -179,15 +196,37 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 		tempkey.amplitude = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->amplitude, nextKey->amplitude);
 		tempkey.center = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->center, nextKey->center);
 		tempkey.frequency = ofMap(sampleTime, prevKey->time, nextKey->time, prevKey->frequency, nextKey->frequency);
-		//tempkey.freqDeviation = (nextKey->frequency - prevKey->frequency);
-		//ofxTLLFOKey* lfo = &tempkey;
-		//return ofClamp( (cos( (2*PI*lfo->frequency/(1000*60))*(sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
-//		alpha = 1;
-//		return ofClamp( (cos( 2*PI*(prevKey->frequency * prevKey->time)/(1000*60) +
-//							  2*PI*(prevKey->frequency + tempkey.freqDeviation*alpha)*(sampleTime-prevKey->time)/(1000*60) )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
-//		return ofClamp( (cos( (2*PI*(prevKey->frequency)/(1000*60)*sampleTime) + tempkey.freqDeviation/*cos(2*) alpha)) )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
-		//return ofClamp( (sin( (2*PI*prevKey->frequency/(1000*60))*(sampleTime) + 2*PI*(tempkey.freqDeviation/(1000*60)*sampleTime)*alpha )*tempkey.amplitude)*.5 + .5 + tempkey.center, 0, 1);
-		return evaluateKeyframeAtTime(&tempkey, sampleTime);
+        
+		if (tempkey.type == OFXTL_LFO_TYPE_SINE) {
+            
+            if (!prevKey->expInterpolate) {
+                
+                // http://stackoverflow.com/questions/11199509/sine-wave-that-slowly-ramps-up-frequency-from-f1-to-f2-for-a-given-time
+                // http://en.wikipedia.org/wiki/Chirp
+                
+                double interval = (double)(nextKey->time - prevKey->time) / (60.0f * 1000.0f);
+                double delta = (double)(sampleTime - prevKey->time) / (double)(nextKey->time - prevKey->time);
+                double t = interval * delta;
+                double phase = 2.0f * PI * t * (prevKey->frequency + (nextKey->frequency - prevKey->frequency) * delta / 2.0f);
+                            
+                return (cos(phase + prevKey->phaseShift) * tempkey.amplitude * 0.5 + 0.5 + tempkey.center);
+            
+            } else {
+                
+                // strange if there's no prevKey
+                
+                double interval = (double)(nextKey->time - prevKey->time) / (60.0f * 1000.0f);
+                double k = exp(log(nextKey->frequency / prevKey->frequency) / interval);
+                double delta = (double)(sampleTime - prevKey->time) / (double)(nextKey->time - prevKey->time);
+                double t = interval * delta;
+                double phase = 2 * PI * prevKey->frequency * ((pow(k, t) - 1) / log(k));
+                return (cos(phase) * 0.5 + 0.5);
+                
+            }
+            
+        }
+
+        return evaluateKeyframeAtTime(&tempkey, sampleTime);
 	}
 	//value interpolation
 	else{
@@ -199,9 +238,10 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
 	ofxTLLFOKey* lfo = (ofxTLLFOKey*)key;
 	if(lfo->type == OFXTL_LFO_TYPE_SINE){
-		//lfo->frequency*sampleTime;
-		//return ofClamp( (sin( lfo->samplePoint )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
-		return ofClamp(( cos( (2*PI*lfo->frequency/(1000*60)) * (sampleTime+lfo->phaseShift) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
+
+        // when no interpolation needed.
+        return ofClamp(( cos( (2.0f*PI * lfo->frequency) * (sampleTime + lfo->phaseShift) / (1000.0f*60.0f) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
+        
 	}
 	else {
 		return ofClamp( (ofSignedNoise(lfo->seed, (2*PI*lfo->frequency/(1000*60*10))*(lfo->phaseShift + sampleTime)) * lfo->amplitude)*.5+.5 + lfo->center, 0, 1);
@@ -226,6 +266,10 @@ bool ofxTLLFO::mousePressed(ofMouseEventArgs& args, long millis){
 			editingExponent = 1;
 			editingSensitivity = 1;
 		}
+			//TODO: Phase match
+//        else if(phaseMatchRect.inside(args.x, args.y)){
+//			mouseDownRect = &phaseMatchRect;
+//		}
 		else if(amplitudeRect.inside(args.x, args.y)){
 			mouseDownRect = &amplitudeRect;
 			editingParam = &((ofxTLLFOKey*)selectedKeyframe)->amplitude;
@@ -256,6 +300,9 @@ bool ofxTLLFO::mousePressed(ofMouseEventArgs& args, long millis){
 		}
 		else if(interpolateRect.inside(args.x, args.y)){
 			mouseDownRect = &interpolateRect;
+		}
+		else if(expInterpolateRect.inside(args.x, args.y)){
+			mouseDownRect = &expInterpolateRect;
 		}
 		if(editingParam != NULL){
 			editingStartValue = *editingParam;
@@ -307,8 +354,21 @@ void ofxTLLFO::mouseReleased(ofMouseEventArgs& args, long millis){
 					timeline->flagTrackModified(this);
 				}
 			}
+			//TODO: Phase match
+//            else if(mouseDownRect == &phaseMatchRect){
+//				lfokey->phaseMatch = !lfokey->phaseMatch;
+//				shouldRecomputePreviews = true;
+//				timeline->flagTrackModified(this);
+//			}
 			else if(mouseDownRect == &interpolateRect){
 				lfokey->interpolate = !lfokey->interpolate;
+                if (lfokey->interpolate) lfokey->expInterpolate = false;
+				shouldRecomputePreviews = true;
+				timeline->flagTrackModified(this);
+			}
+			else if(mouseDownRect == &expInterpolateRect){
+				lfokey->expInterpolate = !lfokey->expInterpolate;
+                if (lfokey->expInterpolate) lfokey->interpolate = false;
 				shouldRecomputePreviews = true;
 				timeline->flagTrackModified(this);
 			}
@@ -337,10 +397,12 @@ ofxTLKeyframe* ofxTLLFO::newKeyframe(){
 	ofxTLLFOKey* newKey = new ofxTLLFOKey();
 	newKey->type = OFXTL_LFO_TYPE_SINE;
 	newKey->phaseShift = 0; //in millis
+    newKey->phaseMatch = false;
 	newKey->amplitude = 1.0;
 	newKey->frequency = 100.;
 	newKey->center = 0 ; // 0 is middle
 	newKey->interpolate = true;
+    newKey->expInterpolate = false;
 	newKey->seed = 0;
 	return newKey;
 }
@@ -354,6 +416,7 @@ void ofxTLLFO::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	lfoKey->seed = xmlStore.getValue("seed", 0.);
 	lfoKey->center = xmlStore.getValue("center", 0.);
 	lfoKey->interpolate = xmlStore.getValue("interpolate", true);
+	lfoKey->expInterpolate = xmlStore.getValue("expInterpolate", true);
 }
 
 void ofxTLLFO::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
@@ -366,7 +429,7 @@ void ofxTLLFO::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	xmlStore.addValue("seed",lfoKey->seed);
 	xmlStore.addValue("center",lfoKey->center);
 	xmlStore.addValue("interpolate",lfoKey->interpolate);
-
+	xmlStore.addValue("expInterpolate",lfoKey->expInterpolate);
 }
 
 void ofxTLLFO::selectedKeySecondaryClick(ofMouseEventArgs& args){
@@ -391,6 +454,9 @@ void ofxTLLFO::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	rectNum++;
 	phaseShiftRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
 	rectNum++;
+			//TODO: Phase match	
+//	phaseMatchRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
+//	rectNum++;
 	amplitudeRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
 	rectNum++;
 	frequencyRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
@@ -400,6 +466,8 @@ void ofxTLLFO::selectedKeySecondaryClick(ofMouseEventArgs& args){
 	centerRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
 	rectNum++;
 	interpolateRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
+	rectNum++;
+	expInterpolateRect = ofRectangle(rectangleX, rectangleY+rectNum*rectHeight, rectWidth, rectHeight);
 	rectNum++;
 
 	lfoRect = ofRectangle(rectangleX, rectangleY, rectWidth, totalDrawHeight);

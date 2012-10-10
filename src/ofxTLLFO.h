@@ -48,12 +48,14 @@ class ofxTLLFOKey : public ofxTLKeyframe {
 	//just make some random colors
 	ofxTLLFOType type;
 	float phaseShift; //in millis
+    bool  phaseMatch;
 	float amplitude; 
 	float frequency;
 	float seed; // for noise
 	float center; // 0 is middle
 	float freqDeviation;
 	bool interpolate;
+    bool expInterpolate;
 };
 
 //Just a simple useless random color keyframer
@@ -123,6 +125,8 @@ class ofxTLLFO : public ofxTLKeyframes {
 	ofRectangle seedRect;
 	ofRectangle centerRect;
 	ofRectangle interpolateRect;
+    ofRectangle expInterpolateRect;
+//    ofRectangle phaseMatchRect;
 	ofRectangle* mouseDownRect;
 	float* editingParam;
 	float editingStartValue;
