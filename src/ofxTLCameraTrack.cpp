@@ -138,28 +138,55 @@ void ofxTLCameraTrack::draw(){
 }
 
 void ofxTLCameraTrack::draw3d(){
+	
+	if(lockCameraToTrack) return;
+	
+	ofxTLCameraFrame interFrame;
+	ofNode n;
+	ofPushStyle();
+
+	
 	for(int i = 0; i  < keyframes.size(); i++){
-		ofNode n;
 		ofxTLCameraFrame* frame = (ofxTLCameraFrame*)keyframes[i];
 		n.setPosition(frame->position);
 		n.setOrientation(frame->orientation);
 		n.draw();
-
-		if(i < keyframes.size() - 1){
-			ofxTLCameraFrame interFrame;
-//			glBegin(GL_POINTS);
-//				for(float s = 0; s <= 1; s += .01){
-			for(unsigned long millis = keyframes[i]->time; millis < keyframes[i+1]->time; millis += 500){
-				setCameraFrameToTime(&interFrame, millis);
-				n.setPosition(interFrame.position);
-				n.setOrientation(interFrame.orientation);
-				ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*10);
-//				glVertex3fv(&(interFrame.position[0]));
-//					glVertex3fv(&(ofHermiteInterpolate(samples[i-2].position, samples[i-1].position, samples[i].position, samples[i+1].position, s, 0, 0)[0]) );
-			}
-//			glEnd();
-		}
+		ofPushStyle();
+		ofPopStyle();
 	}
+	
+	unsigned long startMillis = screenXToMillis(bounds.x);
+	unsigned long endMillis = screenXToMillis(bounds.getMaxX());
+	unsigned long step = (endMillis - startMillis)/100;
+	for(unsigned long millis = startMillis; millis < endMillis; millis += step ){
+		setCameraFrameToTime(&interFrame, millis);
+		n.setPosition(interFrame.position);
+		n.setOrientation(interFrame.orientation);
+		ofSetColor(0,0,255);
+		ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*10);
+		ofSetColor(0,255,0);
+		ofLine(n.getPosition(), n.getPosition() + n.getUpDir()*10);
+		ofSetColor(255,0,0);
+		ofLine(n.getPosition(), n.getPosition() + n.getSideDir()*10);
+	}
+
+	setCameraFrameToTime(&interFrame, currentTrackTime());
+	n.setPosition(interFrame.position);
+	n.setOrientation(interFrame.orientation);
+	
+	ofSetLineWidth(3);
+	ofSetColor(0,0,255);
+	ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*25);
+	ofSetColor(0,255,0);
+	ofLine(n.getPosition(), n.getPosition() + n.getUpDir()*25);
+	ofSetColor(255,0,0);
+	ofLine(n.getPosition(), n.getPosition() + n.getSideDir()*25);
+	
+	ofNoFill();
+	ofSetColor(255);
+	ofBox(n.getPosition(), 4);
+	
+	ofPopStyle();
 }
 
 void ofxTLCameraTrack::draweEase(CameraTrackEase ease, ofPoint screenPoint, bool easeIn){
@@ -235,7 +262,14 @@ bool ofxTLCameraTrack::mousePressed(ofMouseEventArgs& args, long millis){
 	//for the general behavior call the super class
 	//or you can do your own thing. Return true if the click caused an item to
 	//become selectd
-	return ofxTLKeyframes::mousePressed(args, millis);
+	bool ret = ofxTLKeyframes::mousePressed(args, millis);
+	createNewOnMouseup = false;
+	if(selectedKeyframe != NULL){
+		ofxTLCameraFrame* sample = (ofxTLCameraFrame*)selectedKeyframe;
+		sample->easeInSelected = args.x < millisToScreenX(sample->time);
+	}
+	return ret;
+
 }
 
 void ofxTLCameraTrack::mouseMoved(ofMouseEventArgs& args, long millis){
@@ -285,12 +319,15 @@ void ofxTLCameraTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 void ofxTLCameraTrack::regionSelected(ofLongRange timeRange, ofRange valueRange){
-	//you can override the default to select other things than just dots
-	ofxTLKeyframes::regionSelected(timeRange, valueRange);
+    for(int i = 0; i < keyframes.size(); i++){
+    	if(timeRange.contains( keyframes[i]->time )){
+            selectKeyframe(keyframes[i]);
+        }
+	}
 }
 
 string ofxTLCameraTrack::getTrackType(){
-	return "EmptyKeyframes";
+	return "CameraTrack";
 }
 
 ofxTLKeyframe* ofxTLCameraTrack::newKeyframe(){
@@ -348,14 +385,14 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	}
 	
 	if(keyframes.size() == 1 || millis <= keyframes[0]->time){
-		ofxTLCameraFrame* firstFrame = (ofxTLCameraFrame*)keyframes[0]->time;
+		ofxTLCameraFrame* firstFrame = (ofxTLCameraFrame*)keyframes[0];
 		camera->setPosition(firstFrame->position);
 		camera->setOrientation(firstFrame->orientation);
 		return;
 	}
 	
 	if (millis >= keyframes[keyframes.size()-1]->time) {
-		ofxTLCameraFrame* lastFrame = (ofxTLCameraFrame*)keyframes[0]->time;
+		ofxTLCameraFrame* lastFrame = (ofxTLCameraFrame*)keyframes[keyframes.size()-1];
 		camera->setPosition(lastFrame->position);
 		camera->setOrientation(lastFrame->orientation);
 		return;

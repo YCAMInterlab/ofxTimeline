@@ -4,12 +4,18 @@
 
 cd ../
 
-git clone https://github.com/YCAMInterlab/ofxTimecode
+if [ -z $1 ]; then
+    PREFIX="git clone https://github.com/"
+else
+    PREFIX="git clone git@github.com:"
+fi
 
-git clone https://github.com/obviousjim/ofxTween.git
+${PREFIX}YCAMInterlab/ofxTimecode.git
 
-git clone https://github.com/obviousjim/ofxMSATimer.git
+${PREFIX}obviousjim/ofxTween.git
 
-git clone https://github.com/Flightphase/ofxTextInputField.git
+${PREFIX}obviousjim/ofxMSATimer.git
 
-git clone https://github.com/Flightphase/ofxRange.git
+${PREFIX}Flightphase/ofxTextInputField.git
+
+${PREFIX}Flightphase/ofxRange.git

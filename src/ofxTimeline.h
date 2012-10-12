@@ -123,6 +123,7 @@ class ofxTimeline : ofThread {
 	virtual bool toggleShow();    
     virtual void show();
 	virtual void hide();
+	virtual bool getIsShowing();
 	virtual void draw();
     
 	virtual void mousePressed(ofMouseEventArgs& args);

@@ -134,5 +134,6 @@ class ofxTLLFO : public ofxTLKeyframes {
 	float editingSensitivity;
 	float editingExponent;
 	float editingClickX;
+	bool draggedValue;
 	
 };

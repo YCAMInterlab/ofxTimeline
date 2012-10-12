@@ -209,7 +209,7 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
                 double t = interval * delta;
                 double phase = 2.0f * PI * t * (prevKey->frequency + (nextKey->frequency - prevKey->frequency) * delta / 2.0f);
                             
-                return (cos(phase + prevKey->phaseShift) * tempkey.amplitude * 0.5 + 0.5 + tempkey.center);
+                return ofClamp((cos(phase + prevKey->phaseShift) * tempkey.amplitude * 0.5 + 0.5 + tempkey.center), 0, 1.0);
             
             } else {
                 
@@ -220,7 +220,7 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
                 double delta = (double)(sampleTime - prevKey->time) / (double)(nextKey->time - prevKey->time);
                 double t = interval * delta;
                 double phase = 2 * PI * prevKey->frequency * ((pow(k, t) - 1) / log(k));
-                return (cos(phase) * 0.5 + 0.5);
+                return ofClamp(cos(phase) * 0.5 + 0.5, 0, 1.0);
                 
             }
             
@@ -250,6 +250,7 @@ float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleT
 
 bool ofxTLLFO::mousePressed(ofMouseEventArgs& args, long millis){
 	if(drawingLFORect){
+		draggedValue = false;
 		mouseDownRect = NULL;
 		editingParam = NULL;
 		editingClickX = args.x;
@@ -328,6 +329,7 @@ void ofxTLLFO::mouseDragged(ofMouseEventArgs& args, long millis){
 			float delta = (args.x-editingClickX)*editingSensitivity;
 			*editingParam = ofClamp(editingStartValue + delta, editingRange.min, editingRange.max);
 			shouldRecomputePreviews = true;
+			draggedValue = true;
 			timeline->flagUserChangedValue();
 		}
 	}
@@ -371,6 +373,11 @@ void ofxTLLFO::mouseReleased(ofMouseEventArgs& args, long millis){
                 if (lfokey->expInterpolate) lfokey->interpolate = false;
 				shouldRecomputePreviews = true;
 				timeline->flagTrackModified(this);
+			}
+			
+			if(draggedValue){
+				timeline->flagTrackModified(this);
+				draggedValue = false;
 			}
 		}
 		if(args.button == 0 && !ofGetModifierControlPressed() && !lfoRect.inside(args.x, args.y) && mouseDownRect == NULL){

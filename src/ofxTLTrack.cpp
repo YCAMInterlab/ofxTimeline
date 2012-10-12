@@ -45,7 +45,6 @@ ofxTLTrack::ofxTLTrack()
 	timeline(NULL),
 	playbackStartTime(0),
 	isPlaying(false)
-
 {
 
 }

@@ -57,8 +57,11 @@ void ofxTLSwitches::draw(){
 
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        float startScreenX = millisToScreenX(switchKey->timeRange.min);
-        float endScreenX = millisToScreenX(switchKey->timeRange.max);
+        float startScreenX = MAX(millisToScreenX(switchKey->timeRange.min), 0);
+        float endScreenX = MIN(millisToScreenX(switchKey->timeRange.max), bounds.getMaxX());
+		if(startScreenX == endScreenX){
+			continue;
+		}
 		switchKey->display = ofRectangle(startScreenX, bounds.y, endScreenX-startScreenX, bounds.height);
 
         //draw handles
@@ -70,7 +73,7 @@ void ofxTLSwitches::draw(){
         }
         else{
 	        ofSetColor(timeline->getColors().keyColor);    
-        }        
+        }
 
         ofLine(switchKey->display.x, bounds.y, 
                switchKey->display.x, bounds.y+bounds.height);
