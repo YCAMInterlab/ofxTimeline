@@ -70,9 +70,11 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void load();
 	
 	virtual void clear();
-	
-	virtual void addKeyframeAtMillis(float value, unsigned long millis);
+
+	virtual void addKeyframe();
 	virtual void addKeyframe(float value);
+	virtual void addKeyframeAtMillis(unsigned long millis);
+	virtual void addKeyframeAtMillis(float value, unsigned long millis);
 	
 	//copy paste
 	virtual string copyRequest();

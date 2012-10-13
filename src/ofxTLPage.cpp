@@ -299,8 +299,15 @@ void ofxTLPage::mouseReleased(ofMouseEventArgs& args, long millis){
 		for(int i = 0; i < headers.size(); i++){
             ofRectangle trackBounds = tracks[headers[i]->name]->getDrawRect();
 			ofRange valueRange;
+			//if we have a collapsed track
 			if(trackBounds.height == 0){
-				valueRange = ofRange(0,1.0);
+				//and the selection rect actual is over the track
+				if(selectionRectangle.getMinY() < trackBounds.y && selectionRectangle.getMaxY() > trackBounds.y){
+					valueRange = ofRange(0,1.0);
+				}
+				else{
+					continue;
+				}
 			}
 			else{
 				valueRange = ofRange(ofMap(selectionRectangle.getMinY(), trackBounds.y, trackBounds.y+trackBounds.height, 0.0, 1.0, true),
@@ -497,9 +504,11 @@ ofxTLTrackHeader* ofxTLPage::getTrackHeader(ofxTLTrack* track){
     return NULL;
 }
 
-void ofxTLPage::collapseAllTracks(){
+void ofxTLPage::collapseAllTracks(bool excludeFocusTrack){
 	for(int i = 0; i < headers.size(); i++){
-		headers[i]->collapseTrack();
+		if(!excludeFocusTrack || focusedTrack != headers[i]->getTrack()){
+			headers[i]->collapseTrack();
+		}
 	}
 	recalculateHeight();
 }

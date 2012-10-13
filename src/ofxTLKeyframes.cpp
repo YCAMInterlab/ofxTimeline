@@ -602,10 +602,17 @@ void ofxTLKeyframes::pasteSent(string pasteboard){
 	}
 }
 
+void ofxTLKeyframes::addKeyframe(){
+	addKeyframe(defaultValue);
+}
+
 void ofxTLKeyframes::addKeyframe(float value){
 	//play solo change
-//	addKeyframeAtMillis(value, timeline->getCurrentTimeMillis());
 	addKeyframeAtMillis(value, currentTrackTime());
+}
+
+void ofxTLKeyframes::addKeyframeAtMillis(unsigned long millis){
+	addKeyframeAtMillis(defaultValue, millis);
 }
 
 void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long millis){

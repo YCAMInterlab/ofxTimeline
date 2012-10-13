@@ -230,6 +230,10 @@ bool ofxTimeline::toggleShow(){
 	return isShowing;
 }
 
+bool ofxTimeline::getIsShowing(){
+	return isShowing;
+}
+
 void ofxTimeline::setShowTimeControls(bool shouldShowTimeControls){
     setShowInoutControl(shouldShowTimeControls);
     setShowZoomer(shouldShowTimeControls);
@@ -546,20 +550,20 @@ bool ofxTimeline::getIsPlaying(){
 	return timeControl != NULL ? timeControl->getIsPlaying() : isPlaying;
 }
 
+void ofxTimeline::setHoverTime(unsigned long millisTime){
+	ticker->setHoverTime(millisTime);
+}
+
 void ofxTimeline::setCurrentFrame(int newFrame){
-    currentTime = timecode.secondsForFrame(newFrame);
+    setCurrentTimeSeconds(timecode.secondsForFrame(newFrame));
 }
 
 void ofxTimeline::setPercentComplete(float percent){
-    currentTime = percent*durationInSeconds;
+    setCurrentTimeSeconds(percent*durationInSeconds);
 }
 
 void ofxTimeline::setCurrentTimecode(string timecodeString){
-    currentTime = timecode.secondsForTimecode(timecodeString);
-}
-
-void ofxTimeline::setHoverTime(unsigned long millisTime){
-	ticker->setHoverTime(millisTime);
+    setCurrentTimeSeconds(timecode.secondsForTimecode(timecodeString));
 }
 
 void ofxTimeline::setCurrentTimeSeconds(float time){
@@ -567,7 +571,7 @@ void ofxTimeline::setCurrentTimeSeconds(float time){
 }
 
 void ofxTimeline::setCurrentTimeMillis(unsigned long millis){
-	currentTime = millis/1000.;
+	setCurrentTimeSeconds(millis/1000.);
 }
 
 void ofxTimeline::setFrameRate(float fps){
@@ -1109,6 +1113,11 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 			save();
 		}
 	}
+	else if(ofGetModifierAltPressed()){
+		if(args.key == 'C' || args.key == 'C'-96){
+			currentPage->collapseAllTracks(true);
+		}
+	}
 	else{
 		if(args.key >= OF_KEY_LEFT && args.key <= OF_KEY_DOWN){
 			ofVec2f nudgeAmount = ofGetModifierShiftPressed() ? getBigNudgePercent() : getNudgePercent();
@@ -1266,8 +1275,8 @@ void ofxTimeline::updateTime(){
 			else {
 				currentTime = timer.getAppTimeSeconds() - playbackStartTime;
 			}
+			checkLoop();
 		}
-		checkLoop();
 	}
 	
 	checkEvents();
