@@ -60,6 +60,7 @@ class ofxTLZoomer : public ofxTLTrack
 	//not allowed to be less than one
 	void setViewExponent(float exponent);
 	ofRange getViewRange(); //exponential viewport
+	virtual void lostFocus();
 	
 	//this set is NON exponential, but normalized 0-1
 	void setViewRange(ofRange newRange);
@@ -71,7 +72,6 @@ class ofxTLZoomer : public ofxTLTrack
 	void notifyZoomEnded();
 
 	ofRange currentViewRange;
-//	ofRange currentLogViewRange;
 
 	float minGrabOffset;
 	float maxGrabOffset;

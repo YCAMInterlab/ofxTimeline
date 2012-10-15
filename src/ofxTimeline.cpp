@@ -989,6 +989,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 		}
 		else if(!focus && timelineHasFocus){
 			currentPage->timelineLostFocus();
+			zoomer->lostFocus();
 		}
 		timelineHasFocus = focus;
 		if(timelineHasFocus){

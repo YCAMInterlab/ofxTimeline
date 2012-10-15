@@ -136,7 +136,7 @@ void ofxTLZoomer::mouseMoved(ofMouseEventArgs& args) {
 void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 
 	if(!enabled) return;
-
+	
 	minSelected = maxSelected = midSelected = false;
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
 		mouseIsDown = true;
@@ -189,7 +189,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
     
 	if(!enabled) return;
-
+	
     bool notify = false;
 	ofRange oldRange = getViewRange();
 	if(minSelected || midSelected){
@@ -228,6 +228,13 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 //		timeline->flagTrackModified(this);
 		save(); //intentionally ignores auto save since this is just a view parameter
 	}
+}
+
+void ofxTLZoomer::lostFocus(){
+	ofxTLTrack::lostFocus();
+	minSelected = false;
+	maxSelected = false;
+	midSelected = false;
 }
 
 void ofxTLZoomer::notifyZoomStarted(){
