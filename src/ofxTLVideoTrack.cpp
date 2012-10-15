@@ -307,8 +307,8 @@ void ofxTLVideoTrack::draw(){
 
 	ofPushStyle();
 	
-	glEnable(GL_SCISSOR_TEST);
-	glScissor(bounds.x, 0, bounds.width, ofGetHeight());
+//	glEnable(GL_SCISSOR_TEST);
+//	glScissor(bounds.x, 0, bounds.width, ofGetHeight());
 	if(thumbsEnabled && getDrawRect().height > 10){
 		//clip hanging frames off the sides
 
@@ -372,7 +372,7 @@ void ofxTLVideoTrack::draw(){
 	
 	ofPopStyle();
 	
-	glDisable(GL_SCISSOR_TEST);
+//	glDisable(GL_SCISSOR_TEST);
 }
 
 void ofxTLVideoTrack::setInFrame(int in){

@@ -1319,6 +1319,9 @@ void ofxTimeline::draw(){
 
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(totalDrawRect.x, 0, totalDrawRect.width, ofGetHeight());
+		
         ofDisableLighting();
 		ofEnableAlphaBlending();
 		ofSetColor(255*.15);
