@@ -65,8 +65,8 @@ class ofxTLZoomer : public ofxTLTrack
 	//this set is NON exponential, but normalized 0-1
 	void setViewRange(ofRange newRange);
     ofRange getSelectedRange(); //non exponential
+	
   private:
-
 	void notifyZoomStarted();
 	void notifyZoomDragged(ofRange oldZoom);
 	void notifyZoomEnded();

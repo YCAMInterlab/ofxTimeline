@@ -275,6 +275,11 @@ ofRange ofxTLZoomer::getViewRange() {
 	return ofRange(centerPosition - logSpan/2, centerPosition + logSpan/2);
 }
 
+void ofxTLZoomer::setViewExponent(float exponent){
+	zoomExponent = 1.0;
+	setViewRange(currentViewRange);
+}
+
 void ofxTLZoomer::setViewRange(ofRange newRange){
 
 	ofxTLZoomEventArgs zoomEvent;

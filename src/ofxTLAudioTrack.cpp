@@ -160,9 +160,9 @@ void ofxTLAudioTrack::recomputePreview(){
 		ofPolyline preview;
 		int lastFrameIndex = 0;
 		for(float i = bounds.x; i < bounds.x+bounds.width; i++){
-			float pointInTrack = screenXtoNormalizedX( i, zoomBounds ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
+			float pointInTrack = screenXtoNormalizedX( i ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
 			float trackCenter = bounds.y + trackHeight * (c+1);
-			if(pointInTrack <= 1.0){
+			if(pointInTrack >= 0 && pointInTrack <= 1.0){
 				//draw sample at pointInTrack * waveDuration;
 				int frameIndex = pointInTrack * numSamples;					
 				float losample = 0;
