@@ -104,8 +104,8 @@ void ofxTLPage::update(){
 
 void ofxTLPage::draw(){	
 	for(int i = 0; i < headers.size(); i++){
-		headers[i]->draw();
 		tracks[headers[i]->name]->_draw();
+		headers[i]->draw();
 	}
 	
 	if(!headerHasFocus && !footerIsDragging && draggingInside && snapPoints.size() > 0){
@@ -544,6 +544,10 @@ void ofxTLPage::expandFocusedTrack(){
 	}
 	
 	recalculateHeight();
+}
+
+void ofxTLPage::setExpandToHeight(float height){
+	heightBeforeCollapse = height;
 }
 
 void ofxTLPage::evenlyDistributeTrackHeights(){

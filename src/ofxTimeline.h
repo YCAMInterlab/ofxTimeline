@@ -245,6 +245,7 @@ class ofxTimeline : ofThread {
     virtual void setLockWidthToWindow(bool lockWidth);
     virtual bool getLockWidthToWindow();
 	virtual void setWidth(float width);
+	virtual void setHeight(float height);
 	virtual void collapseAllTracks(); //collapses all tracks heights to 0;
 	
 	ofRectangle getDrawRect();

@@ -62,14 +62,15 @@ class ofxTLPage {
 	virtual void setHeaderHeight(float newHeaderHeight);
 	virtual void setDefaultTrackHeight(float newDefaultTrackHeight);
 	
-	virtual void setMinimalHeaders(bool minimal);
-	virtual void hideFooters(bool hide);
+	void setMinimalHeaders(bool minimal);
+	void hideFooters(bool hide);
 	//collapses all track heights to 0;
-	virtual void collapseAllTracks(bool excludeFocusTrack = false);
+	void collapseAllTracks(bool excludeFocusTrack = false);
 	//evenly distributes all tracks, restoring the height if it was just collapsed
-	virtual void evenlyDistributeTrackHeights();
-	virtual void expandFocusedTrack();
-	
+	void evenlyDistributeTrackHeights();
+	void expandFocusedTrack();
+	void setExpandToHeight(float height);
+		
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
 	virtual void unselectAll();
