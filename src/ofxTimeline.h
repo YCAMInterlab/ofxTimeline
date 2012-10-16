@@ -126,6 +126,8 @@ class ofxTimeline : ofThread {
 	virtual bool getIsShowing();
 	virtual void draw();
     
+
+	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -216,6 +218,13 @@ class ofxTimeline : ofThread {
     
 	virtual void setEditableHeaders(bool headersEditable);
 	virtual bool areHeadersEditable();
+	
+	virtual void setMinimalHeaders(bool headersMinimal);
+	virtual bool areHeadersMinimal();
+	
+	virtual bool toggleShowFooters();
+	virtual void setFootersHidden(bool footersHidden);
+	virtual bool areFootersHidden();
 	
 	virtual void setInOutRange(ofRange inoutPercentRange);
 	virtual void clearInOut();
@@ -539,6 +548,8 @@ class ofxTimeline : ofThread {
 	bool autosave;
 	bool unsavedChanges;
 	bool headersAreEditable;
+	bool minimalHeaders;
+	bool footersHidden;
 	
 	bool isFrameBased;
 	float durationInSeconds;

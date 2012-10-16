@@ -82,11 +82,13 @@ ofxTimeline::ofxTimeline()
 	unsavedChanges(false),
 	curvesUseBinary(false),
 	headersAreEditable(false),
+	minimalHeaders(false),
 	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
-	fontSize(9)
+	fontSize(9),
+	footersHidden(false)
 {
 }
 
@@ -825,6 +827,37 @@ void ofxTimeline::setLockWidthToWindow(bool lockWidth){
     }
 }
 
+void ofxTimeline::setMinimalHeaders(bool headersMinimal){
+	if(minimalHeaders != headersMinimal){
+		minimalHeaders = headersMinimal;
+		for(int i = 0; i < pages.size(); i++){
+			pages[i]->setMinimalHeaders(minimalHeaders);
+		}
+	}
+}
+
+bool ofxTimeline::areHeadersMinimal(){
+	return minimalHeaders;
+}
+
+bool ofxTimeline::toggleShowFooters(){
+	setFootersHidden(!footersHidden);
+	return !footersHidden;
+}
+
+void ofxTimeline::setFootersHidden(bool hidden){
+	if(hidden != footersHidden){
+		footersHidden = hidden;
+		for(int i = 0; i < pages.size(); i++){
+			pages[i]->hideFooters(footersHidden);
+		}
+	}
+}
+
+bool ofxTimeline::areFootersHidden(){
+	return footersHidden;
+}
+
 void ofxTimeline::setEditableHeaders(bool headersEditable){
 	headersAreEditable = headersEditable;
 }
@@ -1115,8 +1148,20 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		}
 	}
 	else if(ofGetModifierAltPressed()){
-		if(args.key == 'C' || args.key == 'C'-96){
-			currentPage->collapseAllTracks(true);
+		if(args.key == 'c' || args.key == 'c'-96 || args.key == 'C' || args.key == 'C'-96){
+			if(ofGetModifierShiftPressed()){
+				currentPage->evenlyDistributeTrackHeights();
+			}
+			else{
+				currentPage->collapseAllTracks(true);
+			}
+			ofEventArgs args;
+			ofNotifyEvent(events().viewWasResized, args);
+		}
+		if(args.key == 'e' || args.key == 'e'-96){
+			currentPage->expandFocusedTrack();
+			ofEventArgs args;
+			ofNotifyEvent(events().viewWasResized, args);			
 		}
 	}
 	else{
@@ -1370,7 +1415,9 @@ void ofxTimeline::addPage(string pageName, bool makeCurrent){
 	newPage->setup();
 	newPage->setZoomBounds(zoomer->getViewRange());
 	newPage->setTicker(ticker);
-    
+    newPage->setMinimalHeaders(minimalHeaders);
+	newPage->hideFooters(footersHidden);
+	
 	pages.push_back(newPage);
 	tabs->addPage(pageName);
 

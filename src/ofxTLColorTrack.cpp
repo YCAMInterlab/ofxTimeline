@@ -47,6 +47,10 @@ ofxTLColorTrack::ofxTLColorTrack()
 
 void ofxTLColorTrack::draw(){
 	
+	if(bounds.height == 0){
+		return;
+	}
+	
 	if(viewIsDirty || shouldRecomputePreviews){
 		updatePreviewPalette();
 	}

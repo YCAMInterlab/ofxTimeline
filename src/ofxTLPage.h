@@ -57,11 +57,18 @@ class ofxTLPage {
 	virtual void setName(string name);
 	virtual string getName();
 	
+	
 	virtual void setContainer(ofVec2f offset, float width);
 	virtual void setHeaderHeight(float newHeaderHeight);
 	virtual void setDefaultTrackHeight(float newDefaultTrackHeight);
 	
-	virtual void collapseAllTracks(bool excludeFocusTrack = false); //collapses all track heights to 0;
+	virtual void setMinimalHeaders(bool minimal);
+	virtual void hideFooters(bool hide);
+	//collapses all track heights to 0;
+	virtual void collapseAllTracks(bool excludeFocusTrack = false);
+	//evenly distributes all tracks, restoring the height if it was just collapsed
+	virtual void evenlyDistributeTrackHeights();
+	virtual void expandFocusedTrack();
 	
 	virtual void setZoomBounds(ofRange zoomBounds);
 	
@@ -147,11 +154,13 @@ class ofxTLPage {
 	
 	long millisecondDragOffset;
 	
+	bool headersAreMinimal;
+	bool footersAreHidden;
     bool draggingSelectionRectangle;
     ofVec2f selectionRectangleAnchor;
     ofRectangle selectionRectangle;
     
-	
+	float heightBeforeCollapse;
 	ofRectangle trackContainerRect;
 	float headerHeight;
 	float defaultTrackHeight;
