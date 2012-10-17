@@ -75,7 +75,13 @@ void ofxTLColorTrack::draw(){
 	}
 	
 	for(int i = 0; i < keyframes.size(); i++){
+		
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		
 		float screenX = millisToScreenX(keyframes[i]->time);
+		
 		ofPoint a = ofPoint(screenX-10,bounds.y);
 		ofPoint b = ofPoint(screenX+10,bounds.y);
 		ofPoint c = ofPoint(screenX,bounds.y+10);

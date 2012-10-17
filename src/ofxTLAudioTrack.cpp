@@ -102,6 +102,7 @@ void ofxTLAudioTrack::draw(){
 	}
 		
 	if(shouldRecomputePreview || viewIsDirty){
+		cout << "recomputing waveform for audio file " << getSoundfilePath() << endl;
 		recomputePreview();
 	}
 
@@ -143,7 +144,6 @@ void ofxTLAudioTrack::draw(){
 		
 		ofPopStyle();
 	}
-	
 }
 
 void ofxTLAudioTrack::recomputePreview(){
@@ -156,20 +156,27 @@ void ofxTLAudioTrack::recomputePreview(){
 	float trackHeight = bounds.height/(1+player.getNumChannels());
 	int numSamples = player.getBuffer().size() / player.getNumChannels();
 	int pixelsPerSample = numSamples / bounds.width;
-	for(int c = 0; c < player.getNumChannels(); c++){
+	int numChannels = player.getNumChannels();
+	vector<short> & buffer  = player.getBuffer();
+
+	for(int c = 0; c < numChannels; c++){
 		ofPolyline preview;
 		int lastFrameIndex = 0;
+		preview.getVertices().resize(bounds.width*2);
 		for(float i = bounds.x; i < bounds.x+bounds.width; i++){
 			float pointInTrack = screenXtoNormalizedX( i ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
 			float trackCenter = bounds.y + trackHeight * (c+1);
+			
+			ofPoint * vertex = & preview.getVertices()[i*2];
+			
 			if(pointInTrack >= 0 && pointInTrack <= 1.0){
 				//draw sample at pointInTrack * waveDuration;
 				int frameIndex = pointInTrack * numSamples;					
 				float losample = 0;
 				float hisample = 0;
 				for(int f = lastFrameIndex; f < frameIndex; f++){
-					int sampleIndex = f * player.getNumChannels() + c;
-					float subpixelSample = player.getBuffer()[sampleIndex]/32565.0;
+					int sampleIndex = f * numChannels + c;
+					float subpixelSample = buffer[sampleIndex]/32565.0;
 					if(subpixelSample < losample) {
 						losample = subpixelSample;
 					}
@@ -177,22 +184,39 @@ void ofxTLAudioTrack::recomputePreview(){
 						hisample = subpixelSample;
 					}
 				}
+				
 				if(losample == 0 && hisample == 0){
-					preview.addVertex(i, trackCenter);
+					//preview.addVertex(i, trackCenter);
+					vertex->x = i;
+					vertex->y = trackCenter;
+					vertex++;
 				}
 				else {
 					if(losample != 0){
-						preview.addVertex(i, trackCenter - losample * trackHeight);
+//						preview.addVertex(i, trackCenter - losample * trackHeight);
+						vertex->x = i;
+						vertex->y = trackCenter - losample * trackHeight;
+						vertex++;
 					}
 					if(hisample != 0){
 						//ofVertex(i, trackCenter - hisample * trackHeight);
-						preview.addVertex(i, trackCenter - hisample * trackHeight);
+//						preview.addVertex(i, trackCenter - hisample * trackHeight);
+						vertex->x = i;
+						vertex->y = trackCenter - hisample * trackHeight;
+						vertex++;
 					}
 				}
+				
+				while (vertex < & preview.getVertices()[i*2] + 2) {
+					*vertex = *(vertex-1);
+					vertex++;
+				}
+
 				lastFrameIndex = frameIndex;
 			}
 			else{
-				preview.addVertex(i,trackCenter);
+				*vertex++ = ofPoint(i,trackCenter);
+				*vertex++ = ofPoint(i,trackCenter);
 			}
 		}
 		preview.simplify();

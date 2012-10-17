@@ -45,6 +45,10 @@ ofxTLTicker::~ofxTLTicker(){
 
 void ofxTLTicker::draw(){
 	
+	if(bounds.height == 0){
+		return;
+	}
+	
 	ofPushStyle();
 	
 	int textH, textW;
