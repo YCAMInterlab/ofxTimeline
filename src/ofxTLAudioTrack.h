@@ -43,6 +43,7 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual ~ofxTLAudioTrack();
 	
 	virtual void draw();
+	virtual void update();
 	
 	virtual bool loadSoundfile(string filepath);
 	virtual bool isSoundLoaded();
@@ -62,6 +63,7 @@ class ofxTLAudioTrack : public ofxTLTrack
     virtual void stop();
     virtual bool getIsPlaying();
 	
+	
 	vector<float>& getFFTSpectrum(int numBins);
 	int getDefaultBinCount();
 
@@ -69,6 +71,10 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
 	virtual void zoomEnded(ofxTLZoomEventArgs& args);
 	
+    virtual void playbackStarted(ofxTLPlaybackEventArgs& args);
+	virtual void playbackLooped(ofxTLPlaybackEventArgs& args);
+	virtual void playbackEnded(ofxTLPlaybackEventArgs& args);
+
 	virtual void boundsChanged(ofEventArgs& args);
 	
 	virtual void setSpeed(float speed);
@@ -78,7 +84,9 @@ class ofxTLAudioTrack : public ofxTLTrack
     
 	virtual string getTrackType();
 	
-  protected:	
+  protected:
+	
+	float positionForSecond(float second);
     bool soundLoaded;
 	bool shouldRecomputePreview;
 	vector<ofPolyline> previews;
@@ -88,8 +96,9 @@ class ofxTLAudioTrack : public ofxTLTrack
 	int defaultFFTBins;
 	vector<float> fftBins;
 	float lastPercent;
-	virtual void update(ofEventArgs& args);
+//	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer_TimelineAdditions player;
 	ofRange computedZoomBounds;
 	float maxBinReceived;
+
 };

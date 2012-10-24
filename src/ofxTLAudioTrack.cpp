@@ -67,28 +67,36 @@ float ofxTLAudioTrack::getDuration(){
 	return player.getDuration();
 }
 
-void ofxTLAudioTrack::update(ofEventArgs& args){
-	if(player.getPosition() < lastPercent){
-		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(events().playbackLooped, args);
-	}
-	lastPercent = player.getPosition();
-	
-    //currently only supports timelines with duration == duration of player
-	if(lastPercent < timeline->getInOutRange().min){
-		player.setPosition(timeline->getInOutRange().min);
-	}
-	else if(lastPercent > timeline->getInOutRange().max){
-		if(timeline->getLoopType() == OF_LOOP_NONE){
-			player.setPosition(timeline->getInOutRange().max);
-			stop();
+void ofxTLAudioTrack::update(){
+	if(this == timeline->getTimecontrolTrack()){
+		if(getIsPlaying()){
+			if(player.getPosition() < lastPercent){
+				ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+				ofNotifyEvent(events().playbackLooped, args);
+			}
+			lastPercent = player.getPosition();
+			
+			//currently only supports timelines with duration == duration of player
+			if(lastPercent < timeline->getInOutRange().min){
+				//player.setPosition( timeline->getInOutRange().min );
+				player.setPosition( positionForSecond(timeline->getInTimeInSeconds()) );
+			}
+			else if(lastPercent > timeline->getInOutRange().max){
+				if(timeline->getLoopType() == OF_LOOP_NONE){
+//					player.setPosition(timeline->getInOutRange().max);
+					player.setPosition( positionForSecond(timeline->getInTimeInSeconds()) );
+					stop();
+				}
+				else{
+//					player.setPosition(timeline->getInOutRange().min);
+					player.setPosition( positionForSecond(timeline->getOutTimeInSeconds()) );
+				}
+			}
+			
+			timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 		}
-		else{
-			player.setPosition(timeline->getInOutRange().min);
-		}
 	}
-	
-    timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
+	//cout << "audio track " << player.getPosition() << " timeline " << timeline->getPercentComplete() << endl;
 }
  
 void ofxTLAudioTrack::draw(){
@@ -102,7 +110,7 @@ void ofxTLAudioTrack::draw(){
 	}
 		
 	if(shouldRecomputePreview || viewIsDirty){
-		cout << "recomputing waveform for audio file " << getSoundfilePath() << endl;
+//		cout << "recomputing waveform for audio file " << getSoundfilePath() << endl;
 		recomputePreview();
 	}
 
@@ -144,6 +152,13 @@ void ofxTLAudioTrack::draw(){
 		
 		ofPopStyle();
 	}
+}
+
+float ofxTLAudioTrack::positionForSecond(float second){
+	if(isSoundLoaded()){
+		return ofMap(second, 0, player.getDuration(), 0, 1.0, true);
+	}
+	return 0;
 }
 
 void ofxTLAudioTrack::recomputePreview(){
@@ -271,24 +286,51 @@ void ofxTLAudioTrack::play(){
 		
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
-//		cout << "calling play on track " << endl;
+
 		player.play();
-		player.setPosition(timeline->getPercentComplete());
-		ofAddListener(ofEvents().update, this, &ofxTLAudioTrack::update);
-		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(events().playbackStarted, args);		
-	}	   
+		if(timeline->getTimecontrolTrack() == this){
+			ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+			ofNotifyEvent(events().playbackStarted, args);
+		}
+	}
 }
 
 void ofxTLAudioTrack::stop(){
 	if(player.getIsPlaying()){
-
-//		cout << "calling stop on track " << endl;
-		player.setPaused(true);
-		ofRemoveListener(ofEvents().update, this, &ofxTLAudioTrack::update);
 		
-		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
-		ofNotifyEvent(events().playbackEnded, args);
+		player.setPaused(true);
+
+		if(timeline->getTimecontrolTrack() == this){
+			ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
+			ofNotifyEvent(events().playbackEnded, args);
+		}
+	}
+}
+
+void ofxTLAudioTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
+	ofxTLTrack::playbackStarted(args);
+	if(isSoundLoaded() && this != timeline->getTimecontrolTrack()){
+		//player.setPosition(timeline->getPercentComplete());
+		float position = positionForSecond(timeline->getCurrentTime());
+		if(position < 1.0){
+			player.play();
+		}
+		player.setPosition( position );
+	}
+}
+
+void ofxTLAudioTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
+	if(isSoundLoaded() && this != timeline->getTimecontrolTrack()){
+		if(!player.getIsPlaying()){
+			player.play();
+		}
+		player.setPosition( positionForSecond(timeline->getCurrentTime()) );
+	}
+}
+
+void ofxTLAudioTrack::playbackEnded(ofxTLPlaybackEventArgs& args){
+	if(isSoundLoaded() && this != timeline->getTimecontrolTrack()){
+		player.stop();
 	}
 }
 

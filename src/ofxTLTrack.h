@@ -190,10 +190,10 @@ class ofxTLTrack
     virtual float millisToScreenX(long millis);
 
     //TODO: check if these are used any more
-	virtual int indexForScreenX(int mouseX);
-	virtual int screenXForIndex(int index);
-	virtual int indexForScreenX(int screenX, int durationInFrames);
-	virtual int screenXForIndex(int index, int durationInFrames);
+//	virtual int indexForScreenX(int mouseX);
+//	virtual int screenXForIndex(int index);
+//	virtual int indexForScreenX(int screenX, int durationInFrames);
+//	virtual int screenXForIndex(int index, int durationInFrames);
 	
 	virtual float screenXForTime(float time);
 	virtual float timeForScreenX(float screenX);

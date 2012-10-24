@@ -110,7 +110,7 @@ void ofxTLTicker::draw(){
     int currentFrameX;
     if (timeline->getIsFrameBased()) {
         text = ofToString(timeline->getCurrentFrame());
-        currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+        currentFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(timeline->getCurrentTime()));
     }
     else{
         text = timeline->formatTime(timeline->getCurrentTime());

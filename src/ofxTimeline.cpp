@@ -1786,9 +1786,9 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 		}
 		else{
 			//make time control by default
-			setTimecontrolTrack(videoTrack);
+//			setTimecontrolTrack(videoTrack);
 			setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+//			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
 		}
     }
     return videoTrack;
