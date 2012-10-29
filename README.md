@@ -2,11 +2,11 @@
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 Timleine sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
 
-ofxTimeline is a simple to use openFrameworks add on to create an editable timeline user interface.
+ofxTimeline is a simple to use openFrameworks add on for creating an editable timeline user interface.
 
 If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel familiar to you. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
 
-You can also extend ofxTimeline with custom tracks to work with other types of time based data.
+You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
 ## General tools for specific projects ##
 
@@ -36,9 +36,13 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 ## Getting started
 
 Here are a series of video tutorials for getting started
+
 https://vimeo.com/52302437
+
 https://vimeo.com/52304312
+
 https://vimeo.com/52304313
+
 password: ycam
 
 ## Examples ##
@@ -60,7 +64,18 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 ![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 
-## Controls ##
+## Anatomy of ofxTimeline
+![Anatomy](http://www.jamesgeorge.org/images/ofxtimeline/github/AnatomyOfTimeline.jpg)
+
+1
+
+2
+
+3
+
+4
+
+5
 
 ### Editing ###
 
