@@ -67,23 +67,29 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 ## Anatomy of ofxTimeline
 ![Anatomy](http://www.jamesgeorge.org/images/ofxtimeline/github/AnatomyOfTimeline.jpg)
 
-1
+1 Pages 
 
-2
+You can divide the timeline into pages, each page containing it's own set of tracks
 
-3
+2 Ticker and Playhead
 
-4
+The header displays tick marks at seconds, and milliseconds. Clicking the header allows you to change the playhead time. The green line crossing the timeline shows the current playhead time. The red line shows display where you are hovering
 
-5
+3 In and Out Handles. 
 
-### Editing ###
+The bar below the ticker allows you to drag the in and out points on the timeline. The region defined by the in and out point is all that is played.
 
-### Zooming ###
+4 Tracks 
 
-### Selecting elements ###
+The main body of the timeline is a list of tracks that are editable and resizable
 
-### Resizing ###
+5 Zoomer
+
+The control at the bottom of the track allows for zooming in and precisely editing time
+
+
+### Keyframe Selection
+
 
 
 ## Including ofxTimeline in your openFrameworks project
