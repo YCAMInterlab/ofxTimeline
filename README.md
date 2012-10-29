@@ -1,18 +1,20 @@
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
-Cover of the timeline sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
+Timleine sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
 
-ofxTimeline is a simple to use openFrameworks add on for graphically editing values over time.
+ofxTimeline is a simple to use openFrameworks add on to create an editable timeline user interface.
 
-It's a lot like other openFrameworks GUIs that connect your parameters in code to an editable graphical interface. However ofxTimeline has the concept of time built into it, letting you create smoothly changing values or events occurring at specific moments. Borrowing concepts from Flash, Ableton Live, Adobe After Effects and Final Cut Pro to give your app powerful time controls with just a few lines of code.
+If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel familiar to you. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
+
+You can also extend ofxTimeline with custom tracks to work with other types of time based data.
 
 ## General tools for specific projects ##
 
-ofxTimeline is an inquiry into how reusable components for building intuitive applications can change the way we create. 
+ofxTimeline is functional tool, but also part of a larger inquiry into how bringing in tools gui based tools in creative coding applications can improve the way we work with the medium.
 
-Interface based applications for creative media are most commonly expensive big box applications like After Effects or Cinema4d, which deny creative reinterpretation or modification by their users. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
+Interface based applications for creative media are most commonly expensive big box applications like After Effects or Cinema4d, which can be prohibitvely complex and aren't open source. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
 
-If an ecosystem of components for building small and intuitive media applications were to exist, what new processes could we invent? What collaborations between creative coders and other designers and artists would emerge? 
+If a lot of small components for building small and intuitive media applications were to exist along with ofxTimeline, what new processes could we invent? What collaborations between creative coders and other designers and artists would emerge? 
 
 ofxTimeline is the product of the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org). 
 
@@ -20,16 +22,24 @@ Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/
 
 ## Major features ##
 - Very few lines of code to use
-- Precise millisecond level timing, nano-second accurate no drift playback
-- Several usable track types out of the box, such as curved tweens and video tracks with thumbnail previews
+- Precise millisecond level timing, no drift playback
+- Several track types built in, such as curved tweens and video tracks with thumbnail previews
 - Convenient controls for efficient editing, such as multi-select, copy+paste, arrow keys nudging, and snapping to points
 - Zooming in for detailed control and long durations
 - Loading of audio and video files with thumbnail and waveform previews
 - Saving and loading of values to XML
 - Adding multiple pages and dragging to resize view
 - Ability to set Beats Per Minute measure marks conjunction with snapping
-- Easy to implement your own tracks
+- Extensible to implement your own tracks
 - A collection of community developed tracks and extensions
+
+## Getting started
+
+Here are a series of video tutorials for getting started
+https://vimeo.com/52302437
+https://vimeo.com/52304312
+https://vimeo.com/52304313
+password: ycam
 
 ## Examples ##
 
@@ -62,6 +72,7 @@ Muli-timeline shows how to use Flags to trigger start and stop the playback of o
 
 
 ## Including ofxTimeline in your openFrameworks project
+Follow the video tutorial to see how to setup a new ofxTimeline project. A textual description is below.
 
 ### Clone ofxTimeline and dependencies 
 to download the timeline open up the terminal and type
@@ -158,14 +169,14 @@ MyClass.cpp
 
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
-### Tweens ###
-![Tweens](http://www.jamesgeorge.org/images/ofxtimeline/github/TweenTrack.png)
+### Curves ###
+![Curves](http://www.jamesgeorge.org/images/ofxtimeline/github/TweenTrack.png)
 
-Tweens change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
+Curves change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
 
-Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in [ofxTween](https://github.com/arturoc/ofxTween)
+Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in [ofxCurves](https://github.com/arturoc/ofxTween)
 
-    Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLTweens
+    Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLCurves
 
 ### Flags ###
 ![Flags](http://www.jamesgeorge.org/images/ofxtimeline/github/FlagTrack.png)
@@ -242,10 +253,6 @@ The timeline's duration must match the audio's duration.
 
 ofxTimeline can be integrated with other addons or time based media, below are examples of just a few
 
-### CameraTrack ###
-
-https://github.com/obviousjim/ofxCameraTrack
-
 ### DepthImageSequence ###
 
 https://github.com/obviousjim/ofxRGBDepth // [RGBDToolkit](http://wwww.rgbdtoolkit.com)
@@ -256,11 +263,18 @@ https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNot](https://
 
 ## Designing custom Tracks ##
 
-The track system is designed to be extensible. Template and tutorial on different patterns for extending forthcoming.
+The track system is designed to be extensible. There are two empty track templates that are the best place to get started building your own track
+
+### ofxTLEmptyTrack
+
+Use this template as a starting point for visualizing time based data in ofxTimeline or creating a unique type of interactive track.
+
+### ofxTLEmptyKeyframes
+Use this template for creating a custom keyframe based track. It already has copy+paste, multiple selection, saving and loading.
 
 ## Supported By ##
 
-ofxTimeline was developed as part of the  [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org) at the [YCAMInterLab](http://interlab.ycam.jp/)
+ofxTimeline is codeveloped by YCAM InterLab during the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org) at the [YCAMInterLab](http://interlab.ycam.jp/)
 
 ![YCAM](http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png)
 
