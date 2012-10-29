@@ -51,13 +51,13 @@ password: ycam
 
 ### 1 Pages 
 
-You can divide the timeline into pages, each page containing it's own set of tracks.
+You can divide the timeline into pages, each page containing its own set of tracks.
 
 ### 2 Ticker and Playhead
 
 The header displays tick marks at minutes, seconds, and milliseconds. Clicking inside the header allows you to scrube the playhead time. The green line extending down the height of the timeline indicates the current time, while the red line  displays the hovering time.
 
-### 3 In and Out Handles. 
+### 3 In/Out Handles 
 
 The bar below the ticker allows you to drag the in and out points on the timeline. The region defined by the in and out point is all that is included during playback.
 
@@ -87,11 +87,66 @@ Video Renderer shows how to build a simple video effects app using the timeline 
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 ![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
-### Hotkeys
+## Hotkeys
 
 ofxTimeline has a few hot keys built in
 
 ### Enabling Hotkeys on OS X
+On OS X, GLUT overrides COMMAND+C, COMMAND+V, and COMMAND+S behavior. ofxTimeline has a function to remove these default bindings in order that the key commands in the timeline work. Add the following line of code to your setup function:
+
+      ofxTimeline::removeCocoaMenusFromGlut("myAppName");
+
+### All Hotkeys
+
+Note on OS X the COMMAND key is used, on Linux and Windows the CTRL key is used
+
+<table>
+    <tr>
+        <td style="font-weight:bold">Function</td><td style="font-weight:bold">Shortcut</td>
+    </tr>
+    <tr>
+        <td>Cut Selection</td><td>command+x</td>
+    </tr>
+    <tr>
+        <td>Copy Selection</td><td>command+c</td>
+    </tr>
+    <tr>
+        <td>Paste Selection</td><td>command+v</td>
+    </tr>
+    <tr>
+        <td>Undo</td><td>command+z</td>
+    </tr>
+    <tr>
+        <td>Redo</td><td>shift+command+z</td>
+    </tr>
+    <tr>
+        <td>Select all keyframes in Focused track</td><td>command+a</td>
+    </tr>
+    <tr>
+        <td>Add all keyframes in Focused track to selection</td><td>command+shift+a</td>
+    </tr>
+    <tr>
+        <td>Delete all selected keyframes</td><td>delete or backspace</td>
+    </tr>    
+    <tr>
+        <td>Nudge keyframes a little</td><td>arrow keys</td>
+    </tr>    
+    <tr>
+        <td>Nudge keyframes a little more</td><td>shift+arrow keys</td>
+    </tr>    
+    <tr>
+        <td>Expand Focused track</td><td>alt+e</td>
+    </tr>    
+    <tr>
+        <td>Collapse all tracks</td><td>alt+c</td>
+    </tr>    
+    <tr>
+        <td>Evenly distribute track sizes</td><td>alt+shift+c</td>
+    </tr>    
+</table>
+
+
+
 
 ## Including ofxTimeline in your openFrameworks project
 
