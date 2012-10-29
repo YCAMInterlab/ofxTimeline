@@ -1,35 +1,34 @@
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 
-ofxTimeline is a simple to use openFrameworks add on for creating an editable timeline user interface. 
+ofxTimeline is a simple to use openFrameworks add on for creating a user interface to an editable timeline. The framework allows you to compose sequences of change over time, controlling the variables in your openFrameworks application to create time based interactions.
 
-If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel familiar to you. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
+If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel comfortable. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
 
 You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
-By [James George](http://www.jamesgeorge.org)
+Copyright 2011-2012 [James George](http://www.jamesgeorge.org)
 
 Co-developed at [YCAM InterLab](http://interlab.ycam.jp/)
 
-## Reusable Tools ##
-
-ofxTimeline is part of my reserach into how creating gui based tools within creative coding environments can open up new ways of creating and interacting with media.
-
-Interface based timeline systems are most commonly found in  expensive big box applications like After Effects or Cinema4d, which can be prohibitvely complex and aren't open source. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
-
-If a lot of small components for building small and intuitive media applications were to exist along with ofxTimeline, what new processes could we invent? What collaborations between creative coders and other designers and artists would emerge? 
-
 Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
 
+## Philosophy of Reusable Tools##
+
+ofxTimeline is part of my reserach into how creating GUI based tools within creative coding environments can open up new ways of creating and interacting with media.
+
+Interface based timeline systems are most commonly found in expensive big box applications like After Effects or Cinema4d, which can be prohibitively complex and aren't open source. There are open timeline implementations are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reuse. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) have commercially restrictive licenses, a deal breaker for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder.
+
+If the community were to build many small components for creating small and intuitive applications what new possibilities would we uncover? What collaborations between creative coders and other designers and artists would emerge? 
+
 ## Major features ##
-- Very few lines of code to set up
-- Precise millisecond level timing. Driftless playback
-- Several track types built in, such as curved tweens and video tracks with thumbnail previews
+- Very few lines of code to include in openFrameworks project
+- Precise millisecond level timing and drift-free playback
+- Several track types built in, such as curved, colors, and video tracks with thumbnail previews
 - Convenient controls for efficient editing, such as multi-select, copy+paste, arrow keys nudging, and snapping to points
-- Zooming in for detailed control and long durations
-- Loading of audio and video files with thumbnail and waveform previews
+- Zooming in for detailed control and editing timelines with long durations
 - Saving and loading of values to XML
-- Adding multiple pages and dragging to resize view
+- Adding multiple pages
 - Ability to set beats per minute measure marks conjunction with snapping
 - Easily extended for implementing your own tracks
 
@@ -50,30 +49,30 @@ password: ycam
 ## Anatomy of ofxTimeline
 ![Anatomy](http://www.jamesgeorge.org/images/ofxtimeline/github/AnatomyOfTimeline.jpg)
 
-1 Pages 
+### 1 Pages 
 
-You can divide the timeline into pages, each page containing it's own set of tracks
+You can divide the timeline into pages, each page containing it's own set of tracks.
 
-2 Ticker and Playhead
+### 2 Ticker and Playhead
 
-The header displays tick marks at seconds, and milliseconds. Clicking the header allows you to change the playhead time. The green line crossing the timeline shows the current playhead time. The red line shows display where you are hovering
+The header displays tick marks at minutes, seconds, and milliseconds. Clicking inside the header allows you to scrube the playhead time. The green line extending down the height of the timeline indicates the current time, while the red line  displays the hovering time.
 
-3 In and Out Handles. 
+### 3 In and Out Handles. 
 
-The bar below the ticker allows you to drag the in and out points on the timeline. The region defined by the in and out point is all that is played.
+The bar below the ticker allows you to drag the in and out points on the timeline. The region defined by the in and out point is all that is included during playback.
 
-4 Tracks 
+### 4 Tracks 
 
-The main body of the timeline is a list of tracks that are editable and resizable
+The main body of the timeline is a list of tracks that are editable and resizable.
 
-5 Zoomer
+### 5 Zoomer
 
-The control at the bottom of the track allows for zooming in and precisely editing time
+The control at the bottom of the track allows for zooming in and precisely editing time.
 
 ## Examples ##
 
-### Simple Tweener
-Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
+### Simple Curves
+Simple Curves shows how to use two keyframes and a switcher to animate and color a cube
 ![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
 
 ### Audio Waveform
@@ -84,11 +83,15 @@ Audio Waveform shows how to add an audio track to a project.
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
 ![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
 
-### Multi-timeline (experimental)
+### Multi-timeline
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
 ![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
-### Keyframe Selection
+### Hotkeys
+
+ofxTimeline has a few hot keys built in
+
+### Enabling Hotkeys on OS X
 
 ## Including ofxTimeline in your openFrameworks project
 
@@ -188,7 +191,7 @@ MyClass.cpp
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Curves ###
-![Curves](http://www.jamesgeorge.org/images/ofxtimeline/github/TweenTrack.png)
+![Curves](http://www.jamesgeorge.org/images/ofxtimeline/github/CurvesTrack.png)
 
 Curves change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
 
@@ -287,7 +290,7 @@ https://github.com/obviousjim/ofxRGBDepth // [RGBDToolkit](http://wwww.rgbdtoolk
 
 ### MidiTrack ###
 
-https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNot](https://vimeo.com/46793363)
+https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNote](https://vimeo.com/46793363)
 
 ## Designing custom Tracks ##
 
