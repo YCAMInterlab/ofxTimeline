@@ -1,41 +1,42 @@
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
-Timleine sequence from [Blue Beams](https://vimeo.com/35931265)  by [Playmodes](http://www.playmodes.com/)
 
-ofxTimeline is a simple to use openFrameworks add on for creating an editable timeline user interface.
+ofxTimeline is a simple to use openFrameworks add on for creating an editable timeline user interface. 
 
 If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel familiar to you. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
 
 You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
-## General tools for specific projects ##
+By [James George](http://www.jamesgeorge.org)
 
-ofxTimeline is functional tool, but also part of a larger inquiry into how bringing in tools gui based tools in creative coding applications can improve the way we work with the medium.
+Co-developed at [YCAM InterLab](http://interlab.ycam.jp/)
 
-Interface based applications for creative media are most commonly expensive big box applications like After Effects or Cinema4d, which can be prohibitvely complex and aren't open source. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
+## Reusable Tools ##
+
+ofxTimeline is part of my reserach into how creating gui based tools within creative coding environments can open up new ways of creating and interacting with media.
+
+Interface based timeline systems are most commonly found in  expensive big box applications like After Effects or Cinema4d, which can be prohibitvely complex and aren't open source. Open source alternatives are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reimagination. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) is a deal breaking restriction for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder that require commercially viable licenses.
 
 If a lot of small components for building small and intuitive media applications were to exist along with ofxTimeline, what new processes could we invent? What collaborations between creative coders and other designers and artists would emerge? 
-
-ofxTimeline is the product of the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org). 
 
 Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
 
 ## Major features ##
-- Very few lines of code to use
-- Precise millisecond level timing, no drift playback
+- Very few lines of code to set up
+- Precise millisecond level timing. Driftless playback
 - Several track types built in, such as curved tweens and video tracks with thumbnail previews
 - Convenient controls for efficient editing, such as multi-select, copy+paste, arrow keys nudging, and snapping to points
 - Zooming in for detailed control and long durations
 - Loading of audio and video files with thumbnail and waveform previews
 - Saving and loading of values to XML
 - Adding multiple pages and dragging to resize view
-- Ability to set Beats Per Minute measure marks conjunction with snapping
-- Extensible to implement your own tracks
-- A collection of community developed tracks and extensions
+- Ability to set beats per minute measure marks conjunction with snapping
+- Easily extended for implementing your own tracks
+
 
 ## Getting started
 
-Here are a series of video tutorials for getting started
+Here are a series of video tutorials for getting started:
 
 https://vimeo.com/52302437
 
@@ -44,24 +45,6 @@ https://vimeo.com/52304312
 https://vimeo.com/52304313
 
 password: ycam
-
-## Examples ##
-
-### Simple Tweener
-Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
-![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
-
-### Audio Waveform
-Audio Waveform shows how to add an audio track to a project.
-![AudioWaveform](http://www.jamesgeorge.org/images/ofxtimeline/github/example-audioWaveform.png)
-
-### Video Renderer
-Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
-![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
-
-### Multi-timeline (experimental)
-Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
-![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 
 ## Anatomy of ofxTimeline
@@ -87,13 +70,27 @@ The main body of the timeline is a list of tracks that are editable and resizabl
 
 The control at the bottom of the track allows for zooming in and precisely editing time
 
+## Examples ##
+
+### Simple Tweener
+Simple Tweener shows how to use two keyframes and a switcher to animate and color a cube
+![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
+
+### Audio Waveform
+Audio Waveform shows how to add an audio track to a project.
+![AudioWaveform](http://www.jamesgeorge.org/images/ofxtimeline/github/example-audioWaveform.png)
+
+### Video Renderer
+Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
+![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
+
+### Multi-timeline (experimental)
+Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
+![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 ### Keyframe Selection
 
-
-
 ## Including ofxTimeline in your openFrameworks project
-Follow the video tutorial to see how to setup a new ofxTimeline project. A textual description is below.
 
 ### Clone ofxTimeline and dependencies 
 to download the timeline open up the terminal and type
@@ -269,6 +266,16 @@ The timeline's duration must match the audio's duration.
 
     ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
+
+### ColorTrack
+![ColorTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/ColorTrack.png)
+
+The color track let's you sequence smoothly changing colors. It uses a provided image as a sample palette, each keyframe specifies a position on the palette to sample from. Between keyframes the image is traverse to create smoothly changing colors.
+
+### LFO (experimental)
+![LFO](http://www.jamesgeorge.org/images/ofxtimeline/github/LFOTrack.png)
+
+The LFO, Low Frequency Oscillator, track defines simple repeating sine waves and noise functions. 
 
 ## 3rd Party Custom Tracks ##
 
