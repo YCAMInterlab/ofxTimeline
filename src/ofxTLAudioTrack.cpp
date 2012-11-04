@@ -210,14 +210,14 @@ void ofxTLAudioTrack::recomputePreview(){
 					if(losample != 0){
 //						preview.addVertex(i, trackCenter - losample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - losample * trackHeight;
+						vertex->y = trackCenter - losample * trackHeight*3;
 						vertex++;
 					}
 					if(hisample != 0){
 						//ofVertex(i, trackCenter - hisample * trackHeight);
 //						preview.addVertex(i, trackCenter - hisample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - hisample * trackHeight;
+						vertex->y = trackCenter - hisample * trackHeight*3;
 						vertex++;
 					}
 				}
@@ -289,6 +289,7 @@ void ofxTLAudioTrack::play(){
 
 		player.play();
 		if(timeline->getTimecontrolTrack() == this){
+			player.setPosition(positionForSecond(timeline->getCurrentTime()));
 			ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 			ofNotifyEvent(events().playbackStarted, args);
 		}

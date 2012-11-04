@@ -759,6 +759,9 @@ void ofxTLKeyframes::deleteSelectedKeyframes(){
 				ofLogError("ofxTLKeyframes::deleteSelectedKeyframes") << "keyframe delete inconsistency";
 			}
 			willDeleteKeyframe(keyframes[i]);
+			if(keyframes[i] == hoverKeyframe){
+				hoverKeyframe = NULL;
+			}
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 			selectedKeyframes.erase(--selectedIt);

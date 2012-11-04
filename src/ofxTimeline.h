@@ -249,6 +249,8 @@ class ofxTimeline : ofThread {
 	virtual void collapseAllTracks(); //collapses all tracks heights to 0;
 	
 	ofRectangle getDrawRect();
+	float getWidth();
+	float getHeight();
     ofVec2f getTopRight();
     ofVec2f getTopLeft();
 	ofVec2f getBottomLeft();

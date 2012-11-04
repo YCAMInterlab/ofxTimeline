@@ -893,10 +893,18 @@ void ofxTimeline::setHeight(float height){
         ofNotifyEvent(events().viewWasResized, args);
 		cout << "desired height was " << height << " resulting height " << totalDrawRect.height << endl;
 	}
-	
 }
+
 void ofxTimeline::collapseAllTracks(){
 	currentPage->collapseAllTracks();
+}
+
+float ofxTimeline::getWidth(){
+	return getDrawRect().width;
+}
+
+float ofxTimeline::getHeight(){
+	return getDrawRect().height;
 }
 
 ofRectangle ofxTimeline::getDrawRect(){
@@ -1023,6 +1031,10 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
 
     if(modalTrack != NULL){
@@ -1057,6 +1069,10 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
@@ -1071,6 +1087,10 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
@@ -1085,6 +1105,10 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     dragAnchorSet = false;

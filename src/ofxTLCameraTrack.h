@@ -67,8 +67,6 @@ class ofxTLCameraTrack : public ofxTLKeyframes {
 	bool lockCameraToTrack;
 	void setCamera(ofCamera& cam);
 
-	void sample();
-	
 	//draw your keyframes
 	//some default style is done before this
 	virtual void draw();

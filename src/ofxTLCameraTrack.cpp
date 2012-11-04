@@ -287,7 +287,6 @@ void ofxTLCameraTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 //keys pressed events, and nuding from arrow keys with normalized nudge amount 0 - 1.0
 void ofxTLCameraTrack::keyPressed(ofKeyEventArgs& args){
 	ofxTLKeyframes::keyPressed(args);
-	ofxTLKeyframes::keyPressed(args);
 	
 	bool modified = false;
 	for(int i = 0; i < selectedKeyframes.size(); i++){
@@ -371,7 +370,15 @@ void ofxTLCameraTrack::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStor
 }
 
 ofxTLKeyframe* ofxTLCameraTrack::keyframeAtScreenpoint(ofVec2f p){
-	return ofxTLKeyframes::keyframeAtScreenpoint(p);
+    if(bounds.inside(p.x, p.y)){
+        for(int i = 0; i < keyframes.size(); i++){
+            float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);
+            if (abs(offset) < 5) {
+                return keyframes[i];
+            }
+        }
+    }
+	return NULL;
 }
 
 void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
