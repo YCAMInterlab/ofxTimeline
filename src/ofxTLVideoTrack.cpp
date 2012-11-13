@@ -187,7 +187,7 @@ void ofxTLVideoTrack::update(){
 	}
 	
 	player->update();
-	cout << "timeline frame vs video frame " << player->getCurrentFrame() << " vs " << timeline->getCurrentFrame() << endl;
+//	cout << "timeline frame vs video frame " << player->getCurrentFrame() << " vs " << timeline->getCurrentFrame() << endl;
 	selectedFrame = player->getCurrentFrame();
 }
 

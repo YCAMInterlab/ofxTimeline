@@ -497,8 +497,14 @@ void ofxTLKeyframes::updateKeyframeSort(){
 	lastKeyframeIndex = 1;
 	lastSampleTime = 0;
 	if(keyframes.size() > 1){
-
+		for(int i = 0; i < keyframes.size(); i++){
+			if(keyframes[i]->time > timeline->getDurationInMilliseconds()){
+				keyframes[i]->time = timeline->getDurationInMilliseconds();
+			}
+		}
+		
 		sort(keyframes.begin(), keyframes.end(), keyframesort);
+		
 		for(int i = 0; i < keyframes.size()-1; i++){
 			if(keyframes[i]->time == keyframes[i+1]->time){
 				if(keyframes[i]->previousTime < keyframes[i+1]->time){

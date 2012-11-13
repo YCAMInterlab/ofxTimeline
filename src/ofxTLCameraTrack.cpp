@@ -250,8 +250,12 @@ void ofxTLCameraTrack::update(ofEventArgs& args){
 void ofxTLCameraTrack::setTimelineInOutToTrack(){
 	//TODO: timebased camera tracking
 	if(keyframes.size() > 0){
-		timeline->setInPointAtMillis(keyframes[0]->time);
-		timeline->setOutPointAtMillis(keyframes[keyframes.size()-1]->time);
+		unsigned long inTime  = keyframes[0]->time;
+		unsigned long outTime = keyframes[keyframes.size()-1]->time;
+//		cout << " IN AND OUT SETTING " << inTime << " " << outTime << endl;
+		timeline->setInOutRangeMillis(inTime, outTime);
+//		timeline->setInPointAtMillis(keyframes[0]->time);
+//		timeline->setOutPointAtMillis(keyframes[keyframes.size()-1]->time);
 	}
 	else{
 		timeline->setInOutRange(ofRange(0,1.0));
@@ -373,7 +377,7 @@ ofxTLKeyframe* ofxTLCameraTrack::keyframeAtScreenpoint(ofVec2f p){
     if(bounds.inside(p.x, p.y)){
         for(int i = 0; i < keyframes.size(); i++){
             float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);
-            if (abs(offset) < 5) {
+            if (abs(offset) < bounds.height/2) {
                 return keyframes[i];
             }
         }

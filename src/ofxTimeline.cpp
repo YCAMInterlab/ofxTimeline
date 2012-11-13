@@ -628,7 +628,7 @@ void ofxTimeline::setInPointAtSeconds(float time){
 void ofxTimeline::setInPointAtFrame(int frame){
     setInPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
 }
-void ofxTimeline::setInPointAtMillis(long millis){
+void ofxTimeline::setInPointAtMillis(unsigned long millis){
     setInPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setInPointAtTimecode(string timecodeString){
@@ -647,7 +647,7 @@ void ofxTimeline::setOutPointAtFrame(float frame){
 void ofxTimeline::setOutPointAtSeconds(float time){
     setOutPointAtPercent(time/durationInSeconds);
 }
-void ofxTimeline::setOutPointAtMillis(long millis){
+void ofxTimeline::setOutPointAtMillis(unsigned long millis){
     setOutPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setOutPointAtTimecode(string timecodeString){
@@ -657,6 +657,12 @@ void ofxTimeline::setOutPointAtTimecode(string timecodeString){
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
     if(inoutPercentRange.min > inoutPercentRange.max) return;
 	inoutRange = inoutPercentRange;
+}
+
+void ofxTimeline::setInOutRangeMillis(unsigned long min, unsigned long max){
+	inoutRange = ofRange(min / (durationInSeconds*1000.),
+						 max / (durationInSeconds*1000.) );
+//	cout << "new range is " << inoutRange << endl;
 }
 
 void ofxTimeline::setCurrentTimeToInPoint(){

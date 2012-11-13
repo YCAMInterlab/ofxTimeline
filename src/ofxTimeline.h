@@ -205,14 +205,14 @@ class ofxTimeline : ofThread {
 	virtual void setInPointAtPercent(float percent);
 	void setInPointAtFrame(int frame);
 	void setInPointAtSeconds(float time);
-    void setInPointAtMillis(long millis);
+    void setInPointAtMillis(unsigned long millis);
     void setInPointAtTimecode(string timecode);
 	void setInPointAtPlayhead();
     
 	virtual void setOutPointAtPercent(float percent);
 	void setOutPointAtFrame(float frame);
 	void setOutPointAtSeconds(float time);
-	void setOutPointAtMillis(long millis);
+	void setOutPointAtMillis(unsigned long millis);
     void setOutPointAtTimecode(string timecode);
     void setOutPointAtPlayhead();
     
@@ -227,6 +227,7 @@ class ofxTimeline : ofThread {
 	virtual bool areFootersHidden();
 	
 	virtual void setInOutRange(ofRange inoutPercentRange);
+	virtual void setInOutRangeMillis(unsigned long min, unsigned long max);
 	virtual void clearInOut();
     
     ofRange getInOutRange();
@@ -432,7 +433,7 @@ class ofxTimeline : ofThread {
     
     //time <-> pixel translation helpers
     long screenXToMillis(float x);
-    float millisToScreenX(long millis); 
+    float millisToScreenX(long millis);
     float screenXtoNormalizedX(float x);
     float normalizedXtoScreenX(float x);
     float screenXtoNormalizedX(float x, ofRange outputRange);
