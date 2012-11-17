@@ -66,7 +66,11 @@ class ofxTLCameraTrack : public ofxTLKeyframes {
 	void setTimelineInOutToTrack();
 	bool lockCameraToTrack;
 	void setCamera(ofCamera& cam);
-
+	
+	//a value from 0 - 1 (where 1 freezes the camera, and 0 is no dampening);
+	void setDampening(float damp);
+	float getDampening();
+	
 	//draw your keyframes
 	//some default style is done before this
 	virtual void draw();
@@ -106,12 +110,14 @@ class ofxTLCameraTrack : public ofxTLKeyframes {
 							ofxTLCameraFrame* sample1,
 							ofxTLCameraFrame* sample2,
 							ofxTLCameraFrame* next, unsigned long millis);
-	
+	float dampening;
+	void moveCameraToPosition(ofxTLCameraFrame* target);
 	
 	void update(ofEventArgs& args);
     
     //convenient drawing functions
     void draweEase(CameraTrackEase ease, ofPoint screenPoint, bool easeIn);
+	
 	
 	//always return the type for your track, in our case ofxTLEmptyKeyframe;
 	//this will enusre that all keyframe objects passed to this class are of this type

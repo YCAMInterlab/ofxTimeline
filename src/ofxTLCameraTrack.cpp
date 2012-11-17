@@ -54,6 +54,7 @@ ofVec3f ofHermiteInterpolate(ofVec3f y0, ofVec3f y1, ofVec3f y2, ofVec3f y3, flo
 ofxTLCameraTrack::ofxTLCameraTrack(){
 	camera = NULL;
 	lockCameraToTrack = false;
+	dampening = .1;
 }
 
 ofxTLCameraTrack::~ofxTLCameraTrack(){
@@ -397,15 +398,18 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	
 	if(keyframes.size() == 1 || millis <= keyframes[0]->time){
 		ofxTLCameraFrame* firstFrame = (ofxTLCameraFrame*)keyframes[0];
-		camera->setPosition(firstFrame->position);
-		camera->setOrientation(firstFrame->orientation);
+//		camera->setPosition(firstFrame->position);
+//		camera->setOrientation(firstFrame->orientation);
+		moveCameraToPosition(firstFrame);
+
 		return;
 	}
 	
 	if (millis >= keyframes[keyframes.size()-1]->time) {
 		ofxTLCameraFrame* lastFrame = (ofxTLCameraFrame*)keyframes[keyframes.size()-1];
-		camera->setPosition(lastFrame->position);
-		camera->setOrientation(lastFrame->orientation);
+//		camera->setPosition(lastFrame->position);
+//		camera->setOrientation(lastFrame->orientation);
+		moveCameraToPosition(lastFrame);
 		return;
 	}
 	
@@ -413,9 +417,9 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	
 	ofxTLCameraFrame interp;
 	setCameraFrameToTime(&interp, millis);
-	camera->setPosition(interp.position);
-	camera->setOrientation(interp.orientation);
-	
+	moveCameraToPosition(&interp);
+//	camera->setPosition(interp.position);
+//	camera->setOrientation(interp.orientation);
 	//	cout << "set position to " << camera->getPosition() << endl;
 }
 
@@ -430,12 +434,26 @@ void ofxTLCameraTrack::setCameraFrameToTime(ofxTLCameraFrame* target, unsigned l
 	}
 }
 
+void ofxTLCameraTrack::moveCameraToPosition(ofxTLCameraFrame* target){
+	camera->setPosition(camera->getPosition().getInterpolated(target->position, dampening) );
+	ofQuaternion q;
+	q.slerp(dampening, camera->getOrientationQuat(), target->orientation);
+	camera->setOrientation(q);
+}
+
+void ofxTLCameraTrack::setDampening(float damp){
+	dampening = damp;
+}
+
+float ofxTLCameraTrack::getDampening(){
+	return dampening;
+}
 
 void ofxTLCameraTrack::interpolateBetween(ofxTLCameraFrame* target,
-													   ofxTLCameraFrame* prev,
-													   ofxTLCameraFrame* sample1,
-													   ofxTLCameraFrame* sample2,
-													   ofxTLCameraFrame* next, unsigned long millis)
+										  ofxTLCameraFrame* prev,
+										  ofxTLCameraFrame* sample1,
+										  ofxTLCameraFrame* sample2,
+										  ofxTLCameraFrame* next, unsigned long millis)
 {
 
     float alpha = 0;
