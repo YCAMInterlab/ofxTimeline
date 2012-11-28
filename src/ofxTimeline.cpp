@@ -1606,6 +1606,15 @@ ofxTLCurves* ofxTimeline::addCurves(string trackName, string xmlFileName, ofRang
 	return newCurves;
 }
 
+float ofxTimeline::getValueAtPercent(string trackName, float atPercent){
+	if(!hasTrack(trackName)){
+		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
+		return 0.0;
+	}
+	ofxTLCurves* curves = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
+	return curves->getValueAtTimeInMillis(atPercent*durationInSeconds*1000);
+}
+
 float ofxTimeline::getValue(string trackName, float atTime){
 	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);

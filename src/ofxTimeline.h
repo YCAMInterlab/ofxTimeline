@@ -324,6 +324,7 @@ class ofxTimeline : ofThread {
     ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	ofxTLCurves* addCurves(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	float getValue(string name);
+	float getValueAtPercent(string name, float atPercent);
 	float getValue(string name, float atTime);
 	float getValue(string name, int atFrame);
 
