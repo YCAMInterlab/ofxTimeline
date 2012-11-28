@@ -126,6 +126,8 @@ class ofxTimeline : ofThread {
 	virtual bool getIsShowing();
 	virtual void draw();
     
+
+	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
@@ -203,21 +205,29 @@ class ofxTimeline : ofThread {
 	virtual void setInPointAtPercent(float percent);
 	void setInPointAtFrame(int frame);
 	void setInPointAtSeconds(float time);
-    void setInPointAtMillis(long millis);
+    void setInPointAtMillis(unsigned long millis);
     void setInPointAtTimecode(string timecode);
 	void setInPointAtPlayhead();
     
 	virtual void setOutPointAtPercent(float percent);
 	void setOutPointAtFrame(float frame);
 	void setOutPointAtSeconds(float time);
-	void setOutPointAtMillis(long millis);
+	void setOutPointAtMillis(unsigned long millis);
     void setOutPointAtTimecode(string timecode);
     void setOutPointAtPlayhead();
     
 	virtual void setEditableHeaders(bool headersEditable);
 	virtual bool areHeadersEditable();
 	
+	virtual void setMinimalHeaders(bool headersMinimal);
+	virtual bool areHeadersMinimal();
+	
+	virtual bool toggleShowFooters();
+	virtual void setFootersHidden(bool footersHidden);
+	virtual bool areFootersHidden();
+	
 	virtual void setInOutRange(ofRange inoutPercentRange);
+	virtual void setInOutRangeMillis(unsigned long min, unsigned long max);
 	virtual void clearInOut();
     
     ofRange getInOutRange();
@@ -236,9 +246,12 @@ class ofxTimeline : ofThread {
     virtual void setLockWidthToWindow(bool lockWidth);
     virtual bool getLockWidthToWindow();
 	virtual void setWidth(float width);
+	virtual void setHeight(float height);
 	virtual void collapseAllTracks(); //collapses all tracks heights to 0;
 	
 	ofRectangle getDrawRect();
+	float getWidth();
+	float getHeight();
     ofVec2f getTopRight();
     ofVec2f getTopLeft();
 	ofVec2f getBottomLeft();
@@ -311,6 +324,7 @@ class ofxTimeline : ofThread {
     ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	ofxTLCurves* addCurves(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	float getValue(string name);
+	float getValueAtPercent(string name, float atPercent);
 	float getValue(string name, float atTime);
 	float getValue(string name, int atFrame);
 
@@ -420,7 +434,7 @@ class ofxTimeline : ofThread {
     
     //time <-> pixel translation helpers
     long screenXToMillis(float x);
-    float millisToScreenX(long millis); 
+    float millisToScreenX(long millis);
     float screenXtoNormalizedX(float x);
     float normalizedXtoScreenX(float x);
     float screenXtoNormalizedX(float x, ofRange outputRange);
@@ -539,6 +553,8 @@ class ofxTimeline : ofThread {
 	bool autosave;
 	bool unsavedChanges;
 	bool headersAreEditable;
+	bool minimalHeaders;
+	bool footersHidden;
 	
 	bool isFrameBased;
 	float durationInSeconds;

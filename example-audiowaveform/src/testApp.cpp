@@ -17,15 +17,17 @@ void testApp::setup(){
 	timeline.setShowBPMGrid(true);
 	
 	timeline.addTrack("Track", &waveform);
+	timeline.addVideoTrack("fingers", "fingers.mov");
 	
-	//this means that calls to play/stop etc will be  routed to the waveform
-	timeline.setTimecontrolTrack(&waveform);
+	//this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
+	//timeline.setTimecontrolTrack(&waveform);
     waveform.loadSoundfile("4chan.wav");
 	//fun to watch on FFT
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
 	
-	timeline.setDurationInSeconds(waveform.getDuration());
+	//timeline.setDurationInSeconds(waveform.getDuration()*2);
+	timeline.setDurationInSeconds(timeline.getVideoPlayer("fingers")->getDuration()*2);
     timeline.addBangs("clickbangs"); //just for fun
 
 	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
@@ -45,13 +47,9 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    float curtime = timeline.getCurrentTime();
-//	ofBackground(.15*255 * ofMap(curtime-lastBang, 0, .2, 1.0, 0., true));
-//	int numBands = 256;
-//    vector<float>& fft = waveform.getFFTSpectrum(numBands);
-//	for(int i = 0; i < fft.size(); i++){
-//		ofRect(ofGetWidth()/numBands * i, 0, ofGetWidth()/numBands, fft[i]*ofGetHeight());
-//	}
+	
+	timeline.getVideoPlayer("fingers")->draw(timeline.getBottomLeft());
+	
 	timeline.draw();
 }
 

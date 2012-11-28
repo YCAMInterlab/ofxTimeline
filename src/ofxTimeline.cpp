@@ -82,11 +82,13 @@ ofxTimeline::ofxTimeline()
 	unsavedChanges(false),
 	curvesUseBinary(false),
 	headersAreEditable(false),
+	minimalHeaders(false),
 	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
-	fontSize(9)
+	fontSize(9),
+	footersHidden(false)
 {
 }
 
@@ -626,7 +628,7 @@ void ofxTimeline::setInPointAtSeconds(float time){
 void ofxTimeline::setInPointAtFrame(int frame){
     setInPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
 }
-void ofxTimeline::setInPointAtMillis(long millis){
+void ofxTimeline::setInPointAtMillis(unsigned long millis){
     setInPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setInPointAtTimecode(string timecodeString){
@@ -645,7 +647,7 @@ void ofxTimeline::setOutPointAtFrame(float frame){
 void ofxTimeline::setOutPointAtSeconds(float time){
     setOutPointAtPercent(time/durationInSeconds);
 }
-void ofxTimeline::setOutPointAtMillis(long millis){
+void ofxTimeline::setOutPointAtMillis(unsigned long millis){
     setOutPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setOutPointAtTimecode(string timecodeString){
@@ -655,6 +657,12 @@ void ofxTimeline::setOutPointAtTimecode(string timecodeString){
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
     if(inoutPercentRange.min > inoutPercentRange.max) return;
 	inoutRange = inoutPercentRange;
+}
+
+void ofxTimeline::setInOutRangeMillis(unsigned long min, unsigned long max){
+	inoutRange = ofRange(min / (durationInSeconds*1000.),
+						 max / (durationInSeconds*1000.) );
+//	cout << "new range is " << inoutRange << endl;
 }
 
 void ofxTimeline::setCurrentTimeToInPoint(){
@@ -825,6 +833,37 @@ void ofxTimeline::setLockWidthToWindow(bool lockWidth){
     }
 }
 
+void ofxTimeline::setMinimalHeaders(bool headersMinimal){
+	if(minimalHeaders != headersMinimal){
+		minimalHeaders = headersMinimal;
+		for(int i = 0; i < pages.size(); i++){
+			pages[i]->setMinimalHeaders(minimalHeaders);
+		}
+	}
+}
+
+bool ofxTimeline::areHeadersMinimal(){
+	return minimalHeaders;
+}
+
+bool ofxTimeline::toggleShowFooters(){
+	setFootersHidden(!footersHidden);
+	return !footersHidden;
+}
+
+void ofxTimeline::setFootersHidden(bool hidden){
+	if(hidden != footersHidden){
+		footersHidden = hidden;
+		for(int i = 0; i < pages.size(); i++){
+			pages[i]->hideFooters(footersHidden);
+		}
+	}
+}
+
+bool ofxTimeline::areFootersHidden(){
+	return footersHidden;
+}
+
 void ofxTimeline::setEditableHeaders(bool headersEditable){
 	headersAreEditable = headersEditable;
 }
@@ -849,8 +888,29 @@ void ofxTimeline::setWidth(float newWidth){
     }
 }
 
+void ofxTimeline::setHeight(float height){
+	if(height != totalDrawRect.height){
+		float staticHeight = totalDrawRect.height - currentPage->getDrawRect().height;
+		cout << "the static height is " << staticHeight << endl;
+		currentPage->setExpandToHeight(height - staticHeight);
+		currentPage->evenlyDistributeTrackHeights();
+		updatePagePositions();
+        ofEventArgs args;
+        ofNotifyEvent(events().viewWasResized, args);
+		cout << "desired height was " << height << " resulting height " << totalDrawRect.height << endl;
+	}
+}
+
 void ofxTimeline::collapseAllTracks(){
 	currentPage->collapseAllTracks();
+}
+
+float ofxTimeline::getWidth(){
+	return getDrawRect().width;
+}
+
+float ofxTimeline::getHeight(){
+	return getDrawRect().height;
 }
 
 ofRectangle ofxTimeline::getDrawRect(){
@@ -977,6 +1037,10 @@ void ofxTimeline::disableEvents() {
 }
 
 void ofxTimeline::mousePressed(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
 
     if(modalTrack != NULL){
@@ -989,6 +1053,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 		}
 		else if(!focus && timelineHasFocus){
 			currentPage->timelineLostFocus();
+			zoomer->lostFocus();
 		}
 		timelineHasFocus = focus;
 		if(timelineHasFocus){
@@ -1010,6 +1075,10 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
@@ -1024,6 +1093,10 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     if(modalTrack != NULL){
@@ -1038,6 +1111,10 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 }
 
 void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
+	if(!isShowing){
+		return;
+	}
+	
     long millis = screenXToMillis(args.x);
     
     dragAnchorSet = false;
@@ -1114,8 +1191,20 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		}
 	}
 	else if(ofGetModifierAltPressed()){
-		if(args.key == 'C' || args.key == 'C'-96){
-			currentPage->collapseAllTracks(true);
+		if(args.key == 'c' || args.key == 'c'-96 || args.key == 'C' || args.key == 'C'-96){
+			if(ofGetModifierShiftPressed()){
+				currentPage->evenlyDistributeTrackHeights();
+			}
+			else{
+				currentPage->collapseAllTracks(true);
+			}
+			ofEventArgs args;
+			ofNotifyEvent(events().viewWasResized, args);
+		}
+		if(args.key == 'e' || args.key == 'e'-96){
+			currentPage->expandFocusedTrack();
+			ofEventArgs args;
+			ofNotifyEvent(events().viewWasResized, args);			
 		}
 	}
 	else{
@@ -1318,6 +1407,9 @@ void ofxTimeline::draw(){
 
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_SCISSOR_TEST);
+		glScissor(totalDrawRect.x, 0, totalDrawRect.width, ofGetHeight());
+		
         ofDisableLighting();
 		ofEnableAlphaBlending();
 		ofSetColor(255*.15);
@@ -1366,7 +1458,9 @@ void ofxTimeline::addPage(string pageName, bool makeCurrent){
 	newPage->setup();
 	newPage->setZoomBounds(zoomer->getViewRange());
 	newPage->setTicker(ticker);
-    
+    newPage->setMinimalHeaders(minimalHeaders);
+	newPage->hideFooters(footersHidden);
+	
 	pages.push_back(newPage);
 	tabs->addPage(pageName);
 
@@ -1510,6 +1604,15 @@ ofxTLCurves* ofxTimeline::addCurves(string trackName, string xmlFileName, ofRang
 	newCurves->setXMLFileName(xmlFileName);
 	addTrack(confirmedUniqueName(trackName), newCurves);
 	return newCurves;
+}
+
+float ofxTimeline::getValueAtPercent(string trackName, float atPercent){
+	if(!hasTrack(trackName)){
+		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
+		return 0.0;
+	}
+	ofxTLCurves* curves = (ofxTLCurves*)trackNameToPage[trackName]->getTrack(trackName);
+	return curves->getValueAtTimeInMillis(atPercent*durationInSeconds*1000);
 }
 
 float ofxTimeline::getValue(string trackName, float atTime){
@@ -1722,9 +1825,9 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 		}
 		else{
 			//make time control by default
-			setTimecontrolTrack(videoTrack);
+//			setTimecontrolTrack(videoTrack);
 			setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+//			setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
 		}
     }
     return videoTrack;

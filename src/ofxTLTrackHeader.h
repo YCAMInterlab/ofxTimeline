@@ -58,6 +58,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void setTrack(ofxTLTrack* track);
 	virtual ofxTLTrack* getTrack();
     
+	virtual void setFooterHeight(float height);
 	virtual void collapseTrack();
     
 	virtual ofRectangle getFooterRect();
@@ -70,6 +71,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	ofxTLTrack* track;
 	ofxTextInputField nameField;
 	
+	float footerHeight;
 	void recalculateFooter();
 	
 	ofRectangle footerRect;

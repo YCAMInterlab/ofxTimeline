@@ -344,25 +344,25 @@ float ofxTLTrack::normalizedXtoScreenX(float x, ofRange inputRange){
     return timeline->normalizedXtoScreenX(x, inputRange);
 }
 
-int ofxTLTrack::indexForScreenX(int screenX){
-	return indexForScreenX(screenX, timeline->getDurationInFrames());
-}
+//int ofxTLTrack::indexForScreenX(int screenX){
+//	return indexForScreenX(screenX, timeline->getDurationInFrames());
+//}
 
-int ofxTLTrack::screenXForIndex(int index){
-	return screenXForIndex(index, timeline->getDurationInFrames());	
-}
+//int ofxTLTrack::screenXForIndex(int index){
+//	return screenXForIndex(index, timeline->getDurationInFrames());	
+//}
 
-int ofxTLTrack::indexForScreenX(int screenX, int durationInFrames){
-	int startFrame = zoomBounds.min * durationInFrames;
-	int endFrame = zoomBounds.max * durationInFrames;
-	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
-}
-
-int ofxTLTrack::screenXForIndex(int index, int durationInFrames){
-	int startFrame = zoomBounds.min * durationInFrames;
-	int endFrame = zoomBounds.max * durationInFrames;
-	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
-}
+//int ofxTLTrack::indexForScreenX(int screenX, int durationInFrames){
+//	int startFrame = zoomBounds.min * durationInFrames;
+//	int endFrame = zoomBounds.max * durationInFrames;
+//	return ofMap(screenX, bounds.x, bounds.x+bounds.width, startFrame, endFrame, true);
+//}
+//
+//int ofxTLTrack::screenXForIndex(int index, int durationInFrames){
+//	int startFrame = zoomBounds.min * durationInFrames;
+//	int endFrame = zoomBounds.max * durationInFrames;
+//	return ofMap(index, startFrame, endFrame, bounds.x, bounds.x+bounds.width, false);
+//}
 
 float ofxTLTrack::screenXForTime(float time){
 	return screenXForTime(time, timeline->getDurationInSeconds());

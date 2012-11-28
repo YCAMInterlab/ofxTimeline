@@ -136,7 +136,7 @@ void ofxTLZoomer::mouseMoved(ofMouseEventArgs& args) {
 void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 
 	if(!enabled) return;
-
+	
 	minSelected = maxSelected = midSelected = false;
 	if (pointInScreenBounds(ofVec2f(args.x, args.y))) {
 		mouseIsDown = true;
@@ -189,7 +189,7 @@ void ofxTLZoomer::mousePressed(ofMouseEventArgs& args) {
 void ofxTLZoomer::mouseDragged(ofMouseEventArgs& args) {
     
 	if(!enabled) return;
-
+	
     bool notify = false;
 	ofRange oldRange = getViewRange();
 	if(minSelected || midSelected){
@@ -230,6 +230,13 @@ void ofxTLZoomer::mouseReleased(ofMouseEventArgs& args){
 	}
 }
 
+void ofxTLZoomer::lostFocus(){
+	ofxTLTrack::lostFocus();
+	minSelected = false;
+	maxSelected = false;
+	midSelected = false;
+}
+
 void ofxTLZoomer::notifyZoomStarted(){
 	ofxTLZoomEventArgs zoomEvent;
     zoomEvent.sender = timeline;
@@ -266,6 +273,11 @@ ofRange ofxTLZoomer::getViewRange() {
 		centerPosition = ofMap(centerPosition, currentViewRange.span()/2, 1.0 - currentViewRange.span()/2, logSpan/2, 1.0-logSpan/2);
 	}
 	return ofRange(centerPosition - logSpan/2, centerPosition + logSpan/2);
+}
+
+void ofxTLZoomer::setViewExponent(float exponent){
+	zoomExponent = 1.0;
+	setViewRange(currentViewRange);
 }
 
 void ofxTLZoomer::setViewRange(ofRange newRange){

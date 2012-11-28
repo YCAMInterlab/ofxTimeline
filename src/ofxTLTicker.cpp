@@ -45,6 +45,10 @@ ofxTLTicker::~ofxTLTicker(){
 
 void ofxTLTicker::draw(){
 	
+	if(bounds.height == 0){
+		return;
+	}
+	
 	ofPushStyle();
 	
 	int textH, textW;
@@ -88,7 +92,15 @@ void ofxTLTicker::draw(){
 		text = timeline->formatTime(hoverTime);
 		textW = timeline->getFont().stringWidth(text)+3;
         if(bounds.height > 2){
-            int previewTimecodeX = ofClamp(screenX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
+//            int previewTimecodeX = ofClamp(screenX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
+			int previewTimecodeX;
+			if (timeline->getIsFrameBased()) {
+				text = ofToString( timeline->getTimecode().frameForMillis(hoverTime) );
+			}
+			else{
+				text = timeline->formatTime(hoverTime);
+			}
+			previewTimecodeX = ofClamp(screenX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
             ofFill();
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
             //draw playhead line
@@ -106,7 +118,7 @@ void ofxTLTicker::draw(){
     int currentFrameX;
     if (timeline->getIsFrameBased()) {
         text = ofToString(timeline->getCurrentFrame());
-        currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+        currentFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(timeline->getCurrentFrame()));
     }
     else{
         text = timeline->formatTime(timeline->getCurrentTime());

@@ -61,7 +61,11 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
-		
+			
+    virtual void playbackStarted(ofxTLPlaybackEventArgs& args);
+	virtual void playbackLooped(ofxTLPlaybackEventArgs& args);
+	virtual void playbackEnded(ofxTLPlaybackEventArgs& args);
+	
 	int getSelectedFrame();
 	int getCurrentFrame();
 	float getCurrentTime();
@@ -83,7 +87,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     virtual string getTrackType();
     
   protected:
-    
+    float positionForSecond(float second);
+	
 	int selectedFrame;
 	int currentLoop;
 //	bool thumbsEnabled;

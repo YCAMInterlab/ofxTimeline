@@ -54,6 +54,7 @@ ofVec3f ofHermiteInterpolate(ofVec3f y0, ofVec3f y1, ofVec3f y2, ofVec3f y3, flo
 ofxTLCameraTrack::ofxTLCameraTrack(){
 	camera = NULL;
 	lockCameraToTrack = false;
+	dampening = .1;
 }
 
 ofxTLCameraTrack::~ofxTLCameraTrack(){
@@ -250,8 +251,12 @@ void ofxTLCameraTrack::update(ofEventArgs& args){
 void ofxTLCameraTrack::setTimelineInOutToTrack(){
 	//TODO: timebased camera tracking
 	if(keyframes.size() > 0){
-		timeline->setInPointAtMillis(keyframes[0]->time);
-		timeline->setOutPointAtMillis(keyframes[keyframes.size()-1]->time);
+		unsigned long inTime  = keyframes[0]->time;
+		unsigned long outTime = keyframes[keyframes.size()-1]->time;
+//		cout << " IN AND OUT SETTING " << inTime << " " << outTime << endl;
+		timeline->setInOutRangeMillis(inTime, outTime);
+//		timeline->setInPointAtMillis(keyframes[0]->time);
+//		timeline->setOutPointAtMillis(keyframes[keyframes.size()-1]->time);
 	}
 	else{
 		timeline->setInOutRange(ofRange(0,1.0));
@@ -286,7 +291,6 @@ void ofxTLCameraTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 
 //keys pressed events, and nuding from arrow keys with normalized nudge amount 0 - 1.0
 void ofxTLCameraTrack::keyPressed(ofKeyEventArgs& args){
-	ofxTLKeyframes::keyPressed(args);
 	ofxTLKeyframes::keyPressed(args);
 	
 	bool modified = false;
@@ -371,7 +375,15 @@ void ofxTLCameraTrack::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStor
 }
 
 ofxTLKeyframe* ofxTLCameraTrack::keyframeAtScreenpoint(ofVec2f p){
-	return ofxTLKeyframes::keyframeAtScreenpoint(p);
+    if(bounds.inside(p.x, p.y)){
+        for(int i = 0; i < keyframes.size(); i++){
+            float offset = p.x - timeline->millisToScreenX(keyframes[i]->time);
+            if (abs(offset) < bounds.height/2) {
+                return keyframes[i];
+            }
+        }
+    }
+	return NULL;
 }
 
 void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
@@ -386,15 +398,18 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	
 	if(keyframes.size() == 1 || millis <= keyframes[0]->time){
 		ofxTLCameraFrame* firstFrame = (ofxTLCameraFrame*)keyframes[0];
-		camera->setPosition(firstFrame->position);
-		camera->setOrientation(firstFrame->orientation);
+//		camera->setPosition(firstFrame->position);
+//		camera->setOrientation(firstFrame->orientation);
+		moveCameraToPosition(firstFrame);
+
 		return;
 	}
 	
 	if (millis >= keyframes[keyframes.size()-1]->time) {
 		ofxTLCameraFrame* lastFrame = (ofxTLCameraFrame*)keyframes[keyframes.size()-1];
-		camera->setPosition(lastFrame->position);
-		camera->setOrientation(lastFrame->orientation);
+//		camera->setPosition(lastFrame->position);
+//		camera->setOrientation(lastFrame->orientation);
+		moveCameraToPosition(lastFrame);
 		return;
 	}
 	
@@ -402,9 +417,9 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	
 	ofxTLCameraFrame interp;
 	setCameraFrameToTime(&interp, millis);
-	camera->setPosition(interp.position);
-	camera->setOrientation(interp.orientation);
-	
+	moveCameraToPosition(&interp);
+//	camera->setPosition(interp.position);
+//	camera->setOrientation(interp.orientation);
 	//	cout << "set position to " << camera->getPosition() << endl;
 }
 
@@ -419,12 +434,26 @@ void ofxTLCameraTrack::setCameraFrameToTime(ofxTLCameraFrame* target, unsigned l
 	}
 }
 
+void ofxTLCameraTrack::moveCameraToPosition(ofxTLCameraFrame* target){
+	camera->setPosition(camera->getPosition().getInterpolated(target->position, dampening) );
+	ofQuaternion q;
+	q.slerp(dampening, camera->getOrientationQuat(), target->orientation);
+	camera->setOrientation(q);
+}
+
+void ofxTLCameraTrack::setDampening(float damp){
+	dampening = damp;
+}
+
+float ofxTLCameraTrack::getDampening(){
+	return dampening;
+}
 
 void ofxTLCameraTrack::interpolateBetween(ofxTLCameraFrame* target,
-													   ofxTLCameraFrame* prev,
-													   ofxTLCameraFrame* sample1,
-													   ofxTLCameraFrame* sample2,
-													   ofxTLCameraFrame* next, unsigned long millis)
+										  ofxTLCameraFrame* prev,
+										  ofxTLCameraFrame* sample1,
+										  ofxTLCameraFrame* sample2,
+										  ofxTLCameraFrame* next, unsigned long millis)
 {
 
     float alpha = 0;

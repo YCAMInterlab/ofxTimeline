@@ -67,7 +67,7 @@ void ofxTLKeyframes::recomputePreviews(){
 //		preview.addVertex(ofPoint(bounds.x+bounds.width, bounds.y + bounds.height - sampleAtPercent(.5f)*bounds.height));
 //	}
 //	else{
-		for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p++){
+		for(int p = bounds.getMinX(); p <= bounds.getMaxX(); p+=2){
 			preview.addVertex(p,  bounds.y + bounds.height - sampleAtPercent(screenXtoNormalizedX(p)) * bounds.height);
 		}
 //	}
@@ -497,8 +497,14 @@ void ofxTLKeyframes::updateKeyframeSort(){
 	lastKeyframeIndex = 1;
 	lastSampleTime = 0;
 	if(keyframes.size() > 1){
-
+		for(int i = 0; i < keyframes.size(); i++){
+			if(keyframes[i]->time > timeline->getDurationInMilliseconds()){
+				keyframes[i]->time = timeline->getDurationInMilliseconds();
+			}
+		}
+		
 		sort(keyframes.begin(), keyframes.end(), keyframesort);
+		
 		for(int i = 0; i < keyframes.size()-1; i++){
 			if(keyframes[i]->time == keyframes[i+1]->time){
 				if(keyframes[i]->previousTime < keyframes[i+1]->time){
@@ -759,6 +765,9 @@ void ofxTLKeyframes::deleteSelectedKeyframes(){
 				ofLogError("ofxTLKeyframes::deleteSelectedKeyframes") << "keyframe delete inconsistency";
 			}
 			willDeleteKeyframe(keyframes[i]);
+			if(keyframes[i] == hoverKeyframe){
+				hoverKeyframe = NULL;
+			}
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
 			selectedKeyframes.erase(--selectedIt);

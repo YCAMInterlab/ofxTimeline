@@ -47,6 +47,10 @@ ofxTLColorTrack::ofxTLColorTrack()
 
 void ofxTLColorTrack::draw(){
 	
+	if(bounds.height == 0){
+		return;
+	}
+	
 	if(viewIsDirty || shouldRecomputePreviews){
 		updatePreviewPalette();
 	}
@@ -71,7 +75,13 @@ void ofxTLColorTrack::draw(){
 	}
 	
 	for(int i = 0; i < keyframes.size(); i++){
+		
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		
 		float screenX = millisToScreenX(keyframes[i]->time);
+		
 		ofPoint a = ofPoint(screenX-10,bounds.y);
 		ofPoint b = ofPoint(screenX+10,bounds.y);
 		ofPoint c = ofPoint(screenX,bounds.y+10);
@@ -215,12 +225,12 @@ ofColor ofxTLColorTrack::getColorAtMillis(unsigned long millis){
 		return defaultColor;
 	}
 	
-	if(millis < keyframes[0]->time){
+	if(millis <= keyframes[0]->time){
 		//cout << "getting color before first key " << ((ofxTLColorSample*)keyframes[0])->color << endl;
 		return ((ofxTLColorSample*)keyframes[0])->color;
 	}
 	
-	if(millis > keyframes[keyframes.size()-1]->time){
+	if(millis >= keyframes[keyframes.size()-1]->time){
 		return ((ofxTLColorSample*)keyframes[keyframes.size()-1])->color;
 	}
 	
@@ -419,6 +429,7 @@ void ofxTLColorTrack::setNextAndPreviousSamples(){
 		}
 	}
 }
+
 
 ofxTLKeyframe* ofxTLColorTrack::keyframeAtScreenpoint(ofVec2f p){
 	if(isHovering()){
