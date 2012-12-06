@@ -70,7 +70,10 @@ class ofxTLCameraTrack : public ofxTLKeyframes {
 	//a value from 0 - 1 (where 1 freezes the camera, and 0 is no dampening);
 	void setDampening(float damp);
 	float getDampening();
-	
+    
+    //call this when you want to stick to the main target ignoring dampening
+	void jumpToTarget();
+    
 	//draw your keyframes
 	//some default style is done before this
 	virtual void draw();

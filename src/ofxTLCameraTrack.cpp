@@ -449,6 +449,14 @@ float ofxTLCameraTrack::getDampening(){
 	return dampening;
 }
 
+void ofxTLCameraTrack::jumpToTarget(){
+    float curDamp = dampening;
+    dampening = 1.0;
+    moveCameraToTime(timeline->getCurrentTimeMillis());
+    
+    dampening = curDamp;
+}
+
 void ofxTLCameraTrack::interpolateBetween(ofxTLCameraFrame* target,
 										  ofxTLCameraFrame* prev,
 										  ofxTLCameraFrame* sample1,
