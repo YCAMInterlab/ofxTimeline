@@ -83,13 +83,16 @@ bool ofxTLVideoTrack::togglePlay(){
 }
 
 void ofxTLVideoTrack::play(){
-    if(isLoaded()){
+    if(isLoaded() && !getIsPlaying()){
         if(player->getIsMovieDone()){
 			player->setFrame(inFrame);
 		}
 		if(getCurrentFrame() >= timeline->getOutFrame()){
 			player->setFrame(timeline->getInFrame());
 		}
+		#ifdef OF_VIDEO_PLAYER_QUICKTIME
+		player->setSpeed(1.0);
+		#endif
 		player->play();
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);
@@ -99,10 +102,14 @@ void ofxTLVideoTrack::play(){
 }
 
 void ofxTLVideoTrack::stop(){
+	player->setSpeed(0);
     if(isLoaded() && getIsPlaying()){
 //		cout << "stopping playback" << endl;
-//        player->setSpeed(0.0);
+		#ifdef OF_VIDEO_PLAYER_QUICKTIME
+        player->setSpeed(0.0);
+		#else
 		player->stop();
+		#endif
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
         ofNotifyEvent(events().playbackEnded, args);
         currentlyPlaying = false;
@@ -168,14 +175,13 @@ void ofxTLVideoTrack::update(){
 				int loopFrame = timeline->getInFrame();
 				selectFrame(loopFrame);
 			}
-			
 			//timeline->setPercentComplete(player->getPosition());
 		}
 		else{
-	//        if(player->getSpeed() != 0){
-	//	        player->setSpeed(0);
-	//        }
-			if(currentlyPlaying){
+//	        if(player->getSpeed() != 0){
+//		        player->setSpeed(0);
+//	        }
+			if(player->isPlaying()){
 				stop();
 			}
 		}
@@ -482,10 +488,10 @@ int ofxTLVideoTrack::selectFrame(int frame){
 	selectedFrame = inFrame + (frame % (outFrame - inFrame));
 //	cout << "setting frame to " << selectedFrame << " with requested frame " << frame << endl;
 	currentLoop = frame / (outFrame-inFrame);
-//	cout << "selecting frame " << selectedFrame << endl;
+	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
 	timeline->flagUserChangedValue();
-	player->update();
+	player->update(); 
 //	cout << "selectFrame: player reports frame " << player->getCurrentFrame() << " with requested frame " << frame << endl;
 
 	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
