@@ -90,9 +90,9 @@ void ofxTLVideoTrack::play(){
 		if(getCurrentFrame() >= timeline->getOutFrame()){
 			player->setFrame(timeline->getInFrame());
 		}
-		#ifdef OF_VIDEO_PLAYER_QUICKTIME
+//		#ifdef OF_VIDEO_PLAYER_QUICKTIME
 		player->setSpeed(1.0);
-		#endif
+//		#endif
 		player->play();
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playbackStarted, args);
@@ -488,7 +488,7 @@ int ofxTLVideoTrack::selectFrame(int frame){
 	selectedFrame = inFrame + (frame % (outFrame - inFrame));
 //	cout << "setting frame to " << selectedFrame << " with requested frame " << frame << endl;
 	currentLoop = frame / (outFrame-inFrame);
-	cout << "selecting frame " << selectedFrame << endl;
+//	cout << "selecting frame " << selectedFrame << endl;
 	player->setFrame(selectedFrame);
 	timeline->flagUserChangedValue();
 	player->update(); 
