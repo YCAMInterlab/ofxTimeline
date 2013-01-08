@@ -44,12 +44,7 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key == ' '){
-		timeline.togglePlay();
-	}
-	if(key == 'h'){
-		timeline.toggleShow();
-	}
+
 }
 
 //--------------------------------------------------------------

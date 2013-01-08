@@ -82,13 +82,7 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key == ' '){
-		timeline.togglePlay();
-	}
     
-	if(key == 'h'){
-		timeline.toggleShow();
-	}
 }
 
 //--------------------------------------------------------------
@@ -118,7 +112,6 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	timeline.setWidth(w);
 	
 }
 

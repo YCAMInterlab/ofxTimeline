@@ -29,6 +29,7 @@ void testApp::setup(){
     for(int i = 0; i < 5; i++){
         ofxTimeline* t = new ofxTimeline();
 		t->setup();
+        t->setSpacebarTogglePlay(false);
         t->setDurationInFrames(400);
         t->addCurves("Sub Timeline " + ofToString(i));
         t->setWidth(ofGetWidth());
@@ -64,26 +65,12 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     
-    //prevents hotkeys from effecting the app when we are typing into a flag track
-    if(timeline.isModal()){
-        return;
-    }
-    
-    //hide all the timelines
-    if(key == 'h'){
-        for(int i = 0; i < sublines.size(); i++){
-            sublines[i]->toggleShow();
-        }            
-    }    
-    
-    //stop all the timelines
+    //reset the sub timelines when you hit play
 	if(key ==  ' '){
-        timeline.togglePlay();      
-        if(!timeline.getIsPlaying()){
-            for(int i = 0; i < sublines.size(); i++){
-                sublines[i]->stop();
-            }            
-        }
+        for(int i = 0; i < sublines.size(); i++){
+            sublines[i]->stop();
+            sublines[i]->setCurrentTimeSeconds(0);
+        }            
     }
 }
 

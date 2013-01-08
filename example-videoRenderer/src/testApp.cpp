@@ -196,13 +196,6 @@ void testApp::renderCurrentFrame(){
 }
 
 void testApp::keyPressed(int key){
-	if(key == ' ' && loaded){
-        timeline.togglePlay();
-	}
-    
-	if(key == 'h'){
-		timeline.toggleShow();
-	}
     
     if(key == 'c'){
         //reload shader

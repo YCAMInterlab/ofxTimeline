@@ -55,13 +55,7 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(timeline.isModal()){
-		return;
-	}
-		
-	if(key == ' '){
-		timeline.togglePlay();
-	}
+    
 }
 
 //--------------------------------------------------------------
