@@ -8,20 +8,8 @@
         <center>0.000000000</center>
         <interpolate>0</interpolate>
         <expInterpolate>1</expInterpolate>
-        <time>00:00:01:466</time>
-        <value>0.437036812</value>
-    </key>
-    <key>
-        <type>0</type>
-        <phaseShift>0.000000000</phaseShift>
-        <amplitude>1.000000000</amplitude>
-        <frequency>11.799995422</frequency>
-        <seed>0.000000000</seed>
-        <center>0.000000000</center>
-        <interpolate>1</interpolate>
-        <expInterpolate>0</expInterpolate>
-        <time>00:00:10:153</time>
-        <value>0.237037063</value>
+        <time>00:00:04:571</time>
+        <value>0.422222018</value>
     </key>
     <key>
         <type>1</type>
@@ -32,7 +20,19 @@
         <center>0.000000000</center>
         <interpolate>1</interpolate>
         <expInterpolate>0</expInterpolate>
-        <time>00:00:29:297</time>
-        <value>0.629629612</value>
+        <time>00:00:13:325</time>
+        <value>0.688888907</value>
+    </key>
+    <key>
+        <type>0</type>
+        <phaseShift>0.000000000</phaseShift>
+        <amplitude>1.000000000</amplitude>
+        <frequency>11.799995422</frequency>
+        <seed>0.000000000</seed>
+        <center>0.000000000</center>
+        <interpolate>1</interpolate>
+        <expInterpolate>0</expInterpolate>
+        <time>00:00:26:127</time>
+        <value>0.288888872</value>
     </key>
 </keyframes>
