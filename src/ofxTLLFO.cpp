@@ -225,8 +225,9 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
             }
             
         }
-
-        return evaluateKeyframeAtTime(&tempkey, sampleTime);
+        else {
+            return evaluateKeyframeAtTime(&tempkey, sampleTime);
+        }
 	}
 	//value interpolation
 	else{
@@ -235,10 +236,12 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 }
 
 //the beating heart
-float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
+float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey){
+    if(firstKey){
+        return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0);
+    }
 	ofxTLLFOKey* lfo = (ofxTLLFOKey*)key;
 	if(lfo->type == OFXTL_LFO_TYPE_SINE){
-
         // when no interpolation needed.
         return ofClamp(( cos( (2.0f*PI * lfo->frequency) * (sampleTime + lfo->phaseShift) / (1000.0f*60.0f) )*lfo->amplitude)*.5 + .5 + lfo->center, 0, 1);
         

@@ -211,12 +211,10 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	}
 	
 	if(sampleTime <= keyframes[0]->time){
-		return evaluateKeyframeAtTime(keyframes[0], sampleTime);
-//		return keyframes[0]->value;
+		return evaluateKeyframeAtTime(keyframes[0], sampleTime, true);
 	}
 	
 	if(sampleTime >= keyframes[keyframes.size()-1]->time){
-		//return keyframes[keyframes.size()-1]->value;
 		return evaluateKeyframeAtTime(keyframes[keyframes.size()-1], sampleTime);
 	}
 	
@@ -237,7 +235,7 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	return defaultValue;
 }
 
-float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime){
+float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey){
 	return key->value;
 }
 

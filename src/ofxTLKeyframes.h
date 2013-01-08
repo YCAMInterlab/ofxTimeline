@@ -131,7 +131,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual float sampleAtPercent(float percent); //less accurate than millis
     virtual float sampleAtTime(long sampleTime);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime);
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey = false);
 
     ofRange valueRange;
 	float defaultValue;
