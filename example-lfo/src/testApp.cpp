@@ -22,11 +22,12 @@ void testApp::setup(){
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
-	
+	timeline.setDurationInSeconds(30);
+    
 	//this is the simplest example and is really flexible
 	timeline.addLFO("LFO");
 	
-	timeline.setDurationInSeconds(30);
+	
 }
 
 //--------------------------------------------------------------
