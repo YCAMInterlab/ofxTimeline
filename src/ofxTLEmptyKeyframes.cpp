@@ -151,8 +151,8 @@ ofxTLKeyframe* ofxTLEmptyKeyframes::newKeyframe(){
 void ofxTLEmptyKeyframes::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	ofxTLEmptyKeyframe* emptyKey = (ofxTLEmptyKeyframe*)key;
 	emptyKey->color = ofColor(xmlStore.getValue("r", 255),
-							  xmlStore.getValue("b", 255),
-							  xmlStore.getValue("g", 255));
+							  xmlStore.getValue("g", 255),
+							  xmlStore.getValue("b", 255));
 }
 
 void ofxTLEmptyKeyframes::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
