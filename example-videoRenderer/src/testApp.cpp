@@ -16,11 +16,11 @@ void testApp::setup(){
 	ofSetVerticalSync(true);
     ofEnableSmoothing();
 	
-
     //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);
-	timeline.setDurationInFrames(90);
+    //set big initial duration, longer than the video needs to be
+	timeline.setDurationInFrames(20000);
 	timeline.setLoopType(OF_LOOP_NORMAL);
     
     //add keyframes for  our shader
@@ -28,7 +28,6 @@ void testApp::setup(){
     timeline.addCurves("contrast", ofRange(.5, 2.0), 1.0);
     timeline.addCurves("saturation", ofRange(0.0, 1.5), 1.0);
     timeline.addSwitches("invert");
-	
 	
     loaded = false;
 	rendering = false;
