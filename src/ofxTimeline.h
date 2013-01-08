@@ -111,7 +111,10 @@ class ofxTimeline : ofThread {
 	virtual void stop();
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
-
+    
+    virtual bool getSacebarTogglesPlay();
+    virtual void setSpacebarTogglePlay(bool spacebarPlays);
+    
 	virtual void playSelectedTrack();
 	virtual void stopSelectedTrack();
 	virtual bool togglePlaySelectedTrack();
@@ -497,6 +500,8 @@ class ofxTimeline : ofThread {
 	bool movePlayheadOnDrag;
     bool snapToBPM;
     bool snapToOtherElements;
+    
+    bool spacebarTogglesPlay;
     
 	float width;
 	ofVec2f offset;
