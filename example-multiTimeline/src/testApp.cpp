@@ -14,15 +14,14 @@ void testApp::setup(){
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
     ofEnableSmoothing();
-	
-	ofSetLogLevel(OF_LOG_VERBOSE);
     
-	ofxTimeline::removeCocoaMenusFromGlut("Multitimeline Example");
+    //on mac lets you use COMMAND+C and COMMAND+V actions
+	ofxTimeline::removeCocoaMenusFromGlut("MultiTimeline Example");
 	
 	timeline.setup();
-    timeline.setFrameRate(24);
 	timeline.setDurationInSeconds(18);
-
+    timeline.setLoopType(OF_LOOP_NORMAL);
+    
     timeline.addFlags("StartStop");
     
     ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
@@ -31,10 +30,7 @@ void testApp::setup(){
         ofxTimeline* t = new ofxTimeline();
 		t->setup();
         t->setDurationInFrames(400);
-        t->addCurves(ofToString(i));
-        t->setShowTicker(false);
-        t->setShowZoomer(false);
-        t->setLockWidthToWindow(false);
+        t->addCurves("Sub Timeline " + ofToString(i));
         t->setWidth(ofGetWidth());
         t->setLoopType(OF_LOOP_NORMAL);
         sublines.push_back(t);	
@@ -56,10 +52,10 @@ void testApp::draw(){
 
     sublines[0]->setOffset(timeline.getBottomLeft());
 
-    for(int i = 0; i < MAX(sublines.size()-mouseX/1000, 0); i++){
-        
+    //we need to offset all the timelines below the one above it, with a 10 pixel buffer
+    for(int i = 0; i < sublines.size(); i++){
         if(i != 0){
-            sublines[i]->setOffset(sublines[i-1]->getBottomLeft());
+            sublines[i]->setOffset(sublines[i-1]->getBottomLeft() + ofVec2f(0, 10));
         }
         sublines[i]->draw();
     }
@@ -67,16 +63,20 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
+    
+    //prevents hotkeys from effecting the app when we are typing into a flag track
     if(timeline.isModal()){
         return;
     }
     
+    //hide all the timelines
     if(key == 'h'){
         for(int i = 0; i < sublines.size(); i++){
             sublines[i]->toggleShow();
         }            
     }    
     
+    //stop all the timelines
 	if(key ==  ' '){
         timeline.togglePlay();      
         if(!timeline.getIsPlaying()){
@@ -92,7 +92,8 @@ void testApp::bangFired(ofxTLBangEventArgs& bang){
     
     //This is our own custom flag protocol to enslave playback
     //on the sub timelines
-    //a flag that is start>3 or stop>2 will start and stop those timelines
+    //a flag that is start 3 or stop 2 will start and stop those timelines
+
 	vector<string> command = ofSplitString(bang.flag, " ");
     if(command.size() == 2){
         int trackIndex = ofToInt(command[1]);           
