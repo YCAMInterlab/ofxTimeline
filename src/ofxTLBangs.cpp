@@ -105,7 +105,7 @@ ofxTLKeyframe* ofxTLBangs::keyframeAtScreenpoint(ofVec2f p){
 }
 
 void ofxTLBangs::update(){
-	if(isPlaying || timeline->getIsPlaying()){
+//	if(isPlaying || timeline->getIsPlaying()){
 		long thisTimelinePoint = currentTrackTime();
 		for(int i = 0; i < keyframes.size(); i++){
 			if(timeline->getInOutRangeMillis().contains(keyframes[i]->time) && lastTimelinePoint < keyframes[i]->time && thisTimelinePoint >= keyframes[i]->time){
@@ -115,7 +115,7 @@ void ofxTLBangs::update(){
 			}
 		}
 		lastTimelinePoint = thisTimelinePoint;
-	}
+//	}
 }
 
 void ofxTLBangs::bangFired(ofxTLKeyframe* key){
