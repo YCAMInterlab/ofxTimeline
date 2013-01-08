@@ -23,7 +23,4 @@ class testApp : public ofBaseApp{
 	
 	ofxTimeline timeline;
 	ofxTLAudioTrack waveform;
-
-    float lastBang;
-	void bangFired(ofxTLBangEventArgs& bang);
 };

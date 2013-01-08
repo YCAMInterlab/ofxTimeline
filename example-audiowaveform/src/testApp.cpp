@@ -3,13 +3,14 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	ofBackground(255*.15);
+	ofBackground(0);
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
-	ofSetEscapeQuitsApp(false);
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	
+    ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
+    
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
     timeline.setBPM(120.f);
@@ -17,39 +18,33 @@ void testApp::setup(){
 	timeline.setShowBPMGrid(true);
 	
 	timeline.addTrack("Track", &waveform);
-	timeline.addVideoTrack("fingers", "fingers.mov");
 	
 	//this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
-	//timeline.setTimecontrolTrack(&waveform);
+	timeline.setTimecontrolTrack(&waveform);
     waveform.loadSoundfile("4chan.wav");
+    
 	//fun to watch on FFT
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
 	
-	//timeline.setDurationInSeconds(waveform.getDuration()*2);
-	timeline.setDurationInSeconds(timeline.getVideoPlayer("fingers")->getDuration()*2);
-    timeline.addBangs("clickbangs"); //just for fun
+	timeline.setDurationInSeconds(waveform.getDuration());
 
-	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
-    lastBang = 0;
-}
-
-//--------------------------------------------------------------
-void testApp::bangFired(ofxTLBangEventArgs& bang){
-//    lastBang = timeline.getCurrentTime();
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
 	
-	
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	
-	timeline.getVideoPlayer("fingers")->draw(timeline.getBottomLeft());
-	
+    
+    //change the background color based on the current bin and amount
+    if(waveform.isSoundLoaded()){
+        int bin = ofMap(mouseX, 0, ofGetWidth(), 0, waveform.getFFTBinCount()-1, true);
+        ofBackground( waveform.getFFTSpectrum()[bin] * 255 );
+    }
+    
 	timeline.draw();
 }
 
@@ -59,6 +54,7 @@ void testApp::keyPressed(int key){
 	if(key == ' '){
 		timeline.togglePlay();
 	}
+    
 	if(key == 'h'){
 		timeline.toggleShow();
 	}
