@@ -1412,8 +1412,10 @@ void ofxTimeline::draw(){
 		
         ofDisableLighting();
 		ofEnableAlphaBlending();
-		ofSetColor(255*.15);
+        
+        ofSetColor(colors.guiBackgroundColor);
 		ofRect(totalDrawRect);
+        
 		ofSetColor(255);
 		
 		if (pages.size() > 1) {
