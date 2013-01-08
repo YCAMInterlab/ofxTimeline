@@ -126,8 +126,6 @@ class ofxTimeline : ofThread {
 	virtual bool getIsShowing();
 	virtual void draw();
     
-
-	
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
 	virtual void mouseDragged(ofMouseEventArgs& args);
