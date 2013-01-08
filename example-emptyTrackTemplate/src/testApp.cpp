@@ -23,7 +23,8 @@ void testApp::setup(){
 	
 	timeline.setup();
 	timeline.setLoopType(OF_LOOP_NORMAL);
-	
+	timeline.setDurationInSeconds(30);
+    
 	//this is the simplest example and is really flexible
 	emptyTrack = new ofxTLEmptyTrack();
 	timeline.addTrack("My Custom Track", emptyTrack);
@@ -32,15 +33,12 @@ void testApp::setup(){
 	emptyKeyframes = new ofxTLEmptyKeyframes();
 	emptyKeyframes->setXMLFileName("MyEmptyKeyframes.xml");
 	timeline.addTrack("My Custom Keyframes", emptyKeyframes);
-	
-	timeline.setDurationInSeconds(30);
 
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-	
-	
+		
 }
 
 //--------------------------------------------------------------
@@ -87,8 +85,7 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
-	timeline.setWidth(w);
-	
+
 }
 
 //--------------------------------------------------------------
