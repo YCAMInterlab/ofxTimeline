@@ -41,7 +41,8 @@ class ofxTLColors
 	
 	void load(); //defaults
 	void load(string colorFile);
-	
+
+	ofColor guiBackgroundColor;
 	ofColor backgroundColor;
 	ofColor keyColor;
 	ofColor textColor;
