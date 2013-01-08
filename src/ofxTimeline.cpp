@@ -66,6 +66,7 @@ ofxTimeline::ofxTimeline()
 	dragAnchorSet(false),
 	snapToBPM(false),
 	snapToOtherElements(true),
+    spacebarTogglesPlay(true),
 	dragMillsecondOffset(0),
 	movePlayheadOnPaste(true),
 	movePlayheadOnDrag(false),
@@ -545,6 +546,14 @@ bool ofxTimeline::togglePlay(){
 		play();
 	}
 	return getIsPlaying();
+}
+
+bool ofxTimeline::getSacebarTogglesPlay(){
+    return spacebarTogglesPlay;
+}
+
+void ofxTimeline::setSpacebarTogglePlay(bool spacebarPlays){
+    spacebarTogglesPlay = spacebarPlays;
 }
 
 bool ofxTimeline::getIsPlaying(){
@@ -1141,6 +1150,10 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
         modalTrack->keyPressed(args);
 		pushUndoStack();
 		return;
+    }
+
+    if(totalDrawRect.inside(ofGetMouseX(), ofGetMouseY()) &&  spacebarTogglesPlay && args.key == ' '){
+        togglePlay();
     }
 
 	if(!timelineHasFocus) return;
