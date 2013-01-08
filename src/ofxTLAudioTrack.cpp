@@ -36,7 +36,7 @@
 ofxTLAudioTrack::ofxTLAudioTrack(){
 	shouldRecomputePreview = false;
     soundLoaded = false;
-	lastFFTPosition = 0;
+	lastFFTPosition = -1;
 	defaultFFTBins = 256;
 	maxBinReceived = 0;
 }
@@ -210,14 +210,14 @@ void ofxTLAudioTrack::recomputePreview(){
 					if(losample != 0){
 //						preview.addVertex(i, trackCenter - losample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - losample * trackHeight*3;
+						vertex->y = trackCenter - losample * trackHeight;
 						vertex++;
 					}
 					if(hisample != 0){
 						//ofVertex(i, trackCenter - hisample * trackHeight);
 //						preview.addVertex(i, trackCenter - hisample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - hisample * trackHeight*3;
+						vertex->y = trackCenter - hisample * trackHeight;
 						vertex++;
 					}
 				}
@@ -241,8 +241,7 @@ void ofxTLAudioTrack::recomputePreview(){
 	shouldRecomputePreview = false;
 }
 
-int ofxTLAudioTrack::getDefaultBinCount(){
-//	cout << defaultFFTBins << endl;
+int ofxTLAudioTrack::getFFTBinCount(){
 	return defaultFFTBins;
 }
 
@@ -363,6 +362,10 @@ void ofxTLAudioTrack::setVolume(float volume){
 
 void ofxTLAudioTrack::setPan(float pan){
     player.setPan(pan);
+}
+
+vector<float>& ofxTLAudioTrack::getFFTSpectrum(){
+    return getFFTSpectrum(getFFTBinCount());
 }
 
 vector<float>& ofxTLAudioTrack::getFFTSpectrum(int numBins){

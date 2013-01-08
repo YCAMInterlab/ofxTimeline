@@ -63,9 +63,9 @@ class ofxTLAudioTrack : public ofxTLTrack
     virtual void stop();
     virtual bool getIsPlaying();
 	
-	
+	int getFFTBinCount();
+	vector<float>& getFFTSpectrum();
 	vector<float>& getFFTSpectrum(int numBins);
-	int getDefaultBinCount();
 
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
