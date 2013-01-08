@@ -16,6 +16,7 @@ void testApp::setup(){
 	ofSetVerticalSync(true);
     ofEnableSmoothing();
 	
+
     //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);

@@ -36,8 +36,6 @@ class testApp : public ofBaseApp{
     void renderCurrentFrame();
     
     string renderFolder;
-    
-    
     ofTrueTypeFont font;
     
     //saves between loads
