@@ -38,6 +38,7 @@ ofxTLTicker::ofxTLTicker() {
     hasBPM = false;
 	drawBPMGrid = false;
 	hoverTime = 0;
+    playOnMouseReleased = false;
 }
 
 ofxTLTicker::~ofxTLTicker(){
@@ -332,9 +333,13 @@ void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
-	//TODO change playhead position
+
 	dragging = bounds.inside(args.x, args.y);
 	if(dragging){
+        if(timeline->getIsPlaying()){
+            playOnMouseReleased = true;
+            timeline->stop();
+        }
 		updateTimelinePosition();
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playheadScrubbed, args);		
@@ -353,8 +358,12 @@ void ofxTLTicker::mouseReleased(ofMouseEventArgs& args){
     if(dragging){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playheadScrubbed, args);
+        if(playOnMouseReleased){
+            timeline->play();
+            playOnMouseReleased = false;
+        }
     }
-	//TODO change playhead position
+
 	dragging = false;
 }
 

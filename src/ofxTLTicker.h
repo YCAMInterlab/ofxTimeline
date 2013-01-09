@@ -76,7 +76,8 @@ class ofxTLTicker : public ofxTLTrack
 	float bpm;
 	bool drawBPMGrid;
 	bool dragging;
-	
+	bool playOnMouseReleased;
+    
 	ofPath tickerMarks;
 	void refreshTickMarks();
 };
