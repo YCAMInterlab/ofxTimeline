@@ -181,9 +181,15 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
-    easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
-                                   MIN(args.y, timeline->getBottomLeft().y - (tweenBoxHeight*easingFunctions.size())));
+	float easingBoxHeight = tweenBoxHeight*easingFunctions.size();
+    easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth*2),
+                                   MIN(args.y, timeline->getBottomLeft().y - easingBoxHeight));
     
+	//keep on screen at all costs.
+
+	easingWindowPosition.x = ofClamp(easingWindowPosition.x, timeline->getDrawRect().x, ofGetWidth()-easingBoxWidth*2);
+	easingWindowPosition.y = ofClamp(easingWindowPosition.y, timeline->getDrawRect().y, ofGetHeight()-easingBoxHeight);
+
     drawingEasingWindow = true;
     timeline->presentedModalContent(this);
 }
