@@ -1152,7 +1152,7 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		return;
     }
 
-    if(totalDrawRect.inside(ofGetMouseX(), ofGetMouseY()) &&  spacebarTogglesPlay && args.key == ' '){
+    if(spacebarTogglesPlay && args.key == ' '){
         togglePlay();
     }
 
