@@ -7,6 +7,9 @@
 #include "ofFileUtils.h"
 #include "ofAppRunner.h"
 #include <set>
+#ifdef TARGET_WIN32
+#include <math.h>
+#endif
 
 ALCdevice * ofOpenALSoundPlayer_TimelineAdditions::alDevice = 0;
 ALCcontext * ofOpenALSoundPlayer_TimelineAdditions::alContext = 0;
@@ -208,7 +211,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::sfStream(string path,vector<short> &
 	}
 
 	int curr_buffer_size = BUFFER_STREAM_SIZE*channels;
-	if(speed>1) curr_buffer_size *= (int)round(speed);
+	if(speed>1) curr_buffer_size *= (int)floor(speed+.5);
 	buffer.resize(curr_buffer_size);
 	fftAuxBuffer.resize(buffer.size());
 	if (stream_subformat == SF_FORMAT_FLOAT || stream_subformat == SF_FORMAT_DOUBLE){
@@ -344,7 +347,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 	bLoadedOk = false;
 	bMultiPlay = false;
 	isStreaming = is_stream;
-
+	
 	// [1] init sound systems, if necessary
 	initialize();
 
@@ -353,6 +356,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 	// if they call "loadSound" repeatedly, for example
 
 	unloadSound();
+
 	ALenum format=AL_FORMAT_MONO16;
 
 	if(!isStreaming){
@@ -362,8 +366,6 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 	}
 
 	int numFrames = buffer.size()/channels;
-
-
 	if(isStreaming){
 		buffers.resize(channels*2);
 	}else{
@@ -529,8 +531,10 @@ void ofOpenALSoundPlayer_TimelineAdditions::update(ofEventArgs & args){
 //------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
 //	ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
-	alDeleteBuffers(buffers.size(),&buffers[0]);
-	alDeleteSources(sources.size(),&sources[0]);
+	if(isLoaded()){
+		alDeleteBuffers(buffers.size(),&buffers[0]);
+		alDeleteSources(sources.size(),&sources[0]);
+	}
 	streamf = 0;
 }
 

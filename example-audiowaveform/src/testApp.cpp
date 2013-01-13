@@ -40,6 +40,7 @@ void testApp::setup(){
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	
+
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
     
 	timeline.setup();
@@ -47,13 +48,14 @@ void testApp::setup(){
     timeline.setBPM(120.f);
 	timeline.enableSnapToBPM(true);
 	timeline.setShowBPMGrid(true);
-	
 	timeline.addTrack("Track", &waveform);
 	
 	//this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
 	timeline.setTimecontrolTrack(&waveform);
-    waveform.loadSoundfile("4chan.wav");
-    
+
+	waveform.loadSoundfile("4chan.wav");
+
+
 	//fun to watch on FFT
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
 	//waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
