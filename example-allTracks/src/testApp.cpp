@@ -11,8 +11,10 @@ void testApp::setup(){
 	timeline.setup();
 
 	timeline.addVideoTrack("fingers", "fingers.mov");
-	t.loadSoundfile("4chan.wav");
+	t.loadSoundfile("low_batter_loop_1-2.aiff");    
 	timeline.addTrack("audio", &t);
+    timeline.setDurationInSeconds(t.getDuration());
+
 	timeline.addCurves("curves", ofRange(0, 255));
 	timeline.addBangs("bangs");
 	timeline.addFlags("flags");
@@ -25,7 +27,7 @@ void testApp::setup(){
 	timeline.addPage("Page 3");
 	timeline.addPage("Page 4");
 	timeline.setCurrentPage(0);
-    
+
 	timeline.enableSnapToOtherKeyframes(false);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
