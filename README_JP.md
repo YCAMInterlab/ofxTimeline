@@ -5,7 +5,7 @@ ofxTimelineは、openFrameworksでタイムラインエディタインターフ�
 
 もしもAfter EffectsやFinal Cut、Blenderなどのタイムライン編集に馴染みがあれば、ofxTimelineは快適に使用する事が出来るでしょう。ほんの数行のコードで、スムーズに補完されたカーブ、カラー、ビデオ、オシレーター、オーディオ、3D空間中のカメラなどのタイムラインシーケンスを作る、エディタを使用する事が可能です。
 
-また、サポートされていないタイムベースのデータを編集する為にカスタムトラックを作成し、ofxTimelineを拡張する事も可能です。[Designing Custom Tracks](#designing-custom-tracks)をご参照ください。
+また、サポートされていないタイムベースのデータを編集する為にカスタムトラックを作成し、ofxTimelineを拡張する事も可能です。[カスタムトラックをデザインする](#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF%E3%82%92%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%81%99%E3%82%8B)をご参照ください。
 
 Copyright 2011-2012 [James George](http://www.jamesgeorge.org)
 
