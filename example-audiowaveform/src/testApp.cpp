@@ -35,8 +35,6 @@
 void testApp::setup(){
 	
 	ofBackground(0);
-	ofSetFrameRate(30);
-	ofSetVerticalSync(true);
 	ofEnableSmoothing();
 	ofEnableAlphaBlending();
 	
@@ -74,8 +72,8 @@ void testApp::draw(){
     
     //change the background color based on the current bin and amount
     if(waveform.isSoundLoaded()){
-        int bin = ofMap(mouseX, 0, ofGetWidth(), 0, waveform.getFFTBinCount()-1, true);
-        ofBackground( waveform.getFFTSpectrum()[bin] * 255 );
+        int bin = ofMap(mouseX, 0, ofGetWidth(), 0, waveform.getFFTSize()-1, true);
+        ofBackground( waveform.getFFT()[bin] * 255 );
     }
     
 	timeline.draw();

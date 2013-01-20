@@ -62,10 +62,13 @@ class ofxTLAudioTrack : public ofxTLTrack
     virtual void play();
     virtual void stop();
     virtual bool getIsPlaying();
-	
-	int getFFTBinCount();
-	vector<float>& getFFTSpectrum();
-	vector<float>& getFFTSpectrum(int numBins);
+
+    virtual void setFFTDampening(float dampening);
+    virtual float getFFTDampening();
+    
+    virtual void setUseFFTEnvelope(bool useEnveolope);
+    virtual bool getUseFFTEnvelope();
+
 
 	virtual void zoomStarted(ofxTLZoomEventArgs& args);
 	virtual void zoomDragged(ofxTLZoomEventArgs& args);
@@ -83,7 +86,12 @@ class ofxTLAudioTrack : public ofxTLTrack
 	virtual void setPan(float pan);
     
 	virtual string getTrackType();
-	
+
+    //FFT for audio reactive
+    void setFFTLogAverages(int minBandwidth = 88, int bandsPerOctave = 20);
+    int getFFTSize();
+	vector<float>& getFFT();
+
   protected:
 	
 	float positionForSecond(float second);
@@ -93,12 +101,20 @@ class ofxTLAudioTrack : public ofxTLTrack
 	void recomputePreview();
 	string soundFilePath;
 	float lastFFTPosition;
-	int defaultFFTBins;
-	vector<float> fftBins;
+	int defaultSpectrumBandwidth;
+
+    vector<float> dampened;
 	float lastPercent;
+
+    
 //	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer_TimelineAdditions player;
 	ofRange computedZoomBounds;
 	float maxBinReceived;
-
+    float dampening;
+    
+    void generateEnvelope(int size);
+    int averageSize;
+    bool useEnvelope;
+    vector<float> envelope;
 };

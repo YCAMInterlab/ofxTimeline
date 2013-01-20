@@ -101,25 +101,28 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		static void initialize();
 		static void close();
 
+        //averaging implementation
 		vector<float>& getSpectrum(int bands);
-
-		static float * getSystemSpectrum(int bands);
-
-		vector<short> & getBuffer();
+        void setLogAverages(int minBandwidth, int bandsPerOctave);
+        vector<float>& getAverages();
 		
+        vector<short> & getBuffer();
+
+        float * getSystemSpectrum(int bands);
+
 		static ALCcontext * alContext;
 	protected:
-		void threadedFunction();
+		
+        void threadedFunction();
 
-	private:
-		friend void ofOpenALSoundUpdate();
+		void ofOpenALSoundUpdate();
 		void update(ofEventArgs & args);
 		void initFFT(int bands);
 		float * getCurrentBufferSum(int size);
 
-		static void createWindow(int size);
-		static void runWindow(vector<float> & signal);
-		static void initSystemFFT(int bands);
+		void createWindow(int size);
+		void runWindow(vector<float> & signal);
+		void initSystemFFT(int bands);
 
 		bool sfReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 		bool sfStream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
@@ -145,9 +148,10 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		static ALCdevice * alDevice;
 
 	
-		static vector<float> window;
-		static float windowSum;
-
+		vector<float> window;
+		float windowSum;
+        float bandWidth;
+    
 		int channels;
 		float duration; //in secs
 		int samplerate;
@@ -159,8 +163,13 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		kiss_fftr_cfg fftCfg;
 		vector<float> windowedSignal;
 		vector<float> bins;
+    	vector<float> averages;
+        int avgPerOctave;
+        int octaves;
 		vector<kiss_fft_cpx> cx_out;
 
+        float calculateAverage(float lowFreq, float hiFreq);
+        int freqToIndex(float freq);
 
 		static kiss_fftr_cfg systemFftCfg;
 		static vector<float> systemWindowedSignal;
