@@ -368,6 +368,7 @@ class ofxTimeline : ofThread {
 	//*IMAGE SEQUENCE DOES NOT WORK*
 	
 	ofxTLVideoTrack* addVideoTrack(string trackName);
+    ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
     ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
