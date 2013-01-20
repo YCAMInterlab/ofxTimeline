@@ -19,7 +19,7 @@ ofxTimeline is part of my reserach into how creating GUI based tools within crea
 
 Interface based timeline systems are most commonly found in expensive big box applications like After Effects or Cinema4d, which can be prohibitively complex and aren't open source. There are open timeline implementations are tied up in huge projects like [Blender](http://blender.org), [VLMC](http://www.videolan.org/vlmc/) and [Audacity](http://audacity.sourceforge.net/). Even very talented programmers have trouble extracting reusable pieces from these applications for creative reuse. Moreover their [GPL licensing](http://www.gnu.org/copyleft/gpl.html) have commercially restrictive licenses, a deal breaker for inclusion in creative coding platforms like openFrameworks, Processing, and Cinder.
 
-If the community were to build many small components for creating small and intuitive applications what new possibilities would we uncover? What collaborations between creative coders and other designers and artists would emerge? 
+If the community were to build many small components for creating small and intuitive applications, what new possibilities would we uncover? What collaborations between creative coders and other designers and artists would emerge? 
 
 ## Major features ##
 - Very few lines of code to include in openFrameworks project
@@ -176,7 +176,7 @@ in your testApp.h file add:
     public:
       ofxTimeline timeline; //inside of the class add a timeline
 
-in your setup fon testApp.cpp file set up the timeline
+in your setup of testApp.cpp file set up the timeline
 
     //--------------------------------------------------------------
     void testApp::setup(){
@@ -289,7 +289,7 @@ VideoTracks let a user interactively scrub through a video and sequence effects 
 
 The timeline's duration must match the video's duration.
 
-    ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
 
 ### AudioTrack ###
@@ -302,7 +302,7 @@ To add an AudioTrack to your project, add the declaration to your .h file
     ofxTimeline timeline;
     ofxTLAudioWaveform waveform;
 
-And n your .cpp file add the track and load a file
+And in your .cpp file add the track and load a file
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
@@ -322,7 +322,7 @@ And n your .cpp file add the track and load a file
 
 The timeline's duration must match the audio's duration.
 
-    ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
 
 ### ColorTrack
