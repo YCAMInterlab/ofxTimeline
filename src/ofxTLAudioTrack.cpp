@@ -141,16 +141,21 @@ void ofxTLAudioTrack::draw(){
     float binWidth = bounds.width / bins.size();
     //find max
     float averagebin = 0 ;
+    float maxBinCurrentFrame = 0;
     for(int i = 0; i < bins.size(); i++){
-        maxBinReceived = MAX(maxBinReceived, bins[i]);
+        maxBinCurrentFrame = MAX(maxBinCurrentFrame, bins[i]);
         averagebin += bins[i];
     }
-    averagebin /= bins.size();
-
+//    maxBinReceived += (maxBinCurrentFrame - maxBinReceived) * .2;
+//    averagebin /= bins.size();
+    maxBinReceived = .02;
+    //cout << maxBinCurrentFrame << endl;
+    
+    
     ofFill();
     ofSetColor(timeline->getColors().disabledColor, 120);
     for(int i = 0; i < bins.size(); i++){
-        float height = bounds.height * bins[i]/maxBinReceived;
+        float height = MIN(bounds.height * bins[i]/maxBinReceived, bounds.height);
         float y = bounds.y + bounds.height - height;
         ofRect(i*binWidth, y, binWidth, height);
     }
@@ -281,14 +286,18 @@ void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
 }
 
 void ofxTLAudioTrack::play(){
+
 	if(!player.getIsPlaying()){
-		
+
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
-
 		player.play();
 		if(timeline->getTimecontrolTrack() == this){
-			player.setPosition(positionForSecond(timeline->getCurrentTime()));
+			if(player.getPosition() == 1.0 || timeline->getPercentComplete() > .99){
+                timeline->setCurrentTimeSeconds(0);
+            }
+            player.setPosition(positionForSecond(timeline->getCurrentTime()));
+            
 			ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 			ofNotifyEvent(events().playbackStarted, args);
 		}
@@ -384,6 +393,14 @@ void ofxTLAudioTrack::setFFTLogAverages(int minBandwidth, int bandsPerOctave){
     if(isSoundLoaded()){
         player.setLogAverages(minBandwidth, bandsPerOctave);
     }
+}
+
+int ofxTLAudioTrack::getLogAverageMinBandwidth(){
+    return player.getMinBandwidth();
+}
+
+int ofxTLAudioTrack::getLogAverageBandsPerOctave(){
+    return player.getBandsPerOctave();
 }
 
 int ofxTLAudioTrack::getFFTSize(){

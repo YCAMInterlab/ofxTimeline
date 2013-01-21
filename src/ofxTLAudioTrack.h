@@ -89,6 +89,9 @@ class ofxTLAudioTrack : public ofxTLTrack
 
     //FFT for audio reactive
     void setFFTLogAverages(int minBandwidth = 88, int bandsPerOctave = 20);
+    int getLogAverageMinBandwidth();
+    int getLogAverageBandsPerOctave();
+    
     int getFFTSize();
 	vector<float>& getFFT();
 
@@ -105,7 +108,6 @@ class ofxTLAudioTrack : public ofxTLTrack
 
     vector<float> dampened;
 	float lastPercent;
-
     
 //	virtual void update(ofEventArgs& args);
 	ofOpenALSoundPlayer_TimelineAdditions player;

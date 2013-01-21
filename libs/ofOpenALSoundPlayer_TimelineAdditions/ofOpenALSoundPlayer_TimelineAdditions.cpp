@@ -914,6 +914,9 @@ void ofOpenALSoundPlayer_TimelineAdditions::setLogAverages(int minBandwidth, int
         return;
     }
     
+    currentMinBandwidth = minBandwidth;
+    currentBandsPerOctave = bandsPerOctave;
+
     float nyquist = (float) samplerate / 2.0f;
     octaves = 1;
     while ((nyquist /= 2) > minBandwidth){
@@ -922,6 +925,16 @@ void ofOpenALSoundPlayer_TimelineAdditions::setLogAverages(int minBandwidth, int
     
     avgPerOctave = bandsPerOctave;
     averages.resize(octaves * bandsPerOctave);
+}
+
+// ----------------------------------------------------------------------------
+int ofOpenALSoundPlayer_TimelineAdditions::getMinBandwidth(){
+    return currentMinBandwidth;
+}
+
+// ----------------------------------------------------------------------------
+int ofOpenALSoundPlayer_TimelineAdditions::getBandsPerOctave(){
+    return currentBandsPerOctave;
 }
 
 // ----------------------------------------------------------------------------

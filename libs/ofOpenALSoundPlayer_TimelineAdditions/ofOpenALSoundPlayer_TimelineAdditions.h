@@ -104,8 +104,9 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
         //averaging implementation
 		vector<float>& getSpectrum(int bands);
         void setLogAverages(int minBandwidth, int bandsPerOctave);
+        int getMinBandwidth();
+        int getBandsPerOctave();
         vector<float>& getAverages();
-		
         vector<short> & getBuffer();
 
         float * getSystemSpectrum(int bands);
@@ -164,6 +165,9 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		vector<float> windowedSignal;
 		vector<float> bins;
     	vector<float> averages;
+        int currentMinBandwidth;
+        int currentBandsPerOctave;
+
         int avgPerOctave;
         int octaves;
 		vector<kiss_fft_cpx> cx_out;
