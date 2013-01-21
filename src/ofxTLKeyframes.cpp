@@ -554,6 +554,10 @@ void ofxTLKeyframes::getSnappingPoints(set<unsigned long>& points){
 	}
 }
 
+vector<ofxTLKeyframe*>& ofxTLKeyframes::getKeyframes(){
+    return keyframes;
+}
+
 string ofxTLKeyframes::copyRequest(){
 	if(selectedKeyframes.size() > 0){
 		return getXMLStringForKeyframes(selectedKeyframes);

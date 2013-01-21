@@ -69,7 +69,9 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	int getSelectedFrame();
 	int getCurrentFrame();
 	float getCurrentTime();
-    
+
+    void setDrawVideoPreview(bool drawPreview);
+    bool getDrawVideoPreview();
 
     bool isLoaded();
 	int selectFrame(int frame); //returns the true selected frame in video
@@ -95,7 +97,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 		
 	int inFrame;
 	int outFrame;
-	
+    
+	bool drawVideoPreview;
     bool canCalculateThumbs();
     bool currentlyPlaying;
     

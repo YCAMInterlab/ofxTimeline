@@ -40,6 +40,7 @@ ofxTLVideoTrack::ofxTLVideoTrack()
 	inFrame = -1;
 	outFrame = -1;
     currentlyPlaying = false;
+    drawVideoPreview = true;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
@@ -219,7 +220,10 @@ void ofxTLVideoTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
 		//player.setPosition(timeline->getPercentComplete());
 		float position = positionForSecond(timeline->getCurrentTime());
 		if(position < 1.0){
+            player->setSpeed(1.0);
 			player->play();
+            currentlyPlaying = true;
+            //play();
 		}
 		player->setPosition( position );
 	}
@@ -355,8 +359,6 @@ void ofxTLVideoTrack::draw(){
 
 	ofPushStyle();
 	
-//	glEnable(GL_SCISSOR_TEST);
-//	glScissor(bounds.x, 0, bounds.width, ofGetHeight());
 	if(thumbsEnabled && getDrawRect().height > 10){
 		//clip hanging frames off the sides
 
@@ -396,6 +398,13 @@ void ofxTLVideoTrack::draw(){
 	}
 	
 	int selectedFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(selectedFrame));
+    if(drawVideoPreview){
+        ofRectangle previewRect = ofRectangle(0,0,player->getWidth(), player->getHeight());
+        previewRect.scaleTo(bounds, OF_ASPECT_RATIO_KEEP);
+        previewRect.x = selectedFrameX;
+        previewRect.y = bounds.y;
+        player->draw(previewRect);
+    }
 	ofPushStyle();
 	ofFill();
 	ofSetColor(timeline->getColors().backgroundColor, 150);
@@ -419,8 +428,6 @@ void ofxTLVideoTrack::draw(){
 	}
 	
 	ofPopStyle();
-	
-//	glDisable(GL_SCISSOR_TEST);
 }
 
 void ofxTLVideoTrack::setInFrame(int in){
@@ -459,6 +466,14 @@ void ofxTLVideoTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 
 bool ofxTLVideoTrack::isLoaded(){
 	return player != NULL && player->isLoaded();
+}
+
+void ofxTLVideoTrack::setDrawVideoPreview(bool drawPreview){
+    drawVideoPreview = drawPreview;
+}
+
+bool ofxTLVideoTrack::getDrawVideoPreview(){
+    return drawVideoPreview;
 }
 
 //width and height of image elements

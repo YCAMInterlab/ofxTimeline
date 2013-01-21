@@ -13,8 +13,8 @@
 
 ALCdevice * ofOpenALSoundPlayer_TimelineAdditions::alDevice = 0;
 ALCcontext * ofOpenALSoundPlayer_TimelineAdditions::alContext = 0;
-vector<float> ofOpenALSoundPlayer_TimelineAdditions::window;
-float ofOpenALSoundPlayer_TimelineAdditions::windowSum=0;
+//vector<float> ofOpenALSoundPlayer_TimelineAdditions::window;
+//float ofOpenALSoundPlayer_TimelineAdditions::windowSum=0;
 
 
 kiss_fftr_cfg ofOpenALSoundPlayer_TimelineAdditions::systemFftCfg=0;
@@ -45,6 +45,7 @@ ofOpenALSoundPlayer_TimelineAdditions::ofOpenALSoundPlayer_TimelineAdditions(){
 	duration		= 0;
 	fftCfg			= 0;
 	streamf			= 0;
+    octaves         = 0;
 #ifdef OF_USING_MPG123
 	mp3streamf		= 0;
 #endif
@@ -78,7 +79,10 @@ void ofOpenALSoundPlayer_TimelineAdditions::createWindow(int size){
 	if(int(window.size())!=size){
 		windowSum = 0;
 		window.resize(size);
+        
+        bandWidth = (2.0f / size) * (samplerate / 2.0f);
 		// hanning window
+
 		for(int i = 0; i < size; i++){
 			window[i] = .54 - .46 * cos((TWO_PI * i) / (size - 1));
 			windowSum += window[i];
@@ -855,6 +859,82 @@ vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
 		bins[i] += sqrtf(cx_out[i].r * cx_out[i].r + cx_out[i].i * cx_out[i].i) * normalizer;
 	}
 	return bins;
+}
+
+// ----------------------------------------------------------------------------
+vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getAverages(){
+    
+    if(averages.size() > 0){
+        getSpectrum(bins.size());
+        for (int i = 0; i < octaves; i++){
+            float lowFreq, hiFreq, freqStep;
+            if (i == 0){
+                lowFreq = 0;
+            }
+            else{
+                lowFreq = (samplerate / 2) / powf(2, octaves - i);
+            }
+            
+            hiFreq = (samplerate / 2) / powf(2, octaves - i - 1);
+            freqStep = (hiFreq - lowFreq) / avgPerOctave;
+            float f = lowFreq;
+            for (int j = 0; j < avgPerOctave; j++){
+                int offset = j + i * avgPerOctave;
+                averages[offset] = calculateAverage(f, f + freqStep);
+                f += freqStep;
+            }
+        }
+    }
+    
+    return averages;
+}
+
+float ofOpenALSoundPlayer_TimelineAdditions::calculateAverage(float lowFreq, float hiFreq) {
+    int lowBound = freqToIndex(lowFreq);
+    int hiBound = freqToIndex(hiFreq);
+    float avg = 0;
+    for (int i = lowBound; i <= hiBound; i++) {
+        avg += bins[i];
+    }
+    avg /= (hiBound - lowBound + 1);
+    return avg;
+}
+
+int ofOpenALSoundPlayer_TimelineAdditions::freqToIndex(float freq) {
+    if (freq < bandWidth / 2) return 0;
+    if (freq > samplerate / 2 - window.size() / 2) return bins.size() - 1;
+    float fraction = freq / samplerate;
+    return int( floor(window.size() * fraction + .5) );
+}
+
+//http://code.compartmental.net/2007/03/21/fft-averages/
+// ----------------------------------------------------------------------------
+void ofOpenALSoundPlayer_TimelineAdditions::setLogAverages(int minBandwidth, int bandsPerOctave){
+    if(!isLoaded()){
+        return;
+    }
+    
+    currentMinBandwidth = minBandwidth;
+    currentBandsPerOctave = bandsPerOctave;
+
+    float nyquist = (float) samplerate / 2.0f;
+    octaves = 1;
+    while ((nyquist /= 2) > minBandwidth){
+        octaves++;
+    }
+    
+    avgPerOctave = bandsPerOctave;
+    averages.resize(octaves * bandsPerOctave);
+}
+
+// ----------------------------------------------------------------------------
+int ofOpenALSoundPlayer_TimelineAdditions::getMinBandwidth(){
+    return currentMinBandwidth;
+}
+
+// ----------------------------------------------------------------------------
+int ofOpenALSoundPlayer_TimelineAdditions::getBandsPerOctave(){
+    return currentBandsPerOctave;
 }
 
 // ----------------------------------------------------------------------------

@@ -340,8 +340,8 @@
 		79433c413c03b5e0758af057f10b84fa /* ofOpenALSoundPlayer_TimelineAdditions */ = {
 			isa = PBXGroup;
 			children = (
-				93147ae9f06e9d980f10ba264cd412da /* ofOpenALSoundPlayer_TimelineAdditions.cpp */,
 				86bafd7be944ebd24951df2596f106ba /* ofOpenALSoundPlayer_TimelineAdditions.h */,
+				93147ae9f06e9d980f10ba264cd412da /* ofOpenALSoundPlayer_TimelineAdditions.cpp */,
 			);
 			name = ofOpenALSoundPlayer_TimelineAdditions;
 			sourceTree = "<group>";

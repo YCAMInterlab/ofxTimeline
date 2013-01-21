@@ -1829,6 +1829,10 @@ ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
 
+ofxTLVideoTrack* ofxTimeline::addVideoTrackWithPath(string videoPath){
+	return addVideoTrack("video", videoPath);
+}
+
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName, string videoPath){
 	ofxTLVideoTrack* videoTrack = new ofxTLVideoTrack();
 	videoTrack->setCreatedByTimeline(true);
