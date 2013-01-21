@@ -30,11 +30,15 @@ common:
 	ADDON_DATA = copy_to_data_GUI/*
 	
 linux64:
+	ADDON_LIBS_EXCLUDE = libs/kiss
 linux:
+	ADDON_LIBS_EXCLUDE = libs/kiss
+linuxarmv6l:
+	ADDON_LIBS_EXCLUDE = libs/kiss
+linuxarmv7l:
+	ADDON_LIBS_EXCLUDE = libs/kiss
 osx:
 win_cb:
 vs2010:
 iphone:
 android:
-linuxarmv6l:
-linuxarmv7l:
