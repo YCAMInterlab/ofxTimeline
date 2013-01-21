@@ -53,12 +53,16 @@ linux64:
 	# when parsing the file system looking for libraries exclude this for all or 
 	# a specific platform
 	ADDON_LIBS_EXCLUDE = libs/kiss
+	
 linux:
 	ADDON_LIBS_EXCLUDE = libs/kiss
+	
 linuxarmv6l:
 	ADDON_LIBS_EXCLUDE = libs/kiss
+	
 linuxarmv7l:
 	ADDON_LIBS_EXCLUDE = libs/kiss
+	
 osx:
 win_cb:
 vs2010:
