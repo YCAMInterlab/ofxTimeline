@@ -7,11 +7,9 @@ If you're familiar with timelines from programs like After Effects, Final Cut, o
 
 You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
-Copyright 2011-2012 [James George](http://www.jamesgeorge.org)
+Copyright 2011-2012 [James George](http://www.jamesgeorge.org) co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
 
-Co-developed at [YCAM InterLab](http://interlab.ycam.jp/)
-
-Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
+Licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## Philosophy of Reusable Tools##
 
@@ -360,9 +358,11 @@ Use this template for creating a custom keyframe based track. It already has cop
 
 ## Supported By ##
 
-ofxTimeline is codeveloped by YCAM InterLab during the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org) at the [YCAMInterLab](http://interlab.ycam.jp/)
+ofxTimeline is a project by [James George](http://www.jamesgeorge.org), co-developed by [YCAMInterLab](http://interlab.ycam.jp/en/) during the [Guest Research Project v.2](http://interlab.ycam.jp/en/projects/guestresearch/vol2)
 
-![YCAM](http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png)
+<p align="center">
+    <img src="http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png" />
+</p>
 
 ### Additional support  ###
 
