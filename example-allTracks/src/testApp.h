@@ -22,5 +22,5 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		ofxTimeline timeline;
 		void bangFired(ofxTLBangEventArgs& args);
-	ofxTLAudioTrack t;
+        ofxTLAudioTrack t;
 };
