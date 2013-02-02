@@ -144,24 +144,33 @@ Note on OS X the COMMAND key is used, on Linux and Windows the CTRL key is used
 </table>
 
 
-
-
 ## Including ofxTimeline in your openFrameworks project
 
 ### Clone ofxTimeline and dependencies 
 to download the timeline open up the terminal and type
 
-    $cd of_0071_osx_release/addons
+    $cd of_0073_osx_release/addons
     $git clone https://github.com/YCAMInterlab/ofxTimeline.git
     $cd ofxTimeline/
     $./clone_addons.sh
 
 This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
 
-### Add ofxTimeline to your project
-In Xcode open up the project you'd like to include the timeline. Drag and drop the ofxTimeline folder in from the finder into Xcode navigator under addons/
+### Create a new ofxTimeline project
 
-If you plan on using the Audiowaveform see additional instructions. Otherwise you can remove the examples-*/, and libs/ folder, as well as removeing the referenc to the ofxTLAudioTrack source files
+ - Open the ProjectGenerator in of_0073_osx_release/projectGenerator/
+ - Give the project a name
+ - Under the addons tab select the following addons
+      - ofxTimeline
+      - ofxTimecode
+      - ofxMSATimer
+      - ofxTextInputField
+      - ofxRange
+      - ofxTween
+ - Generate project
+ - If you are in Windows VC2010, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event
+
+            xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
 
 ### Add a timeline to your code
 
@@ -183,7 +192,7 @@ in your setup of testApp.cpp file set up the timeline
       timeline.setDurationInSeconds(60); //sets time
       timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
       
-      //add a track
+      //add a tracks, etc
       timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
   
 in your draw or update function, read the value
@@ -198,18 +207,6 @@ in your draw or update function, read the value
       timeline.draw();
     }
     
-It's a good convention to put in hotkeys for play and show hide in keyPressed
-
-    //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
-      if(key == ' '){
-        timeline.togglePlay();
-      }
-      if(key == 'h'){
-        timeline.toggleShow();
-      }
-    }
-
 ## Track Types
 ofxTimeline has several built in track types for doing standard timeline tasks. 
 
