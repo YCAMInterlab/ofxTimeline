@@ -381,7 +381,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 		alGenSources(1, &sources[0]);
 		if (alGetError() != AL_NO_ERROR){
 			ofLog(OF_LOG_WARNING,"ofOpenALSoundPlayer_TimelineAdditions: openAL error reported generating sources for " + fileName);
-			//return false;
+			return false;
 		}
 
 		for(int i=0; i<(int)buffers.size(); i++){
