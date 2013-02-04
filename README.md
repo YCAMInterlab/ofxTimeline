@@ -283,8 +283,7 @@ VideoTracks let a user interactively scrub through a video and sequence effects 
             timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
             timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
         }
-
-The timeline's duration must match the video's duration.
+        
 
     Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
