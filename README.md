@@ -172,6 +172,8 @@ This will download the necessary addons, but won't overwrite any changes if you 
 
             xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
 
+ - If you are on OS X, you'll need to add the OpenAL.framework to your project in order to use the AudioTrack
+
 ### Add a timeline to your code
 
 in your testApp.h file add:
