@@ -195,14 +195,14 @@ in your setup of testApp.cpp file set up the timeline
       timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
       
       //add a tracks, etc
-      timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
+      timeline.addCurves("MyCircleRadius", ofRange(0, 200));
   
 in your draw or update function, read the value
   
     //--------------------------------------------------------------
     void testApp::draw(){
       //the value of changingRadius will be different depending on the timeline
-      float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
+      float changingRadius = timeline.getValue("MyCircleRadius"),
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
       //don't forget to draw your timeline so you can edit it.
@@ -294,27 +294,25 @@ The timeline's duration must match the video's duration.
 
 AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
 
-To add an AudioTrack to your project, add the declaration to your .h file
 
-    ofxTimeline timeline;
-    ofxTLAudioWaveform waveform;
-
-And in your .cpp file add the track and load a file
+In your .cpp file add the track and load a file
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
         //... setup stuff
-        timeline.addTrack("Track", &waveform);
-        waveform.loadSoundfile("myAudioFile.wav");
-        timeline.setDurationInSeconds(waveform.getDuration());
+        timeline.addAudioTrack("Audio", "myAudioFile.wav");
     }
 
     //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
+    void testApp::update(){
+        //check the FFT data
         if(key == ' '){
             //calling play on the waveform controls the timeline playback
-    		waveform.togglePlay();
-    	}
+            ofxTLAudioTrack* track = timeline.getAudioTrack("Audio");
+            for(int i = 0; i < track->getFFTSize(); i++){
+                track->getFFT()[i]; //FFT data
+            }
+        }
     }
 
 The timeline's duration must match the audio's duration.
