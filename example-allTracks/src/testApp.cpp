@@ -11,9 +11,8 @@ void testApp::setup(){
 	timeline.setup();
 
 	timeline.addVideoTrack("fingers", "fingers.mov");
-	t.loadSoundfile("4chan.wav");    
-	timeline.addTrack("audio", &t);
-    timeline.setDurationInSeconds(t.getDuration());
+    timeline.addAudioTrack("audio", "4chan.wav");
+    timeline.setDurationInSeconds(timeline.getAudioTrack("audio")->getDuration());
 
 	timeline.addCurves("curves", ofRange(0, 255));
 	timeline.addBangs("bangs");
