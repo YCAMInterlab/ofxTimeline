@@ -277,14 +277,14 @@ Switches provide a simple control to turn regions of the timeline on and off.
 
 VideoTracks let a user interactively scrub through a video and sequence effects in time with the playback. When a video track is added the video playback will control the playback of the entire timeline. 
 
-        ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
-        if(videoTrack != NULL){ //in the case the video load failed check against null
-            timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-            timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
-            timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
-        }
+    ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
+    if(videoTrack != NULL){ //in the case the video load failed check against null
+        timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+        timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+        timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
+    }
         
-
+,
     Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
 
@@ -292,7 +292,6 @@ VideoTracks let a user interactively scrub through a video and sequence effects 
 ![AudioTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/AudioTrack.png)
 
 AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
-
 
 In your .cpp file add the track and load a file
 
@@ -314,9 +313,9 @@ In your .cpp file add the track and load a file
         }
     }
 
-The timeline's duration must match the audio's duration.
+.
 
-    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLAudioTrack
 
 
 ### ColorTrack
