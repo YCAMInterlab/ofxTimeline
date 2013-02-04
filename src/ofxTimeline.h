@@ -66,9 +66,11 @@
 #include "ofxTLSwitches.h"
 #include "ofxTLColorTrack.h"
 #include "ofxTLImageSequence.h"
-#include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
+#include "ofxTLVideoTrack.h"
+#include "ofxTLAudioTrack.h"
+
 
 typedef struct {
     ofxTLTrack* track;
@@ -367,15 +369,22 @@ class ofxTimeline : ofThread {
 	ofImage* getImage(string name, int atFrame);
 	//*IMAGE SEQUENCE DOES NOT WORK*
 	
-	ofxTLVideoTrack* addVideoTrack(string trackName);
+	ofxTLVideoTrack* addVideoTrack(string name);
     ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
     ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
     
+    //Audio tracks only work with PCM Wav or Aiff file
+    ofxTLAudioTrack* addAudioTrack(string trackName);
+    ofxTLAudioTrack* addAudioTrackWithPath(string audioPath);
+    ofxTLAudioTrack* addAudioTrack(string name, string audioPath);
+    ofxTLAudioTrack* getAudioTrack(string audioTrackName);
+
     //used for audio and video.
     //we punt to the track to control time.
     //this can be a video or audio track
+    void setTimecontrolTrack(string trackName);
     void setTimecontrolTrack(ofxTLTrack* track);
 	ofxTLTrack* getTimecontrolTrack();
     
