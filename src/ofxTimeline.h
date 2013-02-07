@@ -112,7 +112,7 @@ class ofxTimeline : ofThread {
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
     
-    virtual bool getSacebarTogglesPlay();
+    virtual bool getSpacebarTogglesPlay();
     virtual void setSpacebarTogglePlay(bool spacebarPlays);
     
 	virtual void playSelectedTrack();
