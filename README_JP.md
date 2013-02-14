@@ -158,18 +158,26 @@ OS Xでは、GLUTがCOMMAND+C、COMMAND+V、そしてCOMMAND+Sの操作を取得
 ### ofxTimelineと関連するファイルのクローンを行う
 timelineをダウンロードするためには、まずターミナルを開き、下記の様に入力します。
 
-    $cd of_0071_osx_release/addons
+    $cd of_0073_osx_release/addons
     $git clone https://github.com/YCAMInterlab/ofxTimeline.git
     $cd ofxTimeline/
     $./clone_addons.sh
 
 これで、必要なアドオンをダウンロードする事が出来ます。もしもいくつかのアドオンが既にインストール済みであった場合は、そのアドオンが上書きされる事はありません。
 
-### ofxTimelineをプロジェクトに加える
+### ofxTimelineを含むプロジェクトを作成する
+of_0073_osx_release/projectGenerator/に入っている、ProjectGeneratorを開きます。
+プロジェクトに名前をつけ、addonsタブから、下記のアドオンを選択します。
+- ofxTimeline
+- ofxTimecode
+- ofxMSATimer
+- ofxTextInputField
+- ofxRange
+- ofxTween
+上記を選択し追えたら、BACKで一つ前の画面に戻り、Generate projectをクリックします。
 
-Xcodeでタイムラインを組み込みたいプロジェクトを開きます。ofxTimelineフォルダをファインダーから、Xcodeのナビゲーターエリアの、addons/の位置にドラッグアンドドロップします。
-
-Audiowaveformを使用する場合には追加のインストラクションも参照してください。もしもそうでないなら、ofxTLAudioTrackのソースファイルへの参照と同様に、examples-*/フォルダーや、libs/フォルダーを削除してもかまいません。
+Windows上のVC2010を使われている場合は、Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Lineの順に選択し、下記のbuild eventをコピー＆ペーストしてください。
+xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
 
 ### タイムラインをコードに加える
 
