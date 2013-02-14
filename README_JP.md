@@ -205,14 +205,14 @@ testApp.cppのsetupの中で、タイムラインのセットアップを行い�
       timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
       
       //add a track
-      timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
+      timeline.addCurves("MyCircleRadius", ofRange(0, 200));
   
 drawもしくはupdateの中で値を読み出します。
   
     //--------------------------------------------------------------
     void testApp::draw(){
       //the value of changingRadius will be different depending on the timeline
-      float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
+      float changingRadius = timeline.getValue("MyCircleRadius"),
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
       //don't forget to draw your timeline so you can edit it.
@@ -307,27 +307,24 @@ timelineの長さは映像の長さと一致している必要があります。
 
 AudioTracksを使用すると、オーディオトラックとその他のシーケンスを同時にスクラブ再生する事が出来ます。
 
-AudioTrackを追加するには、下記の様に.hファイルの中に宣言する必要が有ります。
-
-    ofxTimeline timeline;
-    ofxTLAudioWaveform waveform;
-
-そして.cppファイルの中でトラック追加とファイルの読み出しを行います。
+.cppファイルの中でトラックを追加し、ファイルを読み込みます。
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
         //... setup stuff
-        timeline.addTrack("Track", &waveform);
-        waveform.loadSoundfile("myAudioFile.wav");
-        timeline.setDurationInSeconds(waveform.getDuration());
+        timeline.addAudioTrack("Audio", "myAudioFile.wav");
     }
 
     //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
+    void testApp::update(){
+        //check the FFT data
         if(key == ' '){
             //calling play on the waveform controls the timeline playback
-    		waveform.togglePlay();
-    	}
+            ofxTLAudioTrack* track = timeline.getAudioTrack("Audio");
+            for(int i = 0; i < track->getFFTSize(); i++){
+                  track->getFFT()[i]; //FFT data
+            }
+        }
     }
 
 タイムライン全体の長さはオーディオの長さと同じである必要があります。
