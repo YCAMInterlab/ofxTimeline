@@ -166,7 +166,8 @@ timelineをダウンロードするためには、まずターミナルを開き
 これで、必要なアドオンをダウンロードする事が出来ます。もしもいくつかのアドオンが既にインストール済みであった場合は、そのアドオンが上書きされる事はありません。
 
 ### ofxTimelineを含むプロジェクトを作成する
-of_0073_osx_release/projectGenerator/に入っている、ProjectGeneratorを開きます。
+of_0073_osx_release/projectGenerator/に入っているProjectGeneratorを開きます。
+
 プロジェクトに名前をつけ、addonsタブから、下記のアドオンを選択します。
 - ofxTimeline
 - ofxTimecode
@@ -174,10 +175,14 @@ of_0073_osx_release/projectGenerator/に入っている、ProjectGeneratorを開
 - ofxTextInputField
 - ofxRange
 - ofxTween
+
 上記を選択し追えたら、BACKで一つ前の画面に戻り、Generate projectをクリックします。
 
 Windows上のVC2010を使われている場合は、Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Lineの順に選択し、下記のbuild eventをコピー＆ペーストしてください。
+
 xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
+
+MacOSXでAudioTrackを使用する場合は、OpenAL.frameworkをプロジェクトに加える必要があります。
 
 ### タイムラインをコードに加える
 
@@ -214,17 +219,6 @@ drawもしくはupdateの中で値を読み出します。
       timeline.draw();
     }
     
-ホットキーで再生／停止と、タイムラインの表示／非表示がコントロール出来る様にしておくのは良い慣習でしょう。
-
-    //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
-      if(key == ' '){
-        timeline.togglePlay();
-      }
-      if(key == 'h'){
-        timeline.toggleShow();
-      }
-    }
 
 ## トラックのタイプ
 ofxTimelineには、一般的なタイムラインで必要になる数種類のタイプのトラックが標準で組み込まれています。
