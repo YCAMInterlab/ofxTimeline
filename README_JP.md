@@ -289,15 +289,14 @@ Switchesを使う事で、タイムライン上で、ON/OFFのシンプルなコ
 
 VideoTracksでは、映像とそのエフェクトを同時にスクラブ再生する事が出来ます。videoトラックが追加されると、映像再生が全体のタイムラインの再生を制御する形になります。
 
-        ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
-        if(videoTrack != NULL){ //in the case the video load failed check against null
-            timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-            timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
-            timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
-        }
+    ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
+    if(videoTrack != NULL){ //in the case the video load failed check against null
+        timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+        timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+        timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
+    }
 
-timelineの長さは映像の長さと一致している必要があります。
-
+.
 
     継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
@@ -327,9 +326,9 @@ AudioTracksを使用すると、オーディオトラックとその他のシー
         }
     }
 
-タイムライン全体の長さはオーディオの長さと同じである必要があります。
+.
 
-    継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLAudioTrack
 
 
 ### ColorTrack
