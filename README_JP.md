@@ -37,14 +37,7 @@ ofxTimelineの開発は、クリエイティブコーディングの環境の中
 ## はじめに
 
 まず初めに、ビデオチュートリアルを下記のURLからご覧になることが出来ます：
-
-https://vimeo.com/52302437
-
-https://vimeo.com/52304312
-
-https://vimeo.com/52304313
-
-password: ycam
+https://vimeo.com/59653952
 
 
 ## ofxTimelineの構造
