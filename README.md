@@ -34,14 +34,7 @@ If the community were to build many small components for creating small and intu
 ## Getting started
 
 Here are a series of video tutorials for getting started:
-
-https://vimeo.com/52302437
-
-https://vimeo.com/52304312
-
-https://vimeo.com/52304313
-
-password: ycam
+https://vimeo.com/59653952
 
 
 ## Anatomy of ofxTimeline
