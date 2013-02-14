@@ -7,11 +7,9 @@ ofxTimelineは、openFrameworksでタイムラインエディタインターフ�
 
 また、サポートされていないタイムベースのデータを編集する為にカスタムトラックを作成し、ofxTimelineを拡張する事も可能です。[カスタムトラックをデザインする](#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF%E3%82%92%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%81%99%E3%82%8B)をご参照ください。
 
-Copyright 2011-2012 [James George](http://www.jamesgeorge.org)
+Copyright 2011-2012 [James George](http://www.jamesgeorge.org) Co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
 
-Co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
-
-Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
+Licensed under the Apache License
 
 ## 再利用可能なツールの哲学##
 
