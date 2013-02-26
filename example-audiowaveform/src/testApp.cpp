@@ -34,31 +34,28 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-	ofBackground(0);
-	ofEnableSmoothing();
-	ofEnableAlphaBlending();
+    ofBackground(0);
+    ofEnableSmoothing();
+    ofEnableAlphaBlending();
 	
 
     ofxTimeline::removeCocoaMenusFromGlut("Audio Waveform Example");
     
-	timeline.setup();
-	timeline.setLoopType(OF_LOOP_NORMAL);
+    timeline.setup();
+    timeline.setLoopType(OF_LOOP_NORMAL);
     timeline.setBPM(120.f);
-	timeline.enableSnapToBPM(true);
-	timeline.setShowBPMGrid(true);
-	timeline.addTrack("Track", &waveform);
-	
-	//this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
-	timeline.setTimecontrolTrack(&waveform);
+    timeline.enableSnapToBPM(true);
+    timeline.setShowBPMGrid(true);
+    timeline.addAudioTrack("Audio","4chan.wav");
+    
+    //this means that calls to play/stop etc will be  routed to the waveform and that timing will be 100% accurate
+    timeline.setTimecontrolTrack("Audio");
 
-	waveform.loadSoundfile("4chan.wav");
+    //fun to watch on FFT
+    //waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
+    //waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
 
-
-	//fun to watch on FFT
-	//waveform.loadSoundfile("audiocheck.net_sweep20-20klog.wav");
-	//waveform.loadSoundfile("audiocheck.net_sweep20-20klin.wav");
-	
-	timeline.setDurationInSeconds(waveform.getDuration());
+    timeline.setDurationInSeconds(timeline.getAudioTrack("Audio")->getDuration());
 
 }
 
@@ -71,12 +68,12 @@ void testApp::update(){
 void testApp::draw(){
     
     //change the background color based on the current bin and amount
-    if(waveform.isSoundLoaded()){
-        int bin = ofMap(mouseX, 0, ofGetWidth(), 0, waveform.getFFTSize()-1, true);
-        ofBackground( waveform.getFFT()[bin] * 255 );
-    }
+
+    ofxTLAudioTrack* track = timeline.getAudioTrack("Audio");
+    int bin = ofMap(mouseX, 0, ofGetWidth(), 0, track->getFFTSize()-1, true);
+    ofBackground( track->getFFT()[bin] * 2000 );
     
-	timeline.draw();
+    timeline.draw();
 }
 
 

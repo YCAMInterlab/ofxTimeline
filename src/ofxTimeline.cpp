@@ -1565,6 +1565,10 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
     return modalTrack;
 }
 
+void ofxTimeline::setTimecontrolTrack(string trackName){
+    setTimecontrolTrack(getTrack(trackName));
+}
+
 void ofxTimeline::setTimecontrolTrack(ofxTLTrack* track){
     timeControl = track;
 }
@@ -1862,6 +1866,30 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
         return ofPtr<ofVideoPlayer>(); //null ptr
     }
     return track->getPlayer();
+}
+
+ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
+    return addAudioTrack(trackName, "");
+}
+
+ofxTLAudioTrack* ofxTimeline::addAudioTrackWithPath(string audioPath){
+    return addAudioTrack("audio", audioPath);
+}
+
+ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName, string audioPath){
+    ofxTLAudioTrack* audioTrack = new ofxTLAudioTrack();
+    audioTrack->setCreatedByTimeline(true);
+    addTrack(confirmedUniqueName(trackName), audioTrack);
+    if(audioPath != ""){
+        if(!audioTrack->loadSoundfile(audioPath)){
+            ofLogError("ofxTimeline::addAudioTrack -- audio file " + audioPath + " failed to load. Use only WAV and AIFF files");
+        }
+    }
+    return audioTrack;
+}
+
+ofxTLAudioTrack* ofxTimeline::getAudioTrack(string audioTrackName){
+    return (ofxTLAudioTrack*)getTrack(audioTrackName);
 }
 
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(string trackName){

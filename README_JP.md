@@ -7,11 +7,9 @@ ofxTimelineは、openFrameworksでタイムラインエディタインターフ�
 
 また、サポートされていないタイムベースのデータを編集する為にカスタムトラックを作成し、ofxTimelineを拡張する事も可能です。[カスタムトラックをデザインする](#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0%E3%83%88%E3%83%A9%E3%83%83%E3%82%AF%E3%82%92%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3%E3%81%99%E3%82%8B)をご参照ください。
 
-Copyright 2011-2012 [James George](http://www.jamesgeorge.org)
+Copyright 2011-2012 [James George](http://www.jamesgeorge.org) Co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
 
-Co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
-
-Licensed under the [MIT License](http://opensource.org/licenses/mit-license.php/) - go crazy, guilt free.
+Licensed under the Apache License
 
 ## 再利用可能なツールの哲学##
 
@@ -39,14 +37,7 @@ ofxTimelineの開発は、クリエイティブコーディングの環境の中
 ## はじめに
 
 まず初めに、ビデオチュートリアルを下記のURLからご覧になることが出来ます：
-
-https://vimeo.com/52302437
-
-https://vimeo.com/52304312
-
-https://vimeo.com/52304313
-
-password: ycam
+https://vimeo.com/59653952
 
 
 ## ofxTimelineの構造
@@ -158,18 +149,31 @@ OS Xでは、GLUTがCOMMAND+C、COMMAND+V、そしてCOMMAND+Sの操作を取得
 ### ofxTimelineと関連するファイルのクローンを行う
 timelineをダウンロードするためには、まずターミナルを開き、下記の様に入力します。
 
-    $cd of_0071_osx_release/addons
+    $cd of_0073_osx_release/addons
     $git clone https://github.com/YCAMInterlab/ofxTimeline.git
     $cd ofxTimeline/
     $./clone_addons.sh
 
 これで、必要なアドオンをダウンロードする事が出来ます。もしもいくつかのアドオンが既にインストール済みであった場合は、そのアドオンが上書きされる事はありません。
 
-### ofxTimelineをプロジェクトに加える
+### ofxTimelineを含むプロジェクトを作成する
+of_0073_osx_release/projectGenerator/に入っているProjectGeneratorを開きます。
 
-Xcodeでタイムラインを組み込みたいプロジェクトを開きます。ofxTimelineフォルダをファインダーから、Xcodeのナビゲーターエリアの、addons/の位置にドラッグアンドドロップします。
+プロジェクトに名前をつけ、addonsタブから、下記のアドオンを選択します。
+- ofxTimeline
+- ofxTimecode
+- ofxMSATimer
+- ofxTextInputField
+- ofxRange
+- ofxTween
 
-Audiowaveformを使用する場合には追加のインストラクションも参照してください。もしもそうでないなら、ofxTLAudioTrackのソースファイルへの参照と同様に、examples-*/フォルダーや、libs/フォルダーを削除してもかまいません。
+上記を選択し追えたら、BACKで一つ前の画面に戻り、Generate projectをクリックします。
+
+Windows上のVC2010を使われている場合は、Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Lineの順に選択し、下記のbuild eventをコピー＆ペーストしてください。
+
+xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
+
+MacOSXでAudioTrackを使用する場合は、OpenAL.frameworkをプロジェクトに加える必要があります。
 
 ### タイムラインをコードに加える
 
@@ -192,31 +196,20 @@ testApp.cppのsetupの中で、タイムラインのセットアップを行い�
       timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
       
       //add a track
-      timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
+      timeline.addCurves("MyCircleRadius", ofRange(0, 200));
   
 drawもしくはupdateの中で値を読み出します。
   
     //--------------------------------------------------------------
     void testApp::draw(){
       //the value of changingRadius will be different depending on the timeline
-      float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
+      float changingRadius = timeline.getValue("MyCircleRadius"),
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
       //don't forget to draw your timeline so you can edit it.
       timeline.draw();
     }
     
-ホットキーで再生／停止と、タイムラインの表示／非表示がコントロール出来る様にしておくのは良い慣習でしょう。
-
-    //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
-      if(key == ' '){
-        timeline.togglePlay();
-      }
-      if(key == 'h'){
-        timeline.toggleShow();
-      }
-    }
 
 ## トラックのタイプ
 ofxTimelineには、一般的なタイムラインで必要になる数種類のタイプのトラックが標準で組み込まれています。
@@ -287,15 +280,14 @@ Switchesを使う事で、タイムライン上で、ON/OFFのシンプルなコ
 
 VideoTracksでは、映像とそのエフェクトを同時にスクラブ再生する事が出来ます。videoトラックが追加されると、映像再生が全体のタイムラインの再生を制御する形になります。
 
-        ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
-        if(videoTrack != NULL){ //in the case the video load failed check against null
-            timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-            timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
-            timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
-        }
+    ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
+    if(videoTrack != NULL){ //in the case the video load failed check against null
+        timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+        timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+        timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
+    }
 
-timelineの長さは映像の長さと一致している必要があります。
-
+.
 
     継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
@@ -305,32 +297,29 @@ timelineの長さは映像の長さと一致している必要があります。
 
 AudioTracksを使用すると、オーディオトラックとその他のシーケンスを同時にスクラブ再生する事が出来ます。
 
-AudioTrackを追加するには、下記の様に.hファイルの中に宣言する必要が有ります。
-
-    ofxTimeline timeline;
-    ofxTLAudioWaveform waveform;
-
-そして.cppファイルの中でトラック追加とファイルの読み出しを行います。
+.cppファイルの中でトラックを追加し、ファイルを読み込みます。
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
         //... setup stuff
-        timeline.addTrack("Track", &waveform);
-        waveform.loadSoundfile("myAudioFile.wav");
-        timeline.setDurationInSeconds(waveform.getDuration());
+        timeline.addAudioTrack("Audio", "myAudioFile.wav");
     }
 
     //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
+    void testApp::update(){
+        //check the FFT data
         if(key == ' '){
             //calling play on the waveform controls the timeline playback
-    		waveform.togglePlay();
-    	}
+            ofxTLAudioTrack* track = timeline.getAudioTrack("Audio");
+            for(int i = 0; i < track->getFFTSize(); i++){
+                  track->getFFT()[i]; //FFT data
+            }
+        }
     }
 
-タイムライン全体の長さはオーディオの長さと同じである必要があります。
+.
 
-    継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    継承関係：ofxTLTrack -> ofxTLImageTrack -> ofxTLAudioTrack
 
 
 ### ColorTrack

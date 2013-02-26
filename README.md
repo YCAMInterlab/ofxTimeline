@@ -34,14 +34,7 @@ If the community were to build many small components for creating small and intu
 ## Getting started
 
 Here are a series of video tutorials for getting started:
-
-https://vimeo.com/52302437
-
-https://vimeo.com/52304312
-
-https://vimeo.com/52304313
-
-password: ycam
+https://vimeo.com/59653952
 
 
 ## Anatomy of ofxTimeline
@@ -172,6 +165,8 @@ This will download the necessary addons, but won't overwrite any changes if you 
 
             xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
 
+ - If you are on OS X, you'll need to add the OpenAL.framework to your project in order to use the AudioTrack
+
 ### Add a timeline to your code
 
 in your testApp.h file add:
@@ -193,14 +188,14 @@ in your setup of testApp.cpp file set up the timeline
       timeline.setLoopType(OF_LOOP_NORMAL); //turns the timeline to loop
       
       //add a tracks, etc
-      timeline.addKeyframes("MyCircleRadius", ofRange(0, 200));
+      timeline.addCurves("MyCircleRadius", ofRange(0, 200));
   
 in your draw or update function, read the value
   
     //--------------------------------------------------------------
     void testApp::draw(){
       //the value of changingRadius will be different depending on the timeline
-      float changingRadius = timeline.getKeyframeValue("MyCircleRadius"),
+      float changingRadius = timeline.getValue("MyCircleRadius"),
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
       //don't forget to draw your timeline so you can edit it.
@@ -275,15 +270,14 @@ Switches provide a simple control to turn regions of the timeline on and off.
 
 VideoTracks let a user interactively scrub through a video and sequence effects in time with the playback. When a video track is added the video playback will control the playback of the entire timeline. 
 
-        ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
-        if(videoTrack != NULL){ //in the case the video load failed check against null
-            timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
-            timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
-            timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
-        }
-
-The timeline's duration must match the video's duration.
-
+    ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
+    if(videoTrack != NULL){ //in the case the video load failed check against null
+        timeline.setFrameRate(videoTrack->getPlayer()->getTotalNumFrames()/videoTrack->getPlayer()->getDuration());
+        timeline.setDurationInFrames(videoTrack->getPlayer()->getTotalNumFrames());
+        timeline.setTimecontrolTrack(videoTrack); //video playback will control the time        
+    }
+        
+,
     Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
 
 
@@ -292,32 +286,29 @@ The timeline's duration must match the video's duration.
 
 AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
 
-To add an AudioTrack to your project, add the declaration to your .h file
-
-    ofxTimeline timeline;
-    ofxTLAudioWaveform waveform;
-
-And in your .cpp file add the track and load a file
+In your .cpp file add the track and load a file
 
     //--------------------------------------------------------------
     void testApp::keyPressed(int key){
         //... setup stuff
-        timeline.addTrack("Track", &waveform);
-        waveform.loadSoundfile("myAudioFile.wav");
-        timeline.setDurationInSeconds(waveform.getDuration());
+        timeline.addAudioTrack("Audio", "myAudioFile.wav");
     }
 
     //--------------------------------------------------------------
-    void testApp::keyPressed(int key){
+    void testApp::update(){
+        //check the FFT data
         if(key == ' '){
             //calling play on the waveform controls the timeline playback
-    		waveform.togglePlay();
-    	}
+            ofxTLAudioTrack* track = timeline.getAudioTrack("Audio");
+            for(int i = 0; i < track->getFFTSize(); i++){
+                track->getFFT()[i]; //FFT data
+            }
+        }
     }
 
-The timeline's duration must match the audio's duration.
+.
 
-    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLVideoTrack
+    Inheritance: ofxTLTrack -> ofxTLImageTrack -> ofxTLAudioTrack
 
 
 ### ColorTrack

@@ -6,17 +6,7 @@
     </key>
     <key>
         <flag>skip</flag>
-        <time>00:00:01:018</time>
+        <time>00:00:02:589</time>
         <value>0.626760602</value>
-    </key>
-    <key>
-        <flag>end</flag>
-        <time>00:00:01:422</time>
-        <value>0.570422530</value>
-    </key>
-    <key>
-        <flag>loop</flag>
-        <time>00:00:01:875</time>
-        <value>0.450704217</value>
     </key>
 </keyframes>
