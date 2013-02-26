@@ -548,7 +548,7 @@ bool ofxTimeline::togglePlay(){
 	return getIsPlaying();
 }
 
-bool ofxTimeline::getSacebarTogglesPlay(){
+bool ofxTimeline::getSpacebarTogglesPlay(){
     return spacebarTogglesPlay;
 }
 
