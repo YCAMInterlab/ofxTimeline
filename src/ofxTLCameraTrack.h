@@ -106,13 +106,13 @@ class ofxTLCameraTrack : public ofxTLKeyframes {
 	static CameraTrackEase getNextEase(CameraTrackEase ease);
     static CameraTrackEase getPreviousEase(CameraTrackEase ease);
 
-	void moveCameraToTime(unsigned long millis);
-	void setCameraFrameToTime(ofxTLCameraFrame* target, unsigned long millis);
+	void moveCameraToTime(unsigned long long millis);
+	void setCameraFrameToTime(ofxTLCameraFrame* target, unsigned long long millis);
 	void interpolateBetween(ofxTLCameraFrame* target,
 							ofxTLCameraFrame* prev,
 							ofxTLCameraFrame* sample1,
 							ofxTLCameraFrame* sample2,
-							ofxTLCameraFrame* next, unsigned long millis);
+							ofxTLCameraFrame* next, unsigned long long millis);
 	float dampening;
 	void moveCameraToPosition(ofxTLCameraFrame* target);
 	

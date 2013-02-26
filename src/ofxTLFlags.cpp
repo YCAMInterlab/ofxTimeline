@@ -236,7 +236,7 @@ void ofxTLFlags::addFlag(string key) {
 	addFlagAtTime(key, timeline->getCurrentTimeMillis());
 }
 
-void ofxTLFlags::addFlagAtTime(string key, unsigned long time){
+void ofxTLFlags::addFlagAtTime(string key, unsigned long long time){
 	ofxTLKeyframe* keyFrame = newKeyframe();
 	ofxTLFlag* flag = (ofxTLFlag*)keyFrame;
 	setKeyframeTime(keyFrame, time);

@@ -69,7 +69,7 @@ class ofxTLEmptyKeyframes : public ofxTLKeyframes {
 
 	//how to get colors from our example, linearly interpolated RGB
 	ofColor getCurrentColor();
-	ofColor getColorAtTime(unsigned long millis);
+	ofColor getColorAtTime(unsigned long long millis);
 	
 	//time range contains MIN and MAX time in milliseconds
 	//valueRange is 0 at the bottom of the track, and 1 at the top

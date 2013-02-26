@@ -79,29 +79,25 @@ void ofxTLAudioTrack::update(){
 				ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 				ofNotifyEvent(events().playbackLooped, args);
 			}
-			lastPercent = player.getPosition();
-			
+			lastPercent = player.getPosition();			
 			//currently only supports timelines with duration == duration of player
 			if(lastPercent < timeline->getInOutRange().min){
-				//player.setPosition( timeline->getInOutRange().min );
-				player.setPosition( positionForSecond(timeline->getInTimeInSeconds()) );
+
+				player.setPosition( positionForSecond(timeline->getInTimeInSeconds())+.001 );
 			}
 			else if(lastPercent > timeline->getInOutRange().max){
 				if(timeline->getLoopType() == OF_LOOP_NONE){
-//					player.setPosition(timeline->getInOutRange().max);
-					player.setPosition( positionForSecond(timeline->getInTimeInSeconds()) );
+					player.setPosition( positionForSecond(timeline->getInTimeInSeconds()));
 					stop();
 				}
 				else{
-//					player.setPosition(timeline->getInOutRange().min);
-					player.setPosition( positionForSecond(timeline->getOutTimeInSeconds()) );
+					player.setPosition( positionForSecond(timeline->getInTimeInSeconds()));
 				}
 			}
 			
 			timeline->setCurrentTimeSeconds(player.getPosition() * player.getDuration());
 		}
 	}
-	//cout << "audio track " << player.getPosition() << " timeline " << timeline->getPercentComplete() << endl;
 }
  
 void ofxTLAudioTrack::draw(){
@@ -139,23 +135,11 @@ void ofxTLAudioTrack::draw(){
     //will refresh fft bins for other calls too
     vector<float>& bins = getFFT();
     float binWidth = bounds.width / bins.size();
-    //find max
-    float averagebin = 0 ;
-    float maxBinCurrentFrame = 0;
-    for(int i = 0; i < bins.size(); i++){
-        maxBinCurrentFrame = MAX(maxBinCurrentFrame, bins[i]);
-        averagebin += bins[i];
-    }
-//    maxBinReceived += (maxBinCurrentFrame - maxBinReceived) * .2;
-//    averagebin /= bins.size();
-    maxBinReceived = .02;
-    //cout << maxBinCurrentFrame << endl;
-    
     
     ofFill();
     ofSetColor(timeline->getColors().disabledColor, 120);
     for(int i = 0; i < bins.size(); i++){
-        float height = MIN(bounds.height * bins[i]/maxBinReceived, bounds.height);
+        float height = MIN(bounds.height * bins[i], bounds.height);
         float y = bounds.y + bounds.height - height;
         ofRect(i*binWidth, y, binWidth, height);
     }
@@ -219,14 +203,14 @@ void ofxTLAudioTrack::recomputePreview(){
 					if(losample != 0){
 //						preview.addVertex(i, trackCenter - losample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - losample * trackHeight;
+						vertex->y = trackCenter - losample * trackHeight*.5;
 						vertex++;
 					}
 					if(hisample != 0){
 						//ofVertex(i, trackCenter - hisample * trackHeight);
 //						preview.addVertex(i, trackCenter - hisample * trackHeight);
 						vertex->x = i;
-						vertex->y = trackCenter - hisample * trackHeight;
+						vertex->y = trackCenter - hisample * trackHeight*.5;
 						vertex++;
 					}
 				}
@@ -288,7 +272,7 @@ void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
 void ofxTLAudioTrack::play(){
 
 	if(!player.getIsPlaying()){
-
+        
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
 		player.play();
@@ -296,7 +280,9 @@ void ofxTLAudioTrack::play(){
 			if(player.getPosition() == 1.0 || timeline->getPercentComplete() > .99){
                 timeline->setCurrentTimeSeconds(0);
             }
+            
             player.setPosition(positionForSecond(timeline->getCurrentTime()));
+            //cout << " setting time to  " << positionForSecond(timeline->getCurrentTime()) << " actual " << player.getPosition() << endl;
             
 			ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 			ofNotifyEvent(events().playbackStarted, args);
@@ -429,10 +415,22 @@ vector<float>& ofxTLAudioTrack::getFFT(){
                 fftAverages[i] *= envelope[i];
             }
         }
-
+        
+        float max = 0;
+        for(int i = 0; i < fftAverages.size(); i++){
+            max = MAX(max, fftAverages[i]);
+        }
+        if(max != 0){
+            for(int i = 0; i < fftAverages.size(); i++){
+                fftAverages[i] = ofMap(fftAverages[i],0, max, 0, 1.0);
+            }
+        }
+ 
         for(int i = 0; i < averageSize; i++) {
             dampened[i] = (fftAverages[i] * dampening) + dampened[i]*(1-dampening);
         }
+        
+        //normalizer hack
         lastFFTPosition = fftPosition;
 	}
     

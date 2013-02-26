@@ -125,7 +125,7 @@ void ofxTLEmptyTrack::nudgeBy(ofVec2f nudgePercent){
 
 //if your track has some selectable elements you can interface with snapping
 //and selection/unselection here
-void ofxTLEmptyTrack::getSnappingPoints(set<unsigned long>& points){
+void ofxTLEmptyTrack::getSnappingPoints(set<unsigned long long>& points){
 	
 }
 void ofxTLEmptyTrack::regionSelected(ofLongRange timeRange, ofRange valueRange){

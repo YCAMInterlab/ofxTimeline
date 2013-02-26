@@ -63,7 +63,7 @@ class ofxTLColorTrack : public ofxTLKeyframes {
 	
     ofColor getColor();
 	ofColor getColorAtSecond(float second);
-	ofColor getColorAtMillis(unsigned long millis);
+	ofColor getColorAtMillis(unsigned long long millis);
 	ofColor getColorAtPosition(float pos);
 
 	virtual void setDefaultColor(ofColor color);

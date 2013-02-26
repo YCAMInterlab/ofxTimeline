@@ -235,11 +235,11 @@ float ofxTLKeyframes::sampleAtTime(long sampleTime){
 	return defaultValue;
 }
 
-float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey){
+float ofxTLKeyframes::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long long sampleTime, bool firstKey){
 	return key->value;
 }
 
-float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+float ofxTLKeyframes::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime){
 	return ofMap(sampleTime, start->time, end->time, start->value, end->value);
 }
 
@@ -357,13 +357,13 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 	keysAreStretchable = ofGetModifierShiftPressed() && ofGetModifierControlPressed();
     keysDidDrag = false;
 	if(keysAreStretchable && timeline->getTotalSelectedItems() > 1){
-		unsigned long minSelected = timeline->getEarliestSelectedTime();
-		unsigned long maxSelected = timeline->getLatestSelectedTime();
+		unsigned long long minSelected = timeline->getEarliestSelectedTime();
+		unsigned long long maxSelected = timeline->getLatestSelectedTime();
 		if(minSelected == maxSelected){
 			keysAreStretchable = false;
 		}
 		else {
-			unsigned long midSelection = (maxSelected-minSelected)/2 + minSelected;
+			unsigned long long midSelection = (maxSelected-minSelected)/2 + minSelected;
 			//the anchor is the selected key opposite to where we are stretching
 			stretchAnchor = midSelection <= millis ? minSelected : maxSelected;
 //			cout << "Min selected " << ofxTimecode::timecodeForMillis(minSelected) << " Mid Selected " << ofxTimecode::timecodeForMillis(midSelection) << " Max selected " << ofxTimecode::timecodeForMillis(maxSelected) << " anchor "  << ofxTimecode::timecodeForMillis(stretchAnchor) << " millis down " << ofxTimecode::timecodeForMillis(millis) << endl;
@@ -541,12 +541,12 @@ void ofxTLKeyframes::mouseReleased(ofMouseEventArgs& args, long millis){
 	createNewOnMouseup = false;
 }
 
-void ofxTLKeyframes::setKeyframeTime(ofxTLKeyframe* key, unsigned long newTime){
+void ofxTLKeyframes::setKeyframeTime(ofxTLKeyframe* key, unsigned long long newTime){
 	key->previousTime = key->time;
 	key->time = newTime;
 }
 
-void ofxTLKeyframes::getSnappingPoints(set<unsigned long>& points){
+void ofxTLKeyframes::getSnappingPoints(set<unsigned long long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
 		if (isKeyframeIsInBounds(keyframes[i]) && !isKeyframeSelected(keyframes[i])) {
 			points.insert(keyframes[i]->time);
@@ -619,11 +619,11 @@ void ofxTLKeyframes::addKeyframe(float value){
 	addKeyframeAtMillis(value, currentTrackTime());
 }
 
-void ofxTLKeyframes::addKeyframeAtMillis(unsigned long millis){
+void ofxTLKeyframes::addKeyframeAtMillis(unsigned long long millis){
 	addKeyframeAtMillis(defaultValue, millis);
 }
 
-void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long millis){
+void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long long millis){
 	ofxTLKeyframe* key = newKeyframe();
 	key->time = key->previousTime = millis;
 	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
@@ -649,7 +649,7 @@ int ofxTLKeyframes::getSelectedItemCount(){
     return selectedKeyframes.size();
 }
 
-unsigned long ofxTLKeyframes::getEarliestTime(){
+unsigned long long ofxTLKeyframes::getEarliestTime(){
 	if(keyframes.size() > 0){
 		return keyframes[0]->time;
 	}
@@ -658,7 +658,7 @@ unsigned long ofxTLKeyframes::getEarliestTime(){
 	}
 }
 
-unsigned long ofxTLKeyframes::getLatestTime(){
+unsigned long long ofxTLKeyframes::getLatestTime(){
 	if(keyframes.size() > 0){
 		return keyframes[keyframes.size()-1]->time;
 	}
@@ -667,7 +667,7 @@ unsigned long ofxTLKeyframes::getLatestTime(){
 	}	
 }
 
-unsigned long ofxTLKeyframes::getEarliestSelectedTime(){
+unsigned long long ofxTLKeyframes::getEarliestSelectedTime(){
 	if(selectedKeyframes.size() > 0){
 		return selectedKeyframes[0]->time;
 	}
@@ -676,7 +676,7 @@ unsigned long ofxTLKeyframes::getEarliestSelectedTime(){
 	}
 }
 
-unsigned long ofxTLKeyframes::getLatestSelectedTime(){
+unsigned long long ofxTLKeyframes::getLatestSelectedTime(){
 	if(selectedKeyframes.size() > 0){
 		return selectedKeyframes[selectedKeyframes.size()-1]->time;
 	}
@@ -707,13 +707,13 @@ void ofxTLKeyframes::saveToBinaryFile(){
 	string filePath = ofFilePath::removeExt(xmlFileName) + ".bin";
 	
 	int numKeys = keyframes.size();
-	int keyBytes = sizeof(unsigned long) + sizeof(float); //time + value
+	int keyBytes = sizeof(unsigned long long) + sizeof(float); //time + value
 	cout << "saving binary file " << filePath << " with # keys " << numKeys << endl;
 	ofFile outfile(ofToDataPath(filePath), ofFile::WriteOnly, true);
 	outfile.write((char*)&numKeys,sizeof(int));
 	outfile.write((char*)&keyBytes, sizeof(int));
 	for(int i = 0; i < keyframes.size(); i++){
-		outfile.write( (char*)&keyframes[i]->time, sizeof(unsigned long));
+		outfile.write( (char*)&keyframes[i]->time, sizeof(unsigned long long));
 		outfile.write( (char*)&keyframes[i]->value, sizeof(float));
 	}
 	outfile.close();
@@ -736,7 +736,7 @@ void ofxTLKeyframes::loadFromBinaryFile(){
 	cout << "# keys " << numKeys << " of size " << keyBytes << endl;
 	for(int i = 0; i < numKeys; i++){
 		ofxTLKeyframe* k = newKeyframe();
-		infile.read( (char*)&k->time, sizeof(unsigned long) );
+		infile.read( (char*)&k->time, sizeof(unsigned long long) );
 		infile.read( (char*)&k->value, sizeof(float) );
 		keyframes.push_back(k);
 	}
@@ -842,7 +842,7 @@ bool ofxTLKeyframes::isKeyframeSelected(ofxTLKeyframe* k){
 
 bool ofxTLKeyframes::isKeyframeIsInBounds(ofxTLKeyframe* key){
 	if(zoomBounds.min == 0.0 && zoomBounds.max == 1.0) return true;
-	unsigned long duration = timeline->getDurationInMilliseconds();
+	unsigned long long duration = timeline->getDurationInMilliseconds();
 	return key->time >= zoomBounds.min*duration && key->time <= zoomBounds.max*duration;
 }
 

@@ -156,10 +156,10 @@ void ofxTLCameraTrack::draw3d(){
 		ofPopStyle();
 	}
 	
-	unsigned long startMillis = screenXToMillis(bounds.x);
-	unsigned long endMillis = screenXToMillis(bounds.getMaxX());
-	unsigned long step = (endMillis - startMillis)/100;
-	for(unsigned long millis = startMillis; millis < endMillis; millis += step ){
+	unsigned long long startMillis = screenXToMillis(bounds.x);
+	unsigned long long endMillis = screenXToMillis(bounds.getMaxX());
+	unsigned long long step = (endMillis - startMillis)/100;
+	for(unsigned long long millis = startMillis; millis < endMillis; millis += step ){
 		setCameraFrameToTime(&interFrame, millis);
 		n.setPosition(interFrame.position);
 		n.setOrientation(interFrame.orientation);
@@ -251,8 +251,8 @@ void ofxTLCameraTrack::update(ofEventArgs& args){
 void ofxTLCameraTrack::setTimelineInOutToTrack(){
 	//TODO: timebased camera tracking
 	if(keyframes.size() > 0){
-		unsigned long inTime  = keyframes[0]->time;
-		unsigned long outTime = keyframes[keyframes.size()-1]->time;
+		unsigned long long inTime  = keyframes[0]->time;
+		unsigned long long outTime = keyframes[keyframes.size()-1]->time;
 //		cout << " IN AND OUT SETTING " << inTime << " " << outTime << endl;
 		timeline->setInOutRangeMillis(inTime, outTime);
 //		timeline->setInPointAtMillis(keyframes[0]->time);
@@ -386,7 +386,7 @@ ofxTLKeyframe* ofxTLCameraTrack::keyframeAtScreenpoint(ofVec2f p){
 	return NULL;
 }
 
-void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
+void ofxTLCameraTrack::moveCameraToTime(unsigned long long millis){
 	if(camera == NULL){
 		ofLogError("ofxCameraTrack -- can't modify a null camera!");
 		return;
@@ -423,7 +423,7 @@ void ofxTLCameraTrack::moveCameraToTime(unsigned long millis){
 	//	cout << "set position to " << camera->getPosition() << endl;
 }
 
-void ofxTLCameraTrack::setCameraFrameToTime(ofxTLCameraFrame* target, unsigned long millis){
+void ofxTLCameraTrack::setCameraFrameToTime(ofxTLCameraFrame* target, unsigned long long millis){
 	for(int i = 1; i < keyframes.size(); i++){
 		if(keyframes[i]->time > millis){
 			ofxTLCameraFrame* prev = (ofxTLCameraFrame*)(i > 2 ? keyframes[i-2] : keyframes[i-1]);
@@ -461,7 +461,7 @@ void ofxTLCameraTrack::interpolateBetween(ofxTLCameraFrame* target,
 										  ofxTLCameraFrame* prev,
 										  ofxTLCameraFrame* sample1,
 										  ofxTLCameraFrame* sample2,
-										  ofxTLCameraFrame* next, unsigned long millis)
+										  ofxTLCameraFrame* next, unsigned long long millis)
 {
 
     float alpha = 0;

@@ -46,6 +46,8 @@ ofOpenALSoundPlayer_TimelineAdditions::ofOpenALSoundPlayer_TimelineAdditions(){
 	fftCfg			= 0;
 	streamf			= 0;
     octaves         = 0;
+    curMaxAverage   = 0;
+    timeSet         = false;
 #ifdef OF_USING_MPG123
 	mp3streamf		= 0;
 #endif
@@ -347,7 +349,14 @@ void ofOpenALSoundPlayer_TimelineAdditions::readFile(string fileName, vector<sho
 //------------------------------------------------------------
 bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_stream){
 
-	fileName = ofToDataPath(fileName);
+    string ext = ofToLower(ofFilePath::getFileExt(fileName));
+    if(ext != "wav" && ext != "aif" && ext != "aiff"){
+        ofLogError("Sound player can only load .wav or .aiff files");
+        return false;
+    }
+       
+    fileName = ofToDataPath(fileName);
+
 	bLoadedOk = false;
 	bMultiPlay = false;
 	isStreaming = is_stream;
@@ -369,6 +378,11 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 		stream(fileName, buffer);
 	}
 
+    if(channels == 0){
+        ofLogError("ofOpenALSoundPlayer_TimelineAdditions -- File not found");
+        return false;
+    }
+    
 	int numFrames = buffer.size()/channels;
 	if(isStreaming){
 		buffers.resize(channels*2);
@@ -468,6 +482,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::threadedFunction(){
 	vector<vector<short> > multibuffer;
 	multibuffer.resize(channels);
 	while(isThreadRunning()){
+        cout << "threaded function" << endl;
 		for(int i=0; i<int(sources.size())/channels; i++){
 			int processed;
 			alGetSourcei(sources[i*channels], AL_BUFFERS_PROCESSED, &processed);
@@ -511,31 +526,38 @@ void ofOpenALSoundPlayer_TimelineAdditions::threadedFunction(){
 
 			stream_end = false;
 		}
+        timeSet = false;
+
 		ofSleepMillis(1);
 	}
 }
 
 //------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::update(ofEventArgs & args){
-
-	for(int i=1; i<int(sources.size())/channels; ){
-		ALint state;
-		alGetSourcei(sources[i*channels],AL_SOURCE_STATE,&state);
-		if(state != AL_PLAYING){
-			alDeleteSources(channels,&sources[i*channels]);
-			for(int j=0;j<channels;j++){
-				sources.erase(sources.begin()+i*channels);
-			}
-		}else{
-			i++;
-		}
-	}
+    if(bMultiPlay){
+        for(int i=1; i<int(sources.size())/channels; ){
+            ALint state;
+            alGetSourcei(sources[i*channels],AL_SOURCE_STATE,&state);
+            if(state != AL_PLAYING){
+                alDeleteSources(channels,&sources[i*channels]);
+                for(int j=0;j<channels;j++){
+                    sources.erase(sources.begin()+i*channels);
+                }
+            }else{
+                i++;
+            }
+        }
+    }
+    timeSet = false;
 }
 
 //------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
+    
 //	ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	if(isLoaded()){
+        ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
+
 		alDeleteBuffers(buffers.size(),&buffers[0]);
 		alDeleteSources(sources.size(),&sources[0]);
 	}
@@ -627,6 +649,8 @@ void ofOpenALSoundPlayer_TimelineAdditions::setPosition(float pct){
 			alSourcef(sources[sources.size()-channels+i],AL_SEC_OFFSET,pct*duration);
 		}
 	}
+    timeSet = true;
+    justSetTime = pct;
 }
 
 //------------------------------------------------------------
@@ -650,8 +674,12 @@ float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
 		pos = float(stream_samples_read) / float(channels) / float(samplerate);
 		return pos/duration;
 	}else{
+        if(timeSet) return justSetTime;
 		alGetSourcef(sources[sources.size()-1],AL_SAMPLE_OFFSET,&pos);
-		return channels*(pos/buffer.size());
+        return channels*(pos/buffer.size());
+        
+        //alGetSourcef(sources[sources.size()-1],AL_SEC_OFFSET,&pos);
+        //return pos / duration;
 	}
 }
 
@@ -736,11 +764,11 @@ void ofOpenALSoundPlayer_TimelineAdditions::setMultiPlay(bool bMp){
 	}
 	bMultiPlay = bMp;		// be careful with this...
 	if(sources.empty()) return;
-	if(bMultiPlay){
+//	if(bMultiPlay){
 		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
-	}else{
-		ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
-	}
+//	}else{
+//		ofRemoveListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
+//	}
 }
 
 // ----------------------------------------------------------------------------
@@ -776,9 +804,9 @@ void ofOpenALSoundPlayer_TimelineAdditions::play(){
 	}
 	alSourcePlayv(channels,&sources[sources.size()-channels]);
 
-	if(bMultiPlay){
+//	if(bMultiPlay){
 		ofAddListener(ofEvents().update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
-	}
+//	}
 	if(isStreaming){
 		setPosition(0);
 		stream_end = false;
@@ -866,6 +894,7 @@ vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getAverages(){
     
     if(averages.size() > 0){
         getSpectrum(bins.size());
+        float max = 0;
         for (int i = 0; i < octaves; i++){
             float lowFreq, hiFreq, freqStep;
             if (i == 0){
@@ -881,10 +910,12 @@ vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getAverages(){
             for (int j = 0; j < avgPerOctave; j++){
                 int offset = j + i * avgPerOctave;
                 averages[offset] = calculateAverage(f, f + freqStep);
+                max = MAX(max,averages[offset]);
                 f += freqStep;
             }
         }
     }
+    
     
     return averages;
 }

@@ -39,7 +39,7 @@ ofxTLCurves::ofxTLCurves(){
 	drawingEasingWindow = false;
 }
 
-float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime){
 	ofxTLTweenKeyframe* tweenKeyStart = (ofxTLTweenKeyframe*)start;
 	ofxTLTweenKeyframe* tweenKeyEnd = (ofxTLTweenKeyframe*)end;
 	return ofxTween::map(sampleTime, tweenKeyStart->time, tweenKeyEnd->time,

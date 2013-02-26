@@ -58,7 +58,7 @@ class ofxTLFlags : public ofxTLBangs {
     virtual string getTrackType();
 	
 	virtual void addFlag(string key);
-	virtual void addFlagAtTime(string key, unsigned long time);
+	virtual void addFlagAtTime(string key, unsigned long long time);
     
 protected:
     

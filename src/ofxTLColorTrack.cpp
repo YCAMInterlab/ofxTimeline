@@ -220,7 +220,7 @@ ofColor ofxTLColorTrack::getColorAtPosition(float pos){
 	return getColorAtMillis(pos * timeline->getDurationInMilliseconds());
 }
 
-ofColor ofxTLColorTrack::getColorAtMillis(unsigned long millis){
+ofColor ofxTLColorTrack::getColorAtMillis(unsigned long long millis){
 	if(keyframes.size() == 0){
 		return defaultColor;
 	}

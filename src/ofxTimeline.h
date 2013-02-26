@@ -156,7 +156,7 @@ class ofxTimeline : ofThread {
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
 	void setDurationInSeconds(float seconds);
-	void setDurationInMillis(unsigned long millis);
+	void setDurationInMillis(unsigned long long millis);
     void setDurationInTimecode(string timecode);
 
 	int getDurationInFrames();
@@ -179,7 +179,7 @@ class ofxTimeline : ofThread {
 	
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTimeSeconds(float time);
-    virtual void setCurrentTimeMillis(unsigned long millis);
+    virtual void setCurrentTimeMillis(unsigned long long millis);
 	virtual void setPercentComplete(float percent);
 	virtual void setCurrentTimecode(string timecodeString);
     
@@ -191,7 +191,7 @@ class ofxTimeline : ofThread {
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
 	virtual string getCurrentTimecode();
-	virtual long getQuantizedTime(unsigned long time, unsigned long step);
+	virtual long getQuantizedTime(unsigned long long time, unsigned long long step);
     
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
@@ -206,14 +206,14 @@ class ofxTimeline : ofThread {
 	virtual void setInPointAtPercent(float percent);
 	void setInPointAtFrame(int frame);
 	void setInPointAtSeconds(float time);
-    void setInPointAtMillis(unsigned long millis);
+    void setInPointAtMillis(unsigned long long millis);
     void setInPointAtTimecode(string timecode);
 	void setInPointAtPlayhead();
     
 	virtual void setOutPointAtPercent(float percent);
 	void setOutPointAtFrame(float frame);
 	void setOutPointAtSeconds(float time);
-	void setOutPointAtMillis(unsigned long millis);
+	void setOutPointAtMillis(unsigned long long millis);
     void setOutPointAtTimecode(string timecode);
     void setOutPointAtPlayhead();
     
@@ -228,7 +228,7 @@ class ofxTimeline : ofThread {
 	virtual bool areFootersHidden();
 	
 	virtual void setInOutRange(ofRange inoutPercentRange);
-	virtual void setInOutRangeMillis(unsigned long min, unsigned long max);
+	virtual void setInOutRangeMillis(unsigned long long min, unsigned long long max);
 	virtual void clearInOut();
     
     ofRange getInOutRange();
@@ -311,10 +311,10 @@ class ofxTimeline : ofThread {
     //	if 2 or more is selected, it just trigger an unselect all before
     //	create any new items
     int getTotalSelectedItems();
-	unsigned long getEarliestTime();
-	unsigned long getLatestTime();
-	unsigned long getEarliestSelectedTime();
-	unsigned long getLatestSelectedTime();
+	unsigned long long getEarliestTime();
+	unsigned long long getLatestTime();
+	unsigned long long getEarliestSelectedTime();
+	unsigned long long getLatestSelectedTime();
 
 	bool hasTrack(string trackName);
 	//type can be
@@ -355,7 +355,7 @@ class ofxTimeline : ofThread {
 	ofColor getColor(string name);
 	ofColor getColorAtPercent(string name, float percent);
 	ofColor getColorAtSecond(string name, float second);
-	ofColor getColorAtMillis(string name, unsigned long millis);
+	ofColor getColorAtMillis(string name, unsigned long long millis);
 	
 	string getDefaultColorPalettePath();
     //TODO: remove image sequence from the core? ... or fix it up.
@@ -415,13 +415,13 @@ class ofxTimeline : ofThread {
 	//and the mouse.  
 	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
-	void setDragTimeOffset(unsigned long millisecondOffset);
+	void setDragTimeOffset(unsigned long long millisecondOffset);
     void cancelSnapping();
 	long getDragTimeOffset();
-    void setHoverTime(unsigned long millisTime);
+    void setHoverTime(unsigned long long millisTime);
         
     string formatTime(float seconds);
-    string formatTime(unsigned long millis);
+    string formatTime(unsigned long long millis);
 
     string nameToXMLName(string name);
     string confirmedUniqueName(string name);

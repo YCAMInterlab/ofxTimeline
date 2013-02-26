@@ -560,7 +560,7 @@ bool ofxTimeline::getIsPlaying(){
 	return timeControl != NULL ? timeControl->getIsPlaying() : isPlaying;
 }
 
-void ofxTimeline::setHoverTime(unsigned long millisTime){
+void ofxTimeline::setHoverTime(unsigned long long millisTime){
 	ticker->setHoverTime(millisTime);
 }
 
@@ -580,7 +580,7 @@ void ofxTimeline::setCurrentTimeSeconds(float time){
 	currentTime = time;
 }
 
-void ofxTimeline::setCurrentTimeMillis(unsigned long millis){
+void ofxTimeline::setCurrentTimeMillis(unsigned long long millis){
 	setCurrentTimeSeconds(millis/1000.);
 }
 
@@ -616,10 +616,10 @@ string ofxTimeline::getCurrentTimecode(){
     return timecode.timecodeForSeconds(currentTime);
 }
 
-long ofxTimeline::getQuantizedTime(unsigned long time, unsigned long step){
+long ofxTimeline::getQuantizedTime(unsigned long long time, unsigned long long step){
 	double oneMeasure = 1000/(getBPM()/240.); // in milliseconds
 	step = oneMeasure / step; // convert step to milliseconds
-	unsigned long base = time / step;
+	unsigned long long base = time / step;
 	base = time % step > (step * 0.5) ? base + 1 : base; // round up or down
 	return base * step;
 }
@@ -636,7 +636,7 @@ void ofxTimeline::setInPointAtSeconds(float time){
 void ofxTimeline::setInPointAtFrame(int frame){
     setInPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
 }
-void ofxTimeline::setInPointAtMillis(unsigned long millis){
+void ofxTimeline::setInPointAtMillis(unsigned long long millis){
     setInPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setInPointAtTimecode(string timecodeString){
@@ -655,7 +655,7 @@ void ofxTimeline::setOutPointAtFrame(float frame){
 void ofxTimeline::setOutPointAtSeconds(float time){
     setOutPointAtPercent(time/durationInSeconds);
 }
-void ofxTimeline::setOutPointAtMillis(unsigned long millis){
+void ofxTimeline::setOutPointAtMillis(unsigned long long millis){
     setOutPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setOutPointAtTimecode(string timecodeString){
@@ -667,7 +667,7 @@ void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
 	inoutRange = inoutPercentRange;
 }
 
-void ofxTimeline::setInOutRangeMillis(unsigned long min, unsigned long max){
+void ofxTimeline::setInOutRangeMillis(unsigned long long min, unsigned long long max){
 	inoutRange = ofRange(min / (durationInSeconds*1000.),
 						 max / (durationInSeconds*1000.) );
 //	cout << "new range is " << inoutRange << endl;
@@ -791,7 +791,7 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
-void ofxTimeline::setDurationInMillis(unsigned long millis){
+void ofxTimeline::setDurationInMillis(unsigned long long millis){
     setDurationInSeconds(millis/1000.);
 }
 
@@ -1516,8 +1516,8 @@ int ofxTimeline::getTotalSelectedItems(){
     return totalSelected;
 }
 
-unsigned long ofxTimeline::getEarliestTime(){
-	unsigned long earliestTime = LONG_MAX;
+unsigned long long ofxTimeline::getEarliestTime(){
+	unsigned long long earliestTime = LONG_MAX;
     for(int i = 0; i < pages.size(); i++){
 		for(int t = 0; t < pages[i]->getTracks().size(); t++){
 			earliestTime = MIN(earliestTime,pages[i]->getTracks()[t]->getEarliestTime());
@@ -1526,8 +1526,8 @@ unsigned long ofxTimeline::getEarliestTime(){
 	return earliestTime;
 }
 
-unsigned long ofxTimeline::getLatestTime(){
-	unsigned long latestTime = 0;
+unsigned long long ofxTimeline::getLatestTime(){
+	unsigned long long latestTime = 0;
     for(int i = 0; i < pages.size(); i++){
 		for(int t = 0; t < pages[i]->getTracks().size(); t++){
 			latestTime = MAX(latestTime,pages[i]->getTracks()[t]->getLatestTime());
@@ -1536,8 +1536,8 @@ unsigned long ofxTimeline::getLatestTime(){
 	return latestTime;	
 }
 
-unsigned long ofxTimeline::getEarliestSelectedTime(){
-	unsigned long earliestTime = LONG_MAX;
+unsigned long long ofxTimeline::getEarliestSelectedTime(){
+	unsigned long long earliestTime = LONG_MAX;
     for(int i = 0; i < pages.size(); i++){
 		for(int t = 0; t < pages[i]->getTracks().size(); t++){
 			earliestTime = MIN(earliestTime,pages[i]->getTracks()[t]->getEarliestSelectedTime());
@@ -1546,8 +1546,8 @@ unsigned long ofxTimeline::getEarliestSelectedTime(){
 	return earliestTime;	
 }
 
-unsigned long ofxTimeline::getLatestSelectedTime(){
-	unsigned long latestTime = 0;
+unsigned long long ofxTimeline::getLatestSelectedTime(){
+	unsigned long long latestTime = 0;
     for(int i = 0; i < pages.size(); i++){
 		for(int t = 0; t < pages[i]->getTracks().size(); t++){
 			latestTime = MAX(latestTime,pages[i]->getTracks()[t]->getLatestSelectedTime());
@@ -1781,7 +1781,7 @@ ofColor ofxTimeline::getColorAtSecond(string trackName, float second){
 	return getColorAtMillis(trackName, second*1000);
 }
 
-ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long millis){
+ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long long millis){
 	if(!hasTrack(trackName)){
 	   ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
 		return ofColor(0,0,0);
@@ -1949,7 +1949,7 @@ string ofxTimeline::formatTime(float seconds){
     return timecode.timecodeForSeconds(seconds);
 }
 
-string ofxTimeline::formatTime(unsigned long millis){
+string ofxTimeline::formatTime(unsigned long long millis){
     return timecode.timecodeForMillis(millis);
 }
 
@@ -1974,7 +1974,7 @@ string ofxTimeline::confirmedUniqueName(string name){
 
 
 
-void ofxTimeline::setDragTimeOffset(unsigned long millisecondOffset){
+void ofxTimeline::setDragTimeOffset(unsigned long long millisecondOffset){
 
 	dragMillsecondOffset = millisecondOffset;
 

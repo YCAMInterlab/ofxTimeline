@@ -174,7 +174,7 @@ void ofxTLLFO::draw(){
 	ofPopStyle();
 }
 
-float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end, unsigned long sampleTime){
+float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end, unsigned long long sampleTime){
 	ofxTLLFOKey* prevKey = (ofxTLLFOKey*)start;
 //	prevKey->samplePoint = (1./prevKey->frequency)*(prevKey->phaseShift + prevKey->time + sampleTime );
 	
@@ -236,7 +236,7 @@ float ofxTLLFO::interpolateValueForKeys(ofxTLKeyframe* start, ofxTLKeyframe* end
 }
 
 //the beating heart
-float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey){
+float ofxTLLFO::evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long long sampleTime, bool firstKey){
     if(firstKey){
         return ofMap(defaultValue, valueRange.min, valueRange.max, 0, 1.0);
     }

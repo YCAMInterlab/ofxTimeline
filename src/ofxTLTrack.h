@@ -71,7 +71,7 @@ class ofxTLTrack
 	virtual void play();
 	virtual void stop();
 	virtual bool getIsPlaying();
-	unsigned long currentTrackTime();
+	unsigned long long currentTrackTime();
 
     //returns the screenspace position of the elements bounds, not including header and footer
 	virtual ofRectangle getDrawRect();
@@ -125,10 +125,10 @@ class ofxTLTrack
 	
 	//returns the bounds at which something interesting happens on this track
 	//used for finding min/max times on a timeline
-	virtual unsigned long getEarliestTime(){ return LONG_MAX; };
-	virtual unsigned long getLatestTime(){ return 0; };
-	virtual unsigned long getEarliestSelectedTime(){ return LONG_MAX; };
-	virtual unsigned long getLatestSelectedTime(){ return 0; };
+	virtual unsigned long long getEarliestTime(){ return LONG_MAX; };
+	virtual unsigned long long getLatestTime(){ return 0; };
+	virtual unsigned long long getEarliestSelectedTime(){ return LONG_MAX; };
+	virtual unsigned long long getLatestSelectedTime(){ return 0; };
 	
     //returns the number of selected items
     //this used to determine two things:
@@ -155,7 +155,7 @@ class ofxTLTrack
 	virtual void clear(){};
 	    
 	//add any points (in screenspace x) that should be snapped to
-	virtual void getSnappingPoints(std::set<unsigned long>& points){};
+	virtual void getSnappingPoints(std::set<unsigned long long>& points){};
 	
 	ofxTimeline* getTimeline();
 	//set by the timeline it's self, no need to call this yourself
@@ -209,8 +209,8 @@ class ofxTLTrack
 	bool createdByTimeline;
 
 	//will be our internal time when playing solo, otherwise timeline time
-	unsigned long playbackStartTime;
-	unsigned long currentTime;
+	unsigned long long playbackStartTime;
+	unsigned long long currentTime;
 	bool isPlaying;
 	void checkLoop();
 	

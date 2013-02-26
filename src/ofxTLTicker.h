@@ -37,7 +37,7 @@
 
 typedef struct{
 	float screenX;
-    unsigned long millis;
+    unsigned long long millis;
 	int weight;
 } ofxTLBPMPoint;
 
@@ -60,10 +60,10 @@ class ofxTLTicker : public ofxTLTrack
 	virtual float getBPM();
 	virtual void setBPM(float bpm);
     
-	virtual void getSnappingPoints(set<unsigned long>& points);
+	virtual void getSnappingPoints(set<unsigned long long>& points);
 	virtual bool getDrawBPMGrid();
 	virtual void setDrawBPMGrid(bool drawGrid);
-	virtual void setHoverTime(unsigned long millis);
+	virtual void setHoverTime(unsigned long long millis);
 	
   protected:
 	void updateTimelinePosition();
@@ -71,7 +71,7 @@ class ofxTLTicker : public ofxTLTrack
 
 	ofRectangle totalDrawRect;
 	vector<ofxTLBPMPoint> bpmScreenPoints;
-    unsigned long hoverTime;
+    unsigned long long hoverTime;
 	bool hasBPM;
 	float bpm;
 	bool drawBPMGrid;

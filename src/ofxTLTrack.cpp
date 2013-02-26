@@ -149,7 +149,7 @@ void ofxTLTrack::_draw(){
 	viewIsDirty = false;
 }
 
-unsigned long ofxTLTrack::currentTrackTime(){
+unsigned long long ofxTLTrack::currentTrackTime(){
 	if(isPlaying){
 		currentTime = timeline->getTimer().getAppTimeMillis() - playbackStartTime;
 		checkLoop();

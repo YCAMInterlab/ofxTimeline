@@ -149,7 +149,7 @@ bool ofxTLSwitches::isOn(){
 }
 
 bool ofxTLSwitches::isOnAtPercent(float percent){
-    unsigned long millis = percent*timeline->getDurationInMilliseconds();
+    unsigned long long millis = percent*timeline->getDurationInMilliseconds();
     return isOnAtMillis(millis);
 }
 
@@ -385,7 +385,7 @@ void ofxTLSwitches::regionSelected(ofLongRange timeRange, ofRange valueRange){
     }
 }
 
-void ofxTLSwitches::getSnappingPoints(set<unsigned long>& points){
+void ofxTLSwitches::getSnappingPoints(set<unsigned long long>& points){
 	for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
 		if (isKeyframeIsInBounds(switchKey) && !isKeyframeSelected(switchKey) &&

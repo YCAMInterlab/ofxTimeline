@@ -40,8 +40,8 @@
 class ofxTLKeyframe {
   public:
 	ofVec2f screenPosition; // cached screen position
-	unsigned long previousTime; //for preventing overlap conflicts
-    unsigned long time; //in millis
+	unsigned long long previousTime; //for preventing overlap conflicts
+    unsigned long long time; //in millis
     float value; //normalized
     long grabTimeOffset;
     float grabValueOffset;
@@ -64,7 +64,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	virtual void keyPressed(ofKeyEventArgs& args);
 
-	virtual void getSnappingPoints(set<unsigned long>& points);
+	virtual void getSnappingPoints(set<unsigned long long>& points);
 	
 	virtual void save();
 	virtual void load();
@@ -73,8 +73,8 @@ class ofxTLKeyframes : public ofxTLTrack
 
 	virtual void addKeyframe();
 	virtual void addKeyframe(float value);
-	virtual void addKeyframeAtMillis(unsigned long millis);
-	virtual void addKeyframeAtMillis(float value, unsigned long millis);
+	virtual void addKeyframeAtMillis(unsigned long long millis);
+	virtual void addKeyframeAtMillis(float value, unsigned long long millis);
 	
     vector<ofxTLKeyframe*>& getKeyframes();
     
@@ -87,10 +87,10 @@ class ofxTLKeyframes : public ofxTLTrack
     
     virtual int getSelectedItemCount();
     
-	virtual unsigned long getEarliestTime();
-	virtual unsigned long getLatestTime();
-	virtual unsigned long getEarliestSelectedTime();
-	virtual unsigned long getLatestSelectedTime();
+	virtual unsigned long long getEarliestTime();
+	virtual unsigned long long getLatestTime();
+	virtual unsigned long long getEarliestSelectedTime();
+	virtual unsigned long long getLatestSelectedTime();
 
     //undo
     virtual string getXMLRepresentation();
@@ -132,15 +132,15 @@ class ofxTLKeyframes : public ofxTLTrack
 	
 	virtual float sampleAtPercent(float percent); //less accurate than millis
     virtual float sampleAtTime(long sampleTime);
-	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey = false);
+	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime);
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long long sampleTime, bool firstKey = false);
 
     ofRange valueRange;
 	float defaultValue;
 	
 	//keep these stored for efficient search through the keyframe array
 	int lastKeyframeIndex;
-	unsigned long lastSampleTime;
+	unsigned long long lastSampleTime;
 	
     virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);
 	bool isKeyframeIsInBounds(ofxTLKeyframe* key);
@@ -162,10 +162,10 @@ class ofxTLKeyframes : public ofxTLTrack
 	int selectedKeyframeIndex;
 	bool keysAreDraggable;
 	bool keysAreStretchable;
-	unsigned long stretchAnchor;
-	unsigned long stretchSelectPoint;
+	unsigned long long stretchAnchor;
+	unsigned long long stretchSelectPoint;
 	
-	virtual void setKeyframeTime(ofxTLKeyframe* key, unsigned long newTime);
+	virtual void setKeyframeTime(ofxTLKeyframe* key, unsigned long long newTime);
 	virtual void updateKeyframeSort();
 	virtual void updateStretchOffsets(ofVec2f screenpoint, long grabMillis);
 	virtual void updateDragOffsets(ofVec2f screenpoint, long grabMillis);

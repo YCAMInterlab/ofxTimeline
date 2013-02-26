@@ -38,7 +38,7 @@
 
 typedef struct {
 	float value;
-	unsigned long time;
+	unsigned long long time;
 } ClickPoint;
 
 class ofxTLEmptyTrack : public ofxTLTrack {
@@ -76,7 +76,7 @@ class ofxTLEmptyTrack : public ofxTLTrack {
 
 	//if your track has some selectable elements you can interface with snapping
 	//and selection/unselection here
-    virtual void getSnappingPoints(set<unsigned long>& points);
+    virtual void getSnappingPoints(set<unsigned long long>& points);
 	
 	//time range contains MIN and MAX time in milliseconds
 	//valueRange is 0 at the bottom of the track, and 1 at the top

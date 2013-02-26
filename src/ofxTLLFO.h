@@ -92,8 +92,8 @@ class ofxTLLFO : public ofxTLKeyframes {
 
   protected:
 	
-	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime);
-	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long sampleTime, bool firstKey = false);
+	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime);
+	virtual float evaluateKeyframeAtTime(ofxTLKeyframe* key, unsigned long long sampleTime, bool firstKey = false);
 
 	
 	virtual ofxTLKeyframe* keyframeAtScreenpoint(ofVec2f p);

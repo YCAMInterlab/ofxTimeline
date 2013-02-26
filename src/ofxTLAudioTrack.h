@@ -114,7 +114,7 @@ class ofxTLAudioTrack : public ofxTLTrack
 	ofRange computedZoomBounds;
 	float maxBinReceived;
     float dampening;
-    
+
     void generateEnvelope(int size);
     int averageSize;
     bool useEnvelope;

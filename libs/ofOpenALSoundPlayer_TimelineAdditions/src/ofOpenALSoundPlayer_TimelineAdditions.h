@@ -2,7 +2,7 @@
 
 #include "ofConstants.h"
 
-
+#include "ofMain.h"
 #include "ofBaseSoundPlayer.h"
 #include "ofEvents.h"
 #include "ofThread.h"
@@ -191,7 +191,11 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		double stream_scale;
 		vector<short> buffer;
 		vector<float> fftAuxBuffer;
-
+        float curMaxAverage;
+    
 		bool stream_end;
+    
+        bool timeSet;
+    float justSetTime;
 };
 

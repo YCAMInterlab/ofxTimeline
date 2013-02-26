@@ -80,7 +80,7 @@ ofColor ofxTLEmptyKeyframes::getCurrentColor(){
 	return getColorAtTime(timeline->getCurrentTimeMillis());
 }
 
-ofColor ofxTLEmptyKeyframes::getColorAtTime(unsigned long sampleTime){
+ofColor ofxTLEmptyKeyframes::getColorAtTime(unsigned long long sampleTime){
 	
 	//return black if there are no frames
 	if(keyframes.size() == 0){

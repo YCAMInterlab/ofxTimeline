@@ -154,7 +154,7 @@ void ofxTLTicker::draw(){
 	ofPopStyle();
 }
 
-void ofxTLTicker::setHoverTime(unsigned long millis){
+void ofxTLTicker::setHoverTime(unsigned long long millis){
     hoverTime = millis;
 }
 
@@ -170,7 +170,7 @@ float ofxTLTicker::getBPM(){
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
-void ofxTLTicker::getSnappingPoints(set<unsigned long>& points){
+void ofxTLTicker::getSnappingPoints(set<unsigned long long>& points){
 
 	if(!drawBPMGrid){
 		updateBPMPoints();
@@ -186,9 +186,9 @@ void ofxTLTicker::getSnappingPoints(set<unsigned long>& points){
 void ofxTLTicker::refreshTickMarks(){
 	tickerMarks.clear();
 
-    unsigned long startMillis = zoomBounds.min * timeline->getDurationInMilliseconds();
-    unsigned long endMillis = zoomBounds.max * timeline->getDurationInMilliseconds();
-    unsigned long durationInview = endMillis-startMillis;
+    unsigned long long startMillis = zoomBounds.min * timeline->getDurationInMilliseconds();
+    unsigned long long endMillis = zoomBounds.max * timeline->getDurationInMilliseconds();
+    unsigned long long durationInview = endMillis-startMillis;
     float millisPerPixel = durationInview / bounds.width;
 	
 	//expand to days
@@ -218,13 +218,13 @@ void ofxTLTicker::refreshTickMarks(){
 		showMinutes = true;
 	}
 	
-	unsigned long lastMillis = screenXToMillis(bounds.x);
+	unsigned long long lastMillis = screenXToMillis(bounds.x);
 	int lastSecond = lastMillis/1000;
 	int lastMinute = lastSecond/60;
 	int lastHour = lastMinute/60;
 	for(int i = bounds.getMinX()+step; i < bounds.getMaxX(); i+=step){
 		int height = 0;
-		unsigned long currentMillis = screenXToMillis(i);
+		unsigned long long currentMillis = screenXToMillis(i);
 		int currentSecond = currentMillis/1000;
 		int currentMinute = currentSecond/60;
 		int currentHour = currentMinute/60;
