@@ -206,6 +206,8 @@ void ofxTimeline::setWorkingFolder(string folderPath){
 	inoutTrack->load();
     zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
 	zoomer->load();
+	
+	currentPage->loadTrackPositions();
 }
 
 string ofxTimeline::getWorkingFolder(){
