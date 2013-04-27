@@ -1,9 +1,11 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #pragma once
@@ -39,7 +37,7 @@
 
 typedef struct{
 	float screenX;
-    long millis;
+    unsigned long long millis;
 	int weight;
 } ofxTLBPMPoint;
 
@@ -62,10 +60,10 @@ class ofxTLTicker : public ofxTLTrack
 	virtual float getBPM();
 	virtual void setBPM(float bpm);
     
-	virtual void getSnappingPoints(set<long>& points);
+	virtual void getSnappingPoints(set<unsigned long long>& points);
 	virtual bool getDrawBPMGrid();
 	virtual void setDrawBPMGrid(bool drawGrid);
-	virtual void setHoverTime(long millis);
+	virtual void setHoverTime(unsigned long long millis);
 	
   protected:
 	void updateTimelinePosition();
@@ -73,12 +71,13 @@ class ofxTLTicker : public ofxTLTrack
 
 	ofRectangle totalDrawRect;
 	vector<ofxTLBPMPoint> bpmScreenPoints;
-    long hoverTime;
+    unsigned long long hoverTime;
 	bool hasBPM;
 	float bpm;
 	bool drawBPMGrid;
 	bool dragging;
-	
+	bool playOnMouseReleased;
+    
 	ofPath tickerMarks;
 	void refreshTickMarks();
 };

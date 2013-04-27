@@ -1,7 +1,9 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase 
  *
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #pragma once
@@ -60,6 +58,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	virtual void setTrack(ofxTLTrack* track);
 	virtual ofxTLTrack* getTrack();
     
+	virtual void setFooterHeight(float height);
 	virtual void collapseTrack();
     
 	virtual ofRectangle getFooterRect();
@@ -72,6 +71,7 @@ class ofxTLTrackHeader : public ofxTLTrack
 	ofxTLTrack* track;
 	ofxTextInputField nameField;
 	
+	float footerHeight;
 	void recalculateFooter();
 	
 	ofRectangle footerRect;

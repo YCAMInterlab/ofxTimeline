@@ -1,3 +1,10 @@
+/**
+ * Multi timeline exmaple
+ * ofxTimeline
+ *
+ * Example of how to create simple interactions between multiple timelines
+ */
+
 #include "ofMain.h"
 #include "testApp.h"
 #include "ofAppGlutWindow.h"

@@ -29,6 +29,11 @@ apps/*/*/obj
 *.opensdf
 *.exp
 *.suo
+*.ilk
+*.pdb
+*.suo
+
+ipch/
 
 #mac files
 .DS_Store

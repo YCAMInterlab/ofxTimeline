@@ -1,10 +1,34 @@
-//
-//  ofxTLCurves.cpp
-//  KeyframeSelection
-//
-//  Created by James George on 7/25/12.
-//  Copyright (c) 2012 FlightPhase. All rights reserved.
-//
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 #include "ofxTLCurves.h"
 #include "ofxTimeline.h"
@@ -15,7 +39,7 @@ ofxTLCurves::ofxTLCurves(){
 	drawingEasingWindow = false;
 }
 
-float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long sampleTime){
+float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime){
 	ofxTLTweenKeyframe* tweenKeyStart = (ofxTLTweenKeyframe*)start;
 	ofxTLTweenKeyframe* tweenKeyEnd = (ofxTLTweenKeyframe*)end;
 	return ofxTween::map(sampleTime, tweenKeyStart->time, tweenKeyEnd->time,
@@ -157,9 +181,15 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
-    easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth),
-                                   MIN(args.y, ofGetHeight() - (easingBoxHeight*easingFunctions.size() + easingBoxHeight*easingTypes.size())));
+	float easingBoxHeight = tweenBoxHeight*easingFunctions.size();
+    easingWindowPosition = ofVec2f(MIN(args.x, bounds.width - easingBoxWidth*2),
+                                   MIN(args.y, timeline->getBottomLeft().y - easingBoxHeight));
     
+	//keep on screen at all costs.
+
+	easingWindowPosition.x = ofClamp(easingWindowPosition.x, timeline->getDrawRect().x, ofGetWidth()-easingBoxWidth*2);
+	easingWindowPosition.y = ofClamp(easingWindowPosition.y, timeline->getDrawRect().y, ofGetHeight()-easingBoxHeight);
+
     drawingEasingWindow = true;
     timeline->presentedModalContent(this);
 }

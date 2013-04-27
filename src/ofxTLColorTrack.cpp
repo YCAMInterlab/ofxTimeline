@@ -1,10 +1,34 @@
-//
-//  ofxTLColorTrack.cpp
-//  Duration
-//
-//  Created by Jim on 8/31/12.
-//
-//
+/**
+ * ofxTimeline
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ *
+ */
 
 #include "ofxTLColorTrack.h"
 #include "ofxTimeline.h"
@@ -22,6 +46,10 @@ ofxTLColorTrack::ofxTLColorTrack()
 }
 
 void ofxTLColorTrack::draw(){
+	
+	if(bounds.height == 0){
+		return;
+	}
 	
 	if(viewIsDirty || shouldRecomputePreviews){
 		updatePreviewPalette();
@@ -47,7 +75,13 @@ void ofxTLColorTrack::draw(){
 	}
 	
 	for(int i = 0; i < keyframes.size(); i++){
+		
+		if(!isKeyframeIsInBounds(keyframes[i])){
+			continue;
+		}
+		
 		float screenX = millisToScreenX(keyframes[i]->time);
+		
 		ofPoint a = ofPoint(screenX-10,bounds.y);
 		ofPoint b = ofPoint(screenX+10,bounds.y);
 		ofPoint c = ofPoint(screenX,bounds.y+10);
@@ -108,7 +142,7 @@ void ofxTLColorTrack::drawModalContent(){
 		
 		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
-		if(colorWindow.getMaxY()+25 > ofGetHeight()){
+		if(colorWindow.getMaxY()+25 > timeline->getBottomLeft().y){
 			colorWindow.y = bounds.y - 25 - colorWindow.height;
 		}
 		if(colorWindow.getMaxX() > ofGetWidth()){
@@ -173,7 +207,9 @@ bool ofxTLColorTrack::loadColorPalette(string imagePath){
 }
 
 ofColor ofxTLColorTrack::getColor(){
-	return getColorAtMillis(timeline->getCurrentTimeMillis());
+	//play solo change
+//	return getColorAtMillis(timeline->getCurrentTimeMillis());
+	return getColorAtMillis(currentTrackTime());
 }
 
 ofColor ofxTLColorTrack::getColorAtSecond(float second){
@@ -184,17 +220,17 @@ ofColor ofxTLColorTrack::getColorAtPosition(float pos){
 	return getColorAtMillis(pos * timeline->getDurationInMilliseconds());
 }
 
-ofColor ofxTLColorTrack::getColorAtMillis(unsigned long millis){
+ofColor ofxTLColorTrack::getColorAtMillis(unsigned long long millis){
 	if(keyframes.size() == 0){
 		return defaultColor;
 	}
 	
-	if(millis < keyframes[0]->time){
+	if(millis <= keyframes[0]->time){
 		//cout << "getting color before first key " << ((ofxTLColorSample*)keyframes[0])->color << endl;
 		return ((ofxTLColorSample*)keyframes[0])->color;
 	}
 	
-	if(millis > keyframes[keyframes.size()-1]->time){
+	if(millis >= keyframes[keyframes.size()-1]->time){
 		return ((ofxTLColorSample*)keyframes[keyframes.size()-1])->color;
 	}
 	
@@ -393,6 +429,7 @@ void ofxTLColorTrack::setNextAndPreviousSamples(){
 		}
 	}
 }
+
 
 ofxTLKeyframe* ofxTLColorTrack::keyframeAtScreenpoint(ofVec2f p){
 	if(isHovering()){

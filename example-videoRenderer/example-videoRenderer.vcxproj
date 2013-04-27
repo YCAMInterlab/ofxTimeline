@@ -57,7 +57,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTimeline\libs\kiss;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\lib;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;..\..\..\addons\ofxTimeline\libs\openal;..\..\..\addons\ofxTimeline\libs\openal\include;..\..\..\addons\ofxTimeline\libs\openal\include\AL;..\..\..\addons\ofxTimeline\libs\openal\libs;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MT;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MTDLL;..\..\..\addons\ofxTimeline\libs\sndfile;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxTimeline\libs\sndfile\lib;..\..\..\addons\ofxTimeline\libs\sndfile\lib\vs2010;..\..\..\addons\ofxTimeline\libs\sndfile\redist;..\..\..\addons\ofxTimeline\libs\vorbis;..\..\..\addons\ofxTimeline\libs\vorbis\lib;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -67,10 +67,13 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);EFX-Util.lib;OpenAL32.lib;libsndfile-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MTDLL;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MT;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010;..\..\..\addons\ofxTimeline\libs\sndfile\lib\vs2010</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" &amp; xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -80,7 +83,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat />
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTimeline\libs\kiss;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\lib;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions;..\..\..\addons\ofxTimeline\libs\sndfile;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxTimeline\libs\sndfile\lib;..\..\..\addons\ofxTimeline\libs\sndfile\lib\win32;..\..\..\addons\ofxTimeline\libs\vorbis;..\..\..\addons\ofxTimeline\libs\vorbis\lib;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxMSATimer\libs;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\libs;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTextInputField\libs;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimecode\libs;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTimeline\libs;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxTimeline\libs\kiss;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\lib;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;..\..\..\addons\ofxTimeline\libs\openal;..\..\..\addons\ofxTimeline\libs\openal\include;..\..\..\addons\ofxTimeline\libs\openal\include\AL;..\..\..\addons\ofxTimeline\libs\openal\libs;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MT;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MTDLL;..\..\..\addons\ofxTimeline\libs\sndfile;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxTimeline\libs\sndfile\lib;..\..\..\addons\ofxTimeline\libs\sndfile\lib\vs2010;..\..\..\addons\ofxTimeline\libs\sndfile\redist;..\..\..\addons\ofxTimeline\libs\vorbis;..\..\..\addons\ofxTimeline\libs\vorbis\lib;..\..\..\addons\ofxTween\libs;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
@@ -92,29 +95,41 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies);EFX-Util.lib;OpenAL32.lib;libsndfile-1.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MTDLL;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010\EFX-Util_MT;..\..\..\addons\ofxTimeline\libs\openal\libs\vs2010;..\..\..\addons\ofxTimeline\libs\sndfile\lib\vs2010</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" &amp; xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\testApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_linux.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_mac.mm" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_win.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.mm" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLAudioTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCameraTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequenceFrame.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.cpp" />
@@ -124,6 +139,8 @@
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoThumb.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoTrack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\libs\kiss\src\kiss_fft.c" />
+    <ClCompile Include="..\..\..\addons\ofxTimeline\libs\kiss\src\kiss_fftr.c" />
     <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasing.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBack.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBounce.cpp" />
@@ -143,17 +160,23 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h" />
     <ClInclude Include="src\testApp.h" />
     <ClInclude Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.h" />
     <ClInclude Include="..\..\..\addons\ofxRange\src\ofRange.h" />
     <ClInclude Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.h" />
     <ClInclude Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLAudioTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCameraTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColorTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEvents.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageSequence.h" />
@@ -161,16 +184,26 @@
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLImageTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLInOut.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPageTabs.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLSwitches.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTicker.h" />
-    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTimeController.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrackHeader.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoThumb.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLVideoTrack.h" />
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\include\kiss_fft.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\include\kiss_fftr.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\src\_kiss_fft_guts.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\al.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\alc.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\efx-creative.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\EFX-Util.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\efx.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\xram.h" />
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\sndfile\include\sndfile.h" />
     <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\easing_terms_of_use.html" />
     <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasing.h" />
     <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\ofxEasingBack.h" />
