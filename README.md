@@ -1,7 +1,3 @@
-# This fork will not always be up to date
-
-Please watch https://github.com/YCAMInterlab/ofxTimeline for latest developments
-
 # ofxTimeline #
 ![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
 
