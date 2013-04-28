@@ -1,20 +1,20 @@
 <positions>
     <element name="Colors">
         <x>0.000000000</x>
-        <y>352.000000000</y>
+        <y>267.000000000</y>
         <width>1024.000000000</width>
-        <height>30.000000000</height>
+        <height>20.000000000</height>
     </element>
     <element name="Rotate X">
         <x>0.000000000</x>
         <y>52.000000000</y>
         <width>1024.000000000</width>
-        <height>133.000000000</height>
+        <height>86.000000000</height>
     </element>
     <element name="Rotate Y">
         <x>0.000000000</x>
-        <y>209.000000000</y>
+        <y>162.000000000</y>
         <width>1024.000000000</width>
-        <height>119.000000000</height>
+        <height>81.000000000</height>
     </element>
 </positions>

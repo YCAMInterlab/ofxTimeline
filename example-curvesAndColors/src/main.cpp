@@ -1,3 +1,10 @@
+/**
+ * Curves demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create a simple curves and color change
+ */
+
 #include "ofMain.h"
 #include "testApp.h"
 #include "ofAppGlutWindow.h"

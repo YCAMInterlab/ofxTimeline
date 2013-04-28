@@ -1,3 +1,11 @@
+/**
+ * Video Renderer Demo
+ * ofxTimeline
+ *
+ * Shows how to use ofxTimeline to create video effects with a shader
+ * that can be rendered to an image sequence
+ */
+
 #include "testApp.h"
 #define BUTTON_HEIGHT 30
 
@@ -11,7 +19,8 @@ void testApp::setup(){
     //set the timeline up with some default values
 	timeline.setup();
     timeline.setFrameRate(30);
-	timeline.setDurationInFrames(90);
+    //set big initial duration, longer than the video needs to be
+	timeline.setDurationInFrames(20000);
 	timeline.setLoopType(OF_LOOP_NORMAL);
     
     //add keyframes for  our shader
@@ -19,7 +28,6 @@ void testApp::setup(){
     timeline.addCurves("contrast", ofRange(.5, 2.0), 1.0);
     timeline.addCurves("saturation", ofRange(0.0, 1.5), 1.0);
     timeline.addSwitches("invert");
-	
 	
     loaded = false;
 	rendering = false;
@@ -188,13 +196,6 @@ void testApp::renderCurrentFrame(){
 }
 
 void testApp::keyPressed(int key){
-	if(key == ' ' && loaded){
-        timeline.togglePlay();
-	}
-    
-	if(key == 'h'){
-		timeline.toggleShow();
-	}
     
     if(key == 'c'){
         //reload shader

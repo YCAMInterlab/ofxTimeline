@@ -22,13 +22,28 @@
     <ClCompile Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.cpp">
       <Filter>addons\ofxTimecode\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_linux.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_mac.mm">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys_impl_win.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.mm">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLAudioTrack.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCameraTrack.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.cpp">
@@ -38,6 +53,12 @@
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLFlags.cpp">
@@ -56,6 +77,9 @@
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.cpp">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.cpp">
@@ -84,6 +108,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\libs\kiss\src\kiss_fft.c">
+      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTimeline\libs\kiss\src\kiss_fftr.c">
+      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxTween\src\Easings\ofxEasing.cpp">
       <Filter>addons\ofxTween\src\Easings</Filter>
@@ -136,6 +166,9 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
+    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
+      <Filter>addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -173,6 +206,36 @@
     </Filter>
     <Filter Include="addons\ofxTimeline\src">
       <UniqueIdentifier>{ac132e01-0f0d-5ff9-8d64-8dada9b5aa38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs">
+      <UniqueIdentifier>{333c4390-0b4e-eaaa-5cfe-0663c4d2e613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\kiss">
+      <UniqueIdentifier>{93d28ed9-a2ca-418a-4538-d3328b5a212b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\kiss\include">
+      <UniqueIdentifier>{239f8b47-5d3c-673b-95de-5e702a695e8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\kiss\src">
+      <UniqueIdentifier>{5451193a-c0cf-9361-b431-0f7f4f2d31d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions">
+      <UniqueIdentifier>{012014bf-0161-a228-4c75-8d280092ed20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\openal">
+      <UniqueIdentifier>{7d44a927-3ef3-d18b-0302-52624b4bc08e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\openal\include">
+      <UniqueIdentifier>{994a9be4-6199-2707-46e1-49bcce2417f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\openal\include\AL">
+      <UniqueIdentifier>{8b1e05c6-fec0-22b7-592b-3de20a7ffb14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\sndfile">
+      <UniqueIdentifier>{944e9321-a6f2-45b7-407b-559efee96ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTimeline\libs\sndfile\include">
+      <UniqueIdentifier>{4ed1f364-a201-a241-2587-22239fe8751e}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxTween">
       <UniqueIdentifier>{8a8810e8-a79d-7a1d-2f0a-7203302f4656}</UniqueIdentifier>
@@ -215,10 +278,19 @@
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxHotKeys.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxRemoveCocoaMenu.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTimeline.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLAudioTrack.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLBangs.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCameraTrack.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLColors.h">
@@ -228,6 +300,12 @@
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLCurves.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyKeyframes.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEmptyTrack.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLEvents.h">
@@ -251,6 +329,9 @@
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLKeyframes.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLLFO.h">
+      <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLPage.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
@@ -261,9 +342,6 @@
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTicker.h">
-      <Filter>addons\ofxTimeline\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTimeController.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLTrack.h">
@@ -280,6 +358,36 @@
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTimeline\src\ofxTLZoomer.h">
       <Filter>addons\ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\include\kiss_fft.h">
+      <Filter>addons\ofxTimeline\libs\kiss\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\include\kiss_fftr.h">
+      <Filter>addons\ofxTimeline\libs\kiss\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\kiss\src\_kiss_fft_guts.h">
+      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\al.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\alc.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\efx-creative.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\EFX-Util.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\efx.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\openal\include\AL\xram.h">
+      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTimeline\libs\sndfile\include\sndfile.h">
+      <Filter>addons\ofxTimeline\libs\sndfile\include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxTween\src\Easings\easing_terms_of_use.html">
       <Filter>addons\ofxTween\src\Easings</Filter>
@@ -328,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
       <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h">
+      <Filter>addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

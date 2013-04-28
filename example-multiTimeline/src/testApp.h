@@ -1,3 +1,10 @@
+/**
+ * Multi timeline exmaple
+ * ofxTimeline
+ *
+ * Examples of how to create simple interactions between multiple timelines
+ */
+
 #pragma once
 
 #include "ofMain.h"

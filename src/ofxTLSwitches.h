@@ -1,9 +1,11 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #pragma once 
@@ -55,6 +53,7 @@ class ofxTLSwitches : public ofxTLKeyframes {
 
     virtual void draw();
 
+	virtual bool isOn();
     virtual bool isOnAtMillis(long millis);
     virtual bool isOnAtPercent(float percent);
     
@@ -63,7 +62,7 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual void mouseReleased(ofMouseEventArgs& args, long millis);
     virtual void mouseMoved(ofMouseEventArgs& args, long millis);
     
-    virtual void getSnappingPoints(set<long>& points);
+    virtual void getSnappingPoints(set<unsigned long long>& points);
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 
     virtual void unselectAll();

@@ -1,9 +1,11 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
+ * openFrameworks graphical timeline addon
+ *
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * http://github.com/obviousjim + http://github.com/flightphase
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,10 +28,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLTicker.h"
@@ -40,12 +38,17 @@ ofxTLTicker::ofxTLTicker() {
     hasBPM = false;
 	drawBPMGrid = false;
 	hoverTime = 0;
+    playOnMouseReleased = false;
 }
 
 ofxTLTicker::~ofxTLTicker(){
 }
 
 void ofxTLTicker::draw(){
+	
+	if(bounds.height == 0){
+		return;
+	}
 	
 	ofPushStyle();
 	
@@ -64,7 +67,7 @@ void ofxTLTicker::draw(){
 	
 	tickerMarks.setStrokeColor( ofColor(200, 180, 40) );
 	tickerMarks.setStrokeWidth(1);
-	tickerMarks.draw(bounds.x, bounds.y);
+	tickerMarks.draw(0, bounds.y);
 		
     if(drawBPMGrid){
 		if(viewIsDirty){
@@ -86,11 +89,19 @@ void ofxTLTicker::draw(){
 	if(hover){
 		//draw background rect
 		ofSetColor(timeline->getColors().backgroundColor);
-        float screenX = millisToScreenX(hoverTime);
+        float screenX = ofClamp(millisToScreenX(hoverTime), bounds.getMinX(), bounds.getMaxX());
 		text = timeline->formatTime(hoverTime);
 		textW = timeline->getFont().stringWidth(text)+3;
         if(bounds.height > 2){
-            int previewTimecodeX = ofClamp(screenX+5, bounds.x, bounds.x+bounds.width-textW-5);
+//            int previewTimecodeX = ofClamp(screenX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
+			int previewTimecodeX;
+			if (timeline->getIsFrameBased()) {
+				text = ofToString( timeline->getTimecode().frameForMillis(hoverTime) );
+			}
+			else{
+				text = timeline->formatTime(hoverTime);
+			}
+			previewTimecodeX = ofClamp(screenX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
             ofFill();
             ofRect(previewTimecodeX-5, bounds.y+textH, textW, textH);		
             //draw playhead line
@@ -105,19 +116,19 @@ void ofxTLTicker::draw(){
 	}
 	
 	//draw current frame
-    //TIMECODE
     int currentFrameX;
     if (timeline->getIsFrameBased()) {
         text = ofToString(timeline->getCurrentFrame());
-        currentFrameX = screenXForIndex(timeline->getCurrentFrame());
+        currentFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(timeline->getCurrentFrame()));
     }
     else{
         text = timeline->formatTime(timeline->getCurrentTime());
         currentFrameX = screenXForTime(timeline->getCurrentTime());
     }
-    
+    currentFrameX = ofClamp(currentFrameX, bounds.getMinX(), bounds.getMaxX());
+							
     if(bounds.height > 2){
-        int timeCodeX = ofClamp(currentFrameX+5, bounds.x, bounds.x+bounds.width-textW-5);
+        int timeCodeX = ofClamp(currentFrameX+5, bounds.getMinX(), bounds.getMaxX()-textW-5);
         ofSetColor(timeline->getColors().backgroundColor);
         ofFill();
         ofRect(timeCodeX-5, bounds.y, textW, textH);
@@ -143,7 +154,7 @@ void ofxTLTicker::draw(){
 	ofPopStyle();
 }
 
-void ofxTLTicker::setHoverTime(long millis){
+void ofxTLTicker::setHoverTime(unsigned long long millis){
     hoverTime = millis;
 }
 
@@ -159,7 +170,7 @@ float ofxTLTicker::getBPM(){
 //250 bpm = 250/60 beats per second
 //1 beat = 1/(250/60) seconds
 //1/2 beat = (1/(250/60))/2 seconds = 0.12 seconds
-void ofxTLTicker::getSnappingPoints(set<long>& points){
+void ofxTLTicker::getSnappingPoints(set<unsigned long long>& points){
 
 	if(!drawBPMGrid){
 		updateBPMPoints();
@@ -168,14 +179,16 @@ void ofxTLTicker::getSnappingPoints(set<long>& points){
 	for(int i = 0; i < bpmScreenPoints.size(); i++){
 		points.insert(bpmScreenPoints[i].millis);
 	}
+	
+	points.insert(timeline->getCurrentTimeMillis());
 }
 
 void ofxTLTicker::refreshTickMarks(){
 	tickerMarks.clear();
 
-    unsigned long startMillis = zoomBounds.min * timeline->getDurationInMilliseconds();
-    unsigned long endMillis = zoomBounds.max * timeline->getDurationInMilliseconds();
-    unsigned long durationInview = endMillis-startMillis;
+    unsigned long long startMillis = zoomBounds.min * timeline->getDurationInMilliseconds();
+    unsigned long long endMillis = zoomBounds.max * timeline->getDurationInMilliseconds();
+    unsigned long long durationInview = endMillis-startMillis;
     float millisPerPixel = durationInview / bounds.width;
 	
 	//expand to days
@@ -205,13 +218,13 @@ void ofxTLTicker::refreshTickMarks(){
 		showMinutes = true;
 	}
 	
-	unsigned long lastMillis = screenXToMillis(bounds.x);
+	unsigned long long lastMillis = screenXToMillis(bounds.x);
 	int lastSecond = lastMillis/1000;
 	int lastMinute = lastSecond/60;
 	int lastHour = lastMinute/60;
 	for(int i = bounds.getMinX()+step; i < bounds.getMaxX(); i+=step){
 		int height = 0;
-		unsigned long currentMillis = screenXToMillis(i);
+		unsigned long long currentMillis = screenXToMillis(i);
 		int currentSecond = currentMillis/1000;
 		int currentMinute = currentSecond/60;
 		int currentHour = currentMinute/60;
@@ -245,34 +258,7 @@ void ofxTLTicker::refreshTickMarks(){
 			tickerMarks.lineTo(x, bounds.height);
 		}
 	}
-	
-//	//draw ticker marks
-//	ofSetLineWidth(1);
-//	float heightMultiplier = .75;
-//	for(float i = startTime; i <= endTime; i += secondsPerPixel*5){
-//		//float x = ofMap(i, curStartFrame, curEndFrame, totalDrawRect.x, totalDrawRect.x+totalDrawRect.width, true);
-//		float x = screenXForTime(i);
-//		ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-//	}
-//    
-//	//draw regular increments
-//	int bigTickStep;
-//	if(durationInview < 1){ //draw big tick every 100 millis
-//		bigTickStep = .1;
-//	}
-//	else if(durationInview < 60){ // draw big tick every second
-//		bigTickStep = 1;
-//	}
-//	else {
-//		bigTickStep = 60;
-//	}
-//	ofSetLineWidth(3);
-//	heightMultiplier = .5;
-//	for(float i = startTime-fmod(startTime, bigTickStep); i <= endTime; i+=bigTickStep){
-//		float x = screenXForTime(i);
-//		ofLine(x, bounds.y+bounds.height*heightMultiplier, x, bounds.y+bounds.height);
-//	}
-//	
+
 }
 
 //TODO: find a way to make this not happen every frame
@@ -347,9 +333,13 @@ void ofxTLTicker::mouseMoved(ofMouseEventArgs& args){
 }
 
 void ofxTLTicker::mousePressed(ofMouseEventArgs& args){
-	//TODO change playhead position
+
 	dragging = bounds.inside(args.x, args.y);
 	if(dragging){
+        if(timeline->getIsPlaying()){
+            playOnMouseReleased = true;
+            timeline->stop();
+        }
 		updateTimelinePosition();
         ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playheadScrubbed, args);		
@@ -368,8 +358,12 @@ void ofxTLTicker::mouseReleased(ofMouseEventArgs& args){
     if(dragging){
 		ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 		ofNotifyEvent(events().playheadScrubbed, args);
+        if(playOnMouseReleased){
+            timeline->play();
+            playOnMouseReleased = false;
+        }
     }
-	//TODO change playhead position
+
 	dragging = false;
 }
 

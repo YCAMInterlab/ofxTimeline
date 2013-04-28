@@ -1,11 +1,12 @@
 /**
  * ofxTimeline
- *	
- * Copyright (c) 2011 James George
- * http://jamesgeorge.org + http://flightphase.com
- * http://github.com/obviousjim + http://github.com/flightphase 
+ * openFrameworks graphical timeline addon
  *
- * 
+ * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
+ * http://jamesgeorge.org + http://flightphase.com
+ * http://github.com/obviousjim + http://github.com/flightphase
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -27,29 +28,17 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline 
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
  */
 
 #include "ofxTLFlags.h"
 #include "ofxTimeline.h"
 #include "ofxHotKeys.h"
 
-//flag!!
-//ofxTLFlag::~ofxTLFlag(){
-//	if(textField.getIsEnabled()){
-//		textField.disable();
-//	}
-//}
-
 //flagssss
 ofxTLFlags::ofxTLFlags() {
 	enteringText = false;
 	clickedTextField = NULL;
 }
-
 
 void ofxTLFlags::draw(){
 	
@@ -65,16 +54,21 @@ void ofxTLFlags::draw(){
 	ofSetLineWidth(5);
 	for(int i = keyframes.size()-1; i >= 0; i--){
         ofxTLFlag* key = (ofxTLFlag*)keyframes[i];
-		int screenX = millisToScreenX(key->time);
-		ofSetColor(timeline->getColors().backgroundColor);		
-		int textHeight = bounds.y + 10 + ( (20*i) % int(bounds.height) );
-		key->display = ofRectangle(screenX+2.5, textHeight-10, 100, 15);
-		ofRect(key->display);
-        
-		ofSetColor(timeline->getColors().textColor);		
-        key->textField.bounds.x = screenX;
-        key->textField.bounds.y = key->display.y;//-10 accounts for textfield's offset
-        key->textField.draw(); 
+		if(isKeyframeIsInBounds(key)){
+			int screenX = millisToScreenX(key->time);
+			
+			ofSetColor(timeline->getColors().backgroundColor);		
+			int textHeight = bounds.y + 10 + ( (20*i) % int(MAX(bounds.height-15, 15)));
+			key->display = ofRectangle(MIN(screenX+3, bounds.getMaxX() - key->textField.bounds.width),
+									   textHeight-10, 100, 15);
+			ofRect(key->display);
+			
+			ofSetColor(timeline->getColors().textColor);
+			
+			key->textField.bounds.x = key->display.x;
+			key->textField.bounds.y = key->display.y;
+			key->textField.draw();
+		}
 	}
 	ofPopStyle();
 }
@@ -107,13 +101,13 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
         if(!ofGetModifierSelection()){
             timeline->unselectAll();
         }
-		if(ofGetModifierSelection() && clickedTextField->textField.getIsEnabled()){
-			clickedTextField->textField.disable();
+		if(ofGetModifierSelection() && clickedTextField->textField.getIsEditing()){
+			clickedTextField->textField.endEditing();
 		}
 		else{
-			clickedTextField->textField.enable();
+			clickedTextField->textField.beginEditing();
 			enteringText = true;
-			//make sure this 
+			//make sure this key is selected
 			selectKeyframe(clickedTextField);
 		}
         return false;
@@ -121,7 +115,7 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
 	else{
 		if(enteringText && !isHovering()){
 			for(int i = 0; i < selectedKeyframes.size(); i++){
-				((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
+				((ofxTLFlag*)selectedKeyframes[i])->textField.endEditing();
 			}
 			enteringText = false;
 			timeline->dismissedModalContent();
@@ -149,7 +143,7 @@ void ofxTLFlags::mouseReleased(ofMouseEventArgs& args, long millis){
 		//if we clicked outside of the rect, definitely deslect everything
 		if(clickedTextField == NULL && !ofGetModifierSelection()){
 			for(int i = 0; i < selectedKeyframes.size(); i++){
-				((ofxTLFlag*)selectedKeyframes[i])->textField.disable();
+				((ofxTLFlag*)selectedKeyframes[i])->textField.endEditing();
 			}
 			enteringText = false;
 		}
@@ -157,7 +151,7 @@ void ofxTLFlags::mouseReleased(ofMouseEventArgs& args, long millis){
 		else{
 			enteringText = false;
 			for(int i = 0; i < selectedKeyframes.size(); i++){
-				enteringText = enteringText || ((ofxTLFlag*)selectedKeyframes[i])->textField.getIsEnabled();
+				enteringText = enteringText || ((ofxTLFlag*)selectedKeyframes[i])->textField.getIsEditing();
 			}
 		}
 
@@ -213,7 +207,7 @@ void ofxTLFlags::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 
 void ofxTLFlags::willDeleteKeyframe(ofxTLKeyframe* keyframe){
 	ofxTLFlag* flag = (ofxTLFlag*)keyframe;
-	if(flag->textField.getIsEnabled()){
+	if(flag->textField.getIsEditing()){
 		timeline->dismissedModalContent();
 		timeline->flagTrackModified(this);
 	}
@@ -224,7 +218,9 @@ void ofxTLFlags::bangFired(ofxTLKeyframe* key){
     ofxTLBangEventArgs args;
     args.sender = timeline;
     args.track = this;
-    args.currentMillis = timeline->getCurrentTimeMillis();
+	//play solo change
+//    args.currentMillis = timeline->getCurrentTimeMillis();
+	args.currentMillis = currentTrackTime();
     args.currentPercent = timeline->getPercentComplete();
     args.currentFrame = timeline->getCurrentFrame();
     args.currentTime = timeline->getCurrentTime();    
@@ -236,4 +232,17 @@ string ofxTLFlags::getTrackType(){
     return "Flags";
 }
 
+void ofxTLFlags::addFlag(string key) {
+	addFlagAtTime(key, timeline->getCurrentTimeMillis());
+}
+
+void ofxTLFlags::addFlagAtTime(string key, unsigned long long time){
+	ofxTLKeyframe* keyFrame = newKeyframe();
+	ofxTLFlag* flag = (ofxTLFlag*)keyFrame;
+	setKeyframeTime(keyFrame, time);
+	flag->textField.text = key;
+	keyframes.push_back(keyFrame);
+	updateKeyframeSort();
+	timeline->flagTrackModified(this);
+}
 

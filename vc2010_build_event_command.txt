@@ -1,0 +1,4 @@
+#use this command in V to make sure the libsnd file is copied across for ofxTimeline
+# Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line
+
+xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"

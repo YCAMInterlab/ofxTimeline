@@ -1,7 +1,9 @@
 /**
  * ofxTimeline
+ * openFrameworks graphical timeline addon
  *
  * Copyright (c) 2011-2012 James George
+ * Development Supported by YCAM InterLab http://interlab.ycam.jp/en/
  * http://jamesgeorge.org + http://flightphase.com
  * http://github.com/obviousjim + http://github.com/flightphase
  *
@@ -26,14 +28,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- * ----------------------
- *
- * ofxTimeline
- * Lightweight SDK for creating graphic timeline tools in openFrameworks
- *
- * Developed with support of YCAM InterLab
  */
-
 
 #pragma once
 
@@ -71,9 +66,11 @@
 #include "ofxTLSwitches.h"
 #include "ofxTLColorTrack.h"
 #include "ofxTLImageSequence.h"
-#include "ofxTLVideoTrack.h"
 #include "ofxTLColors.h"
-#include "ofxTLTimeController.h"
+#include "ofxTLLFO.h"
+#include "ofxTLVideoTrack.h"
+#include "ofxTLAudioTrack.h"
+
 
 typedef struct {
     ofxTLTrack* track;
@@ -82,6 +79,11 @@ typedef struct {
 
 class ofxTimeline : ofThread {
   public:
+	
+	//needed for hotkeys to work
+	//optionally pass in an "app name" for Quit.
+	static void removeCocoaMenusFromGlut(string appName);
+	
 	ofxTimeline();
 	virtual ~ofxTimeline();
 
@@ -111,7 +113,14 @@ class ofxTimeline : ofThread {
 	virtual void stop();
 	virtual bool togglePlay();
 	virtual bool getIsPlaying();
-
+    
+    virtual bool getSpacebarTogglesPlay();
+    virtual void setSpacebarTogglePlay(bool spacebarPlays);
+    
+	virtual void playSelectedTrack();
+	virtual void stopSelectedTrack();
+	virtual bool togglePlaySelectedTrack();
+	
     virtual void setLoopType(ofLoopType newType);
 	virtual ofLoopType getLoopType();
     bool isDone(); //returns true if percentComplete == 1.0 and loop type is none
@@ -119,8 +128,8 @@ class ofxTimeline : ofThread {
 	virtual bool toggleShow();    
     virtual void show();
 	virtual void hide();
+	virtual bool getIsShowing();
 	virtual void draw();
-//	virtual void draw(ofEventArgs& args);
     
 	virtual void mousePressed(ofMouseEventArgs& args);
 	virtual void mouseMoved(ofMouseEventArgs& args);
@@ -149,7 +158,7 @@ class ofxTimeline : ofThread {
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
 	void setDurationInSeconds(float seconds);
-	void setDurationInMillis(long millis);
+	void setDurationInMillis(unsigned long long millis);
     void setDurationInTimecode(string timecode);
 
 	int getDurationInFrames();
@@ -172,7 +181,7 @@ class ofxTimeline : ofThread {
 	
 	virtual void setCurrentFrame(int currentFrame);
 	virtual void setCurrentTimeSeconds(float time);
-    virtual void setCurrentTimeMillis(long millis);
+    virtual void setCurrentTimeMillis(unsigned long long millis);
 	virtual void setPercentComplete(float percent);
 	virtual void setCurrentTimecode(string timecodeString);
     
@@ -184,6 +193,7 @@ class ofxTimeline : ofThread {
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
 	virtual string getCurrentTimecode();
+	virtual long getQuantizedTime(unsigned long long time, unsigned long long step);
     
     //internal tracks call this when the value has changed slightly
     //so that views can know if they need to update
@@ -198,21 +208,33 @@ class ofxTimeline : ofThread {
 	virtual void setInPointAtPercent(float percent);
 	void setInPointAtFrame(int frame);
 	void setInPointAtSeconds(float time);
-    void setInPointAtMillis(long millis);
+    void setInPointAtMillis(unsigned long long millis);
     void setInPointAtTimecode(string timecode);
 	void setInPointAtPlayhead();
     
 	virtual void setOutPointAtPercent(float percent);
 	void setOutPointAtFrame(float frame);
 	void setOutPointAtSeconds(float time);
-	void setOutPointAtMillis(long millis);
+	void setOutPointAtMillis(unsigned long long millis);
     void setOutPointAtTimecode(string timecode);
     void setOutPointAtPlayhead();
     
+	virtual void setEditableHeaders(bool headersEditable);
+	virtual bool areHeadersEditable();
+	
+	virtual void setMinimalHeaders(bool headersMinimal);
+	virtual bool areHeadersMinimal();
+	
+	virtual bool toggleShowFooters();
+	virtual void setFootersHidden(bool footersHidden);
+	virtual bool areFootersHidden();
+	
 	virtual void setInOutRange(ofRange inoutPercentRange);
+	virtual void setInOutRangeMillis(unsigned long long min, unsigned long long max);
 	virtual void clearInOut();
     
     ofRange getInOutRange();
+	ofLongRange getInOutRangeMillis();
 	int getInFrame();
 	float getInTimeInSeconds();
 	long getInTimeInMillis();
@@ -223,14 +245,16 @@ class ofxTimeline : ofThread {
 	long getOutTimeInMillis();
     string getOutPointTimecode();
 
-
 	virtual void setOffset(ofVec2f offset);
     virtual void setLockWidthToWindow(bool lockWidth);
     virtual bool getLockWidthToWindow();
 	virtual void setWidth(float width);
+	virtual void setHeight(float height);
 	virtual void collapseAllTracks(); //collapses all tracks heights to 0;
 	
 	ofRectangle getDrawRect();
+	float getWidth();
+	float getHeight();
     ofVec2f getTopRight();
     ofVec2f getTopLeft();
 	ofVec2f getBottomLeft();
@@ -255,7 +279,7 @@ class ofxTimeline : ofThread {
     
 	void setMovePlayheadOnPaste(bool move);
 	bool getMovePlayheadOnPaste();	
-	string getPasteboard();
+	vector<string>& getPasteboard();
 	
     //Undo and Redo
     void enableUndo(bool enabled);
@@ -280,31 +304,42 @@ class ofxTimeline : ofThread {
     bool isModal();
     ofxTLTrack* getModalTrack();
     
-    //Subclass Note
-    //ofxTLTracks that allow for multiple selection
-    //should use this value to change the behavior for creating new items
-    //If a user clicks on a blank part of a track it should only
-    //create a new keyframe if 1 or 0 keys is selected
-    //if 2 or more is selected, it just trigger an unselect all before
-    //create any new items
-    
-    //Returns the number of items selected in the whole timeline
+	//Returns the number of items selected in the whole timeline
+    //	Subclass Note
+    //	ofxTLTracks that allow for multiple selection
+    //	should use this value to change the behavior for creating new items
+    //	If a user clicks on a blank part of a track it should only
+    //	create a new keyframe if 1 or 0 keys is selected
+    //	if 2 or more is selected, it just trigger an unselect all before
+    //	create any new items
     int getTotalSelectedItems();
-    
-	virtual ofxTLTrack* getTrack(string name);
+	unsigned long long getEarliestTime();
+	unsigned long long getLatestTime();
+	unsigned long long getEarliestSelectedTime();
+	unsigned long long getLatestSelectedTime();
+
+	bool hasTrack(string trackName);
+	//type can be
+	//Bangs, Switches, Flags, Colors, Curves, Audio or Video
+	ofxTLTrack* getTrack(string name);
 	
 	//adding tracks always adds to the current page
     ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
 	ofxTLCurves* addCurves(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
-	virtual float getValue(string name);
-	virtual float getValue(string name, float atTime);
-	virtual float getValue(string name, int atFrame);
+	float getValue(string name);
+	float getValueAtPercent(string name, float atPercent);
+	float getValue(string name, float atTime);
+	float getValue(string name, int atFrame);
 
-    virtual ofxTLSwitches* addSwitches(string name);
-	virtual ofxTLSwitches* addSwitches(string name, string xmlFileName);
-	virtual bool isSwitchOn(string name);
-	virtual bool isSwitchOn(string name, float atTime);
-	virtual bool isSwitchOn(string name, int atFrame);
+	//adding tracks always adds to the current page
+    ofxTLLFO* addLFO(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+	ofxTLLFO* addLFO(string name, string xmlFileName, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
+
+    ofxTLSwitches* addSwitches(string name);
+	ofxTLSwitches* addSwitches(string name, string xmlFileName);
+	bool isSwitchOn(string name);
+	bool isSwitchOn(string name, float atTime);
+	bool isSwitchOn(string name, int atFrame);
 	
     ofxTLBangs* addBangs(string name);
 	ofxTLBangs* addBangs(string name, string xmlFileName);
@@ -319,46 +354,54 @@ class ofxTimeline : ofThread {
 	ofxTLColorTrack* addColorsWithPalette(string name, string xmlFileName, ofImage& palette);
 	ofxTLColorTrack* addColorsWithPalette(string name, string xmlFileName, string palettePath);
 	
-	virtual ofColor getColor(string name);
-	virtual ofColor getColorAtPercent(string name, float percent);
-	virtual ofColor getColorAtSecond(string name, float second);
-	virtual ofColor getColorAtMillis(string name, unsigned long millis);
+	ofColor getColor(string name);
+	ofColor getColorAtPercent(string name, float percent);
+	ofColor getColorAtSecond(string name, float second);
+	ofColor getColorAtMillis(string name, unsigned long long millis);
 	
 	string getDefaultColorPalettePath();
     //TODO: remove image sequence from the core? ... or fix it up.
 	//*IMAGE SEQUENCE DOES NOT WORK*
-	virtual ofxTLImageSequence* addImageSequence(string name);
-	virtual ofxTLImageSequence* addImageSequence(string name, string directory);
-	virtual ofImage* getImage(string name);
-	virtual ofImage* getImage(string name, float atTime);
-	virtual ofImage* getImage(string name, int atFrame);
+	ofxTLImageSequence* addImageSequence(string name);
+	ofxTLImageSequence* addImageSequence(string name, string directory);
+	ofImage* getImage(string name);
+	ofImage* getImage(string name, float atTime);
+	ofImage* getImage(string name, int atFrame);
 	//*IMAGE SEQUENCE DOES NOT WORK*
 	
-	virtual ofxTLVideoTrack* addVideoTrack(string trackName);
-    virtual ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
-    virtual ofxTLVideoTrack* getVideoTrack(string videoTrackName);
-    virtual ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
+	ofxTLVideoTrack* addVideoTrack(string name);
+    ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
+    ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
+    ofxTLVideoTrack* getVideoTrack(string videoTrackName);
+    ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
     
+    //Audio tracks only work with PCM Wav or Aiff file
+    ofxTLAudioTrack* addAudioTrack(string trackName);
+    ofxTLAudioTrack* addAudioTrackWithPath(string audioPath);
+    ofxTLAudioTrack* addAudioTrack(string name, string audioPath);
+    ofxTLAudioTrack* getAudioTrack(string audioTrackName);
+
     //used for audio and video.
     //we punt to the track to control time.
     //this can be a video or audio track
-    virtual void setTimecontrolTrack(ofxTLTimeController* track);
-	virtual ofxTLTimeController* getTimecontrolTrack();
+    void setTimecontrolTrack(string trackName);
+    void setTimecontrolTrack(ofxTLTrack* track);
+	ofxTLTrack* getTimecontrolTrack();
     
 	//you can add custom tracks this way
 	virtual void addTrack(string name, ofxTLTrack* track);
 
-    virtual ofxTLTrackHeader* getTrackHeader(string trackName);
-    virtual ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
+    ofxTLTrackHeader* getTrackHeader(string trackName);
+    ofxTLTrackHeader* getTrackHeader(ofxTLTrack* track);
     
-    virtual void removeTrack(string name);
-    virtual void removeTrack(ofxTLTrack* track);
+    void removeTrack(string name);
+    void removeTrack(ofxTLTrack* track);
     
     //ordering the track
-    virtual void bringTrackToTop(string name);
-    virtual void bringTrackToTop(ofxTLTrack* track);
-    virtual void bringTrackToBottom(string name);
-    virtual void bringTrackToBottom(ofxTLTrack* track);
+    void bringTrackToTop(string name);
+    void bringTrackToTop(ofxTLTrack* track);
+    void bringTrackToBottom(string name);
+    void bringTrackToBottom(ofxTLTrack* track);
 	
 	void setupFont();
 	void setupFont(string newFontPath, int newFontSize);
@@ -366,6 +409,7 @@ class ofxTimeline : ofThread {
 	
 	ofxTLColors& getColors();
 	ofxTimecode& getTimecode();
+	ofxMSATimer& getTimer();
 	ofxTLZoomer* getZoomer();
 	
 	vector<ofxTLPage*>& getPages();
@@ -380,17 +424,17 @@ class ofxTimeline : ofThread {
 	//and the mouse.  
 	//TLTracks should call this on mousedown if one of their tracks is
 	//should be snapped directly to snap lines
-	void setDragTimeOffset(long millisecondOffset);
+	void setDragTimeOffset(unsigned long long millisecondOffset);
     void cancelSnapping();
 	long getDragTimeOffset();
-    void setHoverTime(long millisTime);
+    void setHoverTime(unsigned long long millisTime);
         
     string formatTime(float seconds);
-    string formatTime(long millis);
+    string formatTime(unsigned long long millis);
 
     string nameToXMLName(string name);
     string confirmedUniqueName(string name);
-
+	
 	ofxTLPlaybackEventArgs createPlaybackEvent();
 	
     //when an track calls presentedModalContent all key and mouse action will be sent directly to that tracks
@@ -401,7 +445,7 @@ class ofxTimeline : ofThread {
     
     //time <-> pixel translation helpers
     long screenXToMillis(float x);
-    float millisToScreenX(long millis); 
+    float millisToScreenX(long millis);
     float screenXtoNormalizedX(float x);
     float normalizedXtoScreenX(float x);
     float screenXtoNormalizedX(float x, ofRange outputRange);
@@ -429,7 +473,7 @@ class ofxTimeline : ofThread {
     map<string, ofxTLPage*> trackNameToPage;
 
     ofxTLTrack* modalTrack;
-    ofxTLTimeController* timeControl;
+    ofxTLTrack* timeControl;
 
     //can be blank, default save to bin/data/
     string workingFolder; 
@@ -438,12 +482,16 @@ class ofxTimeline : ofThread {
 	bool usingEvents;
 	bool isOnThread;
 
+	//called when the name changes to setup the inout track, zoomer, ticker etc
+	void setupStandardElements();
+	
 	bool movePlayheadOnPaste;
     long dragMillsecondOffset;
 	bool dragAnchorSet; // will disable snapping if no drag anchor is set on mousedown
 	bool lockWidthToWindow;
     
-	string pasteboard;
+	//one string per track
+	vector<string> pasteboard;
     
     bool undoEnabled; //turn off undo if you don't need it, it'll take up a ton of memory
     void collectStateBuffers();
@@ -463,6 +511,8 @@ class ofxTimeline : ofThread {
     bool snapToBPM;
     bool snapToOtherElements;
     
+    bool spacebarTogglesPlay;
+    
 	float width;
 	ofVec2f offset;
 
@@ -472,6 +522,7 @@ class ofxTimeline : ofThread {
 	
 	//only enabled while playing
 	virtual void update(ofEventArgs& updateArgs);
+	virtual void updateTime();
     virtual void threadedFunction(); //only fired after moveToThread()
 	virtual void checkLoop();
 	virtual void checkEvents();
@@ -485,9 +536,10 @@ class ofxTimeline : ofThread {
 	virtual void updatePagePositions();
 	virtual void recalculateBoundingRects();
     
+	
 	string defaultPalettePath;
 	
-    //TODO convert to long
+    //TODO convert to ofLongRange
 	ofRange inoutRange;
 	
     bool timelineHasFocus;
@@ -513,6 +565,9 @@ class ofxTimeline : ofThread {
 
 	bool autosave;
 	bool unsavedChanges;
+	bool headersAreEditable;
+	bool minimalHeaders;
+	bool footersHidden;
 	
 	bool isFrameBased;
 	float durationInSeconds;
