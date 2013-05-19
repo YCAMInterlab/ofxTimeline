@@ -1,0 +1,504 @@
+<?xml version="1.0"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="example-videoRenderer" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="addons\;src\;" />
+		<Build>
+			<Target title="release">
+				<Option output="bin\$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj\release" />
+				<Option external_deps="..\..\..\libs\openFrameworksCompiled\lib\win_cb\openFrameworks.lib;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="../../../libs/openFrameworksCompiled/lib/win_cb/openFrameworks.lib" />
+				</Linker>
+			</Target>
+			<Target title="debug">
+				<Option output="bin\$(PROJECT_NAME)_DEBUG" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj\debug\" />
+				<Option external_deps="..\..\..\libs\openFrameworksCompiled\lib\win_cb\openFrameworksDebug.lib;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="../../../libs/openFrameworksCompiled/lib/win_cb/openFrameworksDebug.lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wno-multichar" />
+			<Add directory="..\..\..\libs\glu\include" />
+			<Add directory="..\..\..\libs\freetype\include" />
+			<Add directory="..\..\..\libs\freetype\include\freetype2" />
+			<Add directory="..\..\..\libs\FreeImage\include" />
+			<Add directory="..\..\..\libs\quicktime\include" />
+			<Add directory="..\..\..\libs\rtAudio\include" />
+			<Add directory="..\..\..\libs\fmodex\include" />
+			<Add directory="..\..\..\libs\videoInput\include" />
+			<Add directory="..\..\..\libs\glew\include" />
+			<Add directory="..\..\..\libs\glut\include" />
+			<Add directory="..\..\..\libs\openFrameworks" />
+			<Add directory="..\..\..\libs\openFrameworks\3d" />
+			<Add directory="..\..\..\libs\openFrameworks\app" />
+			<Add directory="..\..\..\libs\openFrameworks\communication" />
+			<Add directory="..\..\..\libs\openFrameworks\events" />
+			<Add directory="..\..\..\libs\openFrameworks\gl" />
+			<Add directory="..\..\..\libs\openFrameworks\graphics" />
+			<Add directory="..\..\..\libs\openFrameworks\math" />
+			<Add directory="..\..\..\libs\openFrameworks\sound" />
+			<Add directory="..\..\..\libs\openFrameworks\types" />
+			<Add directory="..\..\..\libs\openFrameworks\utils" />
+			<Add directory="..\..\..\libs\openFrameworks\video" />
+			<Add directory="..\..\..\libs\poco\include" />
+			<Add directory="..\..\..\libs\tess2\include" />
+			<Add directory="..\..\..\libs\cairo\include\cairo" />
+			<Add directory="../../../addons/ofxXmlSettings/libs" />
+			<Add directory="../../../addons/ofxXmlSettings/src" />
+			<Add directory="../../../addons\ofxXmlSettings\libs" />
+			<Add directory="../../../addons\ofxXmlSettings\src" />
+			<Add directory="../../../addons/ofxMSATimer/libs" />
+			<Add directory="../../../addons/ofxMSATimer/src" />
+			<Add directory="../../../addons\ofxMSATimer\src" />
+			<Add directory="../../../addons/ofxRange/libs" />
+			<Add directory="../../../addons/ofxRange/src" />
+			<Add directory="../../../addons\ofxRange\src" />
+			<Add directory="../../../addons/ofxTextInputField/libs" />
+			<Add directory="../../../addons/ofxTextInputField/src" />
+			<Add directory="../../../addons\ofxTextInputField\src" />
+			<Add directory="../../../addons/ofxTimecode/libs" />
+			<Add directory="../../../addons/ofxTimecode/src" />
+			<Add directory="../../../addons\ofxTimecode\src" />
+			<Add directory="../../../addons/ofxTimeline/libs" />
+			<Add directory="../../../addons/ofxTimeline/src" />
+			<Add directory="../../../addons\ofxTimeline\libs\kiss" />
+			<Add directory="../../../addons\ofxTimeline\libs\kiss\include" />
+			<Add directory="../../../addons\ofxTimeline\libs\kiss\src" />
+			<Add directory="../../../addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions" />
+			<Add directory="../../../addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\include" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\include\AL" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\libs" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\libs\win_cb" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\libs\win_cb\EFX-Util_MT" />
+			<Add directory="../../../addons\ofxTimeline\libs\openal\libs\win_cb\EFX-Util_MTDLL" />
+			<Add directory="../../../addons\ofxTimeline\libs\sndfile" />
+			<Add directory="../../../addons\ofxTimeline\libs\sndfile\include" />
+			<Add directory="../../../addons\ofxTimeline\libs\sndfile\lib" />
+			<Add directory="../../../addons\ofxTimeline\libs\sndfile\lib\win_cb" />
+			<Add directory="../../../addons\ofxTimeline\libs\sndfile\redist" />
+			<Add directory="../../../addons\ofxTimeline\src" />
+			<Add directory="../../../addons/ofxTween/libs" />
+			<Add directory="../../../addons/ofxTween/src" />
+			<Add directory="../../../addons\ofxTween\src" />
+			<Add directory="../../../addons\ofxTween\src\Easings" />
+		</Compiler>
+		<Linker>
+			<Add library="..\..\..\libs\FreeImage\lib\win_cb\FreeImage.lib" />
+			<Add library="..\..\..\libs\rtAudio\lib\win_cb\librtaudio.a" />
+			<Add library="..\..\..\libs\quicktime\lib\win_cb\qtmlClient.lib" />
+			<Add library="..\..\..\libs\cairo\lib\win_cb\libcairo.a" />
+			<Add library="..\..\..\libs\cairo\lib\win_cb\libpixman-1.a" />
+			<Add library="..\..\..\libs\freetype\lib\win_cb\libfreetype.a" />
+			<Add library="..\..\..\libs\glut\lib\win_cb\libglut.a" />
+			<Add library="..\..\..\libs\videoInput\lib\win_cb\videoInputLib.a" />
+			<Add library="..\..\..\libs\fmodex\lib\win_cb\libfmodex.a" />
+			<Add library="..\..\..\libs\glew\lib\win_cb\glew32s.lib" />
+			<Add library="..\..\..\libs\glu\lib\win_cb\glu32.lib" />
+			<Add library="..\..\..\libs\poco\lib\win_cb\libPocoNet.a" />
+			<Add library="..\..\..\libs\poco\lib\win_cb\libPocoUtil.a" />
+			<Add library="..\..\..\libs\poco\lib\win_cb\libPocoXML.a" />
+			<Add library="..\..\..\libs\poco\lib\win_cb\libPocoFoundation.a" />
+			<Add library="..\..\..\libs\tess2\lib\win_cb\libtess2.a" />
+			<Add library="opengl32" />
+			<Add library="gdi32" />
+			<Add library="msimg32" />
+			<Add library="glu32" />
+			<Add library="dsound" />
+			<Add library="winmm" />
+			<Add library="dxguid" />
+			<Add library="strmbase" />
+			<Add library="strmiids" />
+			<Add library="z" />
+			<Add library="uuid" />
+			<Add library="ole32" />
+			<Add library="oleaut32" />
+			<Add library="setupapi" />
+			<Add library="wsock32" />
+			<Add library="ws2_32" />
+			<Add library="Iphlpapi" />
+			<Add library="Comdlg32" />
+			<Add library="../../../addons\ofxTimeline\libs\openal\libs\win_cb\EFX-Util_MT\EFX-Util.lib" />
+			<Add library="../../../addons\ofxTimeline\libs\openal\libs\win_cb\EFX-Util_MTDLL\EFX-Util.lib" />
+			<Add library="../../../addons\ofxTimeline\libs\openal\libs\win_cb\OpenAL32.lib" />
+			<Add library="../../../addons\ofxTimeline\libs\sndfile\lib\win_cb\libsndfile-1.lib" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="xcopy /e /i /y &quot;$(PROJECT_DIR)..\..\..\export\win_cb\*.dll&quot;  &quot;$(PROJECT_DIR)bin&quot;" />
+			<Add after="cmd /c if not exist &quot;$(PROJECT_DIR)bin/data&quot; mkdir &quot;$(PROJECT_DIR)bin/data&quot;" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="src\main.cpp">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Unit filename="src\testApp.cpp">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Unit filename="src\testApp.h">
+			<Option virtualFolder="src" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+		<Unit filename="../../../addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
+			<Option virtualFolder="addons\ofxXmlSettings\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxXmlSettings\src\ofxXmlSettings.h">
+			<Option virtualFolder="addons\ofxXmlSettings\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxXmlSettings\libs\tinyxml.cpp">
+			<Option virtualFolder="addons\ofxXmlSettings\libs" />
+		</Unit>
+		<Unit filename="../../../addons\ofxXmlSettings\libs\tinyxml.h">
+			<Option virtualFolder="addons\ofxXmlSettings\libs" />
+		</Unit>
+		<Unit filename="../../../addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
+			<Option virtualFolder="addons\ofxXmlSettings\libs" />
+		</Unit>
+		<Unit filename="../../../addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
+			<Option virtualFolder="addons\ofxXmlSettings\libs" />
+		</Unit>
+		<Unit filename="../../../addons\ofxMSATimer\src\ofxMSATimer.cpp">
+			<Option virtualFolder="addons\ofxMSATimer\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxMSATimer\src\ofxMSATimer.h">
+			<Option virtualFolder="addons\ofxMSATimer\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxRange\src\ofRange.h">
+			<Option virtualFolder="addons\ofxRange\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTextInputField\src\ofxTextInputField.cpp">
+			<Option virtualFolder="addons\ofxTextInputField\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTextInputField\src\ofxTextInputField.h">
+			<Option virtualFolder="addons\ofxTextInputField\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimecode\src\ofxTimecode.cpp">
+			<Option virtualFolder="addons\ofxTimecode\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimecode\src\ofxTimecode.h">
+			<Option virtualFolder="addons\ofxTimecode\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxHotKeys.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxHotKeys_impl_linux.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxHotKeys_impl_mac.mm">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxHotKeys_impl_win.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxRemoveCocoaMenu.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxRemoveCocoaMenu.mm">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTimeline.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTimeline.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLAudioTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLAudioTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLBangs.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLBangs.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLCameraTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLCameraTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLColors.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLColors.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLColorTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLColorTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLCurves.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLCurves.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLEmptyKeyframes.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLEmptyKeyframes.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLEmptyTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLEmptyTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLEvents.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLFlags.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLFlags.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageSequence.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageSequence.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageSequenceFrame.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageSequenceFrame.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLImageTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLInOut.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLInOut.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLKeyframes.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLKeyframes.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLLFO.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLLFO.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLPage.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLPage.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLPageTabs.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLPageTabs.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLSwitches.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLSwitches.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTicker.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTicker.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTrackHeader.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLTrackHeader.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLVideoThumb.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLVideoThumb.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLVideoTrack.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLVideoTrack.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLZoomer.cpp">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\src\ofxTLZoomer.h">
+			<Option virtualFolder="addons\ofxTimeline\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\kiss\include\kiss_fft.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\kiss\include" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\kiss\include\kiss_fftr.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\kiss\include" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\kiss\src\kiss_fft.c">
+			<Option virtualFolder="addons\ofxTimeline\libs\kiss\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\kiss\src\kiss_fftr.c">
+			<Option virtualFolder="addons\ofxTimeline\libs\kiss\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\kiss\src\_kiss_fft_guts.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\kiss\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
+			<Option virtualFolder="addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\al.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\alc.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\efx-creative.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\EFX-Util.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\efx.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\openal\include\AL\xram.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\openal\include\AL" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTimeline\libs\sndfile\include\sndfile.h">
+			<Option virtualFolder="addons\ofxTimeline\libs\sndfile\include" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\easing_terms_of_use.html">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasing.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasing.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingBack.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingBack.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingBounce.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingBounce.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingCirc.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingCirc.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingCubic.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingCubic.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingElastic.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingElastic.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingExpo.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingExpo.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingLinear.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingLinear.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuad.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuad.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuart.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuart.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuint.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingQuint.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingSine.cpp">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\Easings\ofxEasingSine.h">
+			<Option virtualFolder="addons\ofxTween\src\Easings" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\ofxTween.cpp">
+			<Option virtualFolder="addons\ofxTween\src" />
+		</Unit>
+		<Unit filename="../../../addons\ofxTween\src\ofxTween.h">
+			<Option virtualFolder="addons\ofxTween\src" />
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
