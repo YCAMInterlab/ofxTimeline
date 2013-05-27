@@ -1881,7 +1881,7 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     }
     return track->getPlayer();
 }
-
+#ifdef TIMELINE_AUDIO_INCLUDED
 ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
     return addAudioTrack(trackName, "");
 }
@@ -1909,6 +1909,7 @@ ofxTLAudioTrack* ofxTimeline::getAudioTrack(string audioTrackName){
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(string trackName){
     return getTrackHeader(getTrack(name));    
 }
+#endif
 
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(ofxTLTrack* track){
     return trackNameToPage[track->getName()]->getTrackHeader(track);
