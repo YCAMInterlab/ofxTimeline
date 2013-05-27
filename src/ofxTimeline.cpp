@@ -218,6 +218,18 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
         pages[i]->loadTracksFromFolder(folderPath);
     }
+	setWorkingFolder(folderPath);
+}
+
+void ofxTimeline::saveTracksToFolder(string folderPath){
+	ofDirectory targetDirectory = ofDirectory(folderPath);
+	if(!targetDirectory.exists()){
+		targetDirectory.create(true);
+	}
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->saveTracksToFolder(folderPath);
+    }
+	setWorkingFolder(folderPath);
 }
 
 #pragma mark CONFIGURATION

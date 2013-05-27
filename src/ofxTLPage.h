@@ -94,8 +94,9 @@ class ofxTLPage {
     vector<ofxTLTrack*>& getTracks();
 
     //given a folder the page will look for xml files to load within that
-	virtual void loadTracksFromFolder(string folderPath);
-    
+	void loadTracksFromFolder(string folderPath);
+    void saveTracksToFolder(string folderPath);
+	
 	virtual void mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);

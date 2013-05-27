@@ -152,8 +152,10 @@ class ofxTimeline : ofThread {
     
     //loads calls load on all tracks from the given folder
     //really useful for setting up 'project' directories
-    virtual void loadTracksFromFolder(string folderPath);
-    
+    void loadTracksFromFolder(string folderPath);
+    void saveTracksToFolder(string folderPath);
+
+		
     //timing setup functions
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);

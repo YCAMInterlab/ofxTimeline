@@ -72,7 +72,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 
     void setDrawVideoPreview(bool drawPreview);
     bool getDrawVideoPreview();
-
+	
     bool isLoaded();
 	int selectFrame(int frame); //returns the true selected frame in video
 	void toggleThumbs();
@@ -85,7 +85,12 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     virtual void play();
     virtual void stop();
     virtual bool getIsPlaying();
-    	
+	
+	
+	//plays when timeline is played
+	void setPlayAlongToTimeline(bool playAlong);
+	bool getPlayAlongToTimeline();
+	
     virtual string getTrackType();
     
   protected:
@@ -102,6 +107,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     bool canCalculateThumbs();
     bool currentlyPlaying;
     
+	bool playAlongToTimeline;
+	
     //width and height of image elements
     float getContentWidth();
     float getContentHeight();

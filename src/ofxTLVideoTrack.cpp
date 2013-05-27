@@ -41,6 +41,7 @@ ofxTLVideoTrack::ofxTLVideoTrack()
 	outFrame = -1;
     currentlyPlaying = false;
     drawVideoPreview = true;
+	playAlongToTimeline = true;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
@@ -126,6 +127,15 @@ bool ofxTLVideoTrack::getIsPlaying(){
 	return isLoaded() && currentlyPlaying;
 }
 
+
+void ofxTLVideoTrack::setPlayAlongToTimeline(bool playAlong){
+	this->playAlongToTimeline = playAlong;
+}
+
+bool ofxTLVideoTrack::getPlayAlongToTimeline(){
+	return playAlongToTimeline;
+}
+
 //void ofxTLVideoTrack::update(ofEventArgs& args){
 void ofxTLVideoTrack::update(){
     
@@ -165,7 +175,9 @@ void ofxTLVideoTrack::update(){
 				else {
 					int loopFrame = timeline->getInFrame();
 					selectFrame(loopFrame);
-					player->play();
+					if(playAlongToTimeline){
+						player->play();
+					}
 					ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 					ofNotifyEvent(events().playbackLooped, args);                
 				}
@@ -200,7 +212,7 @@ void ofxTLVideoTrack::update(){
 
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
 	
-    if(isLoaded() && !currentlyPlaying){
+    if(isLoaded() && !currentlyPlaying && playAlongToTimeline){
         selectFrame(args.currentFrame);
 //        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
 //        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;
@@ -216,21 +228,20 @@ float ofxTLVideoTrack::positionForSecond(float second){
 
 void ofxTLVideoTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
 	ofxTLTrack::playbackStarted(args);
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		//player.setPosition(timeline->getPercentComplete());
 		float position = positionForSecond(timeline->getCurrentTime());
 		if(position < 1.0){
-            player->setSpeed(1.0);
+			player->setSpeed(1.0);
 			player->play();
             currentlyPlaying = true;
-            //play();
 		}
 		player->setPosition( position );
 	}
 }
 
 void ofxTLVideoTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		if(!player->isPlaying()){
 			player->play();
 		}
@@ -239,7 +250,7 @@ void ofxTLVideoTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
 }
 
 void ofxTLVideoTrack::playbackEnded(ofxTLPlaybackEventArgs& args){
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		player->stop();
 	}
 }
