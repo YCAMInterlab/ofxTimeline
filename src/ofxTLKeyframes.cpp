@@ -412,6 +412,7 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 		if(selectedKeyframe != NULL){
 
 			if(args.button == 0 && !ofGetModifierSelection() && !ofGetModifierControlPressed()){
+
 	            timeline->setDragTimeOffset(selectedKeyframe->grabTimeOffset);
 				//move the playhead
 				if(timeline->getMovePlayheadOnDrag()){

@@ -32,6 +32,7 @@
 
 #include "ofxTLCurves.h"
 #include "ofxTimeline.h"
+#include "ofxHotKeys.h"
 
 ofxTLCurves::ofxTLCurves(){
 	initializeEasings();
@@ -149,7 +150,7 @@ void ofxTLCurves::mouseDragged(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
-	if(drawingEasingWindow && args.button == 0){
+	if(drawingEasingWindow && (args.button == 0 && !ofGetModifierControlPressed()) ){
 		drawingEasingWindow = false;
 		timeline->dismissedModalContent();
 		ofVec2f screenpoint(args.x,args.y);
@@ -296,7 +297,7 @@ void ofxTLCurves::initializeEasings(){
 	}
 
 	for(int i = 0; i < easingFunctions.size(); i++){
-		easingFunctions[i]->bounds = ofRectangle(easingBoxWidth, i*tweenBoxHeight, tweenBoxWidth, tweenBoxHeight);
+		easingFunctions[i]->bounds = ofRectangle(easingBoxWidth + tweenBoxWidth * (i/3), (i%3)*tweenBoxHeight, tweenBoxWidth, tweenBoxHeight);
 		easingFunctions[i]->id = i;
 		//build preview
 		for(int p = 1; p < tweenBoxWidth-1; p++){
