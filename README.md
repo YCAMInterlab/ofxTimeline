@@ -149,6 +149,12 @@ to download the timeline open up the terminal and type
 
 This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
 
+### Install OpenAL
+
+For Windows:
+If you don't have OpenAL, you can install it.
+Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx](http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx) and download "OpenAL with OpenAL Installer for Windows".
+
 ### Create a new ofxTimeline project
 
  - Open the ProjectGenerator in of_0073_osx_release/projectGenerator/

@@ -19,6 +19,9 @@ apps/*/*/*.depend
 apps/*/*/bin/clickToLaunch*
 apps/*/*/bin/libs
 apps/*/*/obj
+example-*/*build_log.html
+example-*/example-*.layout
+example-*/example-*.depend
 
 #VCPP files
 
@@ -46,3 +49,6 @@ ipch/
 
 example-videoRenderer/bin/data/renders/
 oldExamples/
+!libs/openal/libs/win_cb/*.lib
+!libs/openal/libs/win_cb/**/*.lib
+!libs/sndfile/lib/win_cb/*
