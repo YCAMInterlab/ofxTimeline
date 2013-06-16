@@ -42,14 +42,18 @@ ofxTLVideoTrack::ofxTLVideoTrack()
     currentlyPlaying = false;
     drawVideoPreview = true;
 	playAlongToTimeline = true;
+	isSetup = false;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
-
+	if(isSetup){
+		ofRemoveListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
+	}
 }
 
 void ofxTLVideoTrack::setup(){
     ofxTLImageTrack::setup();
+	isSetup = true;
     ofAddListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
     startThread();
 }
@@ -542,8 +546,8 @@ int ofxTLVideoTrack::getSelectedFrame(){
 }
 
 void ofxTLVideoTrack::exit(ofEventArgs& args){
-    stopThread();
-//	waitForThread(true);
+//    stopThread();
+	waitForThread(true);
 }
 
 string ofxTLVideoTrack::getTrackType(){

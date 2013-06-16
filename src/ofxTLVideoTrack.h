@@ -98,8 +98,8 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
 	
 	int selectedFrame;
 	int currentLoop;
-//	bool thumbsEnabled;
-		
+	bool isSetup;
+	
 	int inFrame;
 	int outFrame;
     
