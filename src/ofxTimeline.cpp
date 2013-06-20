@@ -798,7 +798,7 @@ void ofxTimeline::setDurationInFrames(int frames){
 void ofxTimeline::setDurationInSeconds(float seconds){
 	//TODO: verify no elements are being truncated
     if(seconds <= 0.){
-    	ofLogError("ofxTimeline::setDurationInSeconds") << " duraiton must set a positive number";
+    	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
 	durationInSeconds = seconds;

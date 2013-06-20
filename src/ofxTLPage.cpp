@@ -753,7 +753,7 @@ void ofxTLPage::loadTrackPositions(){
 		trackPositions.popTag();
 	}
 	else{
-		 ofLogNotice("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
+		 ofLogVerbose("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
 	}
 }
 
