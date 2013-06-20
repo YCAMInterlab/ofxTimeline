@@ -47,6 +47,7 @@ ofxTLVideoTrack::ofxTLVideoTrack()
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
 	if(isSetup){
+		disable();
 		ofRemoveListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
 	}
 }
@@ -108,6 +109,10 @@ void ofxTLVideoTrack::play(){
 }
 
 void ofxTLVideoTrack::stop(){
+	if(!isLoaded()){
+		return;
+	}
+
 	player->setSpeed(0);
     if(isLoaded() && getIsPlaying()){
 //		cout << "stopping playback" << endl;
