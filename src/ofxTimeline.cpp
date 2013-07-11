@@ -73,6 +73,7 @@ ofxTimeline::ofxTimeline()
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL),
 	modalTrack(NULL),
+    tabs(NULL),
 	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
@@ -84,7 +85,7 @@ ofxTimeline::ofxTimeline()
 	curvesUseBinary(false),
 	headersAreEditable(false),
 	minimalHeaders(false),
-	//copy from ofxTimeline/assets into bin/data/
+   	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
@@ -111,10 +112,14 @@ ofxTimeline::~ofxTimeline(){
 
 void ofxTimeline::setup(){
 
+    //TODO: error if isSetup...
+    
 	isSetup = true;
 	
 	width = ofGetWidth();
-
+    if(tabs != NULL){
+        delete tabs;
+    }
 	tabs = new ofxTLPageTabs();
 	tabs->setTimeline(this);
 	tabs->setup();
@@ -768,16 +773,24 @@ void ofxTimeline::clear(){
 }
 
 void ofxTimeline::reset(){ //gets rid of everything
+    
+    if(!isSetup){
+        return;
+    }
+    
 	if(isOnThread){
 		waitForThread(true);
 	}
+    
     stop();
     undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
-	
-	tabs->clear();
+    if(tabs != NULL){
+        tabs->clear();
+    }
+
     setInOutRange(ofRange(0,1.0));
     pages.clear();
     trackNameToPage.clear();
@@ -788,6 +801,7 @@ void ofxTimeline::reset(){ //gets rid of everything
 	if(isOnThread){
 		startThread();
 	}
+    isSetup = false;
 }
 
 
@@ -1425,7 +1439,6 @@ void ofxTimeline::checkLoop(){
     }
 }
 
-//void ofxTimeline::draw(ofEventArgs& args){
 void ofxTimeline::draw(){
 
 	if(isSetup && isShowing){
