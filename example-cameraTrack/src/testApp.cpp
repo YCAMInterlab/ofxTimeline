@@ -11,7 +11,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-//	ofBackground(255*.15);
+
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 
@@ -44,14 +44,6 @@ void testApp::setup(){
 							
 		particles.addColor(ofFloatColor(ofRandomuf()*.4));
 	}
-//	//this is the simplest example and is really flexible
-//	emptyTrack = new ofxTLEmptyTrack();
-//	timeline.addTrack("My Custom Track", emptyTrack);
-//
-//	//a very simple color keyframe
-//	emptyKeyframes = new ofxTLEmptyKeyframes();
-//	emptyKeyframes->setXMLFileName("MyEmptyKeyframes.xml");
-//	timeline.addTrack("My Custom Keyframes", emptyKeyframes);
 
 }
 
