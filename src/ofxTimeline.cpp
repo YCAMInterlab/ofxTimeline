@@ -96,16 +96,21 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
+		
+		disable();
+		
 		ofRemoveListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
-
+		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+		
         //TODO: move to shared pointers 
         //this breaks timelines that are statically declared because 
         //there is no copy/assignment constructor
 		reset();
         
-        delete ticker;
         delete tabs;
+		delete inoutTrack;
+        delete ticker;
         delete zoomer;
 	}
 }
