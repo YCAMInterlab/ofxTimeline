@@ -187,10 +187,13 @@ void ofxTimeline::removeFromThread(){
 
 void ofxTimeline::setName(string newName){
     if(newName != name){
-        
+        string oldName = name;
 	    name = newName;
 		if(isSetup){
 			setupStandardElements();
+			for(int i = 0; i < pages.size(); i++){
+				pages[i]->timelineChangedName(newName, oldName);
+			}
 		}
     }
 }
@@ -815,12 +818,13 @@ void ofxTimeline::setDurationInFrames(int frames){
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
-	//TODO: verify no elements are being truncated
-    if(seconds <= 0.){
+
+	//verify no elements are being truncated
+	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
-	durationInSeconds = seconds;
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
@@ -1616,7 +1620,7 @@ ofxTLZoomer* ofxTimeline::getZoomer(){
 //can be used to add custom elements
 void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	if(trackNameToPage[trackName] != NULL){
-        ofLogError("ofxTimeline::addTrack") << " Adding dupliciate track name " << trackName;
+        ofLogError("ofxTimeline::addTrack") << " Adding duplicate track name " << trackName;
     }
 	track->setTimeline( this );
 	track->setName( trackName );
@@ -2032,8 +2036,6 @@ string ofxTimeline::confirmedUniqueName(string name){
     }
     return uniqueName;
 }
-
-
 
 void ofxTimeline::setDragTimeOffset(unsigned long long millisecondOffset){
 

@@ -496,9 +496,11 @@ void ofxTLKeyframes::updateKeyframeSort(){
 	lastKeyframeIndex = 1;
 	lastSampleTime = 0;
 	if(keyframes.size() > 1){
+		//modify duration to fit
 		for(int i = 0; i < keyframes.size(); i++){
 			if(keyframes[i]->time > timeline->getDurationInMilliseconds()){
-				keyframes[i]->time = timeline->getDurationInMilliseconds();
+				//keyframes[i]->time = timeline->getDurationInMilliseconds();
+				timeline->setDurationInMillis(keyframes[i]->time);
 			}
 		}
 		

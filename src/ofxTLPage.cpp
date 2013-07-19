@@ -100,6 +100,14 @@ void ofxTLPage::saveTracksToFolder(string folderPath){
     }
 }
 
+void ofxTLPage::timelineChangedName(string newName, string oldName){
+    for(int i = 0; i < headers.size(); i++){
+		string filename = tracks[headers[i]->name]->getXMLFileName();
+		ofStringReplace(filename, oldName+"_", newName+"_");
+        tracks[headers[i]->name]->setXMLFileName(filename);
+    }
+}
+
 void ofxTLPage::setTicker(ofxTLTicker* t){
 	ticker = t;
 }
