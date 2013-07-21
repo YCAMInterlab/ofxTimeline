@@ -100,7 +100,9 @@ class ofxTimeline : ofThread {
 	bool toggleEnabled();
     virtual void enable();
 	virtual void disable();
-    
+	virtual void enableEvents();
+	virtual void disableEvents();
+
     virtual void clear(); //clears every track
     virtual void reset(); //gets rid of everything, sets back to one page
 
@@ -532,8 +534,6 @@ class ofxTimeline : ofThread {
 	virtual void checkLoop();
 	virtual void checkEvents();
 	
-	virtual void enableEvents();
-	virtual void disableEvents();
 
 	virtual void viewWasResized(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);
