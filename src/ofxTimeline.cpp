@@ -200,6 +200,8 @@ void ofxTimeline::setName(string newName){
 
 void ofxTimeline::setupStandardElements(){
 	
+//	cout << "*****TL setting up standard path " << ofToDataPath(workingFolder + name + "_inout.xml") << endl;
+	
 	inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
 	inoutTrack->setup();
 	
@@ -215,12 +217,10 @@ string ofxTimeline::getName(){
 
 void ofxTimeline::setWorkingFolder(string folderPath){
 	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
-    inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
-	inoutTrack->load();
-    zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
-	zoomer->load();
-	
-	currentPage->loadTrackPositions();
+    
+	if(isSetup){
+		setupStandardElements();	
+	}
 }
 
 string ofxTimeline::getWorkingFolder(){
@@ -231,6 +231,9 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
         pages[i]->loadTracksFromFolder(folderPath);
     }
+	
+//	cout << "*****TL " << name << " Loading tracks from " << folderPath << endl;
+	
 	setWorkingFolder(folderPath);
 }
 
@@ -242,6 +245,16 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->saveTracksToFolder(folderPath);
     }
+	string filename = folderPath + zoomer->getXMLFileName();
+	zoomer->setXMLFileName(filename);
+	zoomer->save();
+	
+	filename = folderPath + inoutTrack->getXMLFileName();
+	inoutTrack->setXMLFileName(filename);
+	inoutTrack->save();
+	
+
+	
 	setWorkingFolder(folderPath);
 }
 
