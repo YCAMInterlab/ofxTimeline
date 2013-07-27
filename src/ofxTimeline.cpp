@@ -819,9 +819,10 @@ void ofxTimeline::reset(){ //gets rid of everything
     modalTrack = NULL;
     timeControl = NULL;
 	addPage("Page One", true);
-	if(isOnThread){
-		startThread();
-	}
+//	if(isOnThread){
+//		startThread();
+//	}
+
 	ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 //	ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
 
