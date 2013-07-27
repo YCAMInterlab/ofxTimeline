@@ -98,11 +98,9 @@ ofxTimeline::~ofxTimeline(){
 	if(isSetup){
 		
 		disable();
-		
-		ofRemoveListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+
 		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
-		ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
-		
+
         //TODO: move to shared pointers 
         //this breaks timelines that are statically declared because 
         //there is no copy/assignment constructor
@@ -799,11 +797,13 @@ void ofxTimeline::reset(){ //gets rid of everything
         return;
     }
     
+	
+	
 	if(isOnThread){
 		waitForThread(true);
 	}
     
-    stop();
+    disable();
     undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
@@ -822,6 +822,9 @@ void ofxTimeline::reset(){ //gets rid of everything
 	if(isOnThread){
 		startThread();
 	}
+	ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+//	ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
+
     isSetup = false;
 }
 
