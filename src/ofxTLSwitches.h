@@ -32,6 +32,7 @@
 
 #pragma once 
 #include "ofxTLKeyframes.h"
+#include "ofxTextInputField.h"
 
 class ofxTLSwitch : public ofxTLKeyframe {
   public:
@@ -44,6 +45,9 @@ class ofxTLSwitch : public ofxTLKeyframe {
 	bool endSelected;
     long edgeDragOffset;
     ofRectangle display;
+    
+    ofxTextInputField textField;
+    ofRectangle textFieldDisplay;
 };
 
 class ofxTLSwitches : public ofxTLKeyframes {
@@ -62,6 +66,8 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual void mouseReleased(ofMouseEventArgs& args, long millis);
     virtual void mouseMoved(ofMouseEventArgs& args, long millis);
     
+    virtual void keyPressed(ofKeyEventArgs& args);
+    
     virtual void getSnappingPoints(set<unsigned long long>& points);
     virtual void regionSelected(ofLongRange timeRange, ofRange valueRange);
 
@@ -71,6 +77,10 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual void pasteSent(string pasteboard);
 	
   protected:
+    virtual void update();
+    virtual void switchStateChanged(ofxTLKeyframe* key);
+    virtual void willDeleteKeyframe(ofxTLKeyframe* keyframe);
+    
     virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
@@ -82,8 +92,12 @@ class ofxTLSwitches : public ofxTLKeyframes {
 	//pushes any edits from keyframes superclass into the switches system
 	virtual void updateTimeRanges();
 	
+    bool previousState;
     bool startHover;
     bool endHover;
     ofxTLSwitch* placingSwitch;
+    
+    ofxTLSwitch* clickedTextField;
+    bool enteringText;
     
 };

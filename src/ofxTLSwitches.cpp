@@ -36,10 +36,51 @@
 
 ofxTLSwitches::ofxTLSwitches(){
 	placingSwitch = NULL;
+    previousState = false;
+    enteringText = false;
+	clickedTextField = NULL;
 }
 
 ofxTLSwitches::~ofxTLSwitches(){
     
+}
+
+void ofxTLSwitches::update(){    
+    long millis = currentTrackTime();
+    
+    bool currentState;
+    int currentSwithId = -1;
+    for(int i = 0; i < keyframes.size(); i++){
+        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+        if(switchKey->timeRange.min > millis){
+            currentState = false;
+            
+            //we do -1 because we want to get the 'previous' keyframe
+            //for its textfield which is used as the switchName
+            currentSwithId = i-1;
+            break;
+        }
+        if(switchKey->timeRange.contains(millis)){
+            currentState = true;
+            currentSwithId = i;
+            break;
+        }
+    }
+    
+    if (currentState != previousState) {
+        switchStateChanged(keyframes[currentSwithId]);
+    }
+    
+    previousState = currentState;
+}
+
+void ofxTLSwitches::switchStateChanged(ofxTLKeyframe* key){
+    ofxTLSwitchEventArgs args;
+    args.sender = timeline;
+    args.track = this;
+    args.on = isOn();
+    args.switchName = ((ofxTLSwitch*)key)->textField.text;
+    ofNotifyEvent(events().switched, args);
 }
 
 void ofxTLSwitches::draw(){
@@ -128,6 +169,28 @@ void ofxTLSwitches::draw(){
         }
         ofRect(switchKey->display);
     }
+    
+    ofFill();
+	ofSetLineWidth(5);
+	for(int i = keyframes.size()-1; i >= 0; i--){
+        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+		if(isKeyframeIsInBounds(switchKey)){
+			int screenX = millisToScreenX(switchKey->time);
+			
+			ofSetColor(timeline->getColors().backgroundColor);
+			int textHeight = bounds.y + 10 + ( (20*i) % int(MAX(bounds.height-15, 15)));
+			switchKey->textFieldDisplay = ofRectangle(MIN(screenX+3, bounds.getMaxX() - switchKey->textField.bounds.width),
+									   textHeight-10, 100, 15);
+			ofRect(switchKey->textFieldDisplay);
+			
+			ofSetColor(timeline->getColors().textColor);
+			
+			switchKey->textField.bounds.x = switchKey->textFieldDisplay.x;
+			switchKey->textField.bounds.y = switchKey->textFieldDisplay.y;
+			switchKey->textField.draw();
+		}
+	}
+    
     ofPopStyle();
 }
 
@@ -155,7 +218,51 @@ bool ofxTLSwitches::isOnAtPercent(float percent){
 
 bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
     
-	if(placingSwitch != NULL){
+    clickedTextField = NULL;
+    //look at each element to see if a text field was clicked
+    for(int i = 0; i < keyframes.size(); i++){
+        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+		if(switchKey->textFieldDisplay.inside(args.x, args.y)){
+            clickedTextField = switchKey;
+            break;
+        }
+    }
+    
+    //if so, select that text field and key and present modally
+    //so that keyboard input all goes to the text field.
+    //selection model is designed so that you can type into
+    //mulitple fields at once
+    if(clickedTextField != NULL){
+        timeline->presentedModalContent(this);
+        if(!ofGetModifierSelection()){
+            timeline->unselectAll();
+        }
+		if(ofGetModifierSelection() && clickedTextField->textField.getIsEditing()){
+			clickedTextField->textField.endEditing();
+		}
+		else{
+			clickedTextField->textField.beginEditing();
+			enteringText = true;
+			//make sure this key is selected
+			selectKeyframe(clickedTextField);
+		}
+        return false;
+    }
+	else{
+		if(enteringText && !isHovering()){
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				((ofxTLSwitch*)selectedKeyframes[i])->textField.endEditing();
+			}
+			enteringText = false;
+			timeline->dismissedModalContent();
+		}
+	}
+	
+	if(enteringText)
+        return false;
+    
+    // ---
+    if(placingSwitch != NULL){
 		if(isActive() && args.button == 0){
 			placingSwitch->timeRange.max = millis;
 			updateTimeRanges();
@@ -254,6 +361,7 @@ void ofxTLSwitches::unselectAll(){
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
         switchKey->startSelected = switchKey->endSelected = false;
+        switchKey->textField.disable();
     }
 }
 
@@ -270,7 +378,9 @@ void ofxTLSwitches::updateEdgeDragOffsets(long clickMillis){
 }
 
 void ofxTLSwitches::mouseDragged(ofMouseEventArgs& args, long millis){
-        
+    if(enteringText)
+        return;
+    
     //do the normal dragging behavior for selected keyframes
     ofxTLKeyframes::mouseDragged(args, millis);
 	
@@ -373,7 +483,46 @@ void ofxTLSwitches::updateTimeRanges(){
 }
 
 void ofxTLSwitches::mouseReleased(ofMouseEventArgs& args, long millis){
-	ofxTLKeyframes::mouseReleased(args, millis);
+    //if we didn't click on a text field and we are entering txt
+    //take off the typing mode. Hitting enter will also do this
+    if(enteringText){
+		//if we clicked outside of the rect, definitely deslect everything
+		if(clickedTextField == NULL && !ofGetModifierSelection()){
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				((ofxTLSwitch*)selectedKeyframes[i])->textField.endEditing();
+			}
+			enteringText = false;
+		}
+		//otherwise check if still have a selection
+		else{
+			enteringText = false;
+			for(int i = 0; i < selectedKeyframes.size(); i++){
+				enteringText = enteringText || ((ofxTLSwitch*)selectedKeyframes[i])->textField.getIsEditing();
+			}
+		}
+        
+		if(!enteringText){
+			timeline->dismissedModalContent();
+			timeline->flagTrackModified(this);
+		}
+	} else {
+        ofxTLKeyframes::mouseReleased(args, millis);
+    }
+}
+
+void ofxTLSwitches::keyPressed(ofKeyEventArgs& args){
+	
+	if(enteringText){
+        //enter key submits the values
+        //This could be done be responding to the event from the text field itself...
+        if(args.key == OF_KEY_RETURN){
+            enteringText = false;
+            timeline->dismissedModalContent();
+            timeline->flagTrackModified(this);
+        }
+    } else {
+        ofxTLKeyframes::keyPressed(args);
+    }
 }
 
 void ofxTLSwitches::regionSelected(ofLongRange timeRange, ofRange valueRange){
@@ -409,6 +558,8 @@ int ofxTLSwitches::getSelectedItemCount(){
 
 ofxTLKeyframe* ofxTLSwitches::newKeyframe(){
     ofxTLSwitch* switchKey = new ofxTLSwitch();
+    switchKey->textField.setFont(timeline->getFont());
+
     //in the case of a click, start at the mouse positiion
     //if this is being restored from XML, the next call to restore will override this with what is in the XML
     switchKey->timeRange.min = switchKey->timeRange.max = screenXToMillis(ofGetMouseX());
@@ -424,6 +575,8 @@ ofxTLKeyframe* ofxTLSwitches::newKeyframe(){
 void ofxTLSwitches::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     //pull the saved time into min, and our custom max value
     ofxTLSwitch* switchKey = (ofxTLSwitch*)key;
+    switchKey->textField.text = xmlStore.getValue("switchName", "");
+
     switchKey->timeRange.min = switchKey->time;
     //
     string timecode = xmlStore.getValue("max", "00:00:00:000");
@@ -443,8 +596,18 @@ void ofxTLSwitches::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore
 void ofxTLSwitches::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
     //push the time range into X/Y
     ofxTLSwitch* switchKey = (ofxTLSwitch* )key;
+    xmlStore.addValue("switchName", switchKey->textField.text);
     switchKey->time = switchKey->timeRange.min;
 	xmlStore.addValue("max", timeline->getTimecode().timecodeForMillis(switchKey->timeRange.max));
+}
+
+void ofxTLSwitches::willDeleteKeyframe(ofxTLKeyframe* keyframe){
+	ofxTLSwitch* switchKey = (ofxTLSwitch* )keyframe;
+	if(switchKey->textField.getIsEditing()){
+		timeline->dismissedModalContent();
+		timeline->flagTrackModified(this);
+	}
+	switchKey->textField.disable();
 }
 
 ofxTLKeyframe* ofxTLSwitches::keyframeAtScreenpoint(ofVec2f p){
