@@ -36,7 +36,7 @@
 
 ofxTLSwitches::ofxTLSwitches(){
 	placingSwitch = NULL;
-    previousState = false;
+    lastTimelinePoint = 0;
     enteringText = false;
 	clickedTextField = NULL;
 }
@@ -45,33 +45,30 @@ ofxTLSwitches::~ofxTLSwitches(){
     
 }
 
-void ofxTLSwitches::update(){    
-    long millis = currentTrackTime();
-    
-    bool currentState;
-    int currentSwithId = -1;
+void ofxTLSwitches::update(){
+    long thisTimelinePoint = currentTrackTime();
     for(int i = 0; i < keyframes.size(); i++){
         ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
-        if(switchKey->timeRange.min > millis){
-            currentState = false;
-            
-            //we do -1 because we want to get the 'previous' keyframe
-            //for its textfield which is used as the switchName
-            currentSwithId = i-1;
-            break;
+        
+        // switch turns on
+        if(timeline->getInOutRangeMillis().contains(switchKey->time) &&
+           lastTimelinePoint <= switchKey->time &&
+           thisTimelinePoint >= switchKey->time &&
+           thisTimelinePoint != lastTimelinePoint)
+        {
+            switchStateChanged(keyframes[i]);
         }
-        if(switchKey->timeRange.contains(millis)){
-            currentState = true;
-            currentSwithId = i;
-            break;
+        
+        // switch turns off
+        if(timeline->getInOutRangeMillis().contains(switchKey->timeRange.max) &&
+           lastTimelinePoint <= switchKey->timeRange.max &&
+           thisTimelinePoint >= switchKey->timeRange.max &&
+           thisTimelinePoint != lastTimelinePoint)
+        {
+            switchStateChanged(keyframes[i]);
         }
     }
-    
-    if (currentState != previousState) {
-        switchStateChanged(keyframes[currentSwithId]);
-    }
-    
-    previousState = currentState;
+    lastTimelinePoint = thisTimelinePoint;
 }
 
 void ofxTLSwitches::switchStateChanged(ofxTLKeyframe* key){

@@ -92,7 +92,7 @@ class ofxTLSwitches : public ofxTLKeyframes {
 	//pushes any edits from keyframes superclass into the switches system
 	virtual void updateTimeRanges();
 	
-    bool previousState;
+    long lastTimelinePoint;
     bool startHover;
     bool endHover;
     ofxTLSwitch* placingSwitch;
