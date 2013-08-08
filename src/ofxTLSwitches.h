@@ -57,6 +57,8 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual bool isOnAtMillis(long millis);
     virtual bool isOnAtPercent(float percent);
     
+    ofxTLSwitch* getActiveSwitchAtMillis(long millis);
+    
     virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
     virtual void mouseReleased(ofMouseEventArgs& args, long millis);
