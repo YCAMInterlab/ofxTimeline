@@ -324,6 +324,8 @@ class ofxTimeline : ofThread {
 	unsigned long long getLatestSelectedTime();
 
 	bool hasTrack(string trackName);
+    bool hasPage(string pageName);
+    
 	//type can be
 	//Bangs, Switches, Flags, Colors, Curves, Audio or Video
 	ofxTLTrack* getTrack(string name);
