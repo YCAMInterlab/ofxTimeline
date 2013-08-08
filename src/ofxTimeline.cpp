@@ -1729,6 +1729,19 @@ ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	return trackNameToPage[trackName]->getTrack(trackName);
 }
 
+ofxTLPage* ofxTimeline::getPage(string pageName){
+
+	for(vector<ofxTLPage*>::iterator it =  pages.begin(); it != pages.end(); it++){
+        if((*it)->getName() == pageName){
+            return (*it);
+        }
+    }
+
+    ofLogError("ofxTimeline -- Couldn't find page " + pageName);
+    return NULL;
+}
+
+
 ofxTLSwitches* ofxTimeline::addSwitches(string trackName){
     string uniqueName = confirmedUniqueName(trackName);
 	return addSwitches(uniqueName, nameToXMLName(uniqueName));
