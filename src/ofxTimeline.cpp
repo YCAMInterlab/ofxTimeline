@@ -1712,6 +1712,15 @@ bool ofxTimeline::hasTrack(string trackName){
 	return trackNameToPage.find(trackName) != trackNameToPage.end();
 }
 
+bool ofxTimeline::hasPage(string pageName){
+	for(vector<ofxTLPage*>::iterator it =  pages.begin(); it != pages.end(); it++){
+        if((*it)->getName() == pageName){
+            return true;
+        }
+    }
+    return false;
+}
+
 ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
@@ -1719,6 +1728,19 @@ ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	}
 	return trackNameToPage[trackName]->getTrack(trackName);
 }
+
+ofxTLPage* ofxTimeline::getPage(string pageName){
+
+	for(vector<ofxTLPage*>::iterator it =  pages.begin(); it != pages.end(); it++){
+        if((*it)->getName() == pageName){
+            return (*it);
+        }
+    }
+
+    ofLogError("ofxTimeline -- Couldn't find page " + pageName);
+    return NULL;
+}
+
 
 ofxTLSwitches* ofxTimeline::addSwitches(string trackName){
     string uniqueName = confirmedUniqueName(trackName);
