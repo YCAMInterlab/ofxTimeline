@@ -213,6 +213,19 @@ bool ofxTLSwitches::isOnAtPercent(float percent){
     return isOnAtMillis(millis);
 }
 
+ofxTLSwitch* ofxTLSwitches::getActiveSwitchAtMillis(long millis){
+    for(int i = 0; i < keyframes.size(); i++){
+        ofxTLSwitch* switchKey = (ofxTLSwitch*)keyframes[i];
+        if(switchKey->timeRange.min > millis){
+            break;
+        }
+        if(switchKey->timeRange.contains(millis)){
+            return switchKey;
+        }
+    }
+    return NULL;
+}
+
 bool ofxTLSwitches::mousePressed(ofMouseEventArgs& args, long millis){
     
     clickedTextField = NULL;
