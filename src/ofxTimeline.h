@@ -69,8 +69,9 @@
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
 #include "ofxTLVideoTrack.h"
+#ifdef TIMELINE_AUDIO_INCLUDED
 #include "ofxTLAudioTrack.h"
-
+#endif
 
 typedef struct {
     ofxTLTrack* track;
@@ -99,7 +100,9 @@ class ofxTimeline : ofThread {
 	bool toggleEnabled();
     virtual void enable();
 	virtual void disable();
-    
+	virtual void enableEvents();
+	virtual void disableEvents();
+
     virtual void clear(); //clears every track
     virtual void reset(); //gets rid of everything, sets back to one page
 
@@ -152,8 +155,10 @@ class ofxTimeline : ofThread {
     
     //loads calls load on all tracks from the given folder
     //really useful for setting up 'project' directories
-    virtual void loadTracksFromFolder(string folderPath);
-    
+    void loadTracksFromFolder(string folderPath);
+    void saveTracksToFolder(string folderPath);
+
+		
     //timing setup functions
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
@@ -319,9 +324,12 @@ class ofxTimeline : ofThread {
 	unsigned long long getLatestSelectedTime();
 
 	bool hasTrack(string trackName);
+    bool hasPage(string pageName);
+    
 	//type can be
 	//Bangs, Switches, Flags, Colors, Curves, Audio or Video
 	ofxTLTrack* getTrack(string name);
+	ofxTLPage* getPage(string pageName);
 	
 	//adding tracks always adds to the current page
     ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
@@ -375,11 +383,13 @@ class ofxTimeline : ofThread {
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
     
+	#ifdef TIMELINE_AUDIO_INCLUDED
     //Audio tracks only work with PCM Wav or Aiff file
     ofxTLAudioTrack* addAudioTrack(string trackName);
     ofxTLAudioTrack* addAudioTrackWithPath(string audioPath);
     ofxTLAudioTrack* addAudioTrack(string name, string audioPath);
     ofxTLAudioTrack* getAudioTrack(string audioTrackName);
+	#endif
 
     //used for audio and video.
     //we punt to the track to control time.
@@ -527,8 +537,6 @@ class ofxTimeline : ofThread {
 	virtual void checkLoop();
 	virtual void checkEvents();
 	
-	virtual void enableEvents();
-	virtual void disableEvents();
 
 	virtual void viewWasResized(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);

@@ -32,6 +32,7 @@
 
 #include "ofxTLColorTrack.h"
 #include "ofxTimeline.h"
+#include "ofxHotKeys.h"
 
 ofxTLColorTrack::ofxTLColorTrack()
  :	drawingColorWindow(false),
@@ -309,7 +310,7 @@ void ofxTLColorTrack::mouseDragged(ofMouseEventArgs& args, long millis){
 void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 	if(drawingColorWindow){
 		//if(args.button == 0 && !colorWindow.inside(args.x, args.y) ){
-		if(args.button == 0 && !clickedInColorRect){
+		if(args.button == 0 && !clickedInColorRect && !ofGetModifierControlPressed()){
 			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 			if(selectedSample->color != colorAtClickTime){
 				timeline->flagTrackModified(this);

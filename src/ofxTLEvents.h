@@ -74,7 +74,8 @@ class ofxTLBangEventArgs : public ofEventArgs {
 
 class ofxTLSwitchEventArgs : public ofEventArgs {
   public:
-    ofxTimeline* sender;    
+    ofxTimeline* sender;
+    ofxTLTrack* track;
 	string switchName;
 	bool on;
 };

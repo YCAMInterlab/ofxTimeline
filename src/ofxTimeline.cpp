@@ -73,6 +73,7 @@ ofxTimeline::ofxTimeline()
 	inoutRange(ofRange(0.0,1.0)),
 	currentPage(NULL),
 	modalTrack(NULL),
+    tabs(NULL),
 	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
@@ -84,7 +85,7 @@ ofxTimeline::ofxTimeline()
 	curvesUseBinary(false),
 	headersAreEditable(false),
 	minimalHeaders(false),
-	//copy from ofxTimeline/assets into bin/data/
+   	//copy from ofxTimeline/assets into bin/data/
 	defaultPalettePath("GUI/defaultColorPalette.png"),
 	//TODO: should be able to use bitmap font if need be
 	fontPath("GUI/NewMedia Fett.ttf"),
@@ -95,7 +96,9 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
-		ofRemoveListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
+		
+		disable();
+
 		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
         //TODO: move to shared pointers 
@@ -103,18 +106,23 @@ ofxTimeline::~ofxTimeline(){
         //there is no copy/assignment constructor
 		reset();
         
-        delete ticker;
         delete tabs;
+		delete inoutTrack;
+        delete ticker;
         delete zoomer;
 	}
 }
 
 void ofxTimeline::setup(){
 
+    //TODO: error if isSetup...
+    
 	isSetup = true;
 	
 	width = ofGetWidth();
-
+    if(tabs != NULL){
+        delete tabs;
+    }
 	tabs = new ofxTLPageTabs();
 	tabs->setTimeline(this);
 	tabs->setup();
@@ -177,15 +185,20 @@ void ofxTimeline::removeFromThread(){
 
 void ofxTimeline::setName(string newName){
     if(newName != name){
-        
+        string oldName = name;
 	    name = newName;
 		if(isSetup){
 			setupStandardElements();
+			for(int i = 0; i < pages.size(); i++){
+				pages[i]->timelineChangedName(newName, oldName);
+			}
 		}
     }
 }
 
 void ofxTimeline::setupStandardElements(){
+	
+//	cout << "*****TL setting up standard path " << ofToDataPath(workingFolder + name + "_inout.xml") << endl;
 	
 	inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
 	inoutTrack->setup();
@@ -202,12 +215,10 @@ string ofxTimeline::getName(){
 
 void ofxTimeline::setWorkingFolder(string folderPath){
 	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
-    inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
-	inoutTrack->load();
-    zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
-	zoomer->load();
-	
-	currentPage->loadTrackPositions();
+    
+	if(isSetup){
+		setupStandardElements();	
+	}
 }
 
 string ofxTimeline::getWorkingFolder(){
@@ -218,6 +229,31 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
         pages[i]->loadTracksFromFolder(folderPath);
     }
+	
+//	cout << "*****TL " << name << " Loading tracks from " << folderPath << endl;
+	
+	setWorkingFolder(folderPath);
+}
+
+void ofxTimeline::saveTracksToFolder(string folderPath){
+	ofDirectory targetDirectory = ofDirectory(folderPath);
+	if(!targetDirectory.exists()){
+		targetDirectory.create(true);
+	}
+	for(int i = 0; i < pages.size(); i++){
+        pages[i]->saveTracksToFolder(folderPath);
+    }
+	string filename = folderPath + zoomer->getXMLFileName();
+	zoomer->setXMLFileName(filename);
+	zoomer->save();
+	
+	filename = folderPath + inoutTrack->getXMLFileName();
+	inoutTrack->setXMLFileName(filename);
+	inoutTrack->save();
+	
+
+	
+	setWorkingFolder(folderPath);
 }
 
 #pragma mark CONFIGURATION
@@ -756,16 +792,26 @@ void ofxTimeline::clear(){
 }
 
 void ofxTimeline::reset(){ //gets rid of everything
+    
+    if(!isSetup){
+        return;
+    }
+    
+	
+	
 	if(isOnThread){
 		waitForThread(true);
 	}
-    stop();
+    
+    disable();
     undoStack.clear();
     for(int i = 0; i < pages.size(); i++){ 
         delete pages[i];
     }
-	
-	tabs->clear();
+    if(tabs != NULL){
+        tabs->clear();
+    }
+
     setInOutRange(ofRange(0,1.0));
     pages.clear();
     trackNameToPage.clear();
@@ -773,9 +819,14 @@ void ofxTimeline::reset(){ //gets rid of everything
     modalTrack = NULL;
     timeControl = NULL;
 	addPage("Page One", true);
-	if(isOnThread){
-		startThread();
-	}
+//	if(isOnThread){
+//		startThread();
+//	}
+
+	ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
+//	ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
+
+    isSetup = false;
 }
 
 
@@ -784,12 +835,13 @@ void ofxTimeline::setDurationInFrames(int frames){
 }
 
 void ofxTimeline::setDurationInSeconds(float seconds){
-	//TODO: verify no elements are being truncated
-    if(seconds <= 0.){
-    	ofLogError("ofxTimeline::setDurationInSeconds") << " duraiton must set a positive number";
+
+	//verify no elements are being truncated
+	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	if(seconds <= 0.){
+    	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
-	durationInSeconds = seconds;
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
@@ -1413,7 +1465,6 @@ void ofxTimeline::checkLoop(){
     }
 }
 
-//void ofxTimeline::draw(ofEventArgs& args){
 void ofxTimeline::draw(){
 
 	if(isSetup && isShowing){
@@ -1586,7 +1637,7 @@ ofxTLZoomer* ofxTimeline::getZoomer(){
 //can be used to add custom elements
 void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
 	if(trackNameToPage[trackName] != NULL){
-        ofLogError("ofxTimeline::addTrack") << " Adding dupliciate track name " << trackName;
+        ofLogError("ofxTimeline::addTrack") << " Adding duplicate track name " << trackName;
     }
 	track->setTimeline( this );
 	track->setName( trackName );
@@ -1661,6 +1712,15 @@ bool ofxTimeline::hasTrack(string trackName){
 	return trackNameToPage.find(trackName) != trackNameToPage.end();
 }
 
+bool ofxTimeline::hasPage(string pageName){
+	for(vector<ofxTLPage*>::iterator it =  pages.begin(); it != pages.end(); it++){
+        if((*it)->getName() == pageName){
+            return true;
+        }
+    }
+    return false;
+}
+
 ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	if(!hasTrack(trackName)){
 		ofLogError("ofxTimeline -- Couldn't find track " + trackName);
@@ -1668,6 +1728,19 @@ ofxTLTrack* ofxTimeline::getTrack(string trackName){
 	}
 	return trackNameToPage[trackName]->getTrack(trackName);
 }
+
+ofxTLPage* ofxTimeline::getPage(string pageName){
+
+	for(vector<ofxTLPage*>::iterator it =  pages.begin(); it != pages.end(); it++){
+        if((*it)->getName() == pageName){
+            return (*it);
+        }
+    }
+
+    ofLogError("ofxTimeline -- Couldn't find page " + pageName);
+    return NULL;
+}
+
 
 ofxTLSwitches* ofxTimeline::addSwitches(string trackName){
     string uniqueName = confirmedUniqueName(trackName);
@@ -1869,7 +1942,7 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     }
     return track->getPlayer();
 }
-
+#ifdef TIMELINE_AUDIO_INCLUDED
 ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
     return addAudioTrack(trackName, "");
 }
@@ -1897,6 +1970,7 @@ ofxTLAudioTrack* ofxTimeline::getAudioTrack(string audioTrackName){
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(string trackName){
     return getTrackHeader(getTrack(name));    
 }
+#endif
 
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(ofxTLTrack* track){
     return trackNameToPage[track->getName()]->getTrackHeader(track);
@@ -2001,8 +2075,6 @@ string ofxTimeline::confirmedUniqueName(string name){
     }
     return uniqueName;
 }
-
-
 
 void ofxTimeline::setDragTimeOffset(unsigned long long millisecondOffset){
 

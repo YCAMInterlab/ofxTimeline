@@ -244,6 +244,7 @@ void ofxTLCameraTrack::draweEase(CameraTrackEase ease, ofPoint screenPoint, bool
 
 void ofxTLCameraTrack::update(ofEventArgs& args){
 	if(lockCameraToTrack){
+//		cout << "moving camera " << timeline << " + " << timeline->getName() << endl;
 		moveCameraToTime(timeline->getCurrentTimeMillis());
 	}
 }
