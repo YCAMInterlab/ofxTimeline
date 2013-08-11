@@ -105,7 +105,7 @@ void ofxTLZoomer::load() {
 	
 	ofxXmlSettings settings;
 	if(!settings.loadFile(xmlFileName)){
-		ofLog(OF_LOG_NOTICE, "ofxTLZoomer -- couldn't load zoom settings file " + xmlFileName);
+		ofLog(OF_LOG_VERBOSE, "ofxTLZoomer -- couldn't load zoom settings file " + xmlFileName);
         currentViewRange = ofRange(0., 1.0);
 		return;
 	}
