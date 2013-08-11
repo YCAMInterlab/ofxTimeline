@@ -41,14 +41,20 @@ ofxTLVideoTrack::ofxTLVideoTrack()
 	outFrame = -1;
     currentlyPlaying = false;
     drawVideoPreview = true;
+	playAlongToTimeline = true;
+	isSetup = false;
 }
 
 ofxTLVideoTrack::~ofxTLVideoTrack(){
-
+	if(isSetup){
+		disable();
+		ofRemoveListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
+	}
 }
 
 void ofxTLVideoTrack::setup(){
     ofxTLImageTrack::setup();
+	isSetup = true;
     ofAddListener(ofEvents().exit, this, &ofxTLVideoTrack::exit);
     startThread();
 }
@@ -103,6 +109,10 @@ void ofxTLVideoTrack::play(){
 }
 
 void ofxTLVideoTrack::stop(){
+	if(!isLoaded()){
+		return;
+	}
+
 	player->setSpeed(0);
     if(isLoaded() && getIsPlaying()){
 //		cout << "stopping playback" << endl;
@@ -124,6 +134,15 @@ void ofxTLVideoTrack::stop(){
 bool ofxTLVideoTrack::getIsPlaying(){
 	//return isLoaded() && player->isPlaying() && player->getSpeed() > 0.0;
 	return isLoaded() && currentlyPlaying;
+}
+
+
+void ofxTLVideoTrack::setPlayAlongToTimeline(bool playAlong){
+	this->playAlongToTimeline = playAlong;
+}
+
+bool ofxTLVideoTrack::getPlayAlongToTimeline(){
+	return playAlongToTimeline;
 }
 
 //void ofxTLVideoTrack::update(ofEventArgs& args){
@@ -165,7 +184,9 @@ void ofxTLVideoTrack::update(){
 				else {
 					int loopFrame = timeline->getInFrame();
 					selectFrame(loopFrame);
-					player->play();
+					if(playAlongToTimeline){
+						player->play();
+					}
 					ofxTLPlaybackEventArgs args = timeline->createPlaybackEvent();
 					ofNotifyEvent(events().playbackLooped, args);                
 				}
@@ -200,7 +221,7 @@ void ofxTLVideoTrack::update(){
 
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
 	
-    if(isLoaded() && !currentlyPlaying){
+    if(isLoaded() && !currentlyPlaying && playAlongToTimeline){
         selectFrame(args.currentFrame);
 //        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
 //        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;
@@ -216,21 +237,20 @@ float ofxTLVideoTrack::positionForSecond(float second){
 
 void ofxTLVideoTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
 	ofxTLTrack::playbackStarted(args);
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		//player.setPosition(timeline->getPercentComplete());
 		float position = positionForSecond(timeline->getCurrentTime());
 		if(position < 1.0){
-            player->setSpeed(1.0);
+			player->setSpeed(1.0);
 			player->play();
             currentlyPlaying = true;
-            //play();
 		}
 		player->setPosition( position );
 	}
 }
 
 void ofxTLVideoTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		if(!player->isPlaying()){
 			player->play();
 		}
@@ -239,7 +259,7 @@ void ofxTLVideoTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
 }
 
 void ofxTLVideoTrack::playbackEnded(ofxTLPlaybackEventArgs& args){
-	if(isLoaded() && this != timeline->getTimecontrolTrack()){
+	if(isLoaded() && this != timeline->getTimecontrolTrack() && playAlongToTimeline){
 		player->stop();
 	}
 }
@@ -534,8 +554,8 @@ int ofxTLVideoTrack::getSelectedFrame(){
 }
 
 void ofxTLVideoTrack::exit(ofEventArgs& args){
-    stopThread();
-//	waitForThread(true);
+//    stopThread();
+	waitForThread(true);
 }
 
 string ofxTLVideoTrack::getTrackType(){

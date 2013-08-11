@@ -91,6 +91,23 @@ void ofxTLPage::loadTracksFromFolder(string folderPath){
     }
 }
 
+//given a folder the page will look for xml files to load within that
+void ofxTLPage::saveTracksToFolder(string folderPath){
+    for(int i = 0; i < headers.size(); i++){
+		string filename = folderPath + tracks[headers[i]->name]->getXMLFileName();
+        tracks[headers[i]->name]->setXMLFileName(filename);
+		tracks[headers[i]->name]->save();
+    }
+}
+
+void ofxTLPage::timelineChangedName(string newName, string oldName){
+    for(int i = 0; i < headers.size(); i++){
+		string filename = tracks[headers[i]->name]->getXMLFileName();
+		ofStringReplace(filename, oldName+"_", newName+"_");
+        tracks[headers[i]->name]->setXMLFileName(filename);
+    }
+}
+
 void ofxTLPage::setTicker(ofxTLTicker* t){
 	ticker = t;
 }
@@ -744,7 +761,7 @@ void ofxTLPage::loadTrackPositions(){
 		trackPositions.popTag();
 	}
 	else{
-		 ofLogNotice("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
+		 ofLogVerbose("ofxTLPage::loadTrackPositions") << "Couldn't load position file";
 	}
 }
 
