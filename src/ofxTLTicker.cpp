@@ -320,6 +320,10 @@ void ofxTLTicker::updateBPMPoints(){
 
 }
 
+bool ofxTLTicker::getIsScrubbing(){
+	return playOnMouseReleased;
+}
+
 bool ofxTLTicker::getDrawBPMGrid(){
 	return drawBPMGrid;
 }

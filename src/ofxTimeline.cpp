@@ -549,8 +549,10 @@ void ofxTimeline::stop(){
 		
         isPlaying = false;
 
-        ofxTLPlaybackEventArgs args = createPlaybackEvent();
-        ofNotifyEvent(timelineEvents.playbackEnded, args);
+		if(!ticker->getIsScrubbing()){ //dont trigger event if we are just scrubbing
+			ofxTLPlaybackEventArgs args = createPlaybackEvent();
+			ofNotifyEvent(timelineEvents.playbackEnded, args);
+		}
 	}
 }
 
