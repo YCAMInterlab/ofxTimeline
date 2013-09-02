@@ -240,6 +240,7 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	if(!targetDirectory.exists()){
 		targetDirectory.create(true);
 	}
+    folderPath = ofFilePath::addTrailingSlash(folderPath);
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->saveTracksToFolder(folderPath);
     }
