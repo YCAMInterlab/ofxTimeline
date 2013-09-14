@@ -98,9 +98,10 @@ class ofxTimeline : ofThread {
     virtual void removeFromThread();
 	
 	bool toggleEnabled();
-    virtual void enable();
-	virtual void disable();
-    
+    void enable();
+	void disable();
+    bool getIsEnabled();
+	
     virtual void clear(); //clears every track
     virtual void reset(); //gets rid of everything, sets back to one page
 

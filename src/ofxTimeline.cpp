@@ -740,7 +740,12 @@ string ofxTimeline::getOutPointTimecode(){
 }
 
 bool ofxTimeline::toggleEnabled(){
-	isEnabled = !isEnabled;
+	if(isEnabled){
+		disable();
+	}
+	else{
+		enable();
+	}
 	return isEnabled;
 }
 
@@ -757,6 +762,10 @@ void ofxTimeline::disable(){
 		isEnabled = false;
 		disableEvents();
     }
+}
+
+bool ofxTimeline::getIsEnabled(){
+	return isEnabled;
 }
 
 //clears every element
