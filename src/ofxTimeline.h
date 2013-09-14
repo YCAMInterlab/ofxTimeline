@@ -102,6 +102,9 @@ class ofxTimeline : ofThread {
 	void disable();
     bool getIsEnabled();
 	
+	void enableEvents();
+	void disableEvents();
+
     virtual void clear(); //clears every track
     virtual void reset(); //gets rid of everything, sets back to one page
 
@@ -323,9 +326,12 @@ class ofxTimeline : ofThread {
 	unsigned long long getLatestSelectedTime();
 
 	bool hasTrack(string trackName);
+    bool hasPage(string pageName);
+    
 	//type can be
 	//Bangs, Switches, Flags, Colors, Curves, Audio or Video
 	ofxTLTrack* getTrack(string name);
+	ofxTLPage* getPage(string pageName);
 	
 	//adding tracks always adds to the current page
     ofxTLCurves* addCurves(string name, ofRange valueRange = ofRange(0,1.0), float defaultValue = 0);
@@ -533,8 +539,6 @@ class ofxTimeline : ofThread {
 	virtual void checkLoop();
 	virtual void checkEvents();
 	
-	virtual void enableEvents();
-	virtual void disableEvents();
 
 	virtual void viewWasResized(ofEventArgs& args);
 	virtual void pageChanged(ofxTLPageEventArgs& args);

@@ -97,6 +97,9 @@ class ofxTLPage {
 	void loadTracksFromFolder(string folderPath);
     void saveTracksToFolder(string folderPath);
 	
+	//this will swap out the xml file names that have been set to default based on the timeline name
+	void timelineChangedName(string newName, string oldName);
+	
 	virtual void mousePressed(ofMouseEventArgs& args, long millis);
 	virtual void mouseMoved(ofMouseEventArgs& args, long millis);
 	virtual void mouseDragged(ofMouseEventArgs& args, long millis);

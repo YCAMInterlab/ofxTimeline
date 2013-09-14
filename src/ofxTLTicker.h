@@ -47,7 +47,7 @@ class ofxTLTicker : public ofxTLTrack
 	ofxTLTicker();
 	~ofxTLTicker();
 	
-	virtual void draw();
+	void draw();
 	
 	//set the draw rect for the whole keyframer interface
 	virtual void setTotalDrawRect(ofRectangle drawRect);
@@ -64,6 +64,8 @@ class ofxTLTicker : public ofxTLTrack
 	virtual bool getDrawBPMGrid();
 	virtual void setDrawBPMGrid(bool drawGrid);
 	virtual void setHoverTime(unsigned long long millis);
+
+	bool getIsScrubbing();
 	
   protected:
 	void updateTimelinePosition();
