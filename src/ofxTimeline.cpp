@@ -74,6 +74,9 @@ ofxTimeline::ofxTimeline()
 	currentPage(NULL),
 	modalTrack(NULL),
     tabs(NULL),
+	inoutTrack(NULL),
+	ticker(NULL),
+	zoomer(NULL),
 	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
@@ -128,17 +131,25 @@ void ofxTimeline::setup(){
 	tabs->setup();
 	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TAB_HEIGHT));
 
+	if(inoutTrack != NULL){
+		delete inoutTrack;
+	}
     inoutTrack = new ofxTLInOut();
     inoutTrack->setTimeline(this);
     inoutTrack->setDrawRect(ofRectangle(offset.x, tabs->getBottomEdge(), width, INOUT_HEIGHT));
     
+	if(ticker != NULL){
+		delete ticker;
+	}
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
 	
     //TODO: save ticker playhead position
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
-	
+	if(zoomer != NULL){
+		delete zoomer;
+	}
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
 	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
