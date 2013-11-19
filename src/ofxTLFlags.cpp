@@ -246,3 +246,13 @@ void ofxTLFlags::addFlagAtTime(string key, unsigned long long time){
 	timeline->flagTrackModified(this);
 }
 
+ofxTLFlag* ofxTLFlags::getFlagWithKey(string key){
+	for(int i = 0; i < keyframes.size(); i++){
+		ofxTLFlag* flag = (ofxTLFlag*)keyframes[i];
+		if( flag->textField.text == key ){
+			return flag;
+		}
+	}
+	return NULL;
+}
+
