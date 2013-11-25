@@ -148,6 +148,7 @@ to download the timeline open up the terminal and type
     $./clone_addons.sh
 
 This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
+If you're using linux, please make sure you checkout the develop branch of ofxTextInputField
 
 ### Create a new ofxTimeline project
 
