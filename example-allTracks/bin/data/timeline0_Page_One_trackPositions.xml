@@ -7,19 +7,19 @@
     </element>
     <element name="bangs">
         <x>0.000000000</x>
-        <y>326.000000000</y>
+        <y>208.000000000</y>
         <width>850.000000000</width>
         <height>43.000000000</height>
     </element>
     <element name="colors">
         <x>0.000000000</x>
-        <y>464.000000000</y>
+        <y>346.000000000</y>
         <width>850.000000000</width>
         <height>47.000000000</height>
     </element>
     <element name="curves">
         <x>0.000000000</x>
-        <y>237.000000000</y>
+        <y>119.000000000</y>
         <width>850.000000000</width>
         <height>65.000000000</height>
     </element>
@@ -31,19 +31,19 @@
     </element>
     <element name="flags">
         <x>0.000000000</x>
-        <y>393.000000000</y>
+        <y>275.000000000</y>
         <width>850.000000000</width>
         <height>47.000000000</height>
     </element>
     <element name="lfo">
         <x>0.000000000</x>
-        <y>535.000000000</y>
+        <y>417.000000000</y>
         <width>850.000000000</width>
         <height>67.000000000</height>
     </element>
     <element name="switches">
         <x>0.000000000</x>
-        <y>626.000000000</y>
+        <y>508.000000000</y>
         <width>850.000000000</width>
         <height>40.000000000</height>
     </element>

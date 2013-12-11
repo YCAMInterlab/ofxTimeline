@@ -546,6 +546,10 @@ float ofxTLVideoTrack::getCurrentTime(){
 	return player->getPosition() * player->getDuration();
 }
 
+float ofxTLVideoTrack::getDuration(){
+	return player->getDuration();
+}
+
 int ofxTLVideoTrack::getSelectedFrame(){
 	return selectedFrame + currentLoop * (outFrame-inFrame);
 }
