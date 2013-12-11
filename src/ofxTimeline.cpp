@@ -199,7 +199,15 @@ void ofxTimeline::setName(string newName){
         string oldName = name;
 	    name = newName;
 		if(isSetup){
-			setupStandardElements();
+//			setupStandardElements();
+			string inoutTrackName = inoutTrack->getXMLFileName();
+			ofStringReplace(inoutTrackName, oldName+"_", newName+"_");
+			inoutTrack->setXMLFileName(inoutTrackName);
+			
+			string zoomerTrackName = zoomer->getXMLFileName();
+			ofStringReplace(zoomerTrackName, oldName+"_", newName+"_");
+			zoomer->setXMLFileName(zoomerTrackName);
+	
 			for(int i = 0; i < pages.size(); i++){
 				pages[i]->timelineChangedName(newName, oldName);
 			}
@@ -225,7 +233,7 @@ string ofxTimeline::getName(){
 }
 
 void ofxTimeline::setWorkingFolder(string folderPath){
-	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
+	workingFolder = ofFilePath::addTrailingSlash(folderPath);
     
 	if(isSetup){
 		setupStandardElements();	
@@ -247,6 +255,7 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
 }
 
 void ofxTimeline::saveTracksToFolder(string folderPath){
+
 	ofDirectory targetDirectory = ofDirectory(folderPath);
 	if(!targetDirectory.exists()){
 		targetDirectory.create(true);
@@ -261,8 +270,6 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	filename = folderPath + inoutTrack->getXMLFileName();
 	inoutTrack->setXMLFileName(filename);
 	inoutTrack->save();
-	
-
 	
 	setWorkingFolder(folderPath);
 }
@@ -859,11 +866,17 @@ void ofxTimeline::setDurationInFrames(int frames){
 void ofxTimeline::setDurationInSeconds(float seconds){
 
 	//verify no elements are being truncated
-	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	float inTimeSeconds  = getInTimeInSeconds();
+	float outTimeSeconds = getOutTimeInSeconds();
 	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
+	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	
+	setInPointAtSeconds(inTimeSeconds);
+	setOutPointAtSeconds(outTimeSeconds);
+	
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
