@@ -170,12 +170,12 @@ void ofxTLAudioTrack::recomputePreview(){
 	for(int c = 0; c < numChannels; c++){
 		ofPolyline preview;
 		int lastFrameIndex = 0;
-        preview.resize(bounds.width*2);
+		preview.resize(bounds.width*2);  //Why * 2? Because there are two points per pixel, center and outside. 
 		for(float i = bounds.x; i < bounds.x+bounds.width; i++){
 			float pointInTrack = screenXtoNormalizedX( i ) * normalizationRatio; //will scale the screenX into wave's 0-1.0
 			float trackCenter = bounds.y + trackHeight * (c+1);
 			
-			ofPoint * vertex = & preview.getVertices()[i*2];
+			ofPoint * vertex = & preview.getVertices()[ (i - bounds.x) * 2];
 			
 			if(pointInTrack >= 0 && pointInTrack <= 1.0){
 				//draw sample at pointInTrack * waveDuration;
@@ -215,7 +215,7 @@ void ofxTLAudioTrack::recomputePreview(){
 					}
 				}
 				
-				while (vertex < & preview.getVertices()[i*2] + 2) {
+				while (vertex < & preview.getVertices()[ (i - bounds.x) * 2] + 2) {
 					*vertex = *(vertex-1);
 					vertex++;
 				}
