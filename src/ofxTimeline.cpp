@@ -865,17 +865,26 @@ void ofxTimeline::setDurationInFrames(int frames){
 
 void ofxTimeline::setDurationInSeconds(float seconds){
 
-	//verify no elements are being truncated
+	bool updateInTime = inoutRange.min > 0.;
+	bool updateOutTime = inoutRange.max < 1.;
+	
 	float inTimeSeconds  = getInTimeInSeconds();
 	float outTimeSeconds = getOutTimeInSeconds();
+	
 	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
+	//verify no elements are being truncated
 	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
 	
-	setInPointAtSeconds(inTimeSeconds);
-	setOutPointAtSeconds(outTimeSeconds);
+
+	if(updateInTime){
+		setInPointAtSeconds(inTimeSeconds);
+	}
+	if(updateOutTime){
+		setOutPointAtSeconds(outTimeSeconds);
+	}
 	
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
