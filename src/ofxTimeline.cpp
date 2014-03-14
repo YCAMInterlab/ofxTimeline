@@ -1948,6 +1948,7 @@ ofImage* ofxTimeline::getImage(string trackName, int atFrame){
 	return NULL;
 }
 
+#ifdef TIMELINE_VIDEO_INCLUDED
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
@@ -1986,6 +1987,8 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     }
     return track->getPlayer();
 }
+#endif
+
 #ifdef TIMELINE_AUDIO_INCLUDED
 ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
     return addAudioTrack(trackName, "");

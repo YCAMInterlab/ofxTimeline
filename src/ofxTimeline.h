@@ -68,10 +68,15 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
+
+#ifdef TIMELINE_VIDEO_INCLUDED
 #include "ofxTLVideoTrack.h"
+#endif
+
 #ifdef TIMELINE_AUDIO_INCLUDED
 #include "ofxTLAudioTrack.h"
 #endif
+
 
 typedef struct {
     ofxTLTrack* track;
@@ -378,12 +383,14 @@ class ofxTimeline : ofThread {
 	ofImage* getImage(string name, float atTime);
 	ofImage* getImage(string name, int atFrame);
 	//*IMAGE SEQUENCE DOES NOT WORK*
-	
+
+	#ifdef TIMELINE_VIDEO_INCLUDED
 	ofxTLVideoTrack* addVideoTrack(string name);
     ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
     ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
+	#endif
     
 	#ifdef TIMELINE_AUDIO_INCLUDED
     //Audio tracks only work with PCM Wav or Aiff file
