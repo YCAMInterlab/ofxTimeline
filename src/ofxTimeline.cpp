@@ -168,9 +168,7 @@ void ofxTimeline::setup(){
 	if(name == ""){
 	    setName("timeline" + ofToString(timelineNumber++));
 	}
-	else{
-		setupStandardElements();
-	}
+	setupStandardElements();
 
 }
 
