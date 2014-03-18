@@ -58,7 +58,7 @@ ofxTLPage::ofxTLPage()
 ofxTLPage::~ofxTLPage(){
 	if(isSetup){
 		ofRemoveListener(timeline->events().zoomEnded, this, &ofxTLPage::zoomEnded);
-        
+        isSetup = false;
 		for(int i = 0; i < headers.size(); i++){
 			if(tracks[headers[i]->name]->getCreatedByTimeline()){
 				delete tracks[headers[i]->name];
