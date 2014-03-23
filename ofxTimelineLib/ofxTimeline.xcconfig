@@ -5,7 +5,7 @@ OF_PATH = ../../..
 //THIS HAS ALL THE HEADER AND LIBS FOR OF CORE
 #include "../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig"
 
-OFX_TIMELINE_PATH = "$(OF_PATH)/addons/ofxTimeline"
+OFX_TIMELINE_PATH = $(OF_PATH)/addons/ofxTimeline
 
 HEADER_KISS = "$(OFX_TIMELINE_PATH)/libs/kiss/include"
 HEADER_OPENAL_ADDITIONS = "$(OFX_TIMELINE_PATH)/libs/ofOpenALSoundPlayer_TimelineAdditions/src"

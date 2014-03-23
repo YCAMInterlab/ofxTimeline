@@ -5,5 +5,7 @@ OF_PATH = ../../..
 //THIS HAS ALL THE HEADER AND LIBS FOR OF CORE
 #include "../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig"
 
+#include "../../../addons/ofxTimeline/ofxTimelineLib/ofxTimeline.xcconfig"
+
 OTHER_LDFLAGS = $(OF_CORE_LIBS) 
-HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS)
+HEADER_SEARCH_PATHS = $(OF_CORE_HEADERS) $(OFX_TIMELINE_HEADERS)
