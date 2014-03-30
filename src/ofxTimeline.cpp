@@ -1041,7 +1041,7 @@ ofVec2f ofxTimeline::getBottomRight(){
 
 void ofxTimeline::updatePagePositions(){
 	if(isSetup){
-		ofVec2f pageOffset = ofVec2f(offset.x, inoutTrack->getBottomEdge());
+		ofVec2f pageOffset = ofVec2f(offset.x, ticker->getBottomEdge());
 		for(int i = 0; i < pages.size(); i++){
 			pages[i]->setContainer(pageOffset, width);
 		}
@@ -1411,8 +1411,8 @@ void ofxTimeline::recalculateBoundingRects(){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
     
-    ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
-    inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
+    inoutTrack->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
+    ticker->setDrawRect( ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
     updatePagePositions();
 	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, showZoomer ? ZOOMER_HEIGHT : 0));
     inoutTrack->setPageRectangle(currentPage->getDrawRect());
@@ -1948,6 +1948,7 @@ ofImage* ofxTimeline::getImage(string trackName, int atFrame){
 	return NULL;
 }
 
+#ifdef TIMELINE_VIDEO_INCLUDED
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
@@ -1986,6 +1987,8 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     }
     return track->getPlayer();
 }
+#endif
+
 #ifdef TIMELINE_AUDIO_INCLUDED
 ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
     return addAudioTrack(trackName, "");

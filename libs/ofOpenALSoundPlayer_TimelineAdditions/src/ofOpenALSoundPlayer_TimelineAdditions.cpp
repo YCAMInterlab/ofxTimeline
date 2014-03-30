@@ -560,6 +560,8 @@ void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
 
 		alDeleteBuffers(buffers.size(),&buffers[0]);
 		alDeleteSources(sources.size(),&sources[0]);
+        
+        bLoadedOk = false;
 	}
 	streamf = 0;
 }

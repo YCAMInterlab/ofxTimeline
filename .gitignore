@@ -46,3 +46,4 @@ ipch/
 
 example-videoRenderer/bin/data/renders/
 oldExamples/
+ofxTimelineLib.a

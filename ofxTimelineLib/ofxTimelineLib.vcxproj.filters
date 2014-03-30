@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ofxTimeline">
+      <UniqueIdentifier>{3a6c7c20-6d4a-4993-887c-934f681b1c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTimeline\src">
+      <UniqueIdentifier>{ba39eb3f-7141-4407-ab90-e3ec6a16e427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxXmlSettings">
+      <UniqueIdentifier>{9760f113-ce5b-45a0-b6f6-474d2882ebe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxXmlSettings\src">
+      <UniqueIdentifier>{5b90b69a-aef0-4ac5-a743-9950fe3beaa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxXmlSettings\libs">
+      <UniqueIdentifier>{5889c82a-df17-40b7-8c9e-c5cd89f63ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTimecode">
+      <UniqueIdentifier>{c0bafa94-4b56-4cce-a29c-d95f9965c772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxRange">
+      <UniqueIdentifier>{15fc893a-60a9-41c6-b483-3048c61af9e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxMSATimer">
+      <UniqueIdentifier>{cc343969-8d58-4f37-aac1-d3e5ec431a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTextInputField">
+      <UniqueIdentifier>{e09a5042-4030-43a1-9b78-74c10cabd8d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTween">
+      <UniqueIdentifier>{cc4b727b-0cee-481d-9185-bf67cc66f387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTween\Easings">
+      <UniqueIdentifier>{708a2120-06dc-4886-ab30-47ed9086c869}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\ofxHotKeys.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxRemoveCocoaMenu.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTimeline.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLBangs.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLCameraTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLColors.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLColorTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLCurves.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLEmptyKeyframes.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLEmptyTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLEvents.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLFlags.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLImageSequence.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLImageSequenceFrame.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLImageTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLInOut.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLKeyframes.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLLFO.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLPage.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLPageTabs.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLSwitches.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLTicker.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLTrackHeader.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLVideoThumb.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLVideoTrack.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxTLZoomer.h">
+      <Filter>ofxTimeline\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxXmlSettings\src\ofxXmlSettings.h">
+      <Filter>ofxXmlSettings\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxXmlSettings\libs\tinyxml.h">
+      <Filter>ofxXmlSettings\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTimecode\src\ofxTimecode.h">
+      <Filter>ofxTimecode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxRange\src\ofRange.h">
+      <Filter>ofxRange</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h">
+      <Filter>ofxMSATimer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h">
+      <Filter>ofxTextInputField</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\ofxTween.h">
+      <Filter>ofxTween</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasing.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBack.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBounce.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCirc.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCubic.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingElastic.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingExpo.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingLinear.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuad.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuart.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuint.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingSine.h">
+      <Filter>ofxTween\Easings</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ofxHotKeys_impl_linux.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxHotKeys_impl_win.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTimeline.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLBangs.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLCameraTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLColors.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLColorTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLCurves.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLEmptyKeyframes.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLEmptyTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLFlags.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLImageSequence.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLImageSequenceFrame.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLImageTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLInOut.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLKeyframes.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLLFO.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLPage.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLPageTabs.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLSwitches.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLTicker.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLTrackHeader.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLVideoThumb.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLVideoTrack.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxTLZoomer.cpp">
+      <Filter>ofxTimeline\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxXmlSettings\src\ofxXmlSettings.cpp">
+      <Filter>ofxXmlSettings\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxml.cpp">
+      <Filter>ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlerror.cpp">
+      <Filter>ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlparser.cpp">
+      <Filter>ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp">
+      <Filter>ofxTimecode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp">
+      <Filter>ofxMSATimer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp">
+      <Filter>ofxTextInputField</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\ofxTween.cpp">
+      <Filter>ofxTween</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasing.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBack.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBounce.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCirc.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCubic.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingElastic.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingExpo.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingLinear.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuad.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuart.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuint.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingSine.cpp">
+      <Filter>ofxTween\Easings</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
