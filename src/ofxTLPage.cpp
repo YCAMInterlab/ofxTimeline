@@ -366,18 +366,35 @@ void ofxTLPage::refreshSnapPoints(){
 	if(snapPoints.size() > 2){
 		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
 		set<unsigned long long>::iterator it = snapPoints.begin();
-		
+
+		//updated way hopefully more stable on windows
+		while(true){
+			set<unsigned long long>::iterator it_a = it++;
+			if(it == snapPoints.end()){
+				break;
+			}
+			set<unsigned long long>::iterator it_b = it;
+
+			unsigned long long a = *(it_a);
+			unsigned long long b = *(it_b);
+			if(labs(b - a) < snappingToleranceMillis){
+				snapPoints.erase(it_a);
+			}
+		}
+/*
+//old crashy way 
 		while(true){
 			unsigned long long a = *(it++);
 			if(it == snapPoints.end()){
 				break;
 			}
 			unsigned long long b = *(it);
-			if(b - a < snappingToleranceMillis){
+			if(labs(b - a) < snappingToleranceMillis){
 				snapPoints.erase(it);
 				it++;
 			}
 		}
+*/
 	}
 	
 //	//double check to make sure snap points are all on screen
