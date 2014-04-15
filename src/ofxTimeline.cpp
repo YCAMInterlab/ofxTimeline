@@ -639,6 +639,14 @@ int ofxTimeline::getCurrentFrame(){
     return timecode.frameForSeconds(currentTime);
 }
 
+int ofxTimeline::getCurrentPageIndex() {
+    return tabs->getSelectedPageIndex();
+}
+
+string ofxTimeline::getCurrentPageName() {
+    return tabs->getSelectedPageName();
+}
+
 long ofxTimeline::getCurrentTimeMillis(){
     return currentTime*1000;
 }

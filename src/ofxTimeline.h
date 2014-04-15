@@ -194,6 +194,8 @@ class ofxTimeline : ofThread {
 	virtual void setCurrentTimeToOutPoint();
 
 	virtual int getCurrentFrame();
+    virtual int getCurrentPageIndex();
+    virtual string getCurrentPageName();
 	virtual float getCurrentTime();
 	virtual long getCurrentTimeMillis();
     virtual float getPercentComplete();
