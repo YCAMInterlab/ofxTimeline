@@ -1479,7 +1479,6 @@ void ofxTimeline::draw(){
 	if(isSetup && isShowing){
 		ofPushStyle();
 
-		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(totalDrawRect.x, 0, totalDrawRect.width, ofGetHeight());
@@ -1508,10 +1507,11 @@ void ofxTimeline::draw(){
 		if(modalTrack != NULL){
 			modalTrack->drawModalContent();
 		}
-			
-		glPopAttrib();
+		
+		glDisable(GL_SCISSOR_TEST);
 		ofPopStyle();
 	}
+
 }
 
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS
