@@ -86,6 +86,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
