@@ -61,6 +61,14 @@ class ofxTLPageEventArgs : public ofEventArgs {
 	string oldPageName;
 };
 
+class ofxTLTrackEventArgs : public ofEventArgs {
+public:
+    ofxTimeline* sender;
+    ofxTLTrack* track;
+	string name;
+	string displayName;
+};
+
 class ofxTLBangEventArgs : public ofEventArgs {
   public:
     ofxTimeline* sender;
@@ -96,6 +104,9 @@ class ofxTLEvents {
 	ofEvent<ofxTLSwitchEventArgs> switched;
 	
 	ofEvent<ofxTLPageEventArgs> pageChanged;
+    
+    ofEvent<ofxTLTrackEventArgs> trackGainedFocus;
+    ofEvent<ofxTLTrackEventArgs> trackLostFocus;
 		
 	ofEvent<ofEventArgs> viewWasResized;
 

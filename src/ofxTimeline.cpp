@@ -74,6 +74,9 @@ ofxTimeline::ofxTimeline()
 	currentPage(NULL),
 	modalTrack(NULL),
     tabs(NULL),
+	inoutTrack(NULL),
+	ticker(NULL),
+	zoomer(NULL),
 	timeControl(NULL),
 	loopType(OF_LOOP_NONE),
 	lockWidthToWindow(true),
@@ -128,17 +131,25 @@ void ofxTimeline::setup(){
 	tabs->setup();
 	tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TAB_HEIGHT));
 
+	if(inoutTrack != NULL){
+		delete inoutTrack;
+	}
     inoutTrack = new ofxTLInOut();
     inoutTrack->setTimeline(this);
     inoutTrack->setDrawRect(ofRectangle(offset.x, tabs->getBottomEdge(), width, INOUT_HEIGHT));
     
+	if(ticker != NULL){
+		delete ticker;
+	}
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
 	
     //TODO: save ticker playhead position
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
-	
+	if(zoomer != NULL){
+		delete zoomer;
+	}
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
 	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
@@ -157,9 +168,7 @@ void ofxTimeline::setup(){
 	if(name == ""){
 	    setName("timeline" + ofToString(timelineNumber++));
 	}
-	else{
-		setupStandardElements();
-	}
+	setupStandardElements();
 
 }
 
@@ -188,7 +197,15 @@ void ofxTimeline::setName(string newName){
         string oldName = name;
 	    name = newName;
 		if(isSetup){
-			setupStandardElements();
+//			setupStandardElements();
+			string inoutTrackName = inoutTrack->getXMLFileName();
+			ofStringReplace(inoutTrackName, oldName+"_", newName+"_");
+			inoutTrack->setXMLFileName(inoutTrackName);
+			
+			string zoomerTrackName = zoomer->getXMLFileName();
+			ofStringReplace(zoomerTrackName, oldName+"_", newName+"_");
+			zoomer->setXMLFileName(zoomerTrackName);
+	
 			for(int i = 0; i < pages.size(); i++){
 				pages[i]->timelineChangedName(newName, oldName);
 			}
@@ -214,7 +231,7 @@ string ofxTimeline::getName(){
 }
 
 void ofxTimeline::setWorkingFolder(string folderPath){
-	workingFolder = folderPath = ofFilePath::addTrailingSlash(folderPath);
+	workingFolder = ofFilePath::addTrailingSlash(folderPath);
     
 	if(isSetup){
 		setupStandardElements();	
@@ -236,6 +253,7 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
 }
 
 void ofxTimeline::saveTracksToFolder(string folderPath){
+
 	ofDirectory targetDirectory = ofDirectory(folderPath);
 	if(!targetDirectory.exists()){
 		targetDirectory.create(true);
@@ -251,8 +269,6 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	filename = folderPath + inoutTrack->getXMLFileName();
 	inoutTrack->setXMLFileName(filename);
 	inoutTrack->save();
-	
-
 	
 	setWorkingFolder(folderPath);
 }
@@ -550,8 +566,10 @@ void ofxTimeline::stop(){
 		
         isPlaying = false;
 
-        ofxTLPlaybackEventArgs args = createPlaybackEvent();
-        ofNotifyEvent(timelineEvents.playbackEnded, args);
+		if(!ticker->getIsScrubbing()){ //dont trigger event if we are just scrubbing
+			ofxTLPlaybackEventArgs args = createPlaybackEvent();
+			ofNotifyEvent(timelineEvents.playbackEnded, args);
+		}
 	}
 }
 
@@ -773,7 +791,12 @@ string ofxTimeline::getOutPointTimecode(){
 }
 
 bool ofxTimeline::toggleEnabled(){
-	isEnabled = !isEnabled;
+	if(isEnabled){
+		disable();
+	}
+	else{
+		enable();
+	}
 	return isEnabled;
 }
 
@@ -790,6 +813,10 @@ void ofxTimeline::disable(){
 		isEnabled = false;
 		disableEvents();
     }
+}
+
+bool ofxTimeline::getIsEnabled(){
+	return isEnabled;
 }
 
 //clears every element
@@ -845,12 +872,27 @@ void ofxTimeline::setDurationInFrames(int frames){
 
 void ofxTimeline::setDurationInSeconds(float seconds){
 
-	//verify no elements are being truncated
-	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	bool updateInTime = inoutRange.min > 0.;
+	bool updateOutTime = inoutRange.max < 1.;
+	
+	float inTimeSeconds  = getInTimeInSeconds();
+	float outTimeSeconds = getOutTimeInSeconds();
+	
 	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
+	//verify no elements are being truncated
+	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
+	
+
+	if(updateInTime){
+		setInPointAtSeconds(inTimeSeconds);
+	}
+	if(updateOutTime){
+		setOutPointAtSeconds(outTimeSeconds);
+	}
+	
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
@@ -1006,7 +1048,7 @@ ofVec2f ofxTimeline::getBottomRight(){
 
 void ofxTimeline::updatePagePositions(){
 	if(isSetup){
-		ofVec2f pageOffset = ofVec2f(offset.x, inoutTrack->getBottomEdge());
+		ofVec2f pageOffset = ofVec2f(offset.x, ticker->getBottomEdge());
 		for(int i = 0; i < pages.size(); i++){
 			pages[i]->setContainer(pageOffset, width);
 		}
@@ -1376,8 +1418,8 @@ void ofxTimeline::recalculateBoundingRects(){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
     
-    ticker->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
-    inoutTrack->setDrawRect( ofRectangle(offset.x, ticker->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
+    inoutTrack->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
+    ticker->setDrawRect( ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
     updatePagePositions();
 	zoomer->setDrawRect(ofRectangle(offset.x, currentPage->getBottomEdge(), width, showZoomer ? ZOOMER_HEIGHT : 0));
     inoutTrack->setPageRectangle(currentPage->getDrawRect());
@@ -1913,6 +1955,7 @@ ofImage* ofxTimeline::getImage(string trackName, int atFrame){
 	return NULL;
 }
 
+#ifdef TIMELINE_VIDEO_INCLUDED
 ofxTLVideoTrack* ofxTimeline::addVideoTrack(string trackName){
 	return addVideoTrack(trackName, "");
 }
@@ -1951,6 +1994,8 @@ ofPtr<ofVideoPlayer> ofxTimeline::getVideoPlayer(string videoTrackName){
     }
     return track->getPlayer();
 }
+#endif
+
 #ifdef TIMELINE_AUDIO_INCLUDED
 ofxTLAudioTrack* ofxTimeline::addAudioTrack(string trackName){
     return addAudioTrack(trackName, "");

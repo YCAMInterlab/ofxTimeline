@@ -380,6 +380,8 @@ void ofxTLVideoTrack::draw(){
     outFrame = player->getTotalNumFrames();
 
 	ofPushStyle();
+    
+	int selectedFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(selectedFrame));
 	
 	if(thumbsEnabled && getDrawRect().height > 10){
 		//clip hanging frames off the sides
@@ -416,23 +418,22 @@ void ofxTLVideoTrack::draw(){
             ofSetColor(timeline->getColors().textColor);
             timeline->getFont().drawString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
             ofRect(videoThumbs[i].displayRect);
-		}		
+		}
+        
+        if(drawVideoPreview){
+            ofRectangle previewRect = ofRectangle(0, 0, player->getWidth() - 2, player->getHeight() - 4);
+            previewRect.scaleTo(bounds, OF_ASPECT_RATIO_KEEP);
+            previewRect.x = selectedFrameX + 1;
+            previewRect.y = bounds.y - 1;
+            player->draw(previewRect);
+            ofPushStyle();
+            ofFill();
+            ofSetColor(timeline->getColors().backgroundColor, 100);
+            ofRect(selectedFrameX + 1, bounds.y + 1, previewRect.width - 2, bounds.height - 2);
+            ofPopStyle();
+        }
 	}
 	
-	int selectedFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(selectedFrame));
-    if(drawVideoPreview){
-        ofRectangle previewRect = ofRectangle(0,0,player->getWidth(), player->getHeight());
-        previewRect.scaleTo(bounds, OF_ASPECT_RATIO_KEEP);
-        previewRect.x = selectedFrameX;
-        previewRect.y = bounds.y;
-        player->draw(previewRect);
-    }
-	
-	ofPushStyle();
-	ofFill();
-	ofSetColor(timeline->getColors().backgroundColor, 150);
-	ofRect(selectedFrameX, bounds.y, 120, bounds.height);
-	ofPopStyle();
 	ofSetColor(timeline->getColors().textColor);
 	ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
 	timeline->getFont().drawString("F# " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
@@ -547,6 +548,10 @@ int ofxTLVideoTrack::getCurrentFrame(){
 float ofxTLVideoTrack::getCurrentTime(){
 	//TODO: account for in and out frame.
 	return player->getPosition() * player->getDuration();
+}
+
+float ofxTLVideoTrack::getDuration(){
+	return player->getDuration();
 }
 
 int ofxTLVideoTrack::getSelectedFrame(){

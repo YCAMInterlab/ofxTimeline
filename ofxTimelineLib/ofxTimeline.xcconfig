@@ -1,0 +1,22 @@
+//THE PATH TO THE ROOT OF OUR OF PATH RELATIVE TO THIS PROJECT.
+//THIS NEEDS TO BE DEFINED BEFORE CoreOF.xcconfig IS INCLUDED
+OF_PATH = ../../..
+
+//THIS HAS ALL THE HEADER AND LIBS FOR OF CORE
+#include "../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig"
+
+OFX_TIMELINE_PATH = $(OF_PATH)/addons/ofxTimeline
+
+HEADER_KISS = "$(OFX_TIMELINE_PATH)/libs/kiss/include"
+HEADER_OPENAL_ADDITIONS = "$(OFX_TIMELINE_PATH)/libs/ofOpenALSoundPlayer_TimelineAdditions/src"
+HEADER_SNDFILE = "$(OFX_TIMELINE_PATH)/libs/sndfile/include"
+
+HEADER_XMLSETTINGS = "$(OF_PATH)/addons/ofxXmlSettings/src" "$(OF_PATH)/addons/ofxXmlSettings/libs"
+HEADER_MSATIMER = "$(OF_PATH)/addons/ofxMSATimer/src"
+HEADER_RANGE = "$(OF_PATH)/addons/ofxRange/src"
+HEADER_TEXTINPUTFIELD = "$(OF_PATH)/addons/ofxTextInputField/src"
+HEADER_TIMECODE = "$(OF_PATH)/addons/ofxTimecode/src"
+HEADER_TIMELINE = "$(OF_PATH)/addons/ofxTimeline/src"
+HEADER_TWEEN = "$(OF_PATH)/addons/ofxTween/src" "$(OF_PATH)/addons/ofxTween/src/Easings"
+
+OFX_TIMELINE_HEADERS = $(HEADER_KISS) $(HEADER_OPENAL_ADDITIONS) $(HEADER_SNDFILE) $(HEADER_XMLSETTINGS) $(HEADER_MSATIMER) $(HEADER_RANGE) $(HEADER_TEXTINPUTFIELD) $(HEADER_TIMECODE) $(HEADER_TIMELINE) $(HEADER_TWEEN)

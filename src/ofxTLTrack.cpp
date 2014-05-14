@@ -245,10 +245,24 @@ void ofxTLTrack::_mouseReleased(ofMouseEventArgs& args, long millis){
 
 void ofxTLTrack::gainedFocus(){
 	focused = true;
+    
+    ofxTLTrackEventArgs args;
+    args.sender = timeline;
+    args.track = this;
+    args.name = name;
+    args.displayName = displayName;
+    ofNotifyEvent(events().trackGainedFocus, args);
 }
 
 void ofxTLTrack::lostFocus(){
     focused = false;
+    
+    ofxTLTrackEventArgs args;
+    args.sender = timeline;
+    args.track = this;
+    args.name = name;
+    args.displayName = displayName;
+    ofNotifyEvent(events().trackLostFocus, args);
 }
 
 ofRectangle ofxTLTrack::getDrawRect(){

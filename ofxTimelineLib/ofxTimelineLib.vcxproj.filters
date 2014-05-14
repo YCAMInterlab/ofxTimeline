@@ -7,15 +7,6 @@
     <Filter Include="ofxTimeline\src">
       <UniqueIdentifier>{ba39eb3f-7141-4407-ab90-e3ec6a16e427}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ofxTimeline\libs">
-      <UniqueIdentifier>{10d616fc-e658-4fcf-9e99-9f181084fbaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\kiss">
-      <UniqueIdentifier>{0a135892-93db-492d-b5bb-ae5224b7a86f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions">
-      <UniqueIdentifier>{53b142e0-b2f6-4227-9f22-f23cb3a70d1e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ofxXmlSettings">
       <UniqueIdentifier>{9760f113-ce5b-45a0-b6f6-474d2882ebe7}</UniqueIdentifier>
     </Filter>
@@ -52,9 +43,6 @@
       <Filter>ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ofxTimeline.h">
-      <Filter>ofxTimeline\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ofxTLAudioTrack.h">
       <Filter>ofxTimeline\src</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ofxTLBangs.h">
@@ -129,12 +117,6 @@
     <ClInclude Include="..\src\ofxTLZoomer.h">
       <Filter>ofxTimeline\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h">
-      <Filter>ofxTimeline\libs\kiss</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h">
-      <Filter>ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ofxXmlSettings\src\ofxXmlSettings.h">
       <Filter>ofxXmlSettings\src</Filter>
     </ClInclude>
@@ -201,9 +183,6 @@
       <Filter>ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ofxTimeline.cpp">
-      <Filter>ofxTimeline\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ofxTLAudioTrack.cpp">
       <Filter>ofxTimeline\src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ofxTLBangs.cpp">
@@ -274,15 +253,6 @@
     </ClCompile>
     <ClCompile Include="..\src\ofxTLZoomer.cpp">
       <Filter>ofxTimeline\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fft.c">
-      <Filter>ofxTimeline\libs\kiss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c">
-      <Filter>ofxTimeline\libs\kiss</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
-      <Filter>ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxXmlSettings\src\ofxXmlSettings.cpp">
       <Filter>ofxXmlSettings\src</Filter>

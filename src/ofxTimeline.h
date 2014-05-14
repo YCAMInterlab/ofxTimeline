@@ -68,10 +68,15 @@
 #include "ofxTLImageSequence.h"
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
+
+#ifdef TIMELINE_VIDEO_INCLUDED
 #include "ofxTLVideoTrack.h"
+#endif
+
 #ifdef TIMELINE_AUDIO_INCLUDED
 #include "ofxTLAudioTrack.h"
 #endif
+
 
 typedef struct {
     ofxTLTrack* track;
@@ -98,10 +103,12 @@ class ofxTimeline : ofThread {
     virtual void removeFromThread();
 	
 	bool toggleEnabled();
-    virtual void enable();
-	virtual void disable();
-	virtual void enableEvents();
-	virtual void disableEvents();
+    void enable();
+	void disable();
+    bool getIsEnabled();
+	
+	void enableEvents();
+	void disableEvents();
 
     virtual void clear(); //clears every track
     virtual void reset(); //gets rid of everything, sets back to one page
@@ -378,12 +385,14 @@ class ofxTimeline : ofThread {
 	ofImage* getImage(string name, float atTime);
 	ofImage* getImage(string name, int atFrame);
 	//*IMAGE SEQUENCE DOES NOT WORK*
-	
+
+	#ifdef TIMELINE_VIDEO_INCLUDED
 	ofxTLVideoTrack* addVideoTrack(string name);
     ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
     ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
+	#endif
     
 	#ifdef TIMELINE_AUDIO_INCLUDED
     //Audio tracks only work with PCM Wav or Aiff file

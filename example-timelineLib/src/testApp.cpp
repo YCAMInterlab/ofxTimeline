@@ -1,64 +1,56 @@
+/**
+ * Empty Template
+ * ofxTimeline
+ *
+ * Examples of two template classes that can be copied and extended
+ * to invent new types of timeline tracks
+ */
+
 #include "testApp.h"
 
 //--------------------------------------------------------------
 void testApp::setup(){
 	
-    ofBackground(255*.15);
-    ofSetVerticalSync(true);
-	ofEnableSmoothing();
-
-    ofxTimeline::removeCocoaMenusFromGlut("AllTracksExample");
-	timeline.setup();
-
-	timeline.addVideoTrack("fingers", "fingers.mov");
-  #ifdef TIMELINE_AUDIO_INCLUDED
-    timeline.addAudioTrack("audio", "4chan.wav");
-    timeline.setDurationInSeconds(timeline.getAudioTrack("audio")->getDuration());
-  #endif
-
-	timeline.addCurves("curves", ofRange(0, 255));
-	timeline.addBangs("bangs");
-	timeline.addFlags("flags");
-	timeline.addColors("colors");
-	timeline.addLFO("lfo");
-	timeline.addSwitches("switches");
-
-	timeline.setPageName("Page 1");
-	timeline.addPage("Page 2");
-	timeline.addPage("Page 3");
-	timeline.addPage("Page 4");
-	timeline.setCurrentPage(0);
-
-	timeline.enableSnapToOtherKeyframes(false);
-	timeline.setLoopType(OF_LOOP_NORMAL);
+	ofBackground(255*.15);
+	ofSetFrameRate(30);
+	ofSetVerticalSync(true);
 	
-	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
-}
+	ofEnableSmoothing();
+	ofEnableAlphaBlending();
 
-//--------------------------------------------------------------
-void testApp::bangFired(ofxTLBangEventArgs& args){
-	cout << "bang fired!" << args.flag << endl;
+	//lets you use COMMAND+C and COMMAND+V actions on mac
+	ofxTimeline::removeCocoaMenusFromGlut("Empty Templates");
+	
+	timeline.setup();
+	timeline.setLoopType(OF_LOOP_NORMAL);
+	timeline.setDurationInSeconds(30);
+    
+	//this is the simplest example and is really flexible
+	emptyTrack = new ofxTLEmptyTrack();
+	timeline.addTrack("My Custom Track", emptyTrack);
+
+	//a very simple color keyframe
+	emptyKeyframes = new ofxTLEmptyKeyframes();
+	emptyKeyframes->setXMLFileName("MyEmptyKeyframes.xml");
+	timeline.addTrack("My Custom Keyframes", emptyKeyframes);
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+		
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	if(timeline.isSwitchOn("switches")){
-		ofBackground(timeline.getColor("colors"));
-	}
-	else{
-		ofBackground(255*.15);
-	}
-	timeline.draw();	
+    float curtime = timeline.getCurrentTime();
+	timeline.draw();
 }
+
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    
+
 }
 
 //--------------------------------------------------------------
