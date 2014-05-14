@@ -7,7 +7,7 @@ If you're familiar with timelines from programs like After Effects, Final Cut, o
 
 You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
-Copyright 2011-2012 [James George](http://www.jamesgeorge.org) co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
+Copyright 2011-2014 [James George](http://www.jamesgeorge.org) co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
 
 Licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
 
