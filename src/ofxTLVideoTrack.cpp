@@ -345,13 +345,15 @@ void ofxTLVideoTrack::setPlayer(ofPtr<ofVideoPlayer> newPlayer){
     player = newPlayer;
     if(player->isLoaded()){
         
-        calculateFramePositions();
         backLock.lock();
+		videoThumbs.clear();
         backthreadedPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());
         backthreadedPlayer->setUseTexture(false);
         backthreadedPlayer->loadMovie(player->getMoviePath());
         backLock.unlock();
         
+		calculateFramePositions();
+		
 		inFrame = 0;
 		outFrame = player->getTotalNumFrames();
         currentlyPlaying = false;

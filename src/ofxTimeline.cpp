@@ -258,6 +258,7 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	if(!targetDirectory.exists()){
 		targetDirectory.create(true);
 	}
+    folderPath = ofFilePath::addTrailingSlash(folderPath);
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->saveTracksToFolder(folderPath);
     }
@@ -654,6 +655,14 @@ bool ofxTimeline::getIsFrameBased(){
 
 int ofxTimeline::getCurrentFrame(){
     return timecode.frameForSeconds(currentTime);
+}
+
+int ofxTimeline::getCurrentPageIndex() {
+    return tabs->getSelectedPageIndex();
+}
+
+string ofxTimeline::getCurrentPageName() {
+    return tabs->getSelectedPageName();
 }
 
 long ofxTimeline::getCurrentTimeMillis(){

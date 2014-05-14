@@ -32,6 +32,7 @@
 
 #include "ofxTLColorTrack.h"
 #include "ofxTimeline.h"
+#include <cfloat>
 #include "ofxHotKeys.h"
 
 ofxTLColorTrack::ofxTLColorTrack()
@@ -47,15 +48,15 @@ ofxTLColorTrack::ofxTLColorTrack()
 }
 
 void ofxTLColorTrack::draw(){
-	
+
 	if(bounds.height == 0){
 		return;
 	}
-	
+
 	if(viewIsDirty || shouldRecomputePreviews){
 		updatePreviewPalette();
 	}
-	
+
 	if(keyframes.size() == 0){
 		ofPushStyle();
 		ofSetColor(defaultColor);
@@ -74,19 +75,19 @@ void ofxTLColorTrack::draw(){
 	else{
 		previewPalette.draw(bounds);
 	}
-	
+
 	for(int i = 0; i < keyframes.size(); i++){
-		
+
 		if(!isKeyframeIsInBounds(keyframes[i])){
 			continue;
 		}
-		
+
 		float screenX = millisToScreenX(keyframes[i]->time);
-		
+
 		ofPoint a = ofPoint(screenX-10,bounds.y);
 		ofPoint b = ofPoint(screenX+10,bounds.y);
 		ofPoint c = ofPoint(screenX,bounds.y+10);
-		
+
 		ofPushStyle();
 		ofFill();
 		ofxTLColorSample* s = (ofxTLColorSample*)keyframes[i];
@@ -115,7 +116,7 @@ void ofxTLColorTrack::draw(){
 
 void ofxTLColorTrack::drawModalContent(){
 	if(drawingColorWindow){
-		
+
 		//this happens when a new keyframe is added
 		//we need to wait until the draw cycle for the new
 		//key to be in the array so we can determine it's
@@ -124,14 +125,14 @@ void ofxTLColorTrack::drawModalContent(){
 			setNextAndPreviousSamples();
 			setNextAndPreviousOnUpdate = false;
 		}
-		
+
 		if(selectedKeyframe == NULL){
 			ofLogError("ofxTLColorTrack::drawModalContent") << "The selected keyframe is null" << endl;
 			drawingColorWindow = false;
 			timeline->dismissedModalContent();
 			return;
 		}
-		
+
 		if(!colorPallete.bAllocated()){
 			ofLogError("ofxTLColorTrack::drawModalContent") << "The color palette is not allocated" << endl;
 			timeline->dismissedModalContent();
@@ -140,7 +141,7 @@ void ofxTLColorTrack::drawModalContent(){
 		ofPushStyle();
 		ofFill();
 		ofSetColor(255);
-		
+
 		ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 		colorWindow = ofRectangle( millisToScreenX(selectedKeyframe->time), bounds.y+bounds.height, 200, 200);
 		if(colorWindow.getMaxY()+25 > timeline->getBottomLeft().y){
@@ -150,12 +151,12 @@ void ofxTLColorTrack::drawModalContent(){
 			colorWindow.x -= colorWindow.width;
 		}
 		colorPallete.draw(colorWindow);
-		
+
 		ofVec2f selectionPoint = colorWindow.getMin() + selectedSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
 		ofSetColor(selectedSample->color.getInverted());
 		ofLine(selectionPoint - ofVec2f(8,0), selectionPoint + ofVec2f(8,0));
 		ofLine(selectionPoint - ofVec2f(0,8), selectionPoint + ofVec2f(0,8));
-		
+
 		ofPushStyle();
 		ofNoFill();
 		if(previousSample != NULL){
@@ -171,13 +172,13 @@ void ofxTLColorTrack::drawModalContent(){
 			//draw a little triangle pointer
 			ofVec2f direction = (nextSamplePoint - selectionPoint).normalized();
 			ofVec2f backStep = nextSamplePoint-direction*5;
-			ofTriangle(nextSamplePoint, 
+			ofTriangle(nextSamplePoint,
 					   backStep + direction.getRotated(90)*3,
 					   backStep - direction.getRotated(90)*3);
 			ofLine(nextSamplePoint,selectionPoint);
 		}
 		ofPopStyle();
-		
+
 		previousColorRect = ofRectangle(colorWindow.x, colorWindow.getMaxY(), colorWindow.width/2, 25);
 		newColorRect = ofRectangle(colorWindow.x+colorWindow.width/2, colorWindow.getMaxY(), colorWindow.width/2, 25);
 
@@ -190,7 +191,7 @@ void ofxTLColorTrack::drawModalContent(){
 		ofSetLineWidth(2);
 		ofRect(colorWindow);
 		ofPopStyle();
-	}	
+	}
 }
 
 void ofxTLColorTrack::loadColorPalette(ofBaseHasPixels& image){
@@ -225,16 +226,16 @@ ofColor ofxTLColorTrack::getColorAtMillis(unsigned long long millis){
 	if(keyframes.size() == 0){
 		return defaultColor;
 	}
-	
+
 	if(millis <= keyframes[0]->time){
 		//cout << "getting color before first key " << ((ofxTLColorSample*)keyframes[0])->color << endl;
 		return ((ofxTLColorSample*)keyframes[0])->color;
 	}
-	
+
 	if(millis >= keyframes[keyframes.size()-1]->time){
 		return ((ofxTLColorSample*)keyframes[keyframes.size()-1])->color;
 	}
-	
+
 	for(int i = 1; i < keyframes.size(); i++){
 		if(keyframes[i]->time >= millis){
 			ofxTLColorSample* startSample = (ofxTLColorSample*)keyframes[i-1];
@@ -252,10 +253,10 @@ void ofxTLColorTrack::setDefaultColor(ofColor color){
 }
 
 ofColor ofxTLColorTrack::getDefaultColor(){
-	return defaultColor;	
+	return defaultColor;
 }
 
-string ofxTLColorTrack::getPalettePath(){	
+string ofxTLColorTrack::getPalettePath(){
 	if(palettePath == ""){
 		ofLogWarning("ofxTLColorTrack::getPalettePath -- Palette is not loaded from path");
 	}
@@ -279,9 +280,9 @@ bool ofxTLColorTrack::mousePressed(ofMouseEventArgs& args, long millis){
 			selectedSample->samplePoint = samplePositionAtClickTime;
 			refreshSample(selectedSample);
 			clickedInColorRect = true; //keep the window open
-			shouldRecomputePreviews = true;			
+			shouldRecomputePreviews = true;
 		}
-		
+
 		return true;
 	}
 	else{
@@ -314,7 +315,7 @@ void ofxTLColorTrack::mouseReleased(ofMouseEventArgs& args, long millis){
 			ofxTLColorSample* selectedSample = (ofxTLColorSample*)selectedKeyframe;
 			if(selectedSample->color != colorAtClickTime){
 				timeline->flagTrackModified(this);
-			}			
+			}
 			timeline->dismissedModalContent();
 			drawingColorWindow = false;
 			shouldRecomputePreviews = true;
@@ -343,11 +344,11 @@ void ofxTLColorTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 void ofxTLColorTrack::updatePreviewPalette(){
-	
+
 	if(previewPalette.getWidth() != bounds.width){
 		previewPalette.allocate(bounds.width, 1, OF_IMAGE_COLOR); //someday support alpha would be rad
 	}
-	
+
 	if(keyframes.size() == 0 || keyframes.size() == 1){
 		return; //we just draw solid colors in this case
 	}
@@ -379,10 +380,10 @@ ofxTLKeyframe* ofxTLColorTrack::newKeyframe(){
 
 void ofxTLColorTrack::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	ofxTLColorSample* sample = (ofxTLColorSample*)key;
-	
+
 	sample->samplePoint = ofVec2f(xmlStore.getValue("sampleX", 0.0),
 								  xmlStore.getValue("sampleY", 0.0));
-	
+
 	//for pasted keyframes cancel the color window
 	drawingColorWindow = false;
 	timeline->dismissedModalContent();
@@ -411,7 +412,7 @@ void ofxTLColorTrack::selectedKeySecondaryClick(ofMouseEventArgs& args){
 
 	colorAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->color;
 	samplePositionAtClickTime = ((ofxTLColorSample*)selectedKeyframe)->samplePoint;
-	
+
 	timeline->presentedModalContent(this);
 	setNextAndPreviousSamples();
 }
