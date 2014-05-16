@@ -365,25 +365,28 @@ void ofxTLPage::refreshSnapPoints(){
 	
 	if(snapPoints.size() > 2){
 		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
-		set<unsigned long long>::iterator it = snapPoints.begin();
-		
+		set<unsigned long long>::iterator it = snapPoints.end();
+//		cout << "***REFRESHING SNAP POINTS" << endl;
 		while(true){
-			unsigned long long a = *(it++);
-			if(it == snapPoints.end()){
+			unsigned long long b = *(--it);
+//			cout << "	SIZE IS " << snapPoints.size() << endl << "	B IS " << b;
+			if(it == snapPoints.begin()){
+//				cout << " Breaking after A" << endl;
 				break;
 			}
-			unsigned long long b = *(it);
+			unsigned long long a = *(it);
+//			cout << "	A IS " << a << endl;
 			if(b - a < snappingToleranceMillis){
-				snapPoints.erase(it);
-				it++;
+				it = snapPoints.erase(it);
+//				cout << "	erasing points, size is now " << snapPoints.size() << endl;
+				if(it == snapPoints.begin()){
+//					cout << "	breaking after delete" << endl;
+					break;
+				}
 			}
 		}
 	}
-	
-//	//double check to make sure snap points are all on screen
-//	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
-//		snapPoints.clear();
-//	}	
+
 }
 
 

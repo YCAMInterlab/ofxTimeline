@@ -763,7 +763,7 @@ void ofxTLKeyframes::nudgeBy(ofVec2f nudgePercent){
 }
 
 void ofxTLKeyframes::deleteSelectedKeyframes(){
-	vector<ofxTLKeyframe*>::iterator selectedIt = selectedKeyframes.end();
+	//vector<ofxTLKeyframe*>::iterator selectedIt = selectedKeyframes.end();
 	for(int i = keyframes.size() - 1; i >= 0; i--){
 		if(isKeyframeSelected(keyframes[i])){
 			if(keyframes[i] != selectedKeyframes[selectedKeyframes.size()-1]){
@@ -775,7 +775,10 @@ void ofxTLKeyframes::deleteSelectedKeyframes(){
 			}
 			delete keyframes[i];
 			keyframes.erase(keyframes.begin()+i);
-			selectedKeyframes.erase(--selectedIt);
+			//if(selectedIt != selectedKeyframes.begin()){
+//				selectedIt--;
+				selectedKeyframes.erase(--selectedKeyframes.end());
+			//}
 		}
 	}
 	
