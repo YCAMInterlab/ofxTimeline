@@ -366,43 +366,24 @@ void ofxTLPage::refreshSnapPoints(){
 	if(snapPoints.size() > 2){
 		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
 		set<unsigned long long>::iterator it = snapPoints.begin();
-
-		//updated way hopefully more stable on windows
+		vector<unsigned long long> toRemove;
 		while(true){
-			set<unsigned long long>::iterator it_a = it++;
+			unsigned long long a = *it++;
 			if(it == snapPoints.end()){
 				break;
 			}
-			set<unsigned long long>::iterator it_b = it;
 
-			unsigned long long a = *(it_a);
-			unsigned long long b = *(it_b);
-			if(labs(b - a) < snappingToleranceMillis){
-				snapPoints.erase(it_a);
+			unsigned long long b = *it;
+			if(b - a < snappingToleranceMillis){
+				toRemove.push_back(a);
 			}
 		}
-/*
-//old crashy way 
-		while(true){
-			unsigned long long a = *(it++);
-			if(it == snapPoints.end()){
-				break;
-			}
-			unsigned long long b = *(it);
-			if(labs(b - a) < snappingToleranceMillis){
-				snapPoints.erase(it);
-				it++;
-			}
+
+		for(int i = 0; i < toRemove.size(); i++){
+			snapPoints.erase( toRemove[i] );
 		}
-*/
 	}
-	
-//	//double check to make sure snap points are all on screen
-//	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
-//		snapPoints.clear();
-//	}	
 }
-
 
 //copy paste
 void ofxTLPage::copyRequest(vector<string>& bufs){

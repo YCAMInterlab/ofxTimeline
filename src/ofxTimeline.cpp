@@ -168,9 +168,7 @@ void ofxTimeline::setup(){
 	if(name == ""){
 	    setName("timeline" + ofToString(timelineNumber++));
 	}
-	else{
-		setupStandardElements();
-	}
+	setupStandardElements();
 
 }
 
@@ -260,6 +258,7 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	if(!targetDirectory.exists()){
 		targetDirectory.create(true);
 	}
+    folderPath = ofFilePath::addTrailingSlash(folderPath);
 	for(int i = 0; i < pages.size(); i++){
         pages[i]->saveTracksToFolder(folderPath);
     }
@@ -656,6 +655,14 @@ bool ofxTimeline::getIsFrameBased(){
 
 int ofxTimeline::getCurrentFrame(){
     return timecode.frameForSeconds(currentTime);
+}
+
+int ofxTimeline::getCurrentPageIndex() {
+    return tabs->getSelectedPageIndex();
+}
+
+string ofxTimeline::getCurrentPageName() {
+    return tabs->getSelectedPageName();
 }
 
 long ofxTimeline::getCurrentTimeMillis(){
@@ -1514,7 +1521,6 @@ void ofxTimeline::draw(){
 	if(isSetup && isShowing){
 		ofPushStyle();
 
-		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(totalDrawRect.x, 0, totalDrawRect.width, ofGetHeight());
@@ -1543,10 +1549,11 @@ void ofxTimeline::draw(){
 		if(modalTrack != NULL){
 			modalTrack->drawModalContent();
 		}
-			
-		glPopAttrib();
+		
+		glDisable(GL_SCISSOR_TEST);
 		ofPopStyle();
 	}
+
 }
 
 #pragma mark ELEMENT CREATORS/GETTERS/SETTERS

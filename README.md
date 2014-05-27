@@ -7,7 +7,7 @@ If you're familiar with timelines from programs like After Effects, Final Cut, o
 
 You can also extend ofxTimeline with custom tracks to work with other types of time based data. Check out [Designing Custom Tracks](#designing-custom-tracks)
 
-Copyright 2011-2012 [James George](http://www.jamesgeorge.org) co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
+Copyright 2011-2014 [James George](http://www.jamesgeorge.org) co-developed by [YCAM InterLab](http://interlab.ycam.jp/)
 
 Licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -149,6 +149,12 @@ to download the timeline open up the terminal and type
 
 This will download the necessary addons, but won't overwrite any changes if you already have some of them installed
 If you're using linux, please make sure you checkout the develop branch of ofxTextInputField
+
+### Install OpenAL
+
+For Windows:
+If you don't have OpenAL, you can install it.
+Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx](http://connect.creativelabs.com/openal/Downloads/Forms/AllItems.aspx) and download "OpenAL with OpenAL Installer for Windows".
 
 ### Create a new ofxTimeline project
 
@@ -364,3 +370,8 @@ ofxTimeline is a project by [James George](http://www.jamesgeorge.org), co-devel
 [Eyebeam](http://http://eyebeam.org/) Who's community has prompted many of the thoughts provoking the development of ofxTimeline during my residency in Spring 2012.
 
 Also a huge thank you to [Creative Applications](creativeapplications.net) for [publishing the initial experiment](http://www.creativeapplications.net/openframeworks/ofxtimeline-openframeworks/) which brought a lot of interested people together to get this to where it is now.
+
+
+<hr>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">This Document</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://interlab.ycam.jp" property="cc:attributionName" rel="cc:attributionURL">James George and YCAMInterLab</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
