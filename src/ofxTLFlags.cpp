@@ -237,7 +237,7 @@ void ofxTLFlags::addFlag(string key) {
 }
 
 void ofxTLFlags::addFlagAtTime(string key, unsigned long long time){
-	cout << "***ADDING FLAG WITH TIME " << time << endl;
+//	cout << "***ADDING FLAG WITH TIME " << time << endl;
 	if(time > 2000000){
 		cout << "***UNITITED VAR " << time << endl;
 		return;
