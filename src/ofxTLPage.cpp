@@ -366,26 +366,24 @@ void ofxTLPage::refreshSnapPoints(){
 	if(snapPoints.size() > 2){
 		long snappingToleranceMillis = timeline->screenXToMillis(snappingTolerance) - timeline->screenXToMillis(0);
 		set<unsigned long long>::iterator it = snapPoints.begin();
-		
+		vector<unsigned long long> toRemove;
 		while(true){
-			unsigned long long a = *(it++);
+			unsigned long long a = *it++;
 			if(it == snapPoints.end()){
 				break;
 			}
-			unsigned long long b = *(it);
+
+			unsigned long long b = *it;
 			if(b - a < snappingToleranceMillis){
-				snapPoints.erase(it);
-				it++;
+				toRemove.push_back(a);
 			}
 		}
-	}
-	
-//	//double check to make sure snap points are all on screen
-//	if(snapPoints.size()*snappingTolerance > getDrawRect().width){
-//		snapPoints.clear();
-//	}	
-}
 
+		for(int i = 0; i < toRemove.size(); i++){
+			snapPoints.erase( toRemove[i] );
+		}
+	}
+}
 
 //copy paste
 void ofxTLPage::copyRequest(vector<string>& bufs){

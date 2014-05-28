@@ -36,8 +36,6 @@
 #include "ofxTLVideoThumb.h"
 #include "ofxTLImageTrack.h"
 
-//TODO: Start and stop points (w handles!) (saving!)
-
 class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
   public:
 	ofxTLVideoTrack();

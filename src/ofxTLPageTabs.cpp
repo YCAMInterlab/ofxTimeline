@@ -141,3 +141,10 @@ void ofxTLPageTabs::drawRectChanged(){
 	}
 }
 
+int ofxTLPageTabs::getSelectedPageIndex() {
+    return selectedPageIndex;
+}
+
+string ofxTLPageTabs::getSelectedPageName() {
+    return pages.size() > 0 ? pages[selectedPageIndex].name : "";
+}
