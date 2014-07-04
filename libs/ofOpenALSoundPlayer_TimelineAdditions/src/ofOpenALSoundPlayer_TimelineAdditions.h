@@ -108,6 +108,9 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
         int getBandsPerOctave();
         vector<float>& getAverages();
         vector<short> & getBuffer();
+        vector<float>& getCurrentBuffer(int _size);
+        vector<float>& getBufferForFrame(int _frame, float _fps, int _size);
+        vector<float> currentBuffer;
 
         float * getSystemSpectrum(int bands);
 
@@ -119,8 +122,8 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		void ofOpenALSoundUpdate();
 		void update(ofEventArgs & args);
 		void initFFT(int bands);
-		float * getCurrentBufferSum(int size);
-
+		float *getCurrentBufferSum(int size);
+    
 		void createWindow(int size);
 		void runWindow(vector<float> & signal);
 		void initSystemFFT(int bands);

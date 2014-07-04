@@ -437,6 +437,28 @@ vector<float>& ofxTLAudioTrack::getFFT(){
 	return dampened;
 }
 
+int ofxTLAudioTrack::getBufferSize()
+{
+    return player.getBuffer().size() / player.getNumChannels();
+}
+
+vector<float>& ofxTLAudioTrack::getCurrentBuffer(int _size)
+{
+    buffered = player.getCurrentBuffer(_size);
+    return buffered;
+}
+
+vector<float>& ofxTLAudioTrack::getBufferForFrame(int _frame, int _size)
+{
+    if(_frame != lastBufferPosition)
+    {
+        lastBufferPosition = _frame;
+        buffered = player.getBufferForFrame(_frame, timeline->getTimecode().getFPS(), _size);
+        return buffered;
+    }
+    return buffered;
+}
+
 void ofxTLAudioTrack::generateEnvelope(int size){
     envelope.clear();
     

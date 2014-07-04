@@ -872,6 +872,65 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getCurrentBufferSum(int size){
 	return &windowedSignal[0];
 }
 
+vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getCurrentBuffer(int _size)
+{
+	if(int(currentBuffer.size()) != _size)
+    {
+        currentBuffer.resize(_size);
+	}
+   	currentBuffer.assign(currentBuffer.size(),0);
+
+    int pos;
+	for(int k = 0; k < int(sources.size())/channels; ++k)
+    {
+		alGetSourcei(sources[k*channels],AL_SAMPLE_OFFSET,&pos);
+        for(int i = 0; i < channels; ++i)
+        {
+            for(int j = 0; j < _size; ++j)
+            {
+                if(pos+j<(int)buffer.size())
+                {
+                    currentBuffer[j] += float(buffer[(pos+j)*channels+i])/65534.0f;
+                }
+                else
+                {
+                    currentBuffer[j] = 0;
+                }
+            }
+        }
+    }
+    return currentBuffer;
+}
+
+vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getBufferForFrame(int _frame, float _fps, int _size)
+{
+	if(int(currentBuffer.size()) != _size)
+    {
+        currentBuffer.resize(_size);
+	}
+   	currentBuffer.assign(currentBuffer.size(),0);
+    
+    int pos = _frame*float(samplerate)/_fps;
+	for(int k = 0; k < int(sources.size())/channels; ++k)
+    {
+        for(int i = 0; i < channels; ++i)
+        {
+            for(int j = 0; j < _size; ++j)
+            {
+                if(pos+j<(int)buffer.size())
+                {
+                    currentBuffer[j] += float(buffer[(pos+j)*channels+i])/65534.0f;
+                }
+                else
+                {
+                    currentBuffer[j] = 0;
+                }
+            }
+        }
+    }
+    return currentBuffer;
+}
+
 // ----------------------------------------------------------------------------
 vector<float>& ofOpenALSoundPlayer_TimelineAdditions::getSpectrum(int bands){
 
@@ -1002,8 +1061,8 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getSystemSpectrum(int bands){
 
 // ----------------------------------------------------------------------------
 void ofOpenALSoundPlayer_TimelineAdditions::runWindow(vector<float> & signal){
-	for(int i = 0; i < (int)signal.size(); i++)
-		signal[i] *= window[i];
+//	for(int i = 0; i < (int)signal.size(); i++)
+//		signal[i] *= window[i];
 }
 
 //#endif
