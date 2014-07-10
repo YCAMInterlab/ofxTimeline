@@ -94,6 +94,9 @@ class ofxTLAudioTrack : public ofxTLTrack
     
     int getFFTSize();
 	vector<float>& getFFT();
+    int getBufferSize();
+    vector<float> &getCurrentBuffer(int _size = 512);
+    vector<float> &getBufferForFrame(int _frame, int _size = 512);
 
   protected:
 	
@@ -104,9 +107,12 @@ class ofxTLAudioTrack : public ofxTLTrack
 	void recomputePreview();
 	string soundFilePath;
 	float lastFFTPosition;
+    float lastBufferPosition;
 	int defaultSpectrumBandwidth;
 
     vector<float> dampened;
+    vector<float> buffered;
+    
 	float lastPercent;
     
 //	virtual void update(ofEventArgs& args);

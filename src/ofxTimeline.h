@@ -66,6 +66,7 @@
 #include "ofxTLSwitches.h"
 #include "ofxTLColorTrack.h"
 #include "ofxTLImageSequence.h"
+#include "ofxTLCameraTrack.h"
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
 

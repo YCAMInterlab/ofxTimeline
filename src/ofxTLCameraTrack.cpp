@@ -185,7 +185,7 @@ void ofxTLCameraTrack::draw3d(){
 	
 	ofNoFill();
 	ofSetColor(255);
-	ofBox(n.getPosition(), 4);
+	ofDrawBox(n.getPosition(), 4);
 	
 	ofPopStyle();
 }
