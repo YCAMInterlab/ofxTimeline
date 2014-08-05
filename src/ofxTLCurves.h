@@ -61,6 +61,27 @@ class ofxTLTweenKeyframe : public ofxTLKeyframe{
 	EasingType* easeType;
 };
 
+ enum EasingFunctions {
+    EasingFunction_linear,
+    EasingFunction_sine,
+    EasingFunction_circular,
+    EasingFunction_quadratic,
+    EasingFunction_cubic,
+    EasingFunction_quartic,
+    EasingFunction_quintic,
+    EasingFunction_exponential,
+    EasingFunction_back,
+    EasingFunction_bounce,
+    EasingFunction_elastic
+};
+
+enum EasingTypes {
+    EasingType_in,
+    EasingType_out,
+    EasingType_in_out
+};
+
+
 class ofxTLCurves : public ofxTLKeyframes {
   public:
     ofxTLCurves();
@@ -73,6 +94,11 @@ class ofxTLCurves : public ofxTLKeyframes {
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
+
+	virtual void setDefaultEasingType( int index );
+    virtual int getDefaultEasingType();
+    virtual void setDefaultEasingFunction( int index );
+    virtual int getDefaultEasingFunction();
 
     virtual string getTrackType();
 
@@ -97,6 +123,8 @@ class ofxTLCurves : public ofxTLKeyframes {
 	float tweenBoxWidth;
 	float tweenBoxHeight;
 
+	int defaultEasingFunction;
+    int defaultEasingType;
 //	float easingWindowSeperatorHeight;
 
 };

@@ -619,11 +619,11 @@ void ofxTLKeyframes::addKeyframe(){
 
 void ofxTLKeyframes::addKeyframe(float value){
 	//play solo change
-	addKeyframeAtMillis(value, currentTrackTime());
+    addKeyframeAtMillis(value, currentTrackTime());
 }
 
 void ofxTLKeyframes::addKeyframeAtMillis(unsigned long long millis){
-	addKeyframeAtMillis(defaultValue, millis);
+    addKeyframeAtMillis(defaultValue, millis);
 }
 
 void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long long millis){

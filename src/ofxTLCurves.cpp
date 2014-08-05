@@ -38,6 +38,8 @@ ofxTLCurves::ofxTLCurves(){
 	initializeEasings();
 	valueRange = ofRange(0.0, 1.0);
 	drawingEasingWindow = false;
+	defaultEasingType = 0;
+	defaultEasingFunction = 0;
 }
 
 float ofxTLCurves::interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime){
@@ -54,8 +56,8 @@ string ofxTLCurves::getTrackType(){
 
 ofxTLKeyframe* ofxTLCurves::newKeyframe(){
 	ofxTLTweenKeyframe* k = new ofxTLTweenKeyframe();
-	k->easeFunc = easingFunctions[0];
-	k->easeType = easingTypes[0];
+	k->easeFunc = easingFunctions[defaultEasingFunction];
+	k->easeType = easingTypes[defaultEasingType];
 	return k;
 }
 
@@ -179,6 +181,26 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 	else{
 		ofxTLKeyframes::mouseReleased(args, millis);
 	}
+}
+
+void ofxTLCurves::setDefaultEasingType( int index ){
+    if ( index < 0 ) index = 0;
+    if ( index >= easingTypes.size()) index = easingTypes.size() - 1;
+    defaultEasingType = index;
+}
+
+int ofxTLCurves::getDefaultEasingType(){
+    return defaultEasingType;
+}
+
+void ofxTLCurves::setDefaultEasingFunction( int index ){
+    if ( index < 0 ) index = 0;
+    if ( index >= easingFunctions.size()) index = easingFunctions.size() - 1;
+    defaultEasingFunction = index;
+}
+
+int ofxTLCurves::getDefaultEasingFunction(){
+    return defaultEasingFunction;
 }
 
 void ofxTLCurves::selectedKeySecondaryClick(ofMouseEventArgs& args){
