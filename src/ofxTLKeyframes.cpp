@@ -355,6 +355,10 @@ bool ofxTLKeyframes::mousePressed(ofMouseEventArgs& args, long millis){
 
 	ofVec2f screenpoint = ofVec2f(args.x, args.y);
 	keysAreStretchable = ofGetModifierShiftPressed() && ofGetModifierControlPressed();
+
+	constrainVerticalDrag = ofGetModifierAltPressed() ? args.y : NULL;
+
+
     keysDidDrag = false;
 	if(keysAreStretchable && timeline->getTotalSelectedItems() > 1){
 		unsigned long long minSelected = timeline->getEarliestSelectedTime();
@@ -456,6 +460,9 @@ void ofxTLKeyframes::mouseMoved(ofMouseEventArgs& args, long millis){
 }
 
 void ofxTLKeyframes::mouseDragged(ofMouseEventArgs& args, long millis){
+
+
+    if ( ofGetModifierAltPressed() && constrainVerticalDrag != NULL ) args.y = constrainVerticalDrag;
 
 	if(keysAreStretchable){
 		//cast the stretch anchor to long so that it can be signed

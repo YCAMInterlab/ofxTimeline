@@ -189,4 +189,5 @@ class ofxTLKeyframes : public ofxTLTrack
 	bool keysDidNudge;
 	bool createNewOnMouseup;
 
+    float constrainVerticalDrag;
 };
