@@ -54,7 +54,7 @@ ofxTimeline::ofxTimeline()
 	autosave(true),
 	isFrameBased(false),
 	timelineHasFocus(false),
-	showTicker(true), 
+	showTicker(true),
 	showInoutControl(true),
 	showZoomer(true),
 	durationInSeconds(100.0f/30.0f),
@@ -99,16 +99,16 @@ ofxTimeline::ofxTimeline()
 
 ofxTimeline::~ofxTimeline(){
 	if(isSetup){
-		
+
 		disable();
 
 		ofRemoveListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 
-        //TODO: move to shared pointers 
-        //this breaks timelines that are statically declared because 
+        //TODO: move to shared pointers
+        //this breaks timelines that are statically declared because
         //there is no copy/assignment constructor
 		reset();
-        
+
         delete tabs;
 		delete inoutTrack;
         delete ticker;
@@ -119,9 +119,9 @@ ofxTimeline::~ofxTimeline(){
 void ofxTimeline::setup(){
 
     //TODO: error if isSetup...
-    
+
 	isSetup = true;
-	
+
 	width = ofGetWidth();
     if(tabs != NULL){
         delete tabs;
@@ -137,13 +137,13 @@ void ofxTimeline::setup(){
     inoutTrack = new ofxTLInOut();
     inoutTrack->setTimeline(this);
     inoutTrack->setDrawRect(ofRectangle(offset.x, tabs->getBottomEdge(), width, INOUT_HEIGHT));
-    
+
 	if(ticker != NULL){
 		delete ticker;
 	}
 	ticker = new ofxTLTicker();
 	ticker->setTimeline(this);
-	
+
     //TODO: save ticker playhead position
 	ticker->setup();
 	ticker->setDrawRect(ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, TICKER_HEIGHT));
@@ -153,18 +153,18 @@ void ofxTimeline::setup(){
 	zoomer = new ofxTLZoomer();
 	zoomer->setTimeline(this);
 	zoomer->setDrawRect(ofRectangle(offset.y, ticker->getBottomEdge(), width, ZOOMER_HEIGHT));
-	
+
 	colors.load();
 
 	enable();
-    
+
 	ofAddListener(timelineEvents.viewWasResized, this, &ofxTimeline::viewWasResized);
 	ofAddListener(timelineEvents.pageChanged, this, &ofxTimeline::pageChanged);
 	ofAddListener(ofEvents().update, this, &ofxTimeline::update);
 
     //You can change this name by calling setPageName()
 	addPage("Page One", true);
-    
+
 	if(name == ""){
 	    setName("timeline" + ofToString(timelineNumber++));
 	}
@@ -201,11 +201,11 @@ void ofxTimeline::setName(string newName){
 			string inoutTrackName = inoutTrack->getXMLFileName();
 			ofStringReplace(inoutTrackName, oldName+"_", newName+"_");
 			inoutTrack->setXMLFileName(inoutTrackName);
-			
+
 			string zoomerTrackName = zoomer->getXMLFileName();
 			ofStringReplace(zoomerTrackName, oldName+"_", newName+"_");
 			zoomer->setXMLFileName(zoomerTrackName);
-	
+
 			for(int i = 0; i < pages.size(); i++){
 				pages[i]->timelineChangedName(newName, oldName);
 			}
@@ -214,16 +214,16 @@ void ofxTimeline::setName(string newName){
 }
 
 void ofxTimeline::setupStandardElements(){
-	
+
 //	cout << "*****TL setting up standard path " << ofToDataPath(workingFolder + name + "_inout.xml") << endl;
-	
+
 	inoutTrack->setXMLFileName( ofToDataPath(workingFolder + name + "_inout.xml") );
 	inoutTrack->setup();
-	
+
 	zoomer->setXMLFileName( ofToDataPath(workingFolder + name + "_zoomer.xml") );
 	zoomer->setup();
-	
-	currentPage->loadTrackPositions();	
+
+	currentPage->loadTrackPositions();
 }
 
 string ofxTimeline::getName(){
@@ -232,9 +232,9 @@ string ofxTimeline::getName(){
 
 void ofxTimeline::setWorkingFolder(string folderPath){
 	workingFolder = ofFilePath::addTrailingSlash(folderPath);
-    
+
 	if(isSetup){
-		setupStandardElements();	
+		setupStandardElements();
 	}
 }
 
@@ -246,9 +246,9 @@ void ofxTimeline::loadTracksFromFolder(string folderPath){
     for(int i = 0; i < pages.size(); i++){
         pages[i]->loadTracksFromFolder(folderPath);
     }
-	
+
 //	cout << "*****TL " << name << " Loading tracks from " << folderPath << endl;
-	
+
 	setWorkingFolder(folderPath);
 }
 
@@ -265,11 +265,11 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	string filename = folderPath + zoomer->getXMLFileName();
 	zoomer->setXMLFileName(filename);
 	zoomer->save();
-	
+
 	filename = folderPath + inoutTrack->getXMLFileName();
 	inoutTrack->setXMLFileName(filename);
 	inoutTrack->save();
-	
+
 	setWorkingFolder(folderPath);
 }
 
@@ -277,7 +277,7 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 void ofxTimeline::show(){
 	isShowing = true;
 }
-	
+
 void ofxTimeline::hide(){
 	isShowing = false;
 }
@@ -310,7 +310,7 @@ void ofxTimeline::setShowInoutControl(bool shouldShowInoutControl){
 void ofxTimeline::setShowZoomer(bool shouldShowZoomer){
     showZoomer = shouldShowZoomer;
     if(showZoomer){
-		zoomer->load();        
+		zoomer->load();
     }
     else{
         zoomer->setViewRange(ofRange(0,1.0));
@@ -353,14 +353,14 @@ vector<string>& ofxTimeline::getPasteboard(){
 
 //turn on undo
 void ofxTimeline::enableUndo(bool enabled){
-	undoEnabled = enabled;    
+	undoEnabled = enabled;
 }
 
 void ofxTimeline::undo(){
     if(undoPointer > 0){
     	undoPointer--;
         restoreToState(undoStack[undoPointer]);
-		unsavedChanges = true;		
+		unsavedChanges = true;
     }
 }
 
@@ -385,23 +385,23 @@ void ofxTimeline::restoreToState(vector<UndoItem>& state){
 //by this action so that we can push ones that actually were changed
 //onto the undo stack
 void ofxTimeline::collectStateBuffers(){
-    
+
     if(!undoEnabled) return;
-    
+
     vector<ofxTLTrack*> tracks = currentPage->getTracks();
     stateBuffers.clear();
     modifiedTracks.clear();
     for(int i = 0; i < tracks.size(); i++){
         ofxTLTrack* track = tracks[i];
         if(track->getSelectedItemCount() > 0 || track->isHovering() || track->hasFocus()){
-			
+
             UndoItem ui;
             ui.track = track;
             ui.stateBuffer = track->getXMLRepresentation();
             stateBuffers.push_back(ui);
 //			cout << "collecting state for " << track->getDisplayName() << endl;
 //			cout << ui.stateBuffer << endl;
-	
+
         }
     }
 }
@@ -412,7 +412,7 @@ void ofxTimeline::pushUndoStack(){
 //    cout << "pushing undo stack" << endl;
 
     if(!undoEnabled) return;
-    
+
     vector<UndoItem> undoCollection;
 	set<ofxTLTrack*>::iterator trackit;
 //    for(int i = 0; i < modifiedTracks.size(); i++){
@@ -425,7 +425,7 @@ void ofxTimeline::pushUndoStack(){
             }
         }
     }
-	
+
     if(undoCollection.size() > 0){
         //remove any history that we've undone
         while(undoPointer < undoStack.size()){
@@ -433,7 +433,7 @@ void ofxTimeline::pushUndoStack(){
         }
         undoStack.push_back(undoCollection);
         undoPointer = undoStack.size();
-        
+
         //store the most recent state at the top of the queue
         vector<UndoItem> currentState;
 		for(trackit = modifiedTracks.begin(); trackit != modifiedTracks.end(); trackit++){
@@ -444,7 +444,7 @@ void ofxTimeline::pushUndoStack(){
         }
         undoStack.push_back(currentState);
     }
-	
+
 }
 
 void ofxTimeline::setMovePlayheadOnDrag(bool movePlayhead){
@@ -482,11 +482,11 @@ bool ofxTimeline::getUserChangedValue(){
 void ofxTimeline::flagTrackModified(ofxTLTrack* track){
 //	cout << "modified track " << track->getDisplayName() << endl;
 	flagUserChangedValue();
-    
+
     if(undoEnabled){
         modifiedTracks.insert(track);
     }
-	
+
     unsavedChanges = true;
     if(autosave){
         track->save();
@@ -511,7 +511,7 @@ void ofxTimeline::play(){
     if(!isEnabled){
         return;
     }
-	
+
 	if(!getIsPlaying()){
 
 		//commented out - always updating
@@ -526,11 +526,11 @@ void ofxTimeline::play(){
         if(isDone()){
             setPercentComplete(0.0);
         }
-		
+
 		isPlaying = true;
         currentTime = ofClamp(currentTime, getInTimeInSeconds(), getOutTimeInSeconds());
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
-        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);        
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
 		ofxTLPlaybackEventArgs args = createPlaybackEvent();
 		ofNotifyEvent(timelineEvents.playbackStarted, args);
 	}
@@ -554,16 +554,16 @@ void ofxTimeline::stop(){
     }
 
 	if(getIsPlaying()){
-		
+
 //		if(!isOnThread){
 //	        ofRemoveListener(ofEvents().update, this, &ofxTimeline::update);
 //		}
-		
+
 		if(timeControl != NULL){
 			timeControl->stop();
 			return;
 		}
-		
+
         isPlaying = false;
 
 		if(!ticker->getIsScrubbing()){ //dont trigger event if we are just scrubbing
@@ -587,11 +587,11 @@ bool ofxTimeline::togglePlaySelectedTrack(){
 }
 
 bool ofxTimeline::togglePlay(){
-	
+
     if(!isEnabled){
         return false;
     }
-    
+
 //    if(timeControl != NULL){
 //        return timeControl->togglePlay();
 //    }
@@ -642,7 +642,7 @@ void ofxTimeline::setCurrentTimeMillis(unsigned long long millis){
 }
 
 void ofxTimeline::setFrameRate(float fps){
-	timecode.setFPS(fps);    
+	timecode.setFPS(fps);
 }
 
 void ofxTimeline::setFrameBased(bool frameBased){
@@ -696,7 +696,7 @@ void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = ofClamp(percent, 0, inoutRange.max);
 }
 void ofxTimeline::setInPointAtSeconds(float time){
-	setInPointAtPercent(time/durationInSeconds);	    
+	setInPointAtPercent(time/durationInSeconds);
 }
 void ofxTimeline::setInPointAtFrame(int frame){
     setInPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
@@ -724,7 +724,7 @@ void ofxTimeline::setOutPointAtMillis(unsigned long long millis){
     setOutPointAtPercent(millis / (1000. * durationInSeconds) );
 }
 void ofxTimeline::setOutPointAtTimecode(string timecodeString){
-    setOutPointAtPercent(timecode.secondsForTimecode(timecodeString) / durationInSeconds);    
+    setOutPointAtPercent(timecode.secondsForTimecode(timecodeString) / durationInSeconds);
 }
 
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
@@ -747,7 +747,7 @@ void ofxTimeline::setCurrentTimeToOutPoint(){
 }
 
 void ofxTimeline::clearInOut(){
-	setInOutRange(ofRange(0.0,1.0));    
+	setInOutRange(ofRange(0.0,1.0));
 }
 
 ofRange ofxTimeline::getInOutRange(){
@@ -783,11 +783,11 @@ string ofxTimeline::getInPointTimecode(){
 }
 
 long ofxTimeline::getOutTimeInMillis(){
-    return getOutTimeInSeconds()*1000;    
+    return getOutTimeInSeconds()*1000;
 }
 
 string ofxTimeline::getOutPointTimecode(){
-	return timecode.timecodeForSeconds(getOutTimeInSeconds());    
+	return timecode.timecodeForSeconds(getOutTimeInSeconds());
 }
 
 bool ofxTimeline::toggleEnabled(){
@@ -828,20 +828,20 @@ void ofxTimeline::clear(){
 }
 
 void ofxTimeline::reset(){ //gets rid of everything
-    
+
     if(!isSetup){
         return;
     }
-    
-	
-	
+
+
+
 	if(isOnThread){
 		waitForThread(true);
 	}
-    
+
     disable();
     undoStack.clear();
-    for(int i = 0; i < pages.size(); i++){ 
+    for(int i = 0; i < pages.size(); i++){
         delete pages[i];
     }
     if(tabs != NULL){
@@ -874,17 +874,17 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 
 	bool updateInTime = inoutRange.min > 0.;
 	bool updateOutTime = inoutRange.max < 1.;
-	
+
 	float inTimeSeconds  = getInTimeInSeconds();
 	float outTimeSeconds = getOutTimeInSeconds();
-	
+
 	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
     }
 	//verify no elements are being truncated
 	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
-	
+
 
 	if(updateInTime){
 		setInPointAtSeconds(inTimeSeconds);
@@ -892,7 +892,7 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 	if(updateOutTime){
 		setOutPointAtSeconds(outTimeSeconds);
 	}
-	
+
 	zoomer->setViewRange(zoomer->getSelectedRange());
 }
 
@@ -1039,11 +1039,11 @@ ofVec2f ofxTimeline::getTopRight(){
 }
 
 ofVec2f ofxTimeline::getBottomLeft(){
-	return ofVec2f(totalDrawRect.x, totalDrawRect.y+totalDrawRect.height);    
+	return ofVec2f(totalDrawRect.x, totalDrawRect.y+totalDrawRect.height);
 }
 
 ofVec2f ofxTimeline::getBottomRight(){
-	return ofVec2f(totalDrawRect.x+totalDrawRect.width, totalDrawRect.y+totalDrawRect.height);    
+	return ofVec2f(totalDrawRect.x+totalDrawRect.width, totalDrawRect.y+totalDrawRect.height);
 }
 
 void ofxTimeline::updatePagePositions(){
@@ -1063,7 +1063,7 @@ void ofxTimeline::presentedModalContent(ofxTLTrack* newModalTrack){
 }
 
 void ofxTimeline::dismissedModalContent(){
-	modalTrack = NULL;    
+	modalTrack = NULL;
 }
 
 void ofxTimeline::unselectAll(){
@@ -1092,7 +1092,7 @@ bool ofxTimeline::getSnapToBPM(){
 }
 
 bool ofxTimeline::toggleShowBPMGrid(){
-    ticker->setDrawBPMGrid(!ticker->getDrawBPMGrid());		
+    ticker->setDrawBPMGrid(!ticker->getDrawBPMGrid());
 	return ticker->getDrawBPMGrid();
 }
 
@@ -1124,12 +1124,13 @@ void ofxTimeline::enableEvents() {
 		ofAddListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
 		ofAddListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
 		ofAddListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
+
 //		ofAddListener(ofEvents().draw, this, &ofxTimeline::draw);
 
 		ofAddListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
 		ofAddListener(ofEvents().keyReleased, this, &ofxTimeline::keyReleased);
 		ofAddListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
-		
+
 		usingEvents = true;
 	}
 }
@@ -1140,11 +1141,11 @@ void ofxTimeline::disableEvents() {
 		ofRemoveListener(ofEvents().mousePressed, this, &ofxTimeline::mousePressed);
 		ofRemoveListener(ofEvents().mouseReleased, this, &ofxTimeline::mouseReleased);
 		ofRemoveListener(ofEvents().mouseDragged, this, &ofxTimeline::mouseDragged);
-		
+
 		ofRemoveListener(ofEvents().keyPressed, this, &ofxTimeline::keyPressed);
 		ofRemoveListener(ofEvents().keyReleased, this, &ofxTimeline::keyReleased);
 		ofRemoveListener(ofEvents().windowResized, this, &ofxTimeline::windowResized);
-		
+
 		usingEvents = false;
 	}
 }
@@ -1153,7 +1154,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 	if(!isShowing){
 		return;
 	}
-	
+
     long millis = screenXToMillis(args.x);
 
     if(modalTrack != NULL){
@@ -1162,7 +1163,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
     else{
 		bool focus = getDrawRect().inside(args.x, args.y);
 		if(focus && !timelineHasFocus){
-			currentPage->timelineGainedFocus();    
+			currentPage->timelineGainedFocus();
 		}
 		else if(!focus && timelineHasFocus){
 			currentPage->timelineLostFocus();
@@ -1181,7 +1182,7 @@ void ofxTimeline::mousePressed(ofMouseEventArgs& args){
 		}
 		currentPage->setSnappingEnabled((snapToBPM || snapToOtherElements) && dragAnchorSet);
 	}
-	
+
     //collect state buffers after items are selected and focus is set
     collectStateBuffers();
 
@@ -1191,14 +1192,14 @@ void ofxTimeline::mouseMoved(ofMouseEventArgs& args){
 	if(!isShowing){
 		return;
 	}
-	
+
     long millis = screenXToMillis(args.x);
-    
+
     if(modalTrack != NULL){
     	modalTrack->_mouseMoved(args, millis);
         return;
     }
-    
+
     inoutTrack->mouseMoved(args);
 	ticker->mouseMoved(args);
 	currentPage->mouseMoved(args, millis);
@@ -1209,14 +1210,14 @@ void ofxTimeline::mouseDragged(ofMouseEventArgs& args){
 	if(!isShowing){
 		return;
 	}
-	
+
     long millis = screenXToMillis(args.x);
-    
+
     if(modalTrack != NULL){
     	modalTrack->mouseDragged(args, false);
         return;
     }
-    
+
 	inoutTrack->mouseDragged(args);
 	ticker->mouseDragged(args);
 	currentPage->mouseDragged(args, millis);
@@ -1227,9 +1228,9 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 	if(!isShowing){
 		return;
 	}
-	
+
     long millis = screenXToMillis(args.x);
-    
+
     dragAnchorSet = false;
 
     if(modalTrack != NULL){
@@ -1242,12 +1243,12 @@ void ofxTimeline::mouseReleased(ofMouseEventArgs& args){
 		currentPage->mouseReleased(args, millis);
 		zoomer->mouseReleased(args);
 	}
-    
+
 	pushUndoStack();
 }
 
 void ofxTimeline::keyPressed(ofKeyEventArgs& args){
-	
+
     //cout << "key event " << args.key << " z? " << int('z') << " ctrl? " << ofGetModifierControlPressed() << " " << ofGetModifierShiftPressed() << " short cut? " << ofGetModifierShortcutKeyPressed() << endl;
 
 	if(modalTrack != NULL){
@@ -1262,7 +1263,7 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
     }
 
 	if(!timelineHasFocus) return;
-	
+
 	if(undoEnabled && ofGetModifierShortcutKeyPressed() && (args.key == 'z' || args.key == 'z'-96)){
 		if(ofGetModifierShiftPressed()){
 			redo();
@@ -1275,8 +1276,8 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 
 	//collect the buffers before the command is sent becasue it's what modifies
     collectStateBuffers();
-    
-    
+
+
 	if(ofGetModifierShortcutKeyPressed()){
 		if(args.key == 'c' || args.key == 'c'-96){ //copy
 			vector<string> copyattempt;
@@ -1295,13 +1296,13 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		else if(args.key == 'v' || args.key == 'v'-96){ //paste
 			if (pasteboard.size() > 0) {
 				currentPage->pasteSent(pasteboard);
-			}				
+			}
 		}
 		else if(args.key == 'a' || args.key == 'a'-96){ //select all
 			if(!ofGetModifierShiftPressed()){
 				unselectAll();
 			}
-			currentPage->selectAll();						
+			currentPage->selectAll();
 		}
 		else if(!autosave && unsavedChanges && (args.key == 's' || args.key == 's'-96) ){ //save
 			save();
@@ -1321,7 +1322,7 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 		if(args.key == 'e' || args.key == 'e'-96){
 			currentPage->expandFocusedTrack();
 			ofEventArgs args;
-			ofNotifyEvent(events().viewWasResized, args);			
+			ofNotifyEvent(events().viewWasResized, args);
 		}
 	}
 	else{
@@ -1364,12 +1365,12 @@ void ofxTimeline::keyPressed(ofKeyEventArgs& args){
 				currentPage->nudgeBy(nudgeAmount);
 			}
 		}
-		
+
 		ticker->keyPressed(args);
 		currentPage->keyPressed(args);
 		zoomer->keyPressed(args);
 	}
-	
+
 	pushUndoStack();
 }
 
@@ -1398,7 +1399,7 @@ void ofxTimeline::exit(ofEventArgs& args){
 		ofLogNotice("ofxTimeline::exit") << "waiting for thread" << endl;
 		waitForThread(true);
 	}
-	
+
 }
 
 #pragma mark DRAWING
@@ -1410,14 +1411,14 @@ void ofxTimeline::recalculateBoundingRects(){
     if(lockWidthToWindow){
         width = ofGetWidth();
     }
-    
+
 	if(pages.size() > 1){
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, TAB_HEIGHT));
 	}
 	else{
 		tabs->setDrawRect(ofRectangle(offset.x, offset.y, width, 0));
 	}
-    
+
     inoutTrack->setDrawRect( ofRectangle(offset.x, tabs->getBottomEdge(), width, showInoutControl ? INOUT_HEIGHT : 0) );
     ticker->setDrawRect( ofRectangle(offset.x, inoutTrack->getBottomEdge(), width, showTicker ? TICKER_HEIGHT : 0) );
     updatePagePositions();
@@ -1425,7 +1426,7 @@ void ofxTimeline::recalculateBoundingRects(){
     inoutTrack->setPageRectangle(currentPage->getDrawRect());
 	ofRectangle tickerRect = ofRectangle(offset.x, ticker->getDrawRect().y,
                                         width, currentPage->getBottomEdge()-ticker->getDrawRect().y);
-	ticker->setTotalDrawRect(tickerRect);		
+	ticker->setTotalDrawRect(tickerRect);
 	totalDrawRect = ofRectangle(offset.x, offset.y, width, zoomer->getDrawRect().y+zoomer->getDrawRect().height - offset.y);
 }
 
@@ -1442,7 +1443,7 @@ void ofxTimeline::pageChanged(ofxTLPageEventArgs& args){
 			return;
 		}
 	}
-		
+
 	ofLogError("ofxTimeline -- Tabbed to nonexistence page " + args.currentPageName);
 }
 
@@ -1455,7 +1456,7 @@ ofLoopType ofxTimeline::getLoopType(){
 }
 
 bool ofxTimeline::isDone(){
-	return getPercentComplete() >= inoutRange.max && getLoopType() == OF_LOOP_NONE;   
+	return getPercentComplete() >= inoutRange.max && getLoopType() == OF_LOOP_NONE;
 }
 
 void ofxTimeline::update(ofEventArgs& updateArgs){
@@ -1472,7 +1473,7 @@ void ofxTimeline::threadedFunction(){
 }
 
 void ofxTimeline::updateTime(){
-	
+
 	if(getIsPlaying()){
 		if(timeControl == NULL){
 			if(isFrameBased){
@@ -1484,7 +1485,7 @@ void ofxTimeline::updateTime(){
 			checkLoop();
 		}
 	}
-	
+
 	checkEvents();
 }
 
@@ -1500,7 +1501,7 @@ void ofxTimeline::checkLoop(){
         playbackStartTime = timer.getAppTimeSeconds() - currentTime;
         playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
     }
-    
+
     if(currentTime >= durationInSeconds*inoutRange.max){
         if(loopType == OF_LOOP_NONE){
             currentTime = durationInSeconds*inoutRange.max;
@@ -1524,32 +1525,32 @@ void ofxTimeline::draw(){
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(totalDrawRect.x, 0, totalDrawRect.width, ofGetHeight());
-		
+
         ofDisableLighting();
 		ofEnableAlphaBlending();
-        
+
         ofSetColor(colors.guiBackgroundColor);
 		ofRect(totalDrawRect);
-        
+
 		ofSetColor(255);
-		
+
 		if (pages.size() > 1) {
-			tabs->draw();			
+			tabs->draw();
 		}
-        
+
 		ofPushStyle();
 		currentPage->draw();
 		if(showZoomer)zoomer->_draw();
-        
+
 		//draw these because they overlay the rest of the timeline with info
         ticker->_draw();
 		inoutTrack->_draw();
         ofPopStyle();
-		
+
 		if(modalTrack != NULL){
 			modalTrack->drawModalContent();
 		}
-		
+
 		glDisable(GL_SCISSOR_TEST);
 		ofPopStyle();
 	}
@@ -1562,14 +1563,14 @@ void ofxTimeline::addPage(string pageName, bool makeCurrent){
 		ofLogError("ofxTimeline -- Cannot add page with an empty name.");
 		return;
 	}
-	
+
 	for(int i = 0; i < pages.size(); i++){
 		if(pageName == pages[i]->getName()){
 			ofLogError("ofxTimeline -- Page " + pageName + " already exists");
 			return;
 		}
 	}
-    
+
 	ofxTLPage* newPage = new ofxTLPage();
     newPage->timeline = this;
 	newPage->setName(pageName);
@@ -1578,7 +1579,7 @@ void ofxTimeline::addPage(string pageName, bool makeCurrent){
 	newPage->setTicker(ticker);
     newPage->setMinimalHeaders(minimalHeaders);
 	newPage->hideFooters(footersHidden);
-	
+
 	pages.push_back(newPage);
 	tabs->addPage(pageName);
 
@@ -1637,7 +1638,7 @@ unsigned long long ofxTimeline::getLatestTime(){
 			latestTime = MAX(latestTime,pages[i]->getTracks()[t]->getLatestTime());
 		}
     }
-	return latestTime;	
+	return latestTime;
 }
 
 unsigned long long ofxTimeline::getEarliestSelectedTime(){
@@ -1647,7 +1648,7 @@ unsigned long long ofxTimeline::getEarliestSelectedTime(){
 			earliestTime = MIN(earliestTime,pages[i]->getTracks()[t]->getEarliestSelectedTime());
 		}
     }
-	return earliestTime;	
+	return earliestTime;
 }
 
 unsigned long long ofxTimeline::getLatestSelectedTime(){
@@ -1692,7 +1693,7 @@ void ofxTimeline::addTrack(string trackName, ofxTLTrack* track){
     }
 	track->setTimeline( this );
 	track->setName( trackName );
-	currentPage->addTrack(trackName, track);	
+	currentPage->addTrack(trackName, track);
 	trackNameToPage[trackName] = currentPage;
 	ofEventArgs args;
 	ofNotifyEvent(events().viewWasResized, args);
@@ -1811,7 +1812,7 @@ bool ofxTimeline::isSwitchOn(string trackName, float atTime){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
-	
+
 	ofxTLSwitches* switches = (ofxTLSwitches*)trackNameToPage[trackName]->getTrack(trackName);
     return switches->isOnAtPercent(atTime/durationInSeconds);
 }
@@ -1821,19 +1822,19 @@ bool ofxTimeline::isSwitchOn(string trackName){
 		ofLogError("ofxTimeline -- Couldn't find switcher track " + trackName);
 		return false;
 	}
-	
+
 	ofxTLSwitches* switches = (ofxTLSwitches*)trackNameToPage[trackName]->getTrack(trackName);
 	return switches->isOn();
 //    return isSwitchOn(trackName, currentTime);
 }
 
 bool ofxTimeline::isSwitchOn(string trackName, int atFrame){
-	return isSwitchOn(trackName, timecode.secondsForFrame(atFrame));	
+	return isSwitchOn(trackName, timecode.secondsForFrame(atFrame));
 }
 
 ofxTLBangs* ofxTimeline::addBangs(string trackName){
     string uniqueName = confirmedUniqueName(trackName);
- 	return addBangs(uniqueName, nameToXMLName(uniqueName));   
+ 	return addBangs(uniqueName, nameToXMLName(uniqueName));
 }
 
 ofxTLBangs* ofxTimeline::addBangs(string trackName, string xmlFileName){
@@ -1916,7 +1917,7 @@ ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long long milli
 	   ofLogError("ofxTimeline -- Couldn't find color track " + trackName);
 		return ofColor(0,0,0);
 	}
-	
+
 	ofxTLColorTrack* colors = (ofxTLColorTrack*)trackNameToPage[trackName]->getTrack(trackName);
 	return colors->getColorAtMillis(millis);
 }
@@ -1939,7 +1940,7 @@ ofxTLImageSequence* ofxTimeline::addImageSequence(string trackName, string direc
 	newImageSequence->setCreatedByTimeline(true);
 	newImageSequence->loadSequence(directory);
 	addTrack(confirmedUniqueName(trackName), newImageSequence);
-	return newImageSequence;	
+	return newImageSequence;
 }
 
 
@@ -2022,7 +2023,7 @@ ofxTLAudioTrack* ofxTimeline::getAudioTrack(string audioTrackName){
 }
 
 ofxTLTrackHeader* ofxTimeline::getTrackHeader(string trackName){
-    return getTrackHeader(getTrack(name));    
+    return getTrackHeader(getTrack(name));
 }
 #endif
 
@@ -2043,14 +2044,14 @@ void ofxTimeline::bringTrackToTop(ofxTLTrack* track){
 }
 
 void ofxTimeline::bringTrackToBottom(string trackName){
-	bringTrackToBottom(getTrack(trackName));    
+	bringTrackToBottom(getTrack(trackName));
 }
 
 void ofxTimeline::bringTrackToBottom(ofxTLTrack* track){
     if(track != NULL){
 		trackNameToPage[track->getName()]->bringTrackToBottom(track);
 		ofEventArgs args;
-		ofNotifyEvent(events().viewWasResized, args);		
+		ofNotifyEvent(events().viewWasResized, args);
     }
 }
 
@@ -2118,7 +2119,7 @@ string ofxTimeline::nameToXMLName(string trackName){
     ofStringReplace(xmlName, "/", "_");
     ofStringReplace(xmlName, "\\", "_");
 	xmlName += ".xml";
-	return xmlName;	    
+	return xmlName;
 }
 
 string ofxTimeline::confirmedUniqueName(string name){
@@ -2152,7 +2153,7 @@ ofVec2f ofxTimeline::getNudgePercent(){
 }
 
 ofVec2f ofxTimeline::getBigNudgePercent(){
-	return ofVec2f(zoomer->getViewRange().span()*.02, 0.02);	
+	return ofVec2f(zoomer->getViewRange().span()*.02, 0.02);
 }
 
 long ofxTimeline::screenXToMillis(float x){

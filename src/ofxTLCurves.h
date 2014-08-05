@@ -44,7 +44,7 @@ typedef struct {
 	ofPolyline easeInPreview;
 	ofPolyline easeOutPreview;
 	ofPolyline easeInOutPreview;
-	
+
 	ofxEasing* easing;
 } EasingFunction;
 
@@ -67,36 +67,36 @@ class ofxTLCurves : public ofxTLKeyframes {
 
 //    virtual void draw();
     virtual void drawModalContent();
-    
+
 	//For selecting keyframe type only,
     //the superclass controls keyframe placement
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
-	
+
     virtual string getTrackType();
-    
+
   protected:
-	
+
     virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-    
-    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	
+
+    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime);
-	
+
 	//easing dialog stuff
     void initializeEasings();
 	ofVec2f easingWindowPosition;
 	bool drawingEasingWindow;
 	vector<EasingFunction*> easingFunctions;
 	vector<EasingType*> easingTypes;
-	
+
 	float easingBoxWidth;
 	float easingBoxHeight;
 	float tweenBoxWidth;
 	float tweenBoxHeight;
-	
+
 //	float easingWindowSeperatorHeight;
 
 };
