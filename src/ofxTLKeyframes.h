@@ -76,6 +76,7 @@ class ofxTLKeyframes : public ofxTLTrack
 	virtual void addKeyframeAtMillis(unsigned long long millis);
 	virtual void addKeyframeAtMillis(float value, unsigned long long millis);
 	virtual void simplifySelectedKeyframes( float tolerance = 0.01f);
+    ofxTLKeyframe* getKeyframeAtMillis( unsigned long long millis);
 
     vector<ofxTLKeyframe*>& getKeyframes();
 

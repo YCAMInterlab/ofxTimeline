@@ -95,6 +95,8 @@ class ofxTLCurves : public ofxTLKeyframes {
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 
+	virtual void keyPressed(ofKeyEventArgs& args);
+
 	virtual void setDefaultEasingType( int index );
     virtual int getDefaultEasingType();
     virtual void setDefaultEasingFunction( int index );

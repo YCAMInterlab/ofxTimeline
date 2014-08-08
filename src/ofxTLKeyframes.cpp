@@ -634,15 +634,22 @@ void ofxTLKeyframes::addKeyframeAtMillis(unsigned long long millis){
 }
 
 void ofxTLKeyframes::addKeyframeAtMillis(float value, unsigned long long millis){
-	ofxTLKeyframe* key = newKeyframe();
-	key->time = key->previousTime = millis;
-	key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
-	keyframes.push_back(key);
-	//smart sort, only sort if not added to end
-	if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->time > keyframes[keyframes.size()-1]->time){
-		updateKeyframeSort();
-	}
-	lastKeyframeIndex = 1;
+
+    ofxTLKeyframe* key = getKeyframeAtMillis(millis);
+    if ( key == NULL)
+    {
+        ofxTLKeyframe* key = newKeyframe();
+        key->time = key->previousTime = millis;
+        key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
+        keyframes.push_back(key);
+        //smart sort, only sort if not added to end
+        if(keyframes.size() > 2 && keyframes[keyframes.size()-2]->time > keyframes[keyframes.size()-1]->time){
+            updateKeyframeSort();
+        }
+        lastKeyframeIndex = 1;
+    } else {
+         key->value = ofMap(value, valueRange.min, valueRange.max, 0, 1.0, true);
+    }
 	timeline->flagTrackModified(this);
 	shouldRecomputePreviews = true;
 }
@@ -658,6 +665,15 @@ void ofxTLKeyframes::unselectAll(){
 int ofxTLKeyframes::getSelectedItemCount(){
     return selectedKeyframes.size();
 }
+
+ofxTLKeyframe* ofxTLKeyframes::getKeyframeAtMillis( unsigned long long millis){
+    for(int i = keyframes.size() - 1; i >= 0; i--){
+        if ( keyframes[i]->time == millis) return keyframes[i];
+    }
+
+    return NULL;
+}
+
 
 unsigned long long ofxTLKeyframes::getEarliestTime(){
 	if(keyframes.size() > 0){
@@ -760,6 +776,10 @@ void ofxTLKeyframes::keyPressed(ofKeyEventArgs& args){
 	if ( args.key == 's')
     {
         simplifySelectedKeyframes();
+    }
+    if ( args.key == 'k')
+    {
+        addKeyframe( getValue() );
     }
 }
 

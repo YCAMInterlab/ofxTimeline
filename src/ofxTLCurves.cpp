@@ -183,6 +183,28 @@ void ofxTLCurves::mouseReleased(ofMouseEventArgs& args, long millis){
 	}
 }
 
+void ofxTLCurves::keyPressed(ofKeyEventArgs& args){
+    if ( args.key == 'e')
+    {
+        if ( selectedKeyframes.size() > 0 )
+        {
+
+
+            for(int k = 0; k < selectedKeyframes.size(); k++){
+            ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = eas ingTypes[defaultEasingType];
+            ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[defaultEasingFunction];
+            }
+            timeline->flagTrackModified(this);
+            shouldRecomputePreviews = true;
+        }
+    }
+
+	ofxTLKeyframes::keyPressed( args );
+
+
+}
+
+
 void ofxTLCurves::setDefaultEasingType( int index ){
     if ( index < 0 ) index = 0;
     if ( index >= easingTypes.size()) index = easingTypes.size() - 1;
