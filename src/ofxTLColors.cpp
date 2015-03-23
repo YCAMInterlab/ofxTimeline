@@ -32,13 +32,16 @@
 #include "ofxTLColors.h"
 
 void ofxTLColors::load() {
-	load("GUI/defaultColors.xml");
+    string colorFile = "GUI/defaultColors.xml";
+	load(colorFile);
 }
 
 void ofxTLColors::load(string colorFile) {
 	ofxXmlSettings settings;
-	if(!settings.loadFile(colorFile)){
-        ofLogError("ofxTLColors -- Couldn't load color file " + colorFile);
+	if(!settings.loadFile( colorFile )){
+	//if(!settings.loadFile( ofToDataPath(colorFile, true) )){
+        cout << "color file is " << ofToDataPath(colorFile, true) << endl;
+        ofLogError("ofxTLColors  -- Couldn't load color file " + colorFile );
     }
 		
     guiBackgroundColor = ofColor(settings.getValue("colors:guiBackground:r", 0),
