@@ -635,6 +635,11 @@ void ofxTimeline::setCurrentTimecode(string timecodeString){
 
 void ofxTimeline::setCurrentTimeSeconds(float time){
 	currentTime = time;
+    if(isPlaying){
+        playbackStartTime = timer.getAppTimeSeconds() - currentTime;
+        playbackStartFrame = ofGetFrameNum() - timecode.frameForSeconds(currentTime);
+    }
+ 
 }
 
 void ofxTimeline::setCurrentTimeMillis(unsigned long long millis){
