@@ -273,7 +273,12 @@ void ofxTimeline::saveTracksToFolder(string folderPath){
 	setWorkingFolder(folderPath);
 }
 
+
 #pragma mark CONFIGURATION
+void ofxTimeline::setDefaultFontPath(string newFontPath){
+    fontPath = newFontPath;
+}
+
 void ofxTimeline::show(){
 	isShowing = true;
 }
@@ -1924,6 +1929,10 @@ ofColor ofxTimeline::getColorAtMillis(string trackName, unsigned long long milli
 	
 	ofxTLColorTrack* colors = (ofxTLColorTrack*)trackNameToPage[trackName]->getTrack(trackName);
 	return colors->getColorAtMillis(millis);
+}
+
+void ofxTimeline::setDefaultColorPalettePath(string path){
+    defaultPalettePath = path;
 }
 
 string ofxTimeline::getDefaultColorPalettePath(){

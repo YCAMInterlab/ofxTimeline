@@ -165,7 +165,8 @@ class ofxTimeline : ofThread {
     void loadTracksFromFolder(string folderPath);
     void saveTracksToFolder(string folderPath);
 
-		
+    void setDefaultFontPath(string fontPath);
+    
     //timing setup functions
     void setFrameRate(float fps);    
     void setDurationInFrames(int frames);
@@ -375,8 +376,10 @@ class ofxTimeline : ofThread {
 	ofColor getColorAtPercent(string name, float percent);
 	ofColor getColorAtSecond(string name, float second);
 	ofColor getColorAtMillis(string name, unsigned long long millis);
-	
+    
+	void setDefaultColorPalettePath(string path);
 	string getDefaultColorPalettePath();
+    
     //TODO: remove image sequence from the core? ... or fix it up.
 	//*IMAGE SEQUENCE DOES NOT WORK*
 	ofxTLImageSequence* addImageSequence(string name);
