@@ -131,6 +131,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		bool mpg123ReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 		bool mpg123Stream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 #endif
+        bool decoderReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 
 		void readFile(string fileName,vector<short> & buffer);
 		void stream(string fileName, vector<short> & buffer);
