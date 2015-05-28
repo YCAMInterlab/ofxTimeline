@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;..\..\..\addons\ofxTimeline\libs\openal\include;..\..\..\addons\ofxTimeline\libs\openal\include\AL;..\..\..\addons\ofxTimeline\libs\sndfile\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTextInputField\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <PreBuildEvent>
@@ -13,13 +13,9 @@
       </Command>
     </PreBuildEvent>
     <Link>
-      <AdditionalLibraryDirectories>..\..\..\addons\ofxTimeline\libs\openal\lib\vs64;..\..\..\addons\ofxTimeline\libs\sndfile\lib\vs64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libOpenAL32.dll.a;libsndfile-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\openal\export\vs64\*.dll" "$(ProjectDir)bin"
-xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\export\vs64\*.dll" "$(ProjectDir)bin"</Command>
-    </PostBuildEvent>
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

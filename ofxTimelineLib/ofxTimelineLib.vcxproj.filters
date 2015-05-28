@@ -34,39 +34,6 @@
     <Filter Include="ofxTween\Easings">
       <UniqueIdentifier>{708a2120-06dc-4886-ab30-47ed9086c869}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ofxTimeline\libs">
-      <UniqueIdentifier>{c8e6863a-30ab-4067-a415-af0248449d84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\kiss">
-      <UniqueIdentifier>{0d6e8c25-e1c8-4be4-bd70-a8ed2b734ffc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\kiss\include">
-      <UniqueIdentifier>{dbaf3c41-337f-47cf-ac27-f5069afa8284}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\kiss\src">
-      <UniqueIdentifier>{00299047-b752-4ce1-bcae-ce3a965d9807}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions">
-      <UniqueIdentifier>{677cc005-c62a-4534-9c5f-90fde18e6feb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src">
-      <UniqueIdentifier>{b88febe4-d219-4306-82aa-5fbc6ea0174c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\sndfile">
-      <UniqueIdentifier>{b74b945e-f851-4845-9ae1-4cddda36e790}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\openal">
-      <UniqueIdentifier>{f4fc8303-8c84-42ba-8f8c-24d6b6f8dc89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\openal\include">
-      <UniqueIdentifier>{77d6a6ed-ab31-48b1-afff-f5a12dd6dac4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\sndfile\include">
-      <UniqueIdentifier>{b50148d2-867b-43e1-95ac-ff77df96d96d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ofxTimeline\libs\openal\include\AL">
-      <UniqueIdentifier>{869f9d7a-cafe-48a2-9a8b-70a8fb5a77f2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ofxHotKeys.h">
@@ -206,39 +173,6 @@
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingSine.h">
       <Filter>ofxTween\Easings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\kiss\include\kiss_fft.h">
-      <Filter>ofxTimeline\libs\kiss\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\kiss\include\kiss_fftr.h">
-      <Filter>ofxTimeline\libs\kiss\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h">
-      <Filter>ofxTimeline\libs\kiss\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h">
-      <Filter>ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\sndfile\include\sndfile.h">
-      <Filter>ofxTimeline\libs\sndfile\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\al.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\alc.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\alext.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx-creative.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx-presets.h">
-      <Filter>ofxTimeline\libs\openal\include\AL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -380,19 +314,5 @@
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingSine.cpp">
       <Filter>ofxTween\Easings</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fft.c">
-      <Filter>ofxTimeline\libs\kiss\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c">
-      <Filter>ofxTimeline\libs\kiss\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
-      <Filter>ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\libs\sndfile\include\sndfile.hh">
-      <Filter>ofxTimeline\libs\sndfile\include</Filter>
-    </None>
   </ItemGroup>
 </Project>
