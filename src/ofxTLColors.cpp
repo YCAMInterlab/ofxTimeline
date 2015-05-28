@@ -40,8 +40,7 @@ void ofxTLColors::load(string colorFile) {
 	ofxXmlSettings settings;
 	if(!settings.loadFile( colorFile )){
 	//if(!settings.loadFile( ofToDataPath(colorFile, true) )){
-        cout << "color file is " << ofToDataPath(colorFile, true) << endl;
-        ofLogError("ofxTLColors  -- Couldn't load color file " + colorFile );
+        ofLogWarning("ofxTLColors  -- Couldn't load color file " + colorFile );
     }
 		
     guiBackgroundColor = ofColor(settings.getValue("colors:guiBackground:r", 0),
