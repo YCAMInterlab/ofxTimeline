@@ -142,9 +142,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h" />
     <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h" />
     <ClInclude Include="..\..\ofxRange\src\ofRange.h" />
     <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h" />
@@ -164,17 +161,6 @@
     <ClInclude Include="..\..\ofxTween\src\ofxTween.h" />
     <ClInclude Include="..\..\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\ofxXmlSettings\src\ofxXmlSettings.h" />
-    <ClInclude Include="..\libs\kiss\include\kiss_fft.h" />
-    <ClInclude Include="..\libs\kiss\include\kiss_fftr.h" />
-    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h" />
-    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h" />
-    <ClInclude Include="..\libs\openal\include\AL\al.h" />
-    <ClInclude Include="..\libs\openal\include\AL\alc.h" />
-    <ClInclude Include="..\libs\openal\include\AL\alext.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx-creative.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx-presets.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx.h" />
-    <ClInclude Include="..\libs\sndfile\include\sndfile.h" />
     <ClInclude Include="..\src\ofxHotKeys.h" />
     <ClInclude Include="..\src\ofxRemoveCocoaMenu.h" />
     <ClInclude Include="..\src\ofxTimeline.h" />
@@ -204,8 +190,6 @@
     <ClInclude Include="..\src\ofxTLZoomer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp" />
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp" />
     <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp" />
@@ -226,9 +210,6 @@
     <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\ofxXmlSettings\src\ofxXmlSettings.cpp" />
-    <ClCompile Include="..\libs\kiss\src\kiss_fft.c" />
-    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c" />
-    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp" />
     <ClCompile Include="..\src\ofxHotKeys_impl_linux.cpp" />
     <ClCompile Include="..\src\ofxHotKeys_impl_win.cpp" />
     <ClCompile Include="..\src\ofxTimeline.cpp" />
@@ -255,9 +236,6 @@
     <ClCompile Include="..\src\ofxTLVideoThumb.cpp" />
     <ClCompile Include="..\src\ofxTLVideoTrack.cpp" />
     <ClCompile Include="..\src\ofxTLZoomer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\libs\sndfile\include\sndfile.hh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
