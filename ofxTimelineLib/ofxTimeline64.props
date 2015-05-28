@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;..\..\..\addons\ofxTimeline\libs\openal\include;..\..\..\addons\ofxTimeline\libs\openal\include\AL;..\..\..\addons\ofxTimeline\libs\sndfile\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxTween\src\Easings;..\..\..\addons\ofxTween\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxTimeline\src;..\..\..\addons\ofxMSATimer\src;..\..\..\addons\ofxRange\src;..\..\..\addons\ofxTimecode\src;..\..\..\addons\ofxTextInputField\src;..\..\..\addons\ofxTimeline\libs\kiss\include;..\..\..\addons\ofxTimeline\libs\kiss\src;..\..\..\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;..\..\..\addons\ofxTimeline\libs\openal\include;..\..\..\addons\ofxTimeline\libs\openal\include\AL;..\..\..\addons\ofxTimeline\libs\sndfile\include;..\..\..\addons\ofxAudioDecoder\src;..\..\..\addons\ofxAudioDecoder\libs\audiodecoder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <PreBuildEvent>

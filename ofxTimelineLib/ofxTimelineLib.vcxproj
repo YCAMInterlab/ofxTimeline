@@ -60,7 +60,7 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="ofxTimeline64.props" />
-    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug64.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -142,6 +142,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h" />
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h" />
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h" />
     <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h" />
     <ClInclude Include="..\..\ofxRange\src\ofRange.h" />
     <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h" />
@@ -201,6 +204,8 @@
     <ClInclude Include="..\src\ofxTLZoomer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp" />
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp" />
     <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp" />

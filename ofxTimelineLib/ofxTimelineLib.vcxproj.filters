@@ -67,6 +67,24 @@
     <Filter Include="ofxTimeline\libs\openal\include\AL">
       <UniqueIdentifier>{869f9d7a-cafe-48a2-9a8b-70a8fb5a77f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ofxAudioDecoder">
+      <UniqueIdentifier>{cf312089-f022-45bc-850e-ccc580056209}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxAudioDecoder\src">
+      <UniqueIdentifier>{06664be7-3c21-4d40-9d21-a25991e95b59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxAudioDecoder\libs">
+      <UniqueIdentifier>{0e2ad1cc-86a5-410b-b1ba-171e302f3e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxAudioDecoder\libs\audiodecoder">
+      <UniqueIdentifier>{fdb71d71-342a-40c2-be73-fa4a401d7af4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxAudioDecoder\libs\audiodecoder\src">
+      <UniqueIdentifier>{efb36fc4-d99a-4a2d-9a86-ef58d1b666a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxAudioDecoder\libs\audiodecoder\include">
+      <UniqueIdentifier>{37cf2034-c78e-408b-b569-324e6421215c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ofxHotKeys.h">
@@ -240,6 +258,15 @@
     <ClInclude Include="..\libs\openal\include\AL\efx-presets.h">
       <Filter>ofxTimeline\libs\openal\include\AL</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h">
+      <Filter>ofxAudioDecoder\libs\audiodecoder\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h">
+      <Filter>ofxAudioDecoder\libs\audiodecoder\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h">
+      <Filter>ofxAudioDecoder\libs\audiodecoder\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ofxHotKeys_impl_linux.cpp">
@@ -388,6 +415,12 @@
     </ClCompile>
     <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
       <Filter>ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp">
+      <Filter>ofxAudioDecoder\libs\audiodecoder\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp">
+      <Filter>ofxAudioDecoder\libs\audiodecoder\src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
