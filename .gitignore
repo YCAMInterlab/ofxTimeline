@@ -12,6 +12,7 @@ build/
 obj/
 *.o
 *.app
+*/x64/
 
 #codeblocks files
 apps/*/*/*.layout

@@ -251,7 +251,7 @@ void ofxTLKeyframes::load(){
 	else{
 		ofxXmlSettings savedkeyframes;
 		if(!savedkeyframes.loadFile(xmlFileName)){
-			ofLog(OF_LOG_NOTICE, "ofxTLKeyframes --- couldn't load xml file " + xmlFileName);
+//			ofLog(OF_LOG_NOTICE, "ofxTLKeyframes --- couldn't load xml file " + xmlFileName);
 			return;
 		}
 		

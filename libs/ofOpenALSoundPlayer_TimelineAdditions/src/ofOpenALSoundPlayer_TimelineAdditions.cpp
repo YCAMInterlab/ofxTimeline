@@ -11,6 +11,8 @@
 #include <math.h>
 #endif
 
+#include "ofxAudioDecoder.h"
+
 ALCdevice * ofOpenALSoundPlayer_TimelineAdditions::alDevice = 0;
 ALCcontext * ofOpenALSoundPlayer_TimelineAdditions::alContext = 0;
 //vector<float> ofOpenALSoundPlayer_TimelineAdditions::window;
@@ -193,6 +195,32 @@ bool ofOpenALSoundPlayer_TimelineAdditions::mpg123ReadFile(string path,vector<sh
 #endif
 
 //------------------------------------------------------------
+bool ofOpenALSoundPlayer_TimelineAdditions::decoderReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
+    
+    ofxAudioDecoder audioDecoder;
+    audioDecoder.load(path);
+    
+    if (audioDecoder.getNumSamples() == 0) {
+        ofLog(OF_LOG_ERROR,"ofOpenALSoundPlayer_TimelineAdditions: couldnt read " + path);
+        return false;
+    }
+    
+    buffer.resize(audioDecoder.getNumFrames() * audioDecoder.getChannels());
+    fftAuxBuffer.resize(audioDecoder.getNumFrames() * audioDecoder.getChannels());
+    
+    memcpy(fftAuxBuffer.data(), audioDecoder.getRawSamples().data(), audioDecoder.getNumSamples() * sizeof(float));
+    
+    for (int i = 0; i < fftAuxBuffer.size(); ++i) {
+        buffer[i] = 32565.0 * fftAuxBuffer[i];
+    }
+    
+    channels = audioDecoder.getChannels();
+    duration = float(audioDecoder.getNumFrames()) / float(audioDecoder.getSampleRate());
+    samplerate = audioDecoder.getSampleRate();
+    return true;
+}
+
+//------------------------------------------------------------
 bool ofOpenALSoundPlayer_TimelineAdditions::sfStream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer){
 	if(!streamf){
 		SF_INFO sfInfo;
@@ -326,16 +354,17 @@ void ofOpenALSoundPlayer_TimelineAdditions::stream(string fileName, vector<short
 }
 
 void ofOpenALSoundPlayer_TimelineAdditions::readFile(string fileName, vector<short> & buffer){
-#ifdef OF_USING_MPG123
-	if(ofFilePath::getFileExt(fileName)!="mp3" && ofFilePath::getFileExt(fileName)!="MP3"){
+    if(ofFilePath::getFileExt(fileName)!="mp3" && ofFilePath::getFileExt(fileName)!="MP3"){
 		if(!sfReadFile(fileName,buffer,fftAuxBuffer)) return;
 	}else{
+#ifdef OF_USING_MPG123
 		if(!mpg123ReadFile(fileName,buffer,fftAuxBuffer)) return;
-	}
 #else
-	if(!sfReadFile(fileName,buffer,fftAuxBuffer)) return;
+        if(!decoderReadFile(fileName,buffer,fftAuxBuffer)) return;
 #endif
-	fftBuffers.resize(channels);
+    }
+
+    fftBuffers.resize(channels);
 	int numFrames = buffer.size()/channels;
 
 	for(int i=0;i<channels;i++){
@@ -350,8 +379,8 @@ void ofOpenALSoundPlayer_TimelineAdditions::readFile(string fileName, vector<sho
 bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_stream){
 
     string ext = ofToLower(ofFilePath::getFileExt(fileName));
-    if(ext != "wav" && ext != "aif" && ext != "aiff"){
-        ofLogError("Sound player can only load .wav or .aiff files");
+    if(ext != "wav" && ext != "aif" && ext != "aiff" && ext != "mp3"){
+        ofLogError("Sound player can only load .wav .aiff or .mp3 files");
         return false;
     }
        
@@ -372,7 +401,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 
 	ALenum format=AL_FORMAT_MONO16;
 
-	if(!isStreaming){
+    if(!isStreaming || ext == "mp3"){ // mp3s don't stream cause they gotta be decoded
 		readFile(fileName, buffer);
 	}else{
 		stream(fileName, buffer);
