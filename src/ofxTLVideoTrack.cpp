@@ -524,16 +524,17 @@ void ofxTLVideoTrack::keyPressed(ofKeyEventArgs& args){
 }
 
 int ofxTLVideoTrack::selectFrame(int frame){
-	selectedFrame = inFrame + (frame % (outFrame - inFrame));
-//	cout << "setting frame to " << selectedFrame << " with requested frame " << frame << endl;
-	currentLoop = frame / (outFrame-inFrame);
-//	cout << "selecting frame " << selectedFrame << endl;
-	player->setFrame(selectedFrame);
-	timeline->flagUserChangedValue();
-	player->update(); 
-//	cout << "selectFrame: player reports frame " << player->getCurrentFrame() << " with requested frame " << frame << endl;
-
-	//cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
+    if(outFrame - inFrame > 0){
+        selectedFrame = inFrame + (frame % (outFrame - inFrame));
+    //	cout << "setting frame to " << selectedFrame << " with requested frame " << frame << endl;
+        currentLoop = frame / (outFrame-inFrame);
+    //	cout << "selecting frame " << selectedFrame << endl;
+        player->setFrame(selectedFrame);
+        timeline->flagUserChangedValue();
+        player->update(); 
+    //	cout << "selectFrame: player reports frame " << player->getCurrentFrame() << " with requested frame " << frame << endl;
+        //cout << "selecting frame " << frame << " video frame " << selectedFrame << " current loop " << currentLoop << " duration " << player->getTotalNumFrames() << " timeline duration " << timeline->getDurationInFrames() << endl;
+    }
 	return selectedFrame;
 }
 
