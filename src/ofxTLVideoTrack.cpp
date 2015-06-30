@@ -327,7 +327,7 @@ void ofxTLVideoTrack::threadedFunction(){
 bool ofxTLVideoTrack::load(string moviePath){
     
     ofPtr<ofVideoPlayer> newPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());    
-    if(newPlayer->loadMovie(moviePath)){
+    if(newPlayer->load(moviePath)){
         setPlayer( newPlayer );
         return true;
     }
@@ -349,7 +349,7 @@ void ofxTLVideoTrack::setPlayer(ofPtr<ofVideoPlayer> newPlayer){
 		videoThumbs.clear();
         backthreadedPlayer = ofPtr<ofVideoPlayer>(new ofVideoPlayer());
         backthreadedPlayer->setUseTexture(false);
-        backthreadedPlayer->loadMovie(player->getMoviePath());
+        backthreadedPlayer->load(player->getMoviePath());
         backLock.unlock();
         
 		calculateFramePositions();
