@@ -77,6 +77,7 @@ class ofxTLPage {
     virtual void clear();
     virtual void save();
 
+    virtual void setFocusedTrack(ofxTLTrack* track);
     virtual ofxTLTrack* getFocusedTrack();
 	
 	virtual float getComputedHeight();	

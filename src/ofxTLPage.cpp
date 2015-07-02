@@ -201,12 +201,16 @@ void ofxTLPage::mousePressed(ofMouseEventArgs& args, long millis){
     //TODO: explore multi-focus tracks for pasting into many tracks at once
     //paste events get sent to the focus track
     if(newFocus != NULL && newFocus != focusedTrack){
-        if(focusedTrack != NULL){
-            focusedTrack->lostFocus();
-        }
-        newFocus->gainedFocus();
-        focusedTrack = newFocus; //is set to NULL when the whole timeline loses focus
+        setFocusedTrack(newFocus);
     }
+}
+
+void ofxTLPage::setFocusedTrack(ofxTLTrack* track){
+    if(focusedTrack != NULL){
+        focusedTrack->lostFocus();
+    }
+    track->gainedFocus();
+    focusedTrack = track; //is set to NULL when the whole timeline loses focus
 }
 
 ofxTLTrack* ofxTLPage::getFocusedTrack(){

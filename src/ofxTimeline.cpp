@@ -1679,6 +1679,13 @@ ofxTLTrack* ofxTimeline::getModalTrack(){
     return modalTrack;
 }
 
+ofxTLTrack* ofxTimeline::getFocusedTrack(){
+    return currentPage->getFocusedTrack();
+}
+void ofxTimeline::setFocusedTrack(ofxTLTrack* track){
+    currentPage->setFocusedTrack(track);
+}
+
 void ofxTimeline::setTimecontrolTrack(string trackName){
     setTimecontrolTrack(getTrack(trackName));
 }

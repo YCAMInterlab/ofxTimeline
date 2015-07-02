@@ -320,6 +320,10 @@ class ofxTimeline : ofThread {
     bool isModal();
     ofxTLTrack* getModalTrack();
     
+    //TODO: focus track on specific pages
+    ofxTLTrack* getFocusedTrack();
+    void setFocusedTrack(ofxTLTrack* track);
+    
 	//Returns the number of items selected in the whole timeline
     //	Subclass Note
     //	ofxTLTracks that allow for multiple selection
