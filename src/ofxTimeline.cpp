@@ -704,6 +704,7 @@ void ofxTimeline::setInPointAtPlayhead(){
 }
 void ofxTimeline::setInPointAtPercent(float percent){
 	inoutRange.min = ofClamp(percent, 0, inoutRange.max);
+    triggerInOutEvent();
 }
 void ofxTimeline::setInPointAtSeconds(float time){
 	setInPointAtPercent(time/durationInSeconds);	    
@@ -723,6 +724,7 @@ void ofxTimeline::setOutPointAtPlayhead(){
 }
 void ofxTimeline::setOutPointAtPercent(float percent){
 	inoutRange.max = ofClamp(percent, inoutRange.min, 1.0);
+    triggerInOutEvent();
 }
 void ofxTimeline::setOutPointAtFrame(float frame){
     setOutPointAtPercent(timecode.secondsForFrame(frame) / durationInSeconds);
@@ -740,12 +742,20 @@ void ofxTimeline::setOutPointAtTimecode(string timecodeString){
 void ofxTimeline::setInOutRange(ofRange inoutPercentRange){
     if(inoutPercentRange.min > inoutPercentRange.max) return;
 	inoutRange = inoutPercentRange;
+    triggerInOutEvent();
 }
 
 void ofxTimeline::setInOutRangeMillis(unsigned long long min, unsigned long long max){
 	inoutRange = ofRange(min / (durationInSeconds*1000.),
 						 max / (durationInSeconds*1000.) );
-//	cout << "new range is " << inoutRange << endl;
+    triggerInOutEvent();
+}
+
+void ofxTimeline::triggerInOutEvent(){
+    ofxTLInOutEventArgs args;
+    args.sender = this;
+    args.inoutRange = inoutRange;
+    ofNotifyEvent(events().inOutChanged, args);
 }
 
 void ofxTimeline::setCurrentTimeToInPoint(){

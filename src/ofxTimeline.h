@@ -568,7 +568,8 @@ class ofxTimeline : ofThread {
 	
     //TODO convert to ofLongRange
 	ofRange inoutRange;
-	
+    void triggerInOutEvent();
+    
     bool timelineHasFocus;
     
     bool showTicker; 

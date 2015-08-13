@@ -222,6 +222,7 @@ void ofxTLVideoTrack::update(){
 void ofxTLVideoTrack::playheadScrubbed(ofxTLPlaybackEventArgs& args){
 	
     if(isLoaded() && !currentlyPlaying && playAlongToTimeline){
+
         selectFrame(args.currentFrame);
 //        cout << "after scrub timeline time is " << timeline->getCurrentTime()  << " frame is " << timeline->getCurrentFrame() << " and percent is " << timeline->getPercentComplete() << endl;
 //        cout << "while video is " << player->getPosition()*player->getDuration() << " frame is " << player->getCurrentFrame() << " and percent is " << player->getPosition() << endl;

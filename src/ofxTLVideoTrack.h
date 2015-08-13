@@ -84,8 +84,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     virtual void play();
     virtual void stop();
     virtual bool getIsPlaying();
-	
-	
+		
 	//plays when timeline is played
 	void setPlayAlongToTimeline(bool playAlong);
 	bool getPlayAlongToTimeline();
@@ -115,7 +114,7 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     void framePositionsUpdated(vector<ofxTLVideoThumb>& newThumbs);
 	ofPtr<ofVideoPlayer> player;
 	ofPtr<ofVideoPlayer> backthreadedPlayer; //this generates thumbnails - a memory compromise to have 2 videos but but speeds things up big time
-	ofMutex backLock; // to protect backThumbs
+    std::mutex backLock; // to protect backThumbs
     vector<ofxTLVideoThumb> backThumbs; //used to generate thumbs on the back thread, then copies them onto the main thread
     
 	void playheadScrubbed(ofxTLPlaybackEventArgs& args);

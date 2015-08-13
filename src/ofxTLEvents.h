@@ -54,6 +54,12 @@ class ofxTLZoomEventArgs : public ofEventArgs {
 	ofRange oldZoom;
 };
 
+class ofxTLInOutEventArgs : public ofEventArgs {
+public:
+    ofxTimeline* sender;
+    ofRange inoutRange;
+};
+
 class ofxTLPageEventArgs : public ofEventArgs {
   public:
     ofxTimeline* sender;
@@ -94,7 +100,9 @@ class ofxTLEvents {
 	ofEvent<ofxTLPlaybackEventArgs> playbackEnded;
 	ofEvent<ofxTLPlaybackEventArgs> playbackLooped;
 	ofEvent<ofxTLPlaybackEventArgs> playheadScrubbed;
-    
+
+    ofEvent<ofxTLInOutEventArgs> inOutChanged;
+
 	ofEvent<ofxTLZoomEventArgs> zoomStarted;
 	ofEvent<ofxTLZoomEventArgs> zoomDragged;
 	ofEvent<ofxTLZoomEventArgs> zoomEnded;
