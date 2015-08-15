@@ -49,7 +49,7 @@ ofxTLAudioTrack::~ofxTLAudioTrack(){
 
 bool ofxTLAudioTrack::loadSoundfile(string filepath){
 	soundLoaded = false;
-	if(player.loadSound(filepath, false)){
+	if(player.load(filepath, false)){
     	soundLoaded = true;
 		soundFilePath = filepath;
 		shouldRecomputePreview = true;
@@ -271,7 +271,7 @@ void ofxTLAudioTrack::boundsChanged(ofEventArgs& args){
 
 void ofxTLAudioTrack::play(){
 
-	if(!player.getIsPlaying()){
+	if(!player.isPlaying()){
         
 //		lastPercent = MIN(timeline->getPercentComplete() * timeline->getDurationInSeconds() / player.getDuration(), 1.0);
 		player.setLoop(timeline->getLoopType() == OF_LOOP_NORMAL);
@@ -291,7 +291,7 @@ void ofxTLAudioTrack::play(){
 }
 
 void ofxTLAudioTrack::stop(){
-	if(player.getIsPlaying()){
+	if(player.isPlaying()){
 		
 		player.setPaused(true);
 
@@ -316,7 +316,7 @@ void ofxTLAudioTrack::playbackStarted(ofxTLPlaybackEventArgs& args){
 
 void ofxTLAudioTrack::playbackLooped(ofxTLPlaybackEventArgs& args){
 	if(isSoundLoaded() && this != timeline->getTimecontrolTrack()){
-		if(!player.getIsPlaying()){
+		if(!player.isPlaying()){
 			player.play();
 		}
 		player.setPosition( positionForSecond(timeline->getCurrentTime()) );
@@ -340,7 +340,7 @@ bool ofxTLAudioTrack::togglePlay(){
 }
 
 bool ofxTLAudioTrack::getIsPlaying(){
-    return player.getIsPlaying();
+    return player.isPlaying();
 }
 
 void ofxTLAudioTrack::setSpeed(float speed){

@@ -1,7 +1,7 @@
-#include "testApp.h"
+#include "ofApp.h"
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
 	
     ofBackground(255*.15);
     ofSetVerticalSync(true);
@@ -9,8 +9,9 @@ void testApp::setup(){
 
     ofxTimeline::removeCocoaMenusFromGlut("AllTracksExample");
 	timeline.setup();
-
+  #ifdef TIMELINE_VIDEO_INCLUDED
 	timeline.addVideoTrack("fingers", "fingers.mov");
+  #endif
   #ifdef TIMELINE_AUDIO_INCLUDED
     timeline.addAudioTrack("audio", "4chan.wav");
     timeline.setDurationInSeconds(timeline.getAudioTrack("audio")->getDuration());
@@ -32,21 +33,21 @@ void testApp::setup(){
 	timeline.enableSnapToOtherKeyframes(false);
 	timeline.setLoopType(OF_LOOP_NORMAL);
 	
-	ofAddListener(timeline.events().bangFired, this, &testApp::bangFired);
+	ofAddListener(timeline.events().bangFired, this, &ofApp::bangFired);
 }
 
 //--------------------------------------------------------------
-void testApp::bangFired(ofxTLBangEventArgs& args){
+void ofApp::bangFired(ofxTLBangEventArgs& args){
 	cout << "bang fired!" << args.flag << endl;
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
 
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 	if(timeline.isSwitchOn("switches")){
 		ofBackground(timeline.getColor("colors"));
 	}
@@ -57,46 +58,46 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
     
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
