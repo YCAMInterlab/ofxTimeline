@@ -167,6 +167,7 @@ Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItem
       - ofxTextInputField
       - ofxRange
       - ofxTween
+      - ofxXmlSettings
  - Generate project
  - If you are in Windows VC2010, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event
 
@@ -232,7 +233,7 @@ MyClass.cpp
     
     //--------------------------------------------------------------
     void MyClass::receivedBang(ofxTLBangEventArgs& bang){
-      ofLogNotice("Bang fired from track " + bang->track.getName());
+      ofLogNotice("Bang fired from track " + bang.track->getName());
       if(bang.track->getName() == "trigger particles"){
         particleGenerator.start(); //some example response
       }
