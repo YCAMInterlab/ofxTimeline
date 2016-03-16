@@ -168,9 +168,12 @@ Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItem
       - ofxRange
       - ofxTween
  - Generate project
- - If you are in Windows VC2010, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event
+ - If you are in Windows VC2015, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event (replace the standard OF command)
 
-            xcopy /e /i /y "$(ProjectDir)..\..\..\export\vs2010\*.dll" "$(ProjectDir)bin" & xcopy /e /i /y "$(ProjectDir)..\..\..\addons\ofxTimeline\libs\sndfile\redist\*.dll" "$(ProjectDir)bin"
+            robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
+            robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
+            robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
+            if errorlevel 1 exit 0 else exit %errorlevel%
 
  - If you are on OS X, you'll need to add the OpenAL.framework to your project in order to use the AudioTrack
 
