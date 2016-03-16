@@ -30,6 +30,8 @@
  *
  */
 
+#ifdef TIMELINE_VIDEO_INCLUDED
+
 #include "ofxTLVideoTrack.h"
 #include "ofxTimeline.h"
 
@@ -568,3 +570,5 @@ void ofxTLVideoTrack::exit(ofEventArgs& args){
 string ofxTLVideoTrack::getTrackType(){
     return "Video";
 }
+
+#endif  // TIMELINE_VIDEO_INCLUDED

@@ -30,6 +30,8 @@
  *
  */
 
+#ifdef TIMELINE_AUDIO_INCLUDED
+
 #include "ofxTLAudioTrack.h"
 #include "ofxTimeline.h"
 
@@ -475,4 +477,4 @@ string ofxTLAudioTrack::getTrackType(){
     return "Audio";    
 }
 
-   
+#endif  // TIMELINE_AUDIO_INCLUDED
