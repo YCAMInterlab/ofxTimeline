@@ -58,7 +58,7 @@ ofOpenALSoundPlayer_TimelineAdditions::ofOpenALSoundPlayer_TimelineAdditions(){
 
 // ----------------------------------------------------------------------------
 ofOpenALSoundPlayer_TimelineAdditions::~ofOpenALSoundPlayer_TimelineAdditions(){
-	unloadSound();
+	unload();
 	kiss_fftr_free(fftCfg);
 	players.erase(this);
 }
@@ -376,7 +376,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::readFile(string fileName, vector<sho
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_stream){
+bool ofOpenALSoundPlayer_TimelineAdditions::load(string fileName, bool is_stream){
 
     string ext = ofToLower(ofFilePath::getFileExt(fileName));
     if(ext != "wav" && ext != "aif" && ext != "aiff" && ext != "mp3"){
@@ -397,7 +397,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::loadSound(string fileName, bool is_s
 	// & prevent user-created memory leaks
 	// if they call "loadSound" repeatedly, for example
 
-	unloadSound();
+	unload();
 
 	ALenum format=AL_FORMAT_MONO16;
 
@@ -581,7 +581,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::update(ofEventArgs & args){
 }
 
 //------------------------------------------------------------
-void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
+void ofOpenALSoundPlayer_TimelineAdditions::unload(){
     
 //	ofRemoveListener(ofEvents.update,this,&ofOpenALSoundPlayer_TimelineAdditions::update);
 	if(isLoaded()){
@@ -596,7 +596,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::unloadSound(){
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer_TimelineAdditions::getIsPlaying(){
+bool ofOpenALSoundPlayer_TimelineAdditions::isPlaying() const{
 	if(sources.empty()) return false;
 	if(isStreaming) return isThreadRunning();
 	ALint state;
@@ -609,7 +609,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::getIsPlaying(){
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer_TimelineAdditions::getIsPaused(){
+bool ofOpenALSoundPlayer_TimelineAdditions::isPaused() const{
 	if(sources.empty()) return false;
 	ALint state;
 	bool paused=true;
@@ -621,20 +621,20 @@ bool ofOpenALSoundPlayer_TimelineAdditions::getIsPaused(){
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer_TimelineAdditions::getSpeed(){
+float ofOpenALSoundPlayer_TimelineAdditions::getSpeed() const{
 	return speed;
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer_TimelineAdditions::getPan(){
+float ofOpenALSoundPlayer_TimelineAdditions::getPan() const{
 	return pan;
 }
 
-float ofOpenALSoundPlayer_TimelineAdditions::getDuration(){
+float ofOpenALSoundPlayer_TimelineAdditions::getDuration() const{
 	return duration;
 }
 
-int ofOpenALSoundPlayer_TimelineAdditions::getNumChannels(){
+int ofOpenALSoundPlayer_TimelineAdditions::getNumChannels() const{
 	return channels;
 }
 
@@ -655,12 +655,12 @@ void ofOpenALSoundPlayer_TimelineAdditions::setVolume(float vol){
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer_TimelineAdditions::getVolume(){
+float ofOpenALSoundPlayer_TimelineAdditions::getVolume() const{
 	return volume;    
 }
 
 //------------------------------------------------------------
-bool ofOpenALSoundPlayer_TimelineAdditions::isLoaded(){
+bool ofOpenALSoundPlayer_TimelineAdditions::isLoaded() const{
     return bLoadedOk;
 }
 
@@ -692,7 +692,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::setPositionMS(int ms){
 }
 
 //------------------------------------------------------------
-float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
+float ofOpenALSoundPlayer_TimelineAdditions::getPosition() const{
 	if(duration==0) return 0;
 	if(sources.empty()) return 0;
 	float pos;
@@ -715,7 +715,7 @@ float ofOpenALSoundPlayer_TimelineAdditions::getPosition(){
 }
 
 //------------------------------------------------------------
-int ofOpenALSoundPlayer_TimelineAdditions::getPositionMS(){
+int ofOpenALSoundPlayer_TimelineAdditions::getPositionMS() const{
 	if(duration==0) return 0;
 	if(sources.empty()) return 0;
 	int pos;
@@ -841,7 +841,7 @@ void ofOpenALSoundPlayer_TimelineAdditions::play(){
 	if(isStreaming){
 		setPosition(0);
 		stream_end = false;
-		startThread(true,false);
+		startThread();
 	}
 
 }
@@ -1049,12 +1049,12 @@ void ofOpenALSoundPlayer_TimelineAdditions::setLogAverages(int minBandwidth, int
 }
 
 // ----------------------------------------------------------------------------
-int ofOpenALSoundPlayer_TimelineAdditions::getMinBandwidth(){
+int ofOpenALSoundPlayer_TimelineAdditions::getMinBandwidth() const{
     return currentMinBandwidth;
 }
 
 // ----------------------------------------------------------------------------
-int ofOpenALSoundPlayer_TimelineAdditions::getBandsPerOctave(){
+int ofOpenALSoundPlayer_TimelineAdditions::getBandsPerOctave() const{
     return currentBandsPerOctave;
 }
 
@@ -1072,7 +1072,7 @@ float * ofOpenALSoundPlayer_TimelineAdditions::getSystemSpectrum(int bands){
 
 	set<ofOpenALSoundPlayer_TimelineAdditions*>::iterator it;
 	for(it=players.begin();it!=players.end();it++){
-		if(!(*it)->getIsPlaying()) continue;
+		if(!(*it)->isPlaying()) continue;
 		float * buffer = (*it)->getCurrentBufferSum(signalSize);
 		for(int i=0;i<signalSize;i++){
 			systemWindowedSignal[i]+=buffer[i];

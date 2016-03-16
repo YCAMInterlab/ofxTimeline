@@ -73,30 +73,31 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 		ofOpenALSoundPlayer_TimelineAdditions();
 		virtual ~ofOpenALSoundPlayer_TimelineAdditions();
 
-		bool loadSound(string fileName, bool stream = false);
-		void unloadSound();
-		void play();
-		void stop();
+		bool load(string fileName, bool stream = false) override;
+		void unload() override;
+		void play() override;
+		void stop() override;
 
-		void setVolume(float vol);
-		void setPan(float vol);
-		void setSpeed(float spd);
-		void setPaused(bool bP);
-		void setLoop(bool bLp);
-		void setMultiPlay(bool bMp);
-		void setPosition(float pct); // 0 = start, 1 = end;
-	    void setPositionMS(int ms);
+		void setVolume(float vol) override;
+		void setPan(float vol) override;
+		void setSpeed(float spd) override;
+		void setPaused(bool bP) override;
+		void setLoop(bool bLp) override;
+		void setMultiPlay(bool bMp) override;
+		void setPosition(float pct) override; // 0 = start, 1 = end;
+	    void setPositionMS(int ms) override;
     
-		float getPosition();
-	    int getPositionMS();
-		bool getIsPlaying();
-		float getSpeed();
-		float getPan();
-	    float getVolume();
-	    bool isLoaded();
-		bool getIsPaused();
-		float getDuration();
-		int getNumChannels();
+		float getPosition() const override;
+	    int getPositionMS() const override;
+		bool isPlaying() const override;
+		float getSpeed() const override;
+		float getPan() const override;
+	    bool isLoaded() const override;
+		float getVolume() const override;
+
+		bool isPaused() const;
+		float getDuration() const;
+		int getNumChannels() const;
     
 		static void initialize();
 		static void close();
@@ -104,8 +105,8 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
         //averaging implementation
 		vector<float>& getSpectrum(int bands);
         void setLogAverages(int minBandwidth, int bandsPerOctave);
-        int getMinBandwidth();
-        int getBandsPerOctave();
+        int getMinBandwidth() const;
+        int getBandsPerOctave() const;
         vector<float>& getAverages();
         vector<short> & getBuffer();
         vector<float>& getCurrentBuffer(int _size);
