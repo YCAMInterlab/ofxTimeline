@@ -85,15 +85,6 @@
     <ClCompile Include="..\src\ofxTLZoomer.cpp">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fft.c">
-      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c">
-      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp">
-      <Filter>addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp">
       <Filter>addons\ofxMSATimer\src</Filter>
     </ClCompile>
@@ -157,12 +148,6 @@
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -176,39 +161,6 @@
     </Filter>
     <Filter Include="addons\ofxTimeline\src">
       <UniqueIdentifier>{95f5e690-6ef9-4850-8a04-838e853ed4ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs">
-      <UniqueIdentifier>{a1fa663b-ead0-43fd-91ff-ffcea2a5d53f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\kiss">
-      <UniqueIdentifier>{09cd92f5-abc1-4e9c-b068-e73994efc62f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\kiss\include">
-      <UniqueIdentifier>{e2fd787e-08a1-42b7-92f3-84223ba66f7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\kiss\src">
-      <UniqueIdentifier>{f5d9c0b5-cc83-464e-bbca-b919e02a9410}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions">
-      <UniqueIdentifier>{df1edad3-2c13-4644-9e02-93e28f38069a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src">
-      <UniqueIdentifier>{19340cb5-28a0-4e1c-9efd-8ed8269ff788}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\openal">
-      <UniqueIdentifier>{b56eb6ed-0d7e-41ca-b59f-9d1c851f6e04}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\openal\include">
-      <UniqueIdentifier>{2e864836-181e-42fd-bd5a-89787acdf1c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\openal\include\AL">
-      <UniqueIdentifier>{e9309401-3f95-4063-ac4a-90378ca36d76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\sndfile">
-      <UniqueIdentifier>{275b2297-351c-40f8-94f1-c1d3c2fd0b61}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxTimeline\libs\sndfile\include">
-      <UniqueIdentifier>{47bc8679-838c-4cf2-8a5b-60b24043c6de}</UniqueIdentifier>
     </Filter>
     <Filter Include="addons\ofxMSATimer">
       <UniqueIdentifier>{be95ddaa-741f-4043-a349-01479effbdfd}</UniqueIdentifier>
@@ -251,27 +203,6 @@
     </Filter>
     <Filter Include="addons\ofxRange\src">
       <UniqueIdentifier>{3373bc21-ea5e-4f3a-8f82-c02f060d24b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder">
-      <UniqueIdentifier>{739a2091-aab1-435b-9b26-dbe75e7b1e36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\src">
-      <UniqueIdentifier>{b0a3291e-77b7-41bf-b34b-b1267c527093}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\libs">
-      <UniqueIdentifier>{9302133c-d6bc-4404-b699-6608b9efbfe3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\libs\audiodecoder">
-      <UniqueIdentifier>{90c91111-f63e-4b80-b890-d21e614dab95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\libs\audiodecoder\include">
-      <UniqueIdentifier>{a17daf96-e98d-4757-a812-f3f7f6094d9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\libs\audiodecoder\include\Apple">
-      <UniqueIdentifier>{dccf2a22-d385-4323-a3b6-cf1fc316da93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxAudioDecoder\libs\audiodecoder\src">
-      <UniqueIdentifier>{cb89922e-1537-49cd-9a86-b403f91af0b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -359,39 +290,6 @@
     <ClInclude Include="..\src\ofxTLZoomer.h">
       <Filter>addons\ofxTimeline\src</Filter>
     </ClInclude>
-    <ClInclude Include="..\libs\kiss\include\kiss_fft.h">
-      <Filter>addons\ofxTimeline\libs\kiss\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\kiss\include\kiss_fftr.h">
-      <Filter>addons\ofxTimeline\libs\kiss\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h">
-      <Filter>addons\ofxTimeline\libs\kiss\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h">
-      <Filter>addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\al.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\alc.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\alext.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx-creative.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx-presets.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\openal\include\AL\efx.h">
-      <Filter>addons\ofxTimeline\libs\openal\include\AL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\libs\sndfile\include\sndfile.h">
-      <Filter>addons\ofxTimeline\libs\sndfile\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h">
       <Filter>addons\ofxMSATimer\src</Filter>
     </ClInclude>
@@ -451,27 +349,6 @@
     </ClInclude>
     <ClInclude Include="..\..\ofxRange\src\ofRange.h">
       <Filter>addons\ofxRange\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\src\ofxAudioDecoder.h">
-      <Filter>addons\ofxAudioDecoder\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodercoreaudio.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\Apple\CADebugMacros.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include\Apple</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\Apple\CAStreamBasicDescription.h">
-      <Filter>addons\ofxAudioDecoder\libs\audiodecoder\include\Apple</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -95,22 +95,20 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include\AL;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>$(OF_ROOT)\addons\ofxTimeline\libs\openal\lib\vs;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\lib\vs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libsndfile-1.lib;libOpenAL32.dll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
     <PostBuildEvent>
       <Command>robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -123,21 +121,19 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include\AL;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>$(OF_ROOT)\addons\ofxTimeline\libs\openal\lib\vs64;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\lib\vs64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libsndfile-1.lib;libOpenAL32.dll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
     <PostBuildEvent>
       <Command>robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -147,7 +143,7 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include\AL;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -158,15 +154,13 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>$(OF_ROOT)\addons\ofxTimeline\libs\openal\lib\vs;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\lib\vs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libsndfile-1.lib;libOpenAL32.dll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
     <PostBuildEvent>
       <Command>robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -176,7 +170,7 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include\AL;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;$(OF_ROOT)\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -186,21 +180,17 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <AdditionalLibraryDirectories>$(OF_ROOT)\addons\ofxTimeline\libs\openal\lib\vs64;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\lib\vs64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libsndfile-1.lib;libOpenAL32.dll.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
     <PostBuildEvent>
       <Command>robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
 if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp" />
-    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp" />
     <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp" />
@@ -221,9 +211,6 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\ofxXmlSettings\src\ofxXmlSettings.cpp" />
-    <ClCompile Include="..\libs\kiss\src\kiss_fft.c" />
-    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c" />
-    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp" />
     <ClCompile Include="..\src\ofxHotKeys_impl_linux.cpp" />
     <ClCompile Include="..\src\ofxHotKeys_impl_win.cpp" />
     <ClCompile Include="..\src\ofxTimeline.cpp" />
@@ -255,13 +242,6 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClCompile Include="src\ofApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\Apple\CADebugMacros.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\Apple\CAStreamBasicDescription.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodercoreaudio.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h" />
-    <ClInclude Include="..\..\ofxAudioDecoder\src\ofxAudioDecoder.h" />
     <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h" />
     <ClInclude Include="..\..\ofxRange\src\ofRange.h" />
     <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h" />
@@ -281,17 +261,6 @@ if errorlevel 1 exit 0 else exit %errorlevel%</Command>
     <ClInclude Include="..\..\ofxTween\src\ofxTween.h" />
     <ClInclude Include="..\..\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\ofxXmlSettings\src\ofxXmlSettings.h" />
-    <ClInclude Include="..\libs\kiss\include\kiss_fft.h" />
-    <ClInclude Include="..\libs\kiss\include\kiss_fftr.h" />
-    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h" />
-    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h" />
-    <ClInclude Include="..\libs\openal\include\AL\al.h" />
-    <ClInclude Include="..\libs\openal\include\AL\alc.h" />
-    <ClInclude Include="..\libs\openal\include\AL\alext.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx-creative.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx-presets.h" />
-    <ClInclude Include="..\libs\openal\include\AL\efx.h" />
-    <ClInclude Include="..\libs\sndfile\include\sndfile.h" />
     <ClInclude Include="..\src\ofxHotKeys.h" />
     <ClInclude Include="..\src\ofxRemoveCocoaMenu.h" />
     <ClInclude Include="..\src\ofxTimeline.h" />

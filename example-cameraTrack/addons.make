@@ -1,5 +1,4 @@
 ofxXmlSettings
-ofxAudioDecoder
 ofxMSATimer
 ofxRange
 ofxTextInputField
