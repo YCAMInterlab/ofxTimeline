@@ -41,12 +41,13 @@ ofxTLTrackHeader::ofxTLTrackHeader(){
 }
 
 ofxTLTrackHeader::~ofxTLTrackHeader(){
-	
+
 }
 
 void ofxTLTrackHeader::enable(){
 	if(!isEnabled()){
 		nameField.setFont(timeline->getFont());
+		nameField.drawBounds = false;
 		ofxTLTrack::enable();
     	ofAddListener(nameField.textChanged, this, &ofxTLTrackHeader::textFieldEnter);
 	}
@@ -65,7 +66,7 @@ void ofxTLTrackHeader::setTrack(ofxTLTrack* newTrack){
 }
 
 ofxTLTrack* ofxTLTrackHeader::getTrack(){
-	return track;    
+	return track;
 }
 
 void ofxTLTrackHeader::textFieldEnter(string& newText){
@@ -96,9 +97,9 @@ void ofxTLTrackHeader::draw(){
 	if(footerRect.width != footerStripeWidth){
 		recalculateFooterStripes();
 	}
-	
+
 	ofPushStyle();
-	
+
 	if(track->hasFocus()){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
@@ -108,22 +109,22 @@ void ofxTLTrackHeader::draw(){
 	// TODO: set these somewhere else instead of setting it every frame here
     // set name if it's empty and we're not editing
     if(nameField.text != track->getDisplayName() && !nameField.getIsEnabled()){
-    	nameField.text = track->getDisplayName();   
+    	nameField.text = track->getDisplayName();
     }
-    
+
 	if(timeline->areHeadersEditable() && !nameField.getIsEnabled()){
 		nameField.enable();
 	}
-	
+
 	if(!timeline->areHeadersEditable() && nameField.getIsEnabled()){
 		nameField.disable();
 	}
-	
+
     if(nameField.getIsEditing()){
     	track->getTimeline()->presentedModalContent(this);
     }
-    
-	
+
+
     nameField.bounds.x = bounds.x;
     nameField.bounds.y = bounds.y;
 	ofNoFill();
@@ -137,10 +138,10 @@ void ofxTLTrackHeader::draw(){
 	if(getTrack()->getDrawRect().height > 0 || bounds.height > 0){
 	    nameField.draw();
 	}
-	
+
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
 	ofRect(bounds);
-	
+
 	//draw grippy lines on the footer draggable element
 	if(footerHeight > 0){
 		if(draggingSize){
@@ -156,7 +157,7 @@ void ofxTLTrackHeader::draw(){
 }
 
 void ofxTLTrackHeader::recalculateFooterStripes(){
-	
+
 	if(footerHeight == 0){
 		return;
 	}
@@ -167,7 +168,7 @@ void ofxTLTrackHeader::recalculateFooterStripes(){
 		footerStripes.moveTo(l, footerHeight);
 		footerStripes.lineTo(l+footerHeight, 0);
 	}
-	
+
 	footerStripeWidth = footerRect.width;
 }
 
@@ -186,8 +187,8 @@ void ofxTLTrackHeader::mouseDragged(ofMouseEventArgs& args){
 	if(draggingSize){
 		ofRectangle trackRect = track->getDrawRect();
 		trackRect.height = MAX(0, args.y - trackRect.y - dragOffset);
-		track->setDrawRect(trackRect);		
-		recalculateFooter();		
+		track->setDrawRect(trackRect);
+		recalculateFooter();
 	}
 }
 
@@ -209,7 +210,7 @@ void ofxTLTrackHeader::recalculateFooter(){
 	ofRectangle trackRect = track->getDrawRect();
 	float footerStartY = trackRect.y + trackRect.height;
 	footerRect = ofRectangle(bounds.x, footerStartY, bounds.width, footerHeight);
-	
+
 	ofEventArgs a;
 	ofNotifyEvent(track->events().viewWasResized, a);
 }
