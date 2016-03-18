@@ -191,7 +191,7 @@ void ofxTLCurves::keyPressed(ofKeyEventArgs& args){
 
 
             for(int k = 0; k < selectedKeyframes.size(); k++){
-            ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = eas ingTypes[defaultEasingType];
+            ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeType = easingTypes[defaultEasingType];
             ((ofxTLTweenKeyframe*)selectedKeyframes[k])->easeFunc = easingFunctions[defaultEasingFunction];
             }
             timeline->flagTrackModified(this);
