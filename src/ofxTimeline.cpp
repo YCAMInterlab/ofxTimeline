@@ -1632,6 +1632,44 @@ void ofxTimeline::setCurrentPage(int index){
 	tabs->selectPage(index);
 }
 
+void ofxTimeline::removePage(string pageName) {
+	ofxTLPage *page = getPage(pageName);
+	if (page == NULL) {
+		ofLogError() << "ofxTimeline::removePage -- Could not find page " << pageName << " to remove " << endl;
+		return;
+	}
+
+	removePage(page);
+}
+
+void ofxTimeline::removePage(ofxTLPage *page) {
+	if (getCurrentPageName() == page->getName()) {
+		setCurrentPage(0);
+	}
+
+	tabs->removePage(page->getName());
+
+	while (page->getTracks().size()) {
+		removeTrack(page->getTracks()[0]);
+	}
+
+	int found = -1;
+	for (int i = 0; i < pages.size(); i++) {
+		if (pages[i] == page) {
+			found = i;
+		}
+	}
+
+	if (found >= 0) {
+		pages.erase(pages.begin() + found);
+	}
+
+	delete page;
+
+	ofEventArgs args;
+	ofNotifyEvent(events().viewWasResized, args);
+}
+
 int ofxTimeline::getTotalSelectedItems(){
     int totalSelected = 0;
     vector<ofxTLTrack*> tracks = currentPage->getTracks();

@@ -312,6 +312,9 @@ class ofxTimeline : ofThread {
 	virtual void setPageName(string newName, int index);
 	virtual void setCurrentPage(string name);
 	virtual void setCurrentPage(int number);
+
+	virtual void removePage(string name);
+	virtual void removePage(ofxTLPage *page);
 	
     //if a timeline is modal it means that it may be presenting
     //content outside of the timeline or requiring keyboard input

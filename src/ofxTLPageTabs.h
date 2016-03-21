@@ -49,6 +49,7 @@ class ofxTLPageTabs : public ofxTLTrack {
 	virtual void draw();
 
 	virtual void addPage(string name);
+	virtual void removePage(string name);
 	virtual void selectPage(string name);
 	virtual void selectPage(int index);
 	virtual void changeName(string oldName, string newName);
