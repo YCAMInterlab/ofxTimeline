@@ -6,11 +6,11 @@
  * that can be rendered to an image sequence
  */
 
-#include "testApp.h"
+#include "ofApp.h"
 #define BUTTON_HEIGHT 30
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
 	
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
@@ -55,7 +55,7 @@ void testApp::setup(){
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
     
     //update views
     if(!loaded){
@@ -80,7 +80,7 @@ void testApp::update(){
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 	
 	ofBackground(.15*255); //pro apps background color
 
@@ -124,7 +124,7 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::loadVideo(string videoPath){
+void ofApp::loadVideo(string videoPath){
     ofxTLVideoTrack* videoTrack = timeline.getVideoTrack("Video");
 
     if(videoTrack == NULL){
@@ -156,7 +156,7 @@ void testApp::loadVideo(string videoPath){
 }
 
 //--------------------------------------------------------------
-void testApp::renderCurrentFrame(){
+void ofApp::renderCurrentFrame(){
     
     //update the video and the timeline to the current frame
     int startFrame = timeline.getVideoPlayer("Video")->getCurrentFrame();
@@ -195,7 +195,7 @@ void testApp::renderCurrentFrame(){
     }
 }
 
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
     
     if(key == 'c'){
         //reload shader
@@ -204,22 +204,22 @@ void testApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y ){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 	if(loaded && renderButton.inside(x,y)){
         if(rendering){
             rendering = false;
@@ -247,22 +247,22 @@ void testApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
     if(dragInfo.files.size() > 0){
 		loadVideo(dragInfo.files[0]);
 	}
