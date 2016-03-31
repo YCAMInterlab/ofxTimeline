@@ -205,8 +205,8 @@ bool ofOpenALSoundPlayer_TimelineAdditions::decoderReadFile(string path,vector<s
         return false;
     }
     
-    buffer.resize(audioDecoder.getNumFrames() * audioDecoder.getChannels());
-    fftAuxBuffer.resize(audioDecoder.getNumFrames() * audioDecoder.getChannels());
+    buffer.resize(audioDecoder.getNumFrames() * audioDecoder.getNumChannels());
+    fftAuxBuffer.resize(audioDecoder.getNumFrames() * audioDecoder.getNumChannels());
     
     memcpy(fftAuxBuffer.data(), audioDecoder.getRawSamples().data(), audioDecoder.getNumSamples() * sizeof(float));
     
@@ -214,7 +214,7 @@ bool ofOpenALSoundPlayer_TimelineAdditions::decoderReadFile(string path,vector<s
         buffer[i] = 32565.0 * fftAuxBuffer[i];
     }
     
-    channels = audioDecoder.getChannels();
+    channels = audioDecoder.getNumChannels();
     duration = float(audioDecoder.getNumFrames()) / float(audioDecoder.getSampleRate());
     samplerate = audioDecoder.getSampleRate();
     return true;
