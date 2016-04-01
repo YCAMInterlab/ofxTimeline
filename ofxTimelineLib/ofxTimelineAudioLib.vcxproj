@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A72C4F16-CB16-4143-BA5C-5E4FA802D636}</ProjectGuid>
+    <RootNamespace>ofxTimelineLib</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TIMELINE_AUDIO_INCLUDED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MinSpace</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TIMELINE_AUDIO_INCLUDED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TIMELINE_AUDIO_INCLUDED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(OF_ROOT)\addons\ofxAudioDecoder\src;$(OF_ROOT)\addons\ofxAudioDecoder\libs\audiodecoder\include;$(OF_ROOT)\addons\ofxMSATimer\src;$(OF_ROOT)\addons\ofxRange\src;$(OF_ROOT)\addons\ofxTextInputField\src;$(OF_ROOT)\addons\ofxTimecode\src;$(OF_ROOT)\addons\ofxTimeline\src;$(OF_ROOT)\addons\ofxTimeline\libs\kiss\include;$(OF_ROOT)\addons\ofxTimeline\libs\ofOpenALSoundPlayer_TimelineAdditions\src;$(OF_ROOT)\addons\ofxTimeline\libs\openal\include;$(OF_ROOT)\addons\ofxTimeline\libs\sndfile\include;$(OF_ROOT)\addons\ofxTween\src;$(OF_ROOT)\addons\ofxTween\src\Easings;$(OF_ROOT)\addons\ofxXmlSettings\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TIMELINE_AUDIO_INCLUDED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoder.h" />
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecoderbase.h" />
+    <ClInclude Include="..\..\ofxAudioDecoder\libs\audiodecoder\include\audiodecodermediafoundation.h" />
+    <ClInclude Include="..\..\ofxAudioDecoder\src\ofxAudioDecoder.h" />
+    <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h" />
+    <ClInclude Include="..\..\ofxRange\src\ofRange.h" />
+    <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h" />
+    <ClInclude Include="..\..\ofxTimecode\src\ofxTimecode.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasing.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBack.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBounce.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCirc.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCubic.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingElastic.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingExpo.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingLinear.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuad.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuart.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuint.h" />
+    <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingSine.h" />
+    <ClInclude Include="..\..\ofxTween\src\ofxTween.h" />
+    <ClInclude Include="..\..\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="..\..\ofxXmlSettings\src\ofxXmlSettings.h" />
+    <ClInclude Include="..\libs\kiss\include\kiss_fft.h" />
+    <ClInclude Include="..\libs\kiss\include\kiss_fftr.h" />
+    <ClInclude Include="..\libs\kiss\src\_kiss_fft_guts.h" />
+    <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h" />
+    <ClInclude Include="..\libs\openal\include\AL\al.h" />
+    <ClInclude Include="..\libs\openal\include\AL\alc.h" />
+    <ClInclude Include="..\libs\openal\include\AL\alext.h" />
+    <ClInclude Include="..\libs\openal\include\AL\efx-creative.h" />
+    <ClInclude Include="..\libs\openal\include\AL\efx-presets.h" />
+    <ClInclude Include="..\libs\openal\include\AL\efx.h" />
+    <ClInclude Include="..\libs\sndfile\include\sndfile.h" />
+    <ClInclude Include="..\libs\sndfile\include\sndfile.hh" />
+    <ClInclude Include="..\src\ofxHotKeys.h" />
+    <ClInclude Include="..\src\ofxRemoveCocoaMenu.h" />
+    <ClInclude Include="..\src\ofxTimeline.h" />
+    <ClInclude Include="..\src\ofxTLAudioTrack.h" />
+    <ClInclude Include="..\src\ofxTLBangs.h" />
+    <ClInclude Include="..\src\ofxTLCameraTrack.h" />
+    <ClInclude Include="..\src\ofxTLColors.h" />
+    <ClInclude Include="..\src\ofxTLColorTrack.h" />
+    <ClInclude Include="..\src\ofxTLCurves.h" />
+    <ClInclude Include="..\src\ofxTLEmptyKeyframes.h" />
+    <ClInclude Include="..\src\ofxTLEmptyTrack.h" />
+    <ClInclude Include="..\src\ofxTLEvents.h" />
+    <ClInclude Include="..\src\ofxTLFlags.h" />
+    <ClInclude Include="..\src\ofxTLImageSequence.h" />
+    <ClInclude Include="..\src\ofxTLImageSequenceFrame.h" />
+    <ClInclude Include="..\src\ofxTLImageTrack.h" />
+    <ClInclude Include="..\src\ofxTLInOut.h" />
+    <ClInclude Include="..\src\ofxTLKeyframes.h" />
+    <ClInclude Include="..\src\ofxTLLFO.h" />
+    <ClInclude Include="..\src\ofxTLPage.h" />
+    <ClInclude Include="..\src\ofxTLPageTabs.h" />
+    <ClInclude Include="..\src\ofxTLSwitches.h" />
+    <ClInclude Include="..\src\ofxTLTicker.h" />
+    <ClInclude Include="..\src\ofxTLTrack.h" />
+    <ClInclude Include="..\src\ofxTLTrackHeader.h" />
+    <ClInclude Include="..\src\ofxTLVideoThumb.h" />
+    <ClInclude Include="..\src\ofxTLVideoTrack.h" />
+    <ClInclude Include="..\src\ofxTLZoomer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecoderbase.cpp" />
+    <ClCompile Include="..\..\ofxAudioDecoder\libs\audiodecoder\src\audiodecodermediafoundation.cpp" />
+    <ClCompile Include="..\..\ofxAudioDecoder\src\ofxAudioDecoder.cpp" />
+    <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp" />
+    <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp" />
+    <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasing.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBack.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBounce.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCirc.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCubic.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingElastic.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingExpo.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingLinear.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuad.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuart.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuint.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingSine.cpp" />
+    <ClCompile Include="..\..\ofxTween\src\ofxTween.cpp" />
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+    <ClCompile Include="..\libs\kiss\src\kiss_fft.c" />
+    <ClCompile Include="..\libs\kiss\src\kiss_fftr.c" />
+    <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp" />
+    <ClCompile Include="..\src\ofxHotKeys_impl_win.cpp" />
+    <ClCompile Include="..\src\ofxTimeline.cpp" />
+    <ClCompile Include="..\src\ofxTLAudioTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLBangs.cpp" />
+    <ClCompile Include="..\src\ofxTLCameraTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLColors.cpp" />
+    <ClCompile Include="..\src\ofxTLColorTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLCurves.cpp" />
+    <ClCompile Include="..\src\ofxTLEmptyKeyframes.cpp" />
+    <ClCompile Include="..\src\ofxTLEmptyTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLFlags.cpp" />
+    <ClCompile Include="..\src\ofxTLImageSequence.cpp" />
+    <ClCompile Include="..\src\ofxTLImageSequenceFrame.cpp" />
+    <ClCompile Include="..\src\ofxTLImageTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLInOut.cpp" />
+    <ClCompile Include="..\src\ofxTLKeyframes.cpp" />
+    <ClCompile Include="..\src\ofxTLLFO.cpp" />
+    <ClCompile Include="..\src\ofxTLPage.cpp" />
+    <ClCompile Include="..\src\ofxTLPageTabs.cpp" />
+    <ClCompile Include="..\src\ofxTLSwitches.cpp" />
+    <ClCompile Include="..\src\ofxTLTicker.cpp" />
+    <ClCompile Include="..\src\ofxTLTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLTrackHeader.cpp" />
+    <ClCompile Include="..\src\ofxTLVideoThumb.cpp" />
+    <ClCompile Include="..\src\ofxTLVideoTrack.cpp" />
+    <ClCompile Include="..\src\ofxTLZoomer.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
