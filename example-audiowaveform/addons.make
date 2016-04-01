@@ -1,3 +1,4 @@
+ofxAudioDecoder
 ofxMSATimer
 ofxRange
 ofxTextInputField

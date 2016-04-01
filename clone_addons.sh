@@ -21,3 +21,5 @@ ${PREFIX}Flightphase/ofxTextInputField.git -b develop
 echo "If you're using linux, please make sure you checkout the develop branch of ofxTextInputField"
 
 ${PREFIX}Flightphase/ofxRange.git
+
+${PREFIX}prisonerjohn/ofxAudioDecoder.git
