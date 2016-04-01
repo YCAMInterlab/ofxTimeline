@@ -167,6 +167,7 @@ Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItem
       - ofxTextInputField
       - ofxRange
       - ofxTween
+      - ofxAudioDecoder
  - Generate project
  - If you are in Windows VC2015, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event (replace the standard OF command)
 
