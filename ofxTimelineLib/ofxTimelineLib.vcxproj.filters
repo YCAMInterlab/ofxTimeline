@@ -31,7 +31,22 @@
     <Filter Include="ofxTween">
       <UniqueIdentifier>{cc4b727b-0cee-481d-9185-bf67cc66f387}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ofxTween\Easings">
+    <Filter Include="ofxMSATimer\src">
+      <UniqueIdentifier>{db32c3d1-4f68-4a87-9363-91b5f7db046d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxRange\src">
+      <UniqueIdentifier>{10c13eba-c18f-4af3-be07-6e3c9537a727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTextInputField\src">
+      <UniqueIdentifier>{bafb311d-6499-42b0-b77d-31a030b854db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTimecode\src">
+      <UniqueIdentifier>{4cc3146e-6b0a-47b4-bc0d-0344cffa4f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTween\src">
+      <UniqueIdentifier>{c51242ac-9a3e-43ab-b7ce-204ffbfd73b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ofxTween\src\Easings">
       <UniqueIdentifier>{708a2120-06dc-4886-ab30-47ed9086c869}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -123,56 +138,56 @@
     <ClInclude Include="..\..\ofxXmlSettings\libs\tinyxml.h">
       <Filter>ofxXmlSettings\libs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ofxTimecode\src\ofxTimecode.h">
-      <Filter>ofxTimecode</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxRange\src\ofRange.h">
-      <Filter>ofxRange</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h">
-      <Filter>ofxMSATimer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h">
-      <Filter>ofxTextInputField</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ofxTween\src\ofxTween.h">
-      <Filter>ofxTween</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasing.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBack.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingBounce.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCirc.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingCubic.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingElastic.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingExpo.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingLinear.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuad.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuart.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingQuint.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ofxTween\src\Easings\ofxEasingSine.h">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxMSATimer\src\ofxMSATimer.h">
+      <Filter>ofxMSATimer\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxRange\src\ofRange.h">
+      <Filter>ofxRange\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTextInputField\src\ofxTextInputField.h">
+      <Filter>ofxTextInputField\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTimecode\src\ofxTimecode.h">
+      <Filter>ofxTimecode\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ofxTween\src\ofxTween.h">
+      <Filter>ofxTween\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -266,53 +281,53 @@
     <ClCompile Include="..\..\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>ofxXmlSettings\libs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp">
-      <Filter>ofxTimecode</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp">
-      <Filter>ofxMSATimer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp">
-      <Filter>ofxTextInputField</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ofxTween\src\ofxTween.cpp">
-      <Filter>ofxTween</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasing.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBack.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingBounce.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCirc.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingCubic.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingElastic.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingExpo.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingLinear.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuad.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuart.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingQuint.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ofxTween\src\Easings\ofxEasingSine.cpp">
-      <Filter>ofxTween\Easings</Filter>
+      <Filter>ofxTween\src\Easings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxMSATimer\src\ofxMSATimer.cpp">
+      <Filter>ofxMSATimer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTextInputField\src\ofxTextInputField.cpp">
+      <Filter>ofxTextInputField\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTimecode\src\ofxTimecode.cpp">
+      <Filter>ofxTimecode\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ofxTween\src\ofxTween.cpp">
+      <Filter>ofxTween\src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
