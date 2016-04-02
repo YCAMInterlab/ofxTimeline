@@ -44,7 +44,7 @@ typedef struct {
 	ofPolyline easeInPreview;
 	ofPolyline easeOutPreview;
 	ofPolyline easeInOutPreview;
-	
+
 	ofxEasing* easing;
 } EasingFunction;
 
@@ -61,42 +61,72 @@ class ofxTLTweenKeyframe : public ofxTLKeyframe{
 	EasingType* easeType;
 };
 
+ enum EasingFunctions {
+    EasingFunction_linear,
+    EasingFunction_sine,
+    EasingFunction_circular,
+    EasingFunction_quadratic,
+    EasingFunction_cubic,
+    EasingFunction_quartic,
+    EasingFunction_quintic,
+    EasingFunction_exponential,
+    EasingFunction_back,
+    EasingFunction_bounce,
+    EasingFunction_elastic
+};
+
+enum EasingTypes {
+    EasingType_in,
+    EasingType_out,
+    EasingType_in_out
+};
+
+
 class ofxTLCurves : public ofxTLKeyframes {
   public:
     ofxTLCurves();
 
 //    virtual void draw();
     virtual void drawModalContent();
-    
+
 	//For selecting keyframe type only,
     //the superclass controls keyframe placement
 	virtual bool mousePressed(ofMouseEventArgs& args, long millis);
     virtual void mouseDragged(ofMouseEventArgs& args, long millis);
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
-	
+
+	virtual void keyPressed(ofKeyEventArgs& args);
+
+	virtual void setDefaultEasingType( int index );
+    virtual int getDefaultEasingType();
+    virtual void setDefaultEasingFunction( int index );
+    virtual int getDefaultEasingFunction();
+
     virtual string getTrackType();
-    
+
   protected:
-	
+
     virtual ofxTLKeyframe* newKeyframe();
     virtual void restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
 	virtual void storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore);
-    
-    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);	
+
+    virtual void selectedKeySecondaryClick(ofMouseEventArgs& args);
 	virtual float interpolateValueForKeys(ofxTLKeyframe* start,ofxTLKeyframe* end, unsigned long long sampleTime);
-	
+
 	//easing dialog stuff
     void initializeEasings();
 	ofVec2f easingWindowPosition;
 	bool drawingEasingWindow;
 	vector<EasingFunction*> easingFunctions;
 	vector<EasingType*> easingTypes;
-	
+
 	float easingBoxWidth;
 	float easingBoxHeight;
 	float tweenBoxWidth;
 	float tweenBoxHeight;
-	
+
+	int defaultEasingFunction;
+    int defaultEasingType;
 //	float easingWindowSeperatorHeight;
 
 };

@@ -83,6 +83,19 @@ void ofxTLPageTabs::addPage(string name){
 	drawRectChanged();
 }
 
+void ofxTLPageTabs::removePage(string name){
+	int found = -1;
+	for (int i = 0; i < pages.size(); i++) {
+		found = i;
+		break;
+	}
+
+	if (found >= 0) {
+		pages.erase(pages.begin() + found);
+		drawRectChanged();
+	}
+}
+
 void ofxTLPageTabs::changeName(string oldName, string newName){
 	for(int i = 0; i < pages.size(); i++){
 		if(pages[i].name == oldName){

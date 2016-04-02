@@ -16,8 +16,10 @@ ${PREFIX}obviousjim/ofxTween.git
 
 ${PREFIX}obviousjim/ofxMSATimer.git
 
-${PREFIX}Flightphase/ofxTextInputField.git -b develop
+${PREFIX}elliotwoods/ofxTextInputField.git
 
 echo "If you're using linux, please make sure you checkout the develop branch of ofxTextInputField"
 
 ${PREFIX}Flightphase/ofxRange.git
+
+${PREFIX}prisonerjohn/ofxAudioDecoder.git

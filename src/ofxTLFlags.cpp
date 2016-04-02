@@ -101,7 +101,7 @@ bool ofxTLFlags::mousePressed(ofMouseEventArgs& args, long millis){
         if(!ofGetModifierSelection()){
             timeline->unselectAll();
         }
-		if(ofGetModifierSelection() && clickedTextField->textField.getIsEditing()){
+		if(ofGetModifierSelection() && clickedTextField->textField.isEditing()){
 			clickedTextField->textField.endEditing();
 		}
 		else{
@@ -151,7 +151,7 @@ void ofxTLFlags::mouseReleased(ofMouseEventArgs& args, long millis){
 		else{
 			enteringText = false;
 			for(int i = 0; i < selectedKeyframes.size(); i++){
-				enteringText = enteringText || ((ofxTLFlag*)selectedKeyframes[i])->textField.getIsEditing();
+				enteringText = enteringText || ((ofxTLFlag*)selectedKeyframes[i])->textField.isEditing();
 			}
 		}
 
@@ -207,7 +207,7 @@ void ofxTLFlags::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 
 void ofxTLFlags::willDeleteKeyframe(ofxTLKeyframe* keyframe){
 	ofxTLFlag* flag = (ofxTLFlag*)keyframe;
-	if(flag->textField.getIsEditing()){
+	if(flag->textField.isEditing()){
 		timeline->dismissedModalContent();
 		timeline->flagTrackModified(this);
 	}
