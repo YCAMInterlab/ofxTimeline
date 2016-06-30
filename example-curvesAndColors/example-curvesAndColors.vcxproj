@@ -106,7 +106,7 @@
   <ItemGroup>
     <ClCompile Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\testApp.cpp" />
+    <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.cpp" />
     <ClCompile Include="..\..\..\addons\ofxTimecode\src\ofxTimecode.cpp" />
@@ -161,7 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\libs\ofOpenALSoundPlayer_TimelineAdditions\src\ofOpenALSoundPlayer_TimelineAdditions.h" />
-    <ClInclude Include="src\testApp.h" />
+    <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="..\..\..\addons\ofxMSATimer\src\ofxMSATimer.h" />
     <ClInclude Include="..\..\..\addons\ofxRange\src\ofRange.h" />
     <ClInclude Include="..\..\..\addons\ofxTextInputField\src\ofxTextInputField.h" />
