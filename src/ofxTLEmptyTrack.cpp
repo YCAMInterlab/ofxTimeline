@@ -123,6 +123,11 @@ void ofxTLEmptyTrack::nudgeBy(ofVec2f nudgePercent){
 	
 }
 
+
+void ofxTLEmptyTrack::snapToCurrentTime() {
+
+}
+
 //if your track has some selectable elements you can interface with snapping
 //and selection/unselection here
 void ofxTLEmptyTrack::getSnappingPoints(set<unsigned long long>& points){

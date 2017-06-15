@@ -90,6 +90,7 @@ class ofxTLSwitches : public ofxTLKeyframes {
     virtual void updateEdgeDragOffsets(long clickMillis);
 	virtual int getSelectedItemCount();
 	virtual void nudgeBy(ofVec2f nudgePercent);
+	virtual void snapToCurrentTime();
 
 	//pushes any edits from keyframes superclass into the switches system
 	virtual void updateTimeRanges();

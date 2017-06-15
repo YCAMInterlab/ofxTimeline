@@ -793,6 +793,15 @@ void ofxTLKeyframes::nudgeBy(ofVec2f nudgePercent){
     timeline->flagTrackModified(this);
 }
 
+void ofxTLKeyframes::snapToCurrentTime() {
+	for (int i = 0; i < selectedKeyframes.size(); i++) {
+		setKeyframeTime(selectedKeyframes[i], ofClamp(timeline->getCurrentTimeMillis(), 0, timeline->getDurationInMilliseconds()));
+	}
+	updateKeyframeSort();
+	timeline->flagTrackModified(this);
+}
+
+
 void ofxTLKeyframes::deleteSelectedKeyframes(){
 	//vector<ofxTLKeyframe*>::iterator selectedIt = selectedKeyframes.end();
 	for(int i = keyframes.size() - 1; i >= 0; i--){

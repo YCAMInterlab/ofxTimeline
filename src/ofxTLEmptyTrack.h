@@ -73,6 +73,7 @@ class ofxTLEmptyTrack : public ofxTLTrack {
 	//keys pressed events, and nuding from arrow keys with normalized nudge amount 0 - 1.0 
 	virtual void keyPressed(ofKeyEventArgs& args);
 	virtual void nudgeBy(ofVec2f nudgePercent);
+	virtual void snapToCurrentTime();
 
 	//if your track has some selectable elements you can interface with snapping
 	//and selection/unselection here

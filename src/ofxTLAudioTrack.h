@@ -32,8 +32,6 @@
 
 #pragma once
 
-#ifdef TIMELINE_AUDIO_INCLUDED
-
 #include "ofMain.h"
 #include "ofxTLTrack.h"
 #include "ofOpenALSoundPlayer_TimelineAdditions.h"
@@ -65,7 +63,9 @@ class ofxTLAudioTrack : public ofxTLTrack
     virtual void stop();
     virtual bool getIsPlaying();
 
-    virtual void setFFTDampening(float dampening);
+	void setDecimate(float res);
+	float getDecimate();
+	virtual void setFFTDampening(float dampening);
     virtual float getFFTDampening();
     
     virtual void setUseFFTEnvelope(bool useEnveolope);
@@ -127,7 +127,8 @@ class ofxTLAudioTrack : public ofxTLTrack
     int averageSize;
     bool useEnvelope;
     vector<float> envelope;
+private:
+	float decimate = 1;
 };
 
-#endif  // TIMELINE_AUDIO_INCLUDED
 

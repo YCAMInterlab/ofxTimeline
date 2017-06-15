@@ -175,6 +175,7 @@ void ofxTLFlags::keyPressed(ofKeyEventArgs& args){
             timeline->dismissedModalContent();
             timeline->flagTrackModified(this);
         }
+		clickedTextField->textField.keyPressed(args); // <-- Line I added to pass the key args to the TextInputField
     }
     //normal behavior for nudging and deleting and stuff
 	else{

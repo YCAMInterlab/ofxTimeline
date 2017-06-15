@@ -522,6 +522,7 @@ CameraTrackEase ofxTLCameraTrack::getNextEase(CameraTrackEase ease){
         case OFXTL_CAMERA_EASE_SMOOTH:
             return OFXTL_CAMERA_EASE_CUT;
     }
+	return OFXTL_CAMERA_EASE_LINEAR;
 }
 
 CameraTrackEase ofxTLCameraTrack::getPreviousEase(CameraTrackEase ease){
@@ -533,4 +534,5 @@ CameraTrackEase ofxTLCameraTrack::getPreviousEase(CameraTrackEase ease){
         case OFXTL_CAMERA_EASE_SMOOTH:
             return OFXTL_CAMERA_EASE_LINEAR;
     }
+	return OFXTL_CAMERA_EASE_LINEAR;
 }

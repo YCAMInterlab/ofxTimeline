@@ -32,8 +32,6 @@
 
 #pragma once
 
-#ifdef TIMELINE_VIDEO_INCLUDED
-
 #include "ofMain.h"
 #include "ofxTLVideoThumb.h"
 #include "ofxTLImageTrack.h"
@@ -125,5 +123,3 @@ class ofxTLVideoTrack : public ofxTLImageTrack, public ofThread {
     void exit(ofEventArgs& args);
     
 };
-
-#endif  // TIMELINE_VIDEO_INCLUDED

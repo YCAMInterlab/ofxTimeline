@@ -1,6 +1,4 @@
 # ofxTimeline #
-![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
-
 ofxTimelineは、openFrameworksでタイムラインエディタインターフェースを使用する事が出来るシンプルなアドオンです。このフレームワークを使用する事で、openFrameworksで作られたアプリケーションの中で時間軸に沿ったシーケンスを編集し、そのタイムシーケンスを使って変数のコントロールを行う事が可能になります。
 
 もしもAfter EffectsやFinal Cut、Blenderなどのタイムライン編集に馴染みがあれば、ofxTimelineは快適に使用する事が出来るでしょう。ほんの数行のコードで、スムーズに補完されたカーブ、カラー、ビデオ、オシレーター、オーディオ、3D空間中のカメラなどのタイムラインシーケンスを作る、エディタを使用する事が可能です。
@@ -11,7 +9,7 @@ Copyright 2011-2012 [James George](http://www.jamesgeorge.org) Co-developed by [
 
 Licensed under the Apache License
 
-## 再利用可能なツールの哲学##
+## 再利用可能なツールの哲学
 
 ofxTimelineの開発は、クリエイティブコーディングの環境の中で、どのようにGUIベースのツールを作り、メディアを使って創造しインタラクションする新しい方法を切り開く事が出来るか、に対するリサーチの一環として制作されています。
 
@@ -41,8 +39,6 @@ https://vimeo.com/59653952
 
 
 ## ofxTimelineの構造
-![Anatomy](http://www.jamesgeorge.org/images/ofxtimeline/github/AnatomyOfTimeline.jpg)
-
 ### 1 ページ
 
 タイムラインをページごとに分ける事が出来ます。それぞれのページには、それぞれ別々のトラックのセットが入っています。
@@ -68,20 +64,16 @@ https://vimeo.com/59653952
 ### Simple Curves
 Simple Curves shows how to use two keyframes and a switcher to animate and color a cube
 Simple Curvesでは2つのキーフレームと1つのスイッチャーを使用し、キューブの色と動きをコントロールする例を紹介しています。
-![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
 
 ### Audio Waveform
 Audio Waveformでは、オーディオトラックの使い方を紹介しています。
-![AudioWaveform](http://www.jamesgeorge.org/images/ofxtimeline/github/example-audioWaveform.png)
 
 ### Video Renderer
 Video Rendererでは、タイムラインとシェーダーを使用した、シンプルなビデオエフェクトアプリケーションの作り方を紹介しています。映像ファイルをアプリケーションにドラッグアンドドロップし、加工、編集されたフレームをイメージのシーケンスとして
 書き出してみてください。
-![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
 
 ### Multi-timeline
 Multi-timelineでは、フラグを使用して同じアプリケーション内の他のタイムラインの再生を制御する方法を紹介しています。
-![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 ## ホットキー
 
@@ -216,8 +208,6 @@ ofxTimelineには、一般的なタイムラインで必要になる数種類の
 
 
 ### Bangs
-![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
-
 bangはシンプルな時間のマーカーで、再生ヘッドがマーカーを通過する時にイベントを送る事ができます。bangトラックを使用するには、下記の様にしてbangイベントを取得するクラスを使う必要があります。
 
 MyClass.h
@@ -246,8 +236,6 @@ MyClass.cpp
     継承関係：ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Curves ###
-![Curves](http://www.jamesgeorge.org/images/ofxtimeline/github/CurvesTrack.png)
-
 Curvesを使うと、補完機能の付いたキーフレームを使い、タイムラインに沿って値を最小値と最大値の間でスムーズに変化させる事が出来ます。
 
 タイムライン上のキーフレームを右クリックすると選択ウィンドウが表示され、補完の方法を変更する事が出来ます。補完の方法は、[ofxCurves](https://github.com/arturoc/ofxTween)の、Penner方程式をベースにしています。
@@ -255,8 +243,6 @@ Curvesを使うと、補完機能の付いたキーフレームを使い、タ�
     継承関係: ofxTLTrack -> ofxTLKeyframes -> ofxTLCurves
 
 ### Flags ###
-![Flags](http://www.jamesgeorge.org/images/ofxtimeline/github/FlagTrack.png)
-
 Flagsはbangsに似ていますが、各フラグ（マーカー）に、テキストを入力する事が出来ます。値はイベントが発生するごとに読み出す事が可能です。
 
     //--------------------------------------------------------------
@@ -269,15 +255,11 @@ Flagsはbangsに似ていますが、各フラグ（マーカー）に、テキ�
     継承関係：ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTLFlags
 
 ### Switches ###
-![Switches](http://www.jamesgeorge.org/images/ofxtimeline/github/SwitchTrack.png)
-
 Switchesを使う事で、タイムライン上で、ON/OFFのシンプルなコントロールをすることが出来ます。
 
     継承関係：ofxTLTrack -> ofxTLBangs -> ofxTLSwitches
 
 ### VideoTrack ###
-![VideoTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/VideoTrack.png)
-
 VideoTracksでは、映像とそのエフェクトを同時にスクラブ再生する事が出来ます。videoトラックが追加されると、映像再生が全体のタイムラインの再生を制御する形になります。
 
     ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
@@ -293,8 +275,6 @@ VideoTracksでは、映像とそのエフェクトを同時にスクラブ再生
 
 
 ### AudioTrack ###
-![AudioTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/AudioTrack.png)
-
 AudioTracksを使用すると、オーディオトラックとその他のシーケンスを同時にスクラブ再生する事が出来ます。
 
 .cppファイルの中でトラックを追加し、ファイルを読み込みます。
@@ -323,34 +303,22 @@ AudioTracksを使用すると、オーディオトラックとその他のシー
 
 
 ### ColorTrack
-![ColorTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/ColorTrack.png)
-
 colorトラックを使えば、シーケンスに沿ってスムーズに色を変化させる事が出来ます。色のサンプルパレットとして画像を使用し、各キーフレームではその画像パレットの中から、色をサンプルする位置を指定します。キーフレーム間では画像パレットの中で色をサンプルする位置が移動していくことで、滑らかに色が変化します。
 
 ### LFO (experimental)
-![LFO](http://www.jamesgeorge.org/images/ofxtimeline/github/LFOTrack.png)
-
 LFOは、Low Frequency Oscillatorの略で、シンプルな繰り返しのパターンや、ノイズ関数を使用する事が出来ます。
 
 
 ## サードパーティーのカスタムトラック##
-
 ofxTimelineは他のアドオンやタイムベースのメディアを組み込んで使用する事ができます。下記はいくつかの例です。
 
-### 深度センサーからのイメージシーケンス ###
-
-https://github.com/obviousjim/ofxRGBDepth // [RGBDToolkit](http://wwww.rgbdtoolkit.com)
-
 ### Midiトラック ###
-
 https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNote](https://vimeo.com/46793363)
 
 ## カスタムトラックをデザインする ##
-
 トラックは拡張しやすいようにデザインされています。ofxTimelineには下記の2つのトラックテンプレートがあり、オリジナルのトラックを作るには、ここから始めるのが良いでしょう。
 
 ### ofxTLEmptyTrack
-
 タイムベースのメディアをビジュアライズしたり、オリジナルのインタラクティブトラックを作る場合は、このテンプレートを使用してください。
 
 ### ofxTLEmptyKeyframes
@@ -359,15 +327,9 @@ Use this template for creating a custom keyframe based track. It already has cop
 
 
 ## Supported By ##
-
 ofxTimeline is codeveloped by YCAM InterLab during the [Guest Research Projector v.2 at YCAM Interlab](http://interlab.ycam.jp/en/projects/guestresearch/vol2) by [James George](http://www.jamesgeorge.org) at the [YCAMInterLab](http://interlab.ycam.jp/)
 
-![YCAM](http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png)
-
 ### Additional support  ###
-
-![Additional Support](http://www.jamesgeorge.org/images/ofxtimeline/github/SupportedBy.png)
-
 [Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for [BlueBeams](https://vimeo.com/35931265) .
 
 [The Frank-Ratchye STUDIO for Creative Inquiry](http://studioforcreativeinquiry.org/) who have supported the [RGBDToolkit](http://www.rgbdtoolkit.com) project.

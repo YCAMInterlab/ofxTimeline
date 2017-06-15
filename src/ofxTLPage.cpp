@@ -446,8 +446,11 @@ void ofxTLPage::selectAll(){
 }
 
 void ofxTLPage::keyPressed(ofKeyEventArgs& args){
-	for(int i = 0; i < headers.size(); i++){
-		tracks[headers[i]->name]->keyPressed(args);
+	//for(int i = 0; i < headers.size(); i++){
+	//	tracks[headers[i]->name]->keyPressed(args);
+	//}
+	if (focusedTrack != NULL) {
+		focusedTrack->keyPressed(args);
 	}
 }
 
@@ -456,6 +459,13 @@ void ofxTLPage::nudgeBy(ofVec2f nudgePercent){
 		tracks[headers[i]->name]->nudgeBy(nudgePercent);
 	}
 }
+
+void ofxTLPage::snapToCurrentTime() {
+	for (int i = 0; i < headers.size(); i++) {
+		tracks[headers[i]->name]->snapToCurrentTime();
+	}
+}
+
 
 void ofxTLPage::addTrack(string trackName, ofxTLTrack* track){
 

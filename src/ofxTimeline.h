@@ -70,13 +70,9 @@
 #include "ofxTLColors.h"
 #include "ofxTLLFO.h"
 
-#ifdef TIMELINE_VIDEO_INCLUDED
 #include "ofxTLVideoTrack.h"
-#endif
-
-#ifdef TIMELINE_AUDIO_INCLUDED
 #include "ofxTLAudioTrack.h"
-#endif
+
 
 
 typedef struct {
@@ -397,21 +393,17 @@ class ofxTimeline : ofThread {
 	ofImage* getImage(string name, int atFrame);
 	//*IMAGE SEQUENCE DOES NOT WORK*
 
-	#ifdef TIMELINE_VIDEO_INCLUDED
 	ofxTLVideoTrack* addVideoTrack(string name);
     ofxTLVideoTrack* addVideoTrackWithPath(string videoPath);
     ofxTLVideoTrack* addVideoTrack(string name, string videoPath);
     ofxTLVideoTrack* getVideoTrack(string videoTrackName);
     ofPtr<ofVideoPlayer> getVideoPlayer(string videoTrackName);
-	#endif
     
-	#ifdef TIMELINE_AUDIO_INCLUDED
     //Audio tracks only work with PCM Wav or Aiff file
     ofxTLAudioTrack* addAudioTrack(string trackName);
     ofxTLAudioTrack* addAudioTrackWithPath(string audioPath);
     ofxTLAudioTrack* addAudioTrack(string name, string audioPath);
     ofxTLAudioTrack* getAudioTrack(string audioTrackName);
-	#endif
 
     //used for audio and video.
     //we punt to the track to control time.
@@ -446,6 +438,7 @@ class ofxTimeline : ofThread {
 	
 	vector<ofxTLPage*>& getPages();
     
+	void mapNudgePercent(float total);
 	ofVec2f getNudgePercent();
 	ofVec2f getBigNudgePercent();
 
@@ -459,7 +452,7 @@ class ofxTimeline : ofThread {
 	void setDragTimeOffset(unsigned long long millisecondOffset);
     void cancelSnapping();
 	long getDragTimeOffset();
-    void setHoverTime(unsigned long long millisTime);
+	void setHoverTime(unsigned long long millisTime);
         
     string formatTime(float seconds);
     string formatTime(unsigned long long millis);
@@ -602,4 +595,7 @@ class ofxTimeline : ofThread {
 	
 	bool isFrameBased;
 	float durationInSeconds;
+
+	bool nudgeAmountUseCustom;
+	float nudgeAmountCustom;
 };

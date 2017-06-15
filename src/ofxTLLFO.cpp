@@ -270,10 +270,7 @@ bool ofxTLLFO::mousePressed(ofMouseEventArgs& args, long millis){
 			editingExponent = 1;
 			editingSensitivity = 1;
 		}
-			//TODO: Phase match
-//        else if(phaseMatchRect.inside(args.x, args.y)){
-//			mouseDownRect = &phaseMatchRect;
-//		}
+
 		else if(amplitudeRect.inside(args.x, args.y)){
 			mouseDownRect = &amplitudeRect;
 			editingParam = &((ofxTLLFOKey*)selectedKeyframe)->amplitude;
@@ -311,6 +308,7 @@ bool ofxTLLFO::mousePressed(ofMouseEventArgs& args, long millis){
 		if(editingParam != NULL){
 			editingStartValue = *editingParam;
 		}
+		return false;
 	}
 	else{
 		return ofxTLKeyframes::mousePressed(args, millis);
@@ -431,7 +429,6 @@ void ofxTLLFO::restoreKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 
 void ofxTLLFO::storeKeyframe(ofxTLKeyframe* key, ofxXmlSettings& xmlStore){
 	ofxTLLFOKey* lfoKey = (ofxTLLFOKey*)key;
-	ofxTLLFOType type;
 	xmlStore.addValue("type", int(lfoKey->type));
 	xmlStore.addValue("phaseShift",lfoKey->phaseShift);
 	xmlStore.addValue("amplitude",lfoKey->amplitude);

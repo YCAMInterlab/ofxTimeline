@@ -282,7 +282,7 @@ void ofxTLTrack::setCreatedByTimeline(bool created){
 }
 
 void ofxTLTrack::zoomStarted(ofxTLZoomEventArgs& args){
-	setZoomBounds(args.currentZoom);
+	//setZoomBounds(args.currentZoom);
 }
 
 void ofxTLTrack::zoomDragged(ofxTLZoomEventArgs& args){
@@ -290,7 +290,7 @@ void ofxTLTrack::zoomDragged(ofxTLZoomEventArgs& args){
 }
 
 void ofxTLTrack::zoomEnded(ofxTLZoomEventArgs& args){
-	setZoomBounds(args.currentZoom);
+	//setZoomBounds(args.currentZoom);
 }
 
 void ofxTLTrack::setZoomBounds(ofRange zoomBoundsPercent){

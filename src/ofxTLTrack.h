@@ -106,6 +106,7 @@ class ofxTLTrack
 
 	virtual void keyPressed(ofKeyEventArgs& args){};
 	virtual void nudgeBy(ofVec2f nudgePercent){};
+	virtual void snapToCurrentTime() {};
 
     //Triggered by the page object based on user interaction, Only calls when the focus actually changes
     virtual void gainedFocus();

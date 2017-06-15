@@ -107,7 +107,8 @@ class ofxTLPage {
 	virtual void mouseReleased(ofMouseEventArgs& args, long millis);
 		
 	virtual void nudgeBy(ofVec2f nudgePercent);
-	
+	virtual void snapToCurrentTime();
+
 	virtual void keyPressed(ofKeyEventArgs& args);
 	
 	virtual void saveTrackPositions();

@@ -20,10 +20,6 @@
 
 #include <sndfile.h>
 
-#ifdef OF_USING_MPG123
-	#include <mpg123.h>
-#endif
-
 //		TO DO :
 //		---------------------------
 // 		-fft via fmod, as in the last time...
@@ -131,10 +127,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 
 		bool sfReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 		bool sfStream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
-#ifdef OF_USING_MPG123
-		bool mpg123ReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
-		bool mpg123Stream(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
-#endif
+
         bool decoderReadFile(string path,vector<short> & buffer,vector<float> & fftAuxBuffer);
 
 		void readFile(string fileName,vector<short> & buffer);
@@ -187,9 +180,7 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
 
 		SNDFILE* streamf;
 		size_t stream_samples_read;
-#ifdef OF_USING_MPG123
-		mpg123_handle * mp3streamf;
-#endif
+
 		int stream_encoding;
 		int mp3_buffer_size;
 		int stream_subformat;

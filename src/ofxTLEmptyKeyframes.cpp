@@ -106,6 +106,8 @@ ofColor ofxTLEmptyKeyframes::getColorAtTime(unsigned long long sampleTime){
 			return prevKey->color.getLerped(nextKey->color, alpha);
 		}
 	}
+
+	return ofColor(0, 0, 0);
 }
 
 bool ofxTLEmptyKeyframes::mousePressed(ofMouseEventArgs& args, long millis){

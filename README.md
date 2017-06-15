@@ -1,6 +1,39 @@
-# ofxTimeline #
-![Timeline](http://www.jamesgeorge.org/images/ofxtimeline/github/Header.png)
+This is a fork of [ofxTimeline](https://github.com/YCAMInterlab/ofxTimeline) without any dependency on [ofxAudioDecoder](https://github.com/kylemcdonald/ofxAudioDecoder). As a result there is no support for `mp3` files.
+I spent hours trying to get `ofxAudioDecoder` to compile properly, however the provided example did not behave as expected once no errors where thrown. Furthermore upon inspection of `ofOpenALSoundPlayer_TimelineAdditions`, the only instance of `ofxAudioDecoder` is found in `decoderReadFile` function which is only called when the file format is `mp3`. 
+I've been successfully able to compile the *allTracks* example on Windows 10 using VS2015. 
 
+## Changes:
+
+ - Removed `ofxAudioDecoder` dependency.
+ - Cleaned up `ofOpenALSoundPlayer_TimelineAdditions` class by removing unused methods and code. 
+ - Updated [OpenAL](https://openal.org/downloads/) `libs` and `dlls` to latest version 1.1.
+ - Fixed `switch` and `flag` tracks' text input field as suggested [here](https://github.com/YCAMInterlab/ofxTimeline/issues/135#issuecomment-247581860).
+
+
+## Installation:
+You need the following dependencies:
+
+- [ofxMSATimer](https://github.com/obviousjim/ofxMSATimer)
+- [ofxRange](https://github.com/Flightphase/ofxRange)
+- [ofxTextInputField](https://github.com/elliotwoods/ofxTextInputField)
+- [ofxTimecode](https://github.com/YCAMInterlab/ofxTimecode)
+- [ofxTween](https://github.com/obviousjim/ofxTween)
+- [ofxXmlSettings](http://openframeworks.cc/documentation/ofxXmlSettings/ofxXmlSettings/)
+
+On Windows:
+
+- Make sure that you are using [K-Lite Codec Pack 12.1.0 Full ~ 33.9 MB ~ April 18th 2016](http://filehippo.com/download_klite_codec_pack/67445/) for video compatibility as suggested [here](https://github.com/openframeworks/openFrameworks/issues/5114#issuecomment-227208136). 
+- Copy the the appropriate architecture dependent dlls from `dll` folder to you app's `bin` folder.
+
+For all platforms:
+ - Copy `GUI` folder to your app's `bin/data` folder.
+
+## Examples:
+All examples have been updated for Windows using VS2015. However creating a new project, adding the dependencies and replacing the `ofApp.cpp` and `ofApp.h` files with those from the examples should suffice for a successful compilation on any platform. 
+
+Unfortunately I have not tested this fork on Linux or Mac. Feedback and issue reports will be highly appreciated. 
+
+# ofxTimeline #
 ofxTimeline is a simple to use openFrameworks add on for creating a user interface to an editable timeline. The framework allows you to compose sequences of change over time, controlling the variables in your openFrameworks application to create time based interactions.
 
 If you're familiar with timelines from programs like After Effects, Final Cut, or Blender then ofxTimeline should feel comfortable. With just a few lines of code you can add a visual editor to smoothly interpolate curves, colors, video, oscillators, audio, and 3d cameras. 
@@ -11,7 +44,7 @@ Copyright 2011-2014 [James George](http://www.jamesgeorge.org) co-developed by [
 
 Licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0)
 
-## Philosophy of Reusable Tools##
+## Philosophy of Reusable Tools
 
 ofxTimeline is part of my reserach into how creating GUI based tools within creative coding environments can open up new ways of creating and interacting with media.
 
@@ -38,8 +71,6 @@ https://vimeo.com/59653952
 
 
 ## Anatomy of ofxTimeline
-![Anatomy](http://www.jamesgeorge.org/images/ofxtimeline/github/AnatomyOfTimeline.jpg)
-
 ### 1 Pages 
 
 You can divide the timeline into pages, each page containing its own set of tracks.
@@ -64,19 +95,15 @@ The control at the bottom of the track allows for zooming in and precisely editi
 
 ### Simple Curves
 Simple Curves shows how to use two keyframes and a switcher to animate and color a cube
-![SimpleTween](http://www.jamesgeorge.org/images/ofxtimeline/github/example-simpleTween.png)
 
 ### Audio Waveform
 Audio Waveform shows how to add an audio track to a project.
-![AudioWaveform](http://www.jamesgeorge.org/images/ofxtimeline/github/example-audioWaveform.png)
 
 ### Video Renderer
 Video Renderer shows how to build a simple video effects app using the timeline and a shader. Drag & Drop a video into the application, edit and export the modified frames as an image sequence
-![VideoRenderer](http://www.jamesgeorge.org/images/ofxtimeline/github/example-videoRenderer.png)
 
 ### Multi-timeline
 Muli-timeline shows how to use Flags to trigger start and stop the playback of other timelines in the same application.
-![MultiTimeline](http://www.jamesgeorge.org/images/ofxtimeline/github/example-multiTimeline.png)
 
 ## Hotkeys
 
@@ -158,7 +185,7 @@ Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItem
 
 ### Create a new ofxTimeline project
 
- - Open the ProjectGenerator in of_0073_osx_release/projectGenerator/
+ - Open the ProjectGenerator
  - Give the project a name
  - Under the addons tab select the following addons
       - ofxTimeline
@@ -167,14 +194,7 @@ Follow this link [http://connect.creativelabs.com/openal/Downloads/Forms/AllItem
       - ofxTextInputField
       - ofxRange
       - ofxTween
-      - ofxAudioDecoder
  - Generate project
- - If you are in Windows VC2015, go to Project Properties -> Configuration Properties -> Build Events -> Post-Build events -> Command Line and paste in the following build event (replace the standard OF command)
-
-            robocopy "$(OF_ROOT)/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-            robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/openal/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-            robocopy "$(OF_ROOT)/addons/ofxTimeline/libs/sndfile/export/vs/$(Platform_Actual)/" "$(ProjectDir)bin/" "*.dll" /njs /njh /np /fp /bytes
-            if errorlevel 1 exit 0 else exit %errorlevel%
 
  - If you are on OS X, you'll need to add the OpenAL.framework to your project in order to use the AudioTrack
 
@@ -217,8 +237,6 @@ in your draw or update function, read the value
 ofxTimeline has several built in track types for doing standard timeline tasks. 
 
 ### Bangs
-![Bangs](http://www.jamesgeorge.org/images/ofxtimeline/github/BangTrack.png)
-
 A bang is a simple time marker that sends an event when the playhead passes it. To use a bang track you need a class that listens to bang events, like so:
 
 MyClass.h
@@ -247,8 +265,6 @@ MyClass.cpp
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs
 
 ### Curves ###
-![Curves](http://www.jamesgeorge.org/images/ofxtimeline/github/CurvesTrack.png)
-
 Curves change a value between a min and max range smoothly over time, edited with keyframes that have interpolation.
 
 Right clicking a keyframe on the timeline brings up a selection window to change the interpolation value. These are based on the Penner equations found in [ofxCurves](https://github.com/arturoc/ofxTween)
@@ -256,8 +272,6 @@ Right clicking a keyframe on the timeline brings up a selection window to change
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLCurves
 
 ### Flags ###
-![Flags](http://www.jamesgeorge.org/images/ofxtimeline/github/FlagTrack.png)
-
 Flags are like Bangs but allow the user to enter text on each flag. The value can be read in the event
 
     //--------------------------------------------------------------
@@ -270,15 +284,11 @@ Flags are like Bangs but allow the user to enter text on each flag. The value ca
     Inheritance: ofxTLTrack -> ofxTLKeyframes -> ofxTLBangs -> ofxTLFlags
 
 ### Switches ###
-![Switches](http://www.jamesgeorge.org/images/ofxtimeline/github/SwitchTrack.png)
-
 Switches provide a simple control to turn regions of the timeline on and off.
 
     Inheritance: ofxTLTrack -> ofxTLBangs -> ofxTLSwitches
 
 ### VideoTrack ###
-![VideoTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/VideoTrack.png)
-
 VideoTracks let a user interactively scrub through a video and sequence effects in time with the playback. When a video track is added the video playback will control the playback of the entire timeline. 
 
     ofxTLVideoTrack* videoTrack = timeline.addVideoTrack("Video", videoPath);
@@ -293,8 +303,6 @@ VideoTracks let a user interactively scrub through a video and sequence effects 
 
 
 ### AudioTrack ###
-![AudioTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/AudioTrack.png)
-
 AudioTracks let a user interactively scrub through an audio track and sequence effects in time.
 
 In your .cpp file add the track and load a file
@@ -323,49 +331,31 @@ In your .cpp file add the track and load a file
 
 
 ### ColorTrack
-![ColorTrack](http://www.jamesgeorge.org/images/ofxtimeline/github/ColorTrack.png)
-
 The color track let's you sequence smoothly changing colors. It uses a provided image as a sample palette, each keyframe specifies a position on the palette to sample from. Between keyframes the image is traverse to create smoothly changing colors.
 
 ### LFO (experimental)
-![LFO](http://www.jamesgeorge.org/images/ofxtimeline/github/LFOTrack.png)
-
 The LFO, Low Frequency Oscillator, track defines simple repeating sine waves and noise functions. 
 
 ## 3rd Party Custom Tracks ##
 
 ofxTimeline can be integrated with other addons or time based media, below are examples of just a few
 
-### DepthImageSequence ###
-
-https://github.com/obviousjim/ofxRGBDepth // [RGBDToolkit](http://wwww.rgbdtoolkit.com)
-
 ### MidiTrack ###
-
 https://github.com/momo-the-monster/ofxTimelineTracks // [ofxTLMidiNote](https://vimeo.com/46793363)
 
 ## Designing custom Tracks ##
-
 The track system is designed to be extensible. There are two empty track templates that are the best place to get started building your own track
 
 ### ofxTLEmptyTrack
-
 Use this template as a starting point for visualizing time based data in ofxTimeline or creating a unique type of interactive track.
 
 ### ofxTLEmptyKeyframes
 Use this template for creating a custom keyframe based track. It already has copy+paste, multiple selection, saving and loading.
 
 ## Supported By ##
-
 ofxTimeline is a project by [James George](http://www.jamesgeorge.org), co-developed by [YCAMInterLab](http://interlab.ycam.jp/en/) during the [Guest Research Project v.2](http://interlab.ycam.jp/en/projects/guestresearch/vol2)
 
-<p align="center">
-    <img src="http://www.jamesgeorge.org/images/ofxtimeline/github/logo_ycam.png" />
-</p>
-
 ### Additional support  ###
-
-![Additional Support](http://www.jamesgeorge.org/images/ofxtimeline/github/SupportedBy.png)
 
 [Playmodes](http://www.playmodes.com/) who graciously funded and shaped the project in it's early stages for [BlueBeams](https://vimeo.com/35931265) .
 
