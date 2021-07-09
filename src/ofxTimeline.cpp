@@ -892,12 +892,6 @@ void ofxTimeline::setDurationInFrames(int frames){
 
 void ofxTimeline::setDurationInSeconds(float seconds){
 
-	bool updateInTime = inoutRange.min > 0.;
-	bool updateOutTime = inoutRange.max < 1.;
-
-	float inTimeSeconds  = getInTimeInSeconds();
-	float outTimeSeconds = getOutTimeInSeconds();
-
 	if(seconds <= 0.){
     	ofLogError("ofxTimeline::setDurationInSeconds") << " Duration must set a positive number";
         return;
@@ -905,6 +899,11 @@ void ofxTimeline::setDurationInSeconds(float seconds){
 	//verify no elements are being truncated
 	durationInSeconds = MAX(seconds, getLatestTime()/1000.0);
 
+	bool updateInTime = inoutRange.min > 0.;
+	bool updateOutTime = inoutRange.max < 1.;
+
+	float inTimeSeconds  = getInTimeInSeconds();
+	float outTimeSeconds = getOutTimeInSeconds();
 
 	if(updateInTime){
 		setInPointAtSeconds(inTimeSeconds);
@@ -1550,7 +1549,7 @@ void ofxTimeline::draw(){
 		ofEnableAlphaBlending();
 
         ofSetColor(colors.guiBackgroundColor);
-		ofRect(totalDrawRect);
+		ofDrawRectangle(totalDrawRect);
 
 		ofSetColor(255);
 

@@ -56,7 +56,7 @@ void ofxTLBangs::draw(){
 	if(currentPercent > 0){
 		ofSetColor(timeline->getColors().disabledColor, 100*(currentPercent));
 		ofFill();
-		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		ofDrawRectangle(bounds);
 	}
 	
     for(int i = keyframes.size()-1; i >= 0; i--){
@@ -78,7 +78,7 @@ void ofxTLBangs::draw(){
             ofSetColor(timeline->getColors().keyColor);
         }
         
-        ofLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
+        ofDrawLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
     }
     ofPopStyle();
 

@@ -58,51 +58,51 @@ void ofxTLLFO::drawModalContent(){
 	ofSetLineWidth(1);
 	ofFill();
 	
-	ofRect(sineTypeRect);
-	ofRect(noiseTypeRect);
-	ofRect(phaseShiftRect);
-//    ofRect(phaseMatchRect);
-	ofRect(amplitudeRect);
-	ofRect(frequencyRect);
-	ofRect(seedRect);
-	ofRect(centerRect);
-	ofRect(interpolateRect);
-    ofRect(expInterpolateRect);
+	ofDrawRectangle(sineTypeRect);
+	ofDrawRectangle(noiseTypeRect);
+	ofDrawRectangle(phaseShiftRect);
+//    ofDrawRectangle(phaseMatchRect);
+	ofDrawRectangle(amplitudeRect);
+	ofDrawRectangle(frequencyRect);
+	ofDrawRectangle(seedRect);
+	ofDrawRectangle(centerRect);
+	ofDrawRectangle(interpolateRect);
+	ofDrawRectangle(expInterpolateRect);
 	
 	ofNoFill();
 	ofSetColor(timeline->getColors().keyColor);
 	
-	ofRect(sineTypeRect);
-	ofRect(noiseTypeRect);
-	ofRect(phaseShiftRect);
-//    ofRect(phaseMatchRect);
-	ofRect(amplitudeRect);
-	ofRect(frequencyRect);
-	ofRect(seedRect);
-	ofRect(centerRect);
-	ofRect(interpolateRect);
-    ofRect(expInterpolateRect);
+	ofDrawRectangle(sineTypeRect);
+	ofDrawRectangle(noiseTypeRect);
+	ofDrawRectangle(phaseShiftRect);
+//    ofDrawRectangle(phaseMatchRect);
+	ofDrawRectangle(amplitudeRect);
+	ofDrawRectangle(frequencyRect);
+	ofDrawRectangle(seedRect);
+	ofDrawRectangle(centerRect);
+	ofDrawRectangle(interpolateRect);
+	ofDrawRectangle(expInterpolateRect);
 	
 	ofxTLLFOKey* lfokey = (ofxTLLFOKey*)selectedKeyframe;
 	ofSetColor(timeline->getColors().highlightColor, 128);
 	ofFill();
 	if(lfokey->type == OFXTL_LFO_TYPE_SINE){
-		ofRect(sineTypeRect);
+		ofDrawRectangle(sineTypeRect);
 	}
 	else{
-		ofRect(noiseTypeRect);
+		ofDrawRectangle(noiseTypeRect);
 	}
 			//TODO: Phase match
 //    if(lfokey->phaseMatch){
-//		ofRect(phaseMatchRect);
+//		ofDrawRectangle(phaseMatchRect);
 //	}
     
 	if(lfokey->interpolate){
-		ofRect(interpolateRect);
+		ofDrawRectangle(interpolateRect);
 	}
     
     if (lfokey->expInterpolate){
-        ofRect(expInterpolateRect);
+		ofDrawRectangle(expInterpolateRect);
     }
     
 	
@@ -140,7 +140,7 @@ void ofxTLLFO::draw(){
 	ofSetColor(timeline->getColors().disabledColor, 30);
 	float currentPercent = sampleAtTime(currentTrackTime());
 	ofFill();
-	ofRect(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
+	ofDrawRectangle(bounds.x, bounds.getMaxY(), bounds.width, -bounds.height*currentPercent);
 	
 	ofPushStyle();
 	ofSetColor(timeline->getColors().keyColor);
@@ -167,7 +167,7 @@ void ofxTLLFO::draw(){
 				ofSetColor(timeline->getColors().keyColor);
 			}
 			float screenX = millisToScreenX(keyframes[i]->time);
-			ofLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
+			ofDrawLine(screenX, bounds.y, screenX, bounds.y+bounds.height);
 		}
 	}
 	

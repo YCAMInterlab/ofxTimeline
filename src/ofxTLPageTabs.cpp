@@ -44,12 +44,12 @@ void ofxTLPageTabs::draw(){
 		if(i == selectedPageIndex){
 			ofFill();
 			ofSetColor(timeline->getColors().highlightColor, 120);
-			ofRect(pages[i].bounds);
+			ofDrawRectangle(pages[i].bounds);
 		}
 		ofNoFill();
 		//ofSetColor(255, 100, 0);
 		ofSetColor(timeline->getColors().outlineColor);
-		ofRect(pages[i].bounds);
+		ofDrawRectangle(pages[i].bounds);
 		ofSetColor(timeline->getColors().textColor);
 		timeline->getFont().drawString(pages[i].name, pages[i].bounds.x + 10, pages[i].bounds.y + timeline->getFont().getLineHeight());
 	}

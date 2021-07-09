@@ -131,8 +131,8 @@ void ofxTLPage::draw(){
 		set<unsigned long long>::iterator it;
 //		for(int i = 0; i < snapPoints.size(); i++){
 		for(it = snapPoints.begin(); it != snapPoints.end(); it++){
-			ofLine(timeline->millisToScreenX(*it), trackContainerRect.y,
-                   timeline->millisToScreenX(*it), trackContainerRect.y+trackContainerRect.height);
+			ofDrawLine(timeline->millisToScreenX(*it), trackContainerRect.y,
+					   timeline->millisToScreenX(*it), trackContainerRect.y+trackContainerRect.height);
 		}
 		ofPopStyle();
 	}
@@ -144,11 +144,11 @@ void ofxTLPage::draw(){
     if(draggingSelectionRectangle){
 		ofFill();
 		ofSetColor(timeline->getColors().keyColor, 30);
-		ofRect(selectionRectangle);
+		ofDrawRectangle(selectionRectangle);
 		
 		ofNoFill();
 		ofSetColor(timeline->getColors().keyColor, 255);
-		ofRect(selectionRectangle);
+		ofDrawRectangle(selectionRectangle);
 		
 	}
 }

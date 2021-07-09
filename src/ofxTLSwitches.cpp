@@ -90,7 +90,7 @@ void ofxTLSwitches::draw(){
 	//play solo change
 	if(isOn()){
 		ofSetColor(timeline->getColors().disabledColor, 20+(1-powf(sin(ofGetElapsedTimef()*5)*.5+.5,2))*20);
-		ofRect(bounds);
+		ofDrawRectangle(bounds);
 	}
 
     for(int i = 0; i < keyframes.size(); i++){
@@ -113,8 +113,8 @@ void ofxTLSwitches::draw(){
 	        ofSetColor(timeline->getColors().keyColor);    
         }
 
-        ofLine(switchKey->display.x, bounds.y, 
-               switchKey->display.x, bounds.y+bounds.height);
+		ofDrawLine(switchKey->display.x, bounds.y,
+				   switchKey->display.x, bounds.y+bounds.height);
 
         if(keyIsSelected || switchKey->endSelected){
 	        ofSetColor(timeline->getColors().textColor);                
@@ -122,8 +122,8 @@ void ofxTLSwitches::draw(){
         else{
 	        ofSetColor(timeline->getColors().keyColor);    
         }        
-        ofLine(switchKey->display.x+switchKey->display.width, bounds.y, 
-               switchKey->display.x+switchKey->display.width, bounds.y+bounds.height);
+		ofDrawLine(switchKey->display.x+switchKey->display.width, bounds.y,
+				   switchKey->display.x+switchKey->display.width, bounds.y+bounds.height);
 
         //draw region
         if(keyIsSelected){
@@ -142,7 +142,7 @@ void ofxTLSwitches::draw(){
                 else{
                     ofSetColor(timeline->getColors().keyColor);
                 }
-                ofRect(switchKey->display.x-2, bounds.y, 4, bounds.height);
+				ofDrawRectangle(switchKey->display.x-2, bounds.y, 4, bounds.height);
                 ofPopStyle();
             }
             else if(endHover){
@@ -153,7 +153,7 @@ void ofxTLSwitches::draw(){
                 else{
                     ofSetColor(timeline->getColors().keyColor);
                 }
-                ofRect(switchKey->display.x+switchKey->display.width-2, bounds.y, 4.0, bounds.height);
+				ofDrawRectangle(switchKey->display.x+switchKey->display.width-2, bounds.y, 4.0, bounds.height);
                 ofPopStyle();
             }
             else {
@@ -164,7 +164,7 @@ void ofxTLSwitches::draw(){
                 }
             }
         }
-        ofRect(switchKey->display);
+		ofDrawRectangle(switchKey->display);
     }
     
     ofFill();
@@ -178,7 +178,7 @@ void ofxTLSwitches::draw(){
 			int textHeight = bounds.y + 10 + ( (20*i) % int(MAX(bounds.height-15, 15)));
 			switchKey->textFieldDisplay = ofRectangle(MIN(screenX+3, bounds.getMaxX() - switchKey->textField.bounds.width),
 									   textHeight-10, 100, 15);
-			ofRect(switchKey->textFieldDisplay);
+			ofDrawRectangle(switchKey->textFieldDisplay);
 			
 			ofSetColor(timeline->getColors().textColor);
 			

@@ -103,7 +103,7 @@ void ofxTLTrackHeader::draw(){
 	if(track->hasFocus()){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
-		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		ofDrawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 
 	// TODO: set these somewhere else instead of setting it every frame here
@@ -140,7 +140,7 @@ void ofxTLTrackHeader::draw(){
 	}
 
 	ofSetColor(track->getTimeline()->getColors().outlineColor);
-	ofRect(bounds);
+	ofDrawRectangle(bounds);
 
 	//draw grippy lines on the footer draggable element
 	if(footerHeight > 0){

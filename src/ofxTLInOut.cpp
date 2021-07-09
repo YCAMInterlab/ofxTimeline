@@ -59,7 +59,7 @@ void ofxTLInOut::draw(){
             else{
                 ofSetColor(timeline->getColors().keyColor);
             }
-            ofLine(inScreenX, bounds.y, inScreenX, bounds.y+bounds.height);
+			ofDrawLine(inScreenX, bounds.y, inScreenX, bounds.y+bounds.height);
         }
 
         if(screenXRange.contains(outScreenX)){
@@ -69,7 +69,7 @@ void ofxTLInOut::draw(){
             else{
                 ofSetColor(timeline->getColors().keyColor);
             }
-            ofLine(outScreenX, bounds.y, outScreenX, bounds.y+bounds.height);
+			ofDrawLine(outScreenX, bounds.y, outScreenX, bounds.y+bounds.height);
         }
     }
     
@@ -82,16 +82,16 @@ void ofxTLInOut::draw(){
     
 	if(bounds.x < inPointX){
 		ofSetColor(timeline->getColors().disabledColor,120);
-		ofRect(bounds.x, pageRect.y, inPointX - bounds.x, pageRect.height);
+		ofDrawRectangle(bounds.x, pageRect.y, inPointX - bounds.x, pageRect.height);
 		ofSetColor(timeline->getColors().highlightColor);
-		ofLine(inPointX, pageRect.y, inPointX, pageRect.y+pageRect.height);
+		ofDrawLine(inPointX, pageRect.y, inPointX, pageRect.y+pageRect.height);
 	}
 	
 	if(bounds.x+bounds.width > outPointX){
 		ofSetColor(timeline->getColors().disabledColor,120);
-		ofRect(outPointX, pageRect.y, (bounds.x+bounds.width) - outPointX, pageRect.height);	
+		ofDrawRectangle(outPointX, pageRect.y, (bounds.x+bounds.width) - outPointX, pageRect.height);
 		ofSetColor(timeline->getColors().highlightColor);
-		ofLine(outPointX, pageRect.y, outPointX, pageRect.y+pageRect.height);
+		ofDrawLine(outPointX, pageRect.y, outPointX, pageRect.y+pageRect.height);
 	}
 	
 	ofPopStyle();

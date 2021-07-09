@@ -61,7 +61,7 @@ void ofxTLColorTrack::draw(){
 		ofPushStyle();
 		ofSetColor(defaultColor);
 		ofFill();
-		ofRect(bounds);
+		ofDrawRectangle(bounds);
 		ofPopStyle();
 	}
 	else if(keyframes.size() == 1){
@@ -69,7 +69,7 @@ void ofxTLColorTrack::draw(){
 		ofxTLColorSample* s = (ofxTLColorSample*)keyframes[0];
 		ofSetColor(s->color);
 		ofFill();
-		ofRect(bounds);
+		ofDrawRectangle(bounds);
 		ofPopStyle();
 	}
 	else{
@@ -84,19 +84,19 @@ void ofxTLColorTrack::draw(){
 
 		float screenX = millisToScreenX(keyframes[i]->time);
 
-		ofPoint a = ofPoint(screenX-10,bounds.y);
-		ofPoint b = ofPoint(screenX+10,bounds.y);
-		ofPoint c = ofPoint(screenX,bounds.y+10);
+		ofVec2f a = ofVec2f(screenX-10,bounds.y);
+		ofVec2f b = ofVec2f(screenX+10,bounds.y);
+		ofVec2f c = ofVec2f(screenX,bounds.y+10);
 
 		ofPushStyle();
 		ofFill();
 		ofxTLColorSample* s = (ofxTLColorSample*)keyframes[i];
 		ofSetColor(s->color);
-		ofTriangle(a,b,c);
+		ofDrawTriangle(a,b,c);
 		ofNoFill();
 		ofSetColor(s->color.getInverted());
 		ofSetLineWidth(1);
-		ofTriangle(a,b,c);
+		ofDrawTriangle(a,b,c);
 
 		if(keyframes[i] == hoverKeyframe){
 			ofSetColor(timeline->getColors().highlightColor);
@@ -109,7 +109,7 @@ void ofxTLColorTrack::draw(){
 		else{
 			ofSetColor(s->color.getInverted());
 		}
-		ofLine(c, ofVec2f(screenX, bounds.getMaxY()));
+		ofDrawLine(c, ofVec2f(screenX, bounds.getMaxY()));
 		ofPopStyle();
 	}
 }
@@ -154,16 +154,16 @@ void ofxTLColorTrack::drawModalContent(){
 
 		ofVec2f selectionPoint = colorWindow.getMin() + selectedSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
 		ofSetColor(selectedSample->color.getInverted());
-		ofLine(selectionPoint - ofVec2f(8,0), selectionPoint + ofVec2f(8,0));
-		ofLine(selectionPoint - ofVec2f(0,8), selectionPoint + ofVec2f(0,8));
+		ofDrawLine(selectionPoint - ofVec2f(8,0), selectionPoint + ofVec2f(8,0));
+		ofDrawLine(selectionPoint - ofVec2f(0,8), selectionPoint + ofVec2f(0,8));
 
 		ofPushStyle();
 		ofNoFill();
 		if(previousSample != NULL){
 			ofVec2f previousSamplePoint = colorWindow.getMin() + previousSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
 			ofSetColor(previousSample->color.getInverted(), 150);
-			ofCircle(previousSamplePoint, 3);
-			ofLine(previousSamplePoint,selectionPoint);
+			ofDrawCircle(previousSamplePoint, 3);
+			ofDrawLine(previousSamplePoint,selectionPoint);
 		}
 		if(nextSample != NULL){
 			ofVec2f nextSamplePoint = colorWindow.getMin() + nextSample->samplePoint * ofVec2f(colorWindow.width,colorWindow.height);
@@ -172,10 +172,10 @@ void ofxTLColorTrack::drawModalContent(){
 			//draw a little triangle pointer
 			ofVec2f direction = (nextSamplePoint - selectionPoint).normalized();
 			ofVec2f backStep = nextSamplePoint-direction*5;
-			ofTriangle(nextSamplePoint,
-					   backStep + direction.getRotated(90)*3,
-					   backStep - direction.getRotated(90)*3);
-			ofLine(nextSamplePoint,selectionPoint);
+			ofDrawTriangle(nextSamplePoint,
+						   backStep + direction.getRotated(90)*3,
+						   backStep - direction.getRotated(90)*3);
+			ofDrawLine(nextSamplePoint,selectionPoint);
 		}
 		ofPopStyle();
 
@@ -183,13 +183,13 @@ void ofxTLColorTrack::drawModalContent(){
 		newColorRect = ofRectangle(colorWindow.x+colorWindow.width/2, colorWindow.getMaxY(), colorWindow.width/2, 25);
 
 		ofSetColor(colorAtClickTime);
-		ofRect(previousColorRect);
+		ofDrawRectangle(previousColorRect);
 		ofSetColor(selectedSample->color);
-		ofRect(newColorRect);
+		ofDrawRectangle(newColorRect);
 		ofSetColor(timeline->getColors().keyColor);
 		ofNoFill();
 		ofSetLineWidth(2);
-		ofRect(colorWindow);
+		ofDrawRectangle(colorWindow);
 		ofPopStyle();
 	}
 }

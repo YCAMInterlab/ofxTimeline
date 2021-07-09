@@ -127,7 +127,7 @@ void ofxTLKeyframes::draw(){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor);
 		ofVec2f hoverKeyPoint = screenPositionForKeyframe( hoverKeyframe );
-		ofCircle(hoverKeyPoint.x, hoverKeyPoint.y, 6);
+		ofDrawCircle(hoverKeyPoint, 6);
 		ofPopStyle();
 	}
 
@@ -135,7 +135,7 @@ void ofxTLKeyframes::draw(){
 	ofSetColor(timeline->getColors().textColor);
 	ofNoFill();
 	for(int i = 0; i < keyPoints.size(); i++){
-		ofRect(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
+		ofDrawRectangle(keyPoints[i].x-1, keyPoints[i].y-1, 3, 3);
 	}
 
 	//**** SELECTED KEYS
@@ -149,7 +149,7 @@ void ofxTLKeyframes::draw(){
 				string frameString = timeline->formatTime(selectedKeyframes[i]->time);
 				timeline->getFont().drawString(ofToString(keysValue, 4), screenpoint.x+5, screenpoint.y-5);
 			}
-			ofCircle(screenpoint.x, screenpoint.y, 4);
+			ofDrawCircle(screenpoint, 4);
 		}
 	}
 

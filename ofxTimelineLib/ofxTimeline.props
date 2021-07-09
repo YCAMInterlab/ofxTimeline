@@ -16,6 +16,10 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>robocopy "$(OF_ROOT)/addons/ofxTimeline/copy_to_data_GUI/" "$(ProjectDir)bin/data/GUI" /njs /njh /np /fp /bytes
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

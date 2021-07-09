@@ -87,7 +87,7 @@ void ofxTLCameraTrack::draw(){
 	if(lockCameraToTrack){
 		ofSetColor(timeline->getColors().keyColor, 40*(sin(ofGetElapsedTimef()*5)*.5+.5)+25);
 		ofFill();
-		ofRect(bounds);
+		ofDrawRectangle(bounds);
 	}
 	ofSetColor(timeline->getColors().keyColor);
 	ofNoFill();
@@ -131,7 +131,7 @@ void ofxTLCameraTrack::draw(){
 	for(int i = 0; i < selectedKeyframes.size(); i++){
 		float screenX = millisToScreenX( selectedKeyframes[i]->time );
 		float screenY = bounds.y+bounds.height/2;
-		ofCircle(screenX, screenY, 4);
+		ofDrawCircle(screenX, screenY, 4);
 	}
 
 	ofPopStyle();
@@ -164,11 +164,11 @@ void ofxTLCameraTrack::draw3d(){
 		n.setPosition(interFrame.position);
 		n.setOrientation(interFrame.orientation);
 		ofSetColor(0,0,255);
-		ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*10);
+		ofDrawLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*10);
 		ofSetColor(0,255,0);
-		ofLine(n.getPosition(), n.getPosition() + n.getUpDir()*10);
+		ofDrawLine(n.getPosition(), n.getPosition() + n.getUpDir()*10);
 		ofSetColor(255,0,0);
-		ofLine(n.getPosition(), n.getPosition() + n.getSideDir()*10);
+		ofDrawLine(n.getPosition(), n.getPosition() + n.getSideDir()*10);
 	}
 
 	setCameraFrameToTime(&interFrame, currentTrackTime());
@@ -177,11 +177,11 @@ void ofxTLCameraTrack::draw3d(){
 	
 	ofSetLineWidth(3);
 	ofSetColor(0,0,255);
-	ofLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*25);
+	ofDrawLine(n.getPosition(), n.getPosition() + n.getLookAtDir()*25);
 	ofSetColor(0,255,0);
-	ofLine(n.getPosition(), n.getPosition() + n.getUpDir()*25);
+	ofDrawLine(n.getPosition(), n.getPosition() + n.getUpDir()*25);
 	ofSetColor(255,0,0);
-	ofLine(n.getPosition(), n.getPosition() + n.getSideDir()*25);
+	ofDrawLine(n.getPosition(), n.getPosition() + n.getSideDir()*25);
 	
 	ofNoFill();
 	ofSetColor(255);
@@ -194,14 +194,14 @@ void ofxTLCameraTrack::draweEase(CameraTrackEase ease, ofPoint screenPoint, bool
     switch (ease) {
         case OFXTL_CAMERA_EASE_LINEAR:
             if(easeIn){
-                ofTriangle(screenPoint.x-bounds.height, screenPoint.y,
-                           screenPoint.x, screenPoint.y,
-                           screenPoint.x, screenPoint.y+bounds.height);
+				ofDrawTriangle(screenPoint.x-bounds.height, screenPoint.y,
+							   screenPoint.x, screenPoint.y,
+							   screenPoint.x, screenPoint.y+bounds.height);
             }
             else{
-                ofTriangle(screenPoint.x, screenPoint.y,
-                           screenPoint.x, screenPoint.y+bounds.height,
-                           screenPoint.x+bounds.height, screenPoint.y+bounds.height);
+				ofDrawTriangle(screenPoint.x, screenPoint.y,
+                               screenPoint.x, screenPoint.y+bounds.height,
+                               screenPoint.x+bounds.height, screenPoint.y+bounds.height);
             }
             break;
         case OFXTL_CAMERA_EASE_SMOOTH:
@@ -210,30 +210,30 @@ void ofxTLCameraTrack::draweEase(CameraTrackEase ease, ofPoint screenPoint, bool
                          screenPoint.x-bounds.height/2, screenPoint.y,
                          screenPoint.x, screenPoint.y+bounds.height/2,
                          screenPoint.x, screenPoint.y+bounds.height);
-                ofLine(screenPoint.x-bounds.height, screenPoint.y,
-                       screenPoint.x, screenPoint.y);
-                ofLine(screenPoint.x, screenPoint.y,
-                       screenPoint.x, screenPoint.y+bounds.height);
+				ofDrawLine(screenPoint.x-bounds.height, screenPoint.y,
+						   screenPoint.x, screenPoint.y);
+				ofDrawLine(screenPoint.x, screenPoint.y,
+                           screenPoint.x, screenPoint.y+bounds.height);
             }
             else {
                 ofBezier(screenPoint.x, screenPoint.y,
                          screenPoint.x, screenPoint.y+bounds.height/2,
                          screenPoint.x+bounds.height/2, screenPoint.y+bounds.height,
                          screenPoint.x+bounds.height, screenPoint.y+bounds.height);
-                ofLine(screenPoint.x, screenPoint.y,
-                       screenPoint.x, screenPoint.y+bounds.height);
-                ofLine(screenPoint.x, screenPoint.y+bounds.height,
-                       screenPoint.x+bounds.height, screenPoint.y+bounds.height);
+				ofDrawLine(screenPoint.x, screenPoint.y,
+                           screenPoint.x, screenPoint.y+bounds.height);
+				ofDrawLine(screenPoint.x, screenPoint.y+bounds.height,
+                           screenPoint.x+bounds.height, screenPoint.y+bounds.height);
             }
             break;
         case OFXTL_CAMERA_EASE_CUT:
             if(easeIn){
-	            ofRect(screenPoint.x-bounds.height/2, screenPoint.y,
-                       bounds.height/2, bounds.height/2);
+				ofDrawRectangle(screenPoint.x-bounds.height/2, screenPoint.y,
+								bounds.height/2, bounds.height/2);
             }
             else{
-                ofRect(screenPoint.x, screenPoint.y+bounds.height/2,
-                       bounds.height/2, bounds.height/2);
+				ofDrawRectangle(screenPoint.x, screenPoint.y+bounds.height/2,
+								bounds.height/2, bounds.height/2);
             }
             break;
         default:

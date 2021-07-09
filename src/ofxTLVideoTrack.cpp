@@ -394,7 +394,7 @@ void ofxTLVideoTrack::draw(){
       else{
         ofPushStyle();
         ofSetColor(0);
-        ofRect(videoThumbs[i].displayRect);
+        ofDrawRectangle(videoThumbs[i].displayRect);
         ofPopStyle();
       }
     }
@@ -405,13 +405,13 @@ void ofxTLVideoTrack::draw(){
       if (!thumbsEnabled) {
         ofFill();
         ofSetColor(0);
-        ofRect(videoThumbs[i].displayRect);
+		ofDrawRectangle(videoThumbs[i].displayRect);
       }
 
       ofNoFill();
       ofSetColor(timeline->getColors().textColor);
       timeline->getFont().drawString(ofToString(videoThumbs[i].framenum), videoThumbs[i].displayRect.x+5, videoThumbs[i].displayRect.y+15);
-      ofRect(videoThumbs[i].displayRect);
+	  ofDrawRectangle(videoThumbs[i].displayRect);
     }
 
     if(drawVideoPreview){
@@ -423,13 +423,13 @@ void ofxTLVideoTrack::draw(){
       ofPushStyle();
       ofFill();
       ofSetColor(timeline->getColors().backgroundColor, 100);
-      ofRect(selectedFrameX + 1, bounds.y + 1, previewRect.width - 2, bounds.height - 2);
+	  ofDrawRectangle(selectedFrameX + 1, bounds.y + 1, previewRect.width - 2, bounds.height - 2);
       ofPopStyle();
     }
   }
 
   ofSetColor(timeline->getColors().textColor);
-  ofLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
+  ofDrawLine(selectedFrameX, bounds.y, selectedFrameX, bounds.y+bounds.height);
   timeline->getFont().drawString("F# " + ofToString(selectedFrame), selectedFrameX, bounds.y+15);
   timeline->getFont().drawString(ofxTimecode::timecodeForSeconds(player->getPosition()*player->getDuration()), selectedFrameX, bounds.y+30);
 
@@ -438,8 +438,8 @@ void ofxTLVideoTrack::draw(){
     ofSetColor(timeline->getColors().highlightColor);
     int inFrameX  = screenXForTime( timeline->getTimecode().secondsForFrame(inFrame));
     int outFrameX = screenXForTime( timeline->getTimecode().secondsForFrame(outFrame));
-    ofLine(inFrameX, bounds.y, inFrameX, bounds.y+bounds.height);
-    ofLine(outFrameX, bounds.y, outFrameX, bounds.y+bounds.height);
+    ofDrawLine(inFrameX, bounds.y, inFrameX, bounds.y+bounds.height);
+    ofDrawLine(outFrameX, bounds.y, outFrameX, bounds.y+bounds.height);
     ofSetColor(timeline->getColors().textColor);
     timeline->getFont().drawString("in  " + ofToString(inFrame),  inFrameX  + 5, bounds.y + 10);
     timeline->getFont().drawString("out " + ofToString(outFrame), outFrameX + 5, bounds.y + bounds.height - 20);

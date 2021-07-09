@@ -143,7 +143,7 @@ void ofxTLAudioTrack::draw(){
     for(int i = 0; i < bins.size(); i++){
         float height = MIN(bounds.height * bins[i], bounds.height);
         float y = bounds.y + bounds.height - height;
-        ofRect(i*binWidth, y, binWidth, height);
+		ofDrawRectangle(i*binWidth, y, binWidth, height);
     }
     
     ofPopStyle();

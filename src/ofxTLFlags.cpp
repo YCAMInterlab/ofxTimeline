@@ -61,7 +61,7 @@ void ofxTLFlags::draw(){
 			int textHeight = bounds.y + 10 + ( (20*i) % int(MAX(bounds.height-15, 15)));
 			key->display = ofRectangle(MIN(screenX+3, bounds.getMaxX() - key->textField.bounds.width),
 									   textHeight-10, 100, 15);
-			ofRect(key->display);
+			ofDrawRectangle(key->display);
 			
 			ofSetColor(timeline->getColors().textColor);
 			

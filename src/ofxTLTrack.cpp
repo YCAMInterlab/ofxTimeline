@@ -120,7 +120,7 @@ void ofxTLTrack::_draw(){
 	if(focused){
 		ofFill();
 		ofSetColor(timeline->getColors().highlightColor, 50);
-		ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+		ofDrawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 	}
 	
 	ofNoFill();
@@ -130,7 +130,7 @@ void ofxTLTrack::_draw(){
 	else{
 		ofSetColor(timeline->getColors().outlineColor);
 	}	
-	ofRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	ofDrawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 	ofPopStyle();
 
 	ofPushStyle();
@@ -142,7 +142,7 @@ void ofxTLTrack::_draw(){
 		if(isOnScreen(playheadScreenX)){
 			ofPushStyle();
 			ofSetColor(timeline->getColors().keyColor);
-			ofLine(playheadScreenX, bounds.getMinY(), playheadScreenX, bounds.getMaxY());
+			ofDrawLine(playheadScreenX, bounds.getMinY(), playheadScreenX, bounds.getMaxY());
 			ofPopStyle();
 		}			
 	}

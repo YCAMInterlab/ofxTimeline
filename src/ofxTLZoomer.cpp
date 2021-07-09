@@ -65,7 +65,7 @@ void ofxTLZoomer::draw(){
 		ofSetLineWidth(1);
 	}
 
-	ofLine(minScreenX, screenY, maxScreenX, screenY);
+	ofDrawLine(minScreenX, screenY, maxScreenX, screenY);
 	ofSetLineWidth(1);
 
 	if(minSelected){
@@ -74,7 +74,7 @@ void ofxTLZoomer::draw(){
 	else{
 		ofNoFill();
 	}
-	ofCircle(minScreenX, screenY, 5);
+	ofDrawCircle(minScreenX, screenY, 5);
 
 	if(maxSelected){
 		ofFill();
@@ -82,12 +82,12 @@ void ofxTLZoomer::draw(){
 	else{
 		ofNoFill();
 	}
-	ofCircle(maxScreenX, screenY, 5);
+	ofDrawCircle(maxScreenX, screenY, 5);
 
 //	cout << "zoomer bounds width " << bounds.width << endl;
 	//draw playhead reference
-	ofLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y,
-		   bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
+	ofDrawLine(bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y,
+			   bounds.x+bounds.width*timeline->getPercentComplete(), bounds.y+bounds.height);
 	//draw zoom region reference
 	ofSetColor(timeline->getColors().backgroundColor);
 	ofRange actualZoom = getViewRange();
@@ -95,7 +95,7 @@ void ofxTLZoomer::draw(){
 										 bounds.width*actualZoom.span(),bounds.height);
 	ofFill();
 	ofSetColor(timeline->getColors().keyColor, 50);
-	ofRect(zoomRegion);
+	ofDrawRectangle(zoomRegion);
 	ofPopStyle();
 }
 

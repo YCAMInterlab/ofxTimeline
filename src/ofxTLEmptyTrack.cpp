@@ -73,7 +73,7 @@ void ofxTLEmptyTrack::draw(){
 	ofFill();
 	if(isHovering()){
 		ofSetColor(timeline->getColors().backgroundColor);
-		ofRect(bounds);
+		ofDrawRectangle(bounds);
 	}
 	
 	ofNoFill();
@@ -82,7 +82,7 @@ void ofxTLEmptyTrack::draw(){
 		float screenX = millisToScreenX(clickPoints[i].time);
 		if(screenX > bounds.x && screenX < bounds.x+bounds.width){
 			float screenY = ofMap(clickPoints[i].value, 0.0, 1.0, bounds.getMinY(), bounds.getMaxY());
-			ofCircle(screenX, screenY, 4);
+			ofDrawCircle(screenX, screenY, 4);
 		}
 	}
 }
