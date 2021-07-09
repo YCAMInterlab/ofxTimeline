@@ -1,3 +1,5 @@
+
+#if defined (TARGET_WIN32) || defined (TARGET_OSX)
 #include "ofOpenALSoundPlayer_TimelineAdditions.h"
 
 //#ifdef OF_SOUND_PLAYER_OPENAL
@@ -1094,4 +1096,4 @@ void ofOpenALSoundPlayer_TimelineAdditions::runWindow(vector<float> & signal){
 		signal[i] *= window[i];
 }
 
-//#endif
+#endif

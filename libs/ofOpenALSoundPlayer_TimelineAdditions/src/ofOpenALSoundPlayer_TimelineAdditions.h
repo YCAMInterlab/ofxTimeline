@@ -1,4 +1,5 @@
 #pragma once
+#if defined (TARGET_WIN32) || defined (TARGET_OSX)
 
 #include "ofConstants.h"
 
@@ -204,3 +205,4 @@ class ofOpenALSoundPlayer_TimelineAdditions : public ofBaseSoundPlayer, public o
     float justSetTime;
 };
 
+#endif
