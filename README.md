@@ -211,7 +211,7 @@ in your draw or update function, read the value
     //--------------------------------------------------------------
     void testApp::draw(){
       //the value of changingRadius will be different depending on the timeline
-      float changingRadius = timeline.getValue("MyCircleRadius"),
+      float changingRadius = timeline.getValue("MyCircleRadius");
       //use the value for something amazing!
       ofCircle(mouseX, mouseY, changingRadius);
       //don't forget to draw your timeline so you can edit it.
